@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: futbol-master-pro
+    env: python
+    buildCommand: "python -c 'import db_manager; db_manager.init_db()'"
+    startCommand: "python server.py"
+    envVars:
+      - key: PORT
+        value: 10000

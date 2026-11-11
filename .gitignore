@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.log
+.agents/
+test_results_summary.json
+*.ps1

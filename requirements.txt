@@ -1,0 +1,2 @@
+# Football Master Pro - Dependencias de producción
+# El backend está diseñado de manera ultra eficiente utilizando la librería estándar de Python (http.server, sqlite3, json, os)
