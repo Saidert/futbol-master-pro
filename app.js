@@ -2444,6 +2444,15 @@ function openAuthModal(defaultTab = 'auth-login-pane') {
     paneLogin?.classList.add('active');
     paneRegister?.classList.remove('active');
   }
+
+  const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
+  if (authTabs && typeof authTabs._updateSlideCursor === 'function') {
+    requestAnimationFrame(() => {
+      authTabs._updateSlideCursor();
+      setTimeout(authTabs._updateSlideCursor, 30);
+      setTimeout(authTabs._updateSlideCursor, 120);
+    });
+  }
 }
 
 function closeAuthModal() {
@@ -2463,19 +2472,27 @@ function initAuthControls() {
   const paneLogin = document.getElementById('auth-login-pane');
   const paneRegister = document.getElementById('auth-register-pane');
 
-  // Alternar pestañas en el Modal
+  // Alternar pestañas en el Modal con sincronización del cursor deslizante
   if (tabBtnLogin && tabBtnRegister) {
     tabBtnLogin.addEventListener('click', () => {
       tabBtnLogin.classList.add('active');
       tabBtnRegister.classList.remove('active');
       paneLogin?.classList.add('active');
       paneRegister?.classList.remove('active');
+      const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
+      if (authTabs && typeof authTabs._updateSlideCursor === 'function') {
+        authTabs._updateSlideCursor();
+      }
     });
     tabBtnRegister.addEventListener('click', () => {
       tabBtnRegister.classList.add('active');
       tabBtnLogin.classList.remove('active');
       paneRegister?.classList.add('active');
       paneLogin?.classList.remove('active');
+      const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
+      if (authTabs && typeof authTabs._updateSlideCursor === 'function') {
+        authTabs._updateSlideCursor();
+      }
     });
   }
 
@@ -12326,6 +12343,10 @@ function updateAllSlideTabs() {
   document.querySelectorAll('.sub-tabs-pills').forEach(p => {
     if (typeof p._updateSlideCursor === 'function') p._updateSlideCursor();
   });
+  const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
+  if (authTabs && typeof authTabs._updateSlideCursor === 'function') {
+    authTabs._updateSlideCursor();
+  }
 }
 
 function initSlideTabsNav() {
@@ -12337,6 +12358,11 @@ function initSlideTabsNav() {
   document.querySelectorAll('.sub-tabs-pills').forEach(pills => {
     setupSlideTabs(pills, '.sub-tab-btn');
   });
+
+  const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
+  if (authTabs) {
+    setupSlideTabs(authTabs, '.auth-tab-btn');
+  }
 
   window.addEventListener('resize', () => {
     updateAllSlideTabs();

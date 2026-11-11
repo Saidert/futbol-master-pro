@@ -9543,45 +9543,87 @@ body.blue-theme .hero-football-wrap {
 }
 
 .auth-modal-tabs {
-  display: flex;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 12px;
-  padding: 0.25rem;
-  margin-bottom: 1.25rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  background: rgba(4, 12, 18, 0.78) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-left: 1px solid rgba(167, 243, 208, 0.25) !important;
+  backdrop-filter: blur(25px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(190%) !important;
+  border-radius: 9999px !important;
+  padding: 4px !important;
+  margin-bottom: 1.25rem !important;
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.12), 0 8px 24px -4px rgba(0, 0, 0, 0.5) !important;
+  overflow: hidden !important;
 }
 
-.auth-tab-btn {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: #94a3b8;
-  font-size: 0.88rem;
-  font-weight: 800;
-  padding: 0.65rem 1rem;
-  border-radius: 9px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+.auth-modal-tabs .slide-tabs-cursor {
+  position: absolute !important;
+  top: 4px !important;
+  bottom: 4px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.38) 0%, rgba(5, 150, 105, 0.28) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.65) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  transition: left 0.38s cubic-bezier(0.32, 0.72, 0, 1), width 0.38s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.2s ease !important;
 }
 
-.auth-tab-btn.active {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(59, 130, 246, 0.25) 100%);
-  color: #ffffff;
-  border: 1px solid rgba(16, 185, 129, 0.45);
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+.auth-modal-tabs .auth-tab-btn {
+  position: relative !important;
+  z-index: 2 !important;
+  flex: 1 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #94a3b8 !important;
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  padding: 0.65rem 1.2rem !important;
+  border-radius: 9999px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  transition: color 0.25s ease, text-shadow 0.25s ease !important;
+  user-select: none !important;
+}
+
+.auth-modal-tabs .auth-tab-btn:hover {
+  color: #f1f5f9 !important;
+}
+
+.auth-modal-tabs .auth-tab-btn.active {
+  background: transparent !important;
+  border: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
 }
 
 .auth-tab-pane {
   display: none;
+  opacity: 0;
+  transform: translateY(6px);
 }
 
 .auth-tab-pane.active {
   display: block;
-  animation: authPaneFade 0.2s ease;
+  opacity: 1;
+  transform: translateY(0);
+  animation: authPaneSlideFadeIn 0.32s cubic-bezier(0.32, 0.72, 0, 1) forwards;
 }
 
-@keyframes authPaneFade {
-  from { opacity: 0; transform: translateY(6px); }
+@keyframes authPaneSlideFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -11230,9 +11272,10 @@ body.blue-theme .hero-football-wrap {
   filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6)) !important;
 }
 
-/* Limpieza de fondos estÃ¡ticos para que la pastilla sea la que viaje */
+/* Limpieza de fondos estáticos para que la pastilla sea la que viaje */
 .nav.glass .nav-link.active,
-.sub-tabs-pills .sub-tab-btn.active {
+.sub-tabs-pills .sub-tab-btn.active,
+.auth-modal-tabs .auth-tab-btn.active {
   background: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
