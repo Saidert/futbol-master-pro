@@ -4174,13 +4174,34 @@
     </div>
   </div>
 
-  <!-- Modal Elegante de Autenticación Multi-Rol (.glass) -->
+  <!-- Modal Elegante de Autenticación Multi-Rol (.glass) con Física Líquida MercuryLogin (NEURAL ACCESS) -->
   <div class="auth-modal-overlay" id="authModalOverlay" style="display: none;">
+    <!-- SVG Filter Gooey para Simulación de Mercurio / Física Líquida -->
+    <svg class="svg-filter-hidden" aria-hidden="true" style="position: absolute; width: 0; height: 0; pointer-events: none;">
+      <defs>
+        <filter id="gooey-mercury-live">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9" result="goo" />
+          <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+        </filter>
+      </defs>
+    </svg>
+
+    <!-- Escenario de Blobs de Mercurio con Parallax Reactivo al Mouse -->
+    <div class="mercury-stage" id="mercuryStage" aria-hidden="true">
+      <div class="mercury-blob" style="width: 260px; height: 260px; left: 12%; top: 18%; animation-delay: -2s; animation-duration: 22s;"></div>
+      <div class="mercury-blob" style="width: 220px; height: 220px; left: 68%; top: 12%; animation-delay: -5s; animation-duration: 18s;"></div>
+      <div class="mercury-blob" style="width: 320px; height: 320px; left: 22%; top: 58%; animation-delay: -9s; animation-duration: 25s;"></div>
+      <div class="mercury-blob" style="width: 190px; height: 190px; left: 64%; top: 62%; animation-delay: -14s; animation-duration: 16s;"></div>
+      <div class="mercury-blob" style="width: 250px; height: 250px; left: 44%; top: 38%; animation-delay: -7s; animation-duration: 20s;"></div>
+      <div class="mercury-blob" style="width: 180px; height: 180px; left: 78%; top: 42%; animation-delay: -11s; animation-duration: 19s;"></div>
+    </div>
+
     <div class="auth-modal-card glass">
       <div class="auth-modal-header">
         <div class="auth-brand-badge">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
-          <span>FÚTBOL MASTER PRO 🇨🇴</span>
+          <span>FÚTBOL MASTER PRO 🇨🇴 // NEURAL ACCESS</span>
         </div>
         <button type="button" class="auth-modal-close" id="btnCloseAuthModal" aria-label="Cerrar modal">&times;</button>
       </div>

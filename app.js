@@ -2562,6 +2562,22 @@ function initAuthControls() {
     authModalOverlay.addEventListener('click', (e) => {
       if (e.target === authModalOverlay) closeAuthModal();
     });
+
+    // Parallax Reactivo al Mouse para la Simulación Líquida de Mercurio (MercuryLogin / NEURAL ACCESS)
+    const mercuryBlobs = document.querySelectorAll('.mercury-blob');
+    if (mercuryBlobs.length > 0) {
+      document.addEventListener('mousemove', (e) => {
+        if (authModalOverlay.style.display !== 'none' && authModalOverlay.style.display !== '') {
+          const x = e.clientX / window.innerWidth;
+          const y = e.clientY / window.innerHeight;
+          mercuryBlobs.forEach((blob, idx) => {
+            const speed = (idx + 1) * 20;
+            blob.style.marginLeft = `${x * speed}px`;
+            blob.style.marginTop = `${y * speed}px`;
+          });
+        }
+      });
+    }
   }
 
     // 3 Botones de Selección de Rol (Punto 2: NO login de 1 clic sin credenciales)

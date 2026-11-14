@@ -1,9 +1,8 @@
-import { SlideTabs } from "@/components/ui/slide-tabs";
+import React from 'react';
+import { MercuryLogin } from "@/components/ui/neural-access-login";
 
-export default function DemoOne() {
-  return (
-    <div className="w-full grid h-screen place-content-center bg-white dark:bg-black">
-      <SlideTabs />
-    </div>
-  );
+export default function DemoLogin() {
+  return <MercuryLogin />;
 }
+
+export { MercuryLogin };
