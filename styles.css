@@ -8644,17 +8644,21 @@ body {
 
 /* Modal Elegante de Inicio de Sesión (.glass) con Física Líquida MercuryLogin (NEURAL ACCESS) */
 .auth-modal-overlay {
-  position: fixed;
-  inset: 0;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
   background: rgba(2, 6, 8, 0.82) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.25rem;
-  overflow: hidden;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
 }
 
 /* Fondo de Física Líquida Dinámica (Efecto Mercurio con Filtro SVG Gooey) */
@@ -8689,15 +8693,30 @@ body {
 .auth-modal-card {
   position: relative !important;
   z-index: 10 !important;
-  width: 100%;
-  max-width: 440px;
+  width: 100% !important;
+  max-width: 440px !important;
+  max-height: min(92vh, 640px) !important;
+  margin: auto !important;
   background: rgba(17, 23, 38, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
-  padding: 2rem;
+  border-radius: 24px !important;
+  padding: 1.25rem 1.45rem !important;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-  position: relative;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
   animation: authModalPop 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.auth-modal-card::-webkit-scrollbar {
+  width: 4px;
+}
+.auth-modal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+.auth-modal-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
 }
 
 @keyframes authModalPop {
@@ -14712,6 +14731,207 @@ body.role-organizer .btn-create-header {
 
 .section-sub-heading {
   color: rgba(241, 245, 249, 0.85) !important;
+}
+
+/* ==========================================================================
+   MODAL DE AUTENTICACIÓN / CREAR CUENTA: CENTRADO ABSOLUTO Y ESCALA COMPACTA
+   ========================================================================== */
+.auth-modal-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(2, 6, 8, 0.82) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 1rem !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.auth-modal-card {
+  position: relative !important;
+  z-index: 10 !important;
+  width: 100% !important;
+  max-width: 440px !important;
+  max-height: min(92vh, 640px) !important;
+  margin: auto !important;
+  padding: 1.15rem 1.35rem !important;
+  border-radius: 22px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.auth-modal-card::-webkit-scrollbar {
+  width: 4px;
+}
+.auth-modal-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+.auth-modal-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+}
+
+.auth-modal-header {
+  margin-bottom: 0.65rem !important;
+}
+
+.auth-brand-badge {
+  font-size: 0.82rem !important;
+  gap: 0.35rem !important;
+}
+
+.auth-modal-close {
+  font-size: 1.35rem !important;
+  padding: 0 4px !important;
+  line-height: 1 !important;
+}
+
+.auth-modal-tabs {
+  margin-bottom: 0.65rem !important;
+  padding: 3px !important;
+  border-radius: 9999px !important;
+}
+
+.auth-modal-tabs .auth-tab-btn {
+  padding: 0.35rem 0.75rem !important;
+  font-size: 0.82rem !important;
+  height: 32px !important;
+}
+
+.auth-modal-sub {
+  font-size: 0.75rem !important;
+  margin-bottom: 0.55rem !important;
+  line-height: 1.32 !important;
+  color: #94a3b8 !important;
+}
+
+/* Reducción de espaciado en Crear Cuenta e Iniciar Sesión */
+.auth-form .form-group {
+  margin-bottom: 0.45rem !important;
+}
+
+.auth-form label {
+  font-size: 0.73rem !important;
+  margin-bottom: 0.18rem !important;
+  color: #cbd5e1 !important;
+  font-weight: 600 !important;
+}
+
+.form-row-2col {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.5rem !important;
+}
+
+.auth-input-wrapper {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.auth-input-wrapper svg {
+  left: 0.65rem !important;
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.auth-input-wrapper input {
+  height: 34px !important;
+  padding: 0.25rem 0.55rem 0.25rem 1.95rem !important;
+  font-size: 0.81rem !important;
+  border-radius: 11px !important;
+}
+
+.auth-select,
+.auth-plain-input {
+  height: 34px !important;
+  padding: 0.25rem 0.55rem !important;
+  font-size: 0.81rem !important;
+  border-radius: 11px !important;
+  box-sizing: border-box !important;
+}
+
+.phone-prefix-tag {
+  left: 0.6rem !important;
+  font-size: 0.78rem !important;
+}
+
+.auth-input-wrapper input[type="tel"] {
+  padding-left: 2.45rem !important;
+}
+
+/* Selector de Roles Compacto en Iniciar Sesión */
+.quick-demo-roles-container {
+  margin-bottom: 0.55rem !important;
+}
+
+.quick-demo-roles-title {
+  font-size: 0.66rem !important;
+  margin-bottom: 0.3rem !important;
+  letter-spacing: 0.4px !important;
+}
+
+.quick-roles-grid {
+  gap: 0.38rem !important;
+}
+
+.btn-quick-role {
+  padding: 0.4rem 0.55rem !important;
+  border-radius: 12px !important;
+}
+
+.btn-quick-role .role-icon {
+  font-size: 1rem !important;
+}
+
+.btn-quick-role .role-desc strong {
+  font-size: 0.76rem !important;
+}
+
+.btn-quick-role .role-desc small {
+  font-size: 0.66rem !important;
+}
+
+.auth-divider-line {
+  margin: 0.55rem 0 !important;
+}
+
+.auth-divider-line span {
+  font-size: 0.68rem !important;
+}
+
+/* Tarjeta Ley 1581 Habeas Data Compacta */
+.habeas-data-card {
+  margin-top: 0.45rem !important;
+  padding: 0.4rem 0.6rem !important;
+  border-radius: 10px !important;
+}
+
+.habeas-checkbox-label input[type="checkbox"] {
+  margin-top: 0.12rem !important;
+  width: 13px !important;
+  height: 13px !important;
+}
+
+.habeas-text {
+  font-size: 0.67rem !important;
+  line-height: 1.28 !important;
+}
+
+.btn-auth-submit {
+  margin-top: 0.65rem !important;
+  height: 36px !important;
+  padding: 0.35rem 0.85rem !important;
+  font-size: 0.82rem !important;
+  border-radius: 9999px !important;
 }
 
 

@@ -403,38 +403,52 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           100% { transform: translate(6vw, -12vh) scale(1.12); }
         }
 
-        /* 2. Contenedor de Interfaz Neural */
+        /* 2. Contenedor de Interfaz Neural Compacto y Centrado */
         .auth-container {
           position: relative;
           z-index: 10;
           width: 100%;
-          max-width: 480px;
-          padding: 44px 38px;
+          max-width: 440px;
+          max-height: min(92vh, 640px);
+          overflow-y: auto;
+          overflow-x: hidden;
+          padding: 26px 24px;
           background: rgba(4, 12, 16, 0.78);
           backdrop-filter: blur(28px) saturate(190%);
           -webkit-backdrop-filter: blur(28px) saturate(190%);
           border: 1px solid rgba(255, 255, 255, 0.12);
           border-top: 1px solid rgba(255, 255, 255, 0.38);
           border-left: 1px solid rgba(167, 243, 208, 0.28);
-          border-radius: 28px;
+          border-radius: 24px;
           box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.85),
                       0 0 32px -4px rgba(16, 185, 129, 0.22),
                       inset 0 1.5px 2px rgba(255, 255, 255, 0.35);
-          margin: 20px;
+          margin: auto;
+        }
+
+        .auth-container::-webkit-scrollbar {
+          width: 4px;
+        }
+        .auth-container::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .auth-container::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 9999px;
         }
 
         .header {
-          margin-bottom: 28px;
+          margin-bottom: 16px;
           text-align: left;
         }
 
         .brand-id {
           font-family: 'Space Mono', monospace;
-          font-size: 10.5px;
-          letter-spacing: 3.5px;
+          font-size: 9.5px;
+          letter-spacing: 2.5px;
           text-transform: uppercase;
           color: var(--mercury-emerald);
-          margin-bottom: 10px;
+          margin-bottom: 6px;
           display: flex;
           align-items: center;
           gap: 6px;
@@ -442,9 +456,9 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
 
         .header h1 {
           font-weight: 800;
-          font-size: 2.5rem;
+          font-size: 2rem;
           line-height: 0.95;
-          letter-spacing: -1.8px;
+          letter-spacing: -1.5px;
           margin: 0;
           color: #ffffff;
           text-shadow: 0 2px 10px rgba(0,0,0,0.5);
@@ -457,7 +471,7 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           border: 1px solid rgba(255, 255, 255, 0.1);
           border-radius: 9999px;
           padding: 3px;
-          margin-bottom: 24px;
+          margin-bottom: 16px;
         }
 
         .neural-tab-btn {
@@ -466,9 +480,9 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           border: none;
           color: var(--text-dim);
           font-family: 'Space Mono', monospace;
-          font-size: 11px;
-          letter-spacing: 1px;
-          padding: 8px 12px;
+          font-size: 10px;
+          letter-spacing: 0.8px;
+          padding: 6px 10px;
           border-radius: 9999px;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -484,16 +498,16 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
 
         /* 4. Selector de Roles Minimalista */
         .role-pill-selector {
-          margin-bottom: 22px;
+          margin-bottom: 14px;
         }
 
         .role-pill-selector label {
           display: block;
           font-family: 'Space Mono', monospace;
-          font-size: 9.5px;
-          letter-spacing: 1.5px;
+          font-size: 9px;
+          letter-spacing: 1px;
           color: var(--text-dim);
-          margin-bottom: 8px;
+          margin-bottom: 6px;
           text-transform: uppercase;
         }
 
@@ -506,17 +520,17 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
         .role-pill-btn {
           background: rgba(255, 255, 255, 0.04);
           border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 12px;
-          padding: 8px 6px;
+          border-radius: 10px;
+          padding: 6px 4px;
           color: var(--text-dim);
-          font-size: 10px;
+          font-size: 9.5px;
           font-family: 'Space Mono', monospace;
           cursor: pointer;
           transition: all 0.25s ease;
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 3px;
+          gap: 2px;
           text-align: center;
         }
 
@@ -530,12 +544,12 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
         /* 5. Campos de Formulario con Resplandor Reactivo (.input-glow) */
         .form-group {
           position: relative;
-          margin-bottom: 22px;
+          margin-bottom: 14px;
           transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
         .form-group:focus-within {
-          transform: translateX(8px);
+          transform: translateX(6px);
         }
 
         .form-group label {
@@ -543,11 +557,11 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           justify-content: space-between;
           align-items: center;
           font-family: 'Space Mono', monospace;
-          font-size: 10.5px;
+          font-size: 9.5px;
           color: var(--text-dim);
-          margin-bottom: 8px;
+          margin-bottom: 4px;
           text-transform: uppercase;
-          letter-spacing: 1px;
+          letter-spacing: 0.8px;
         }
 
         .input-box {
@@ -562,8 +576,8 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           border: none;
           border-bottom: 1px solid rgba(255, 255, 255, 0.15);
           color: var(--accent);
-          padding: 10px 0;
-          font-size: 15px;
+          padding: 6px 0;
+          font-size: 14px;
           outline: none;
           transition: border-color 0.4s;
           font-family: 'Inter', sans-serif;
@@ -571,7 +585,7 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
 
         .form-group input::placeholder {
           color: rgba(255, 255, 255, 0.25);
-          font-size: 13.5px;
+          font-size: 12.5px;
         }
 
         .input-glow {
@@ -608,7 +622,7 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
 
         /* 6. El Botón Mercury Líquido (.submit-wrap y .mercury-drop) */
         .submit-wrap {
-          margin-top: 32px;
+          margin-top: 20px;
           position: relative;
           filter: var(--filter-goo);
         }
@@ -617,12 +631,12 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
           background: #ffffff;
           color: #050505;
           border: none;
-          padding: 18px 30px;
-          font-size: 13px;
+          padding: 13px 24px;
+          font-size: 12px;
           font-family: 'Space Mono', monospace;
           font-weight: 700;
           text-transform: uppercase;
-          letter-spacing: 2px;
+          letter-spacing: 1.5px;
           cursor: pointer;
           width: 100%;
           position: relative;
@@ -636,14 +650,14 @@ export const MercuryLogin: React.FC<MercuryLoginProps> = ({
         }
 
         .btn-base:hover:not(:disabled) {
-          letter-spacing: 3.5px;
+          letter-spacing: 2.5px;
           background: #f1f5f9;
         }
 
         .btn-base:disabled {
           opacity: 0.8;
           cursor: not-allowed;
-          letter-spacing: 1.5px;
+          letter-spacing: 1.2px;
         }
 
         .mercury-drop {
