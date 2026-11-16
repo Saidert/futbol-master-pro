@@ -2646,6 +2646,30 @@ function selectRegisterRole(role) {
 }
 window.selectRegisterRole = selectRegisterRole;
 
+let isSignUp = false;
+window.isSignUp = isSignUp;
+
+function pulseHudCorners() {
+  const corners = document.querySelectorAll('.hud-corner-tl, .hud-corner-br');
+  corners.forEach(c => {
+    c.style.animation = 'none';
+    void c.offsetWidth; // forzar reflow
+    c.style.animation = 'hudCornerPulse 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards';
+  });
+}
+window.pulseHudCorners = pulseHudCorners;
+
+function restartStaggerAnimations(container) {
+  if (!container) return;
+  const children = container.querySelectorAll('.auth-form-content > *');
+  children.forEach(c => {
+    c.style.animation = 'none';
+    void c.offsetWidth; // forzar reflow
+    c.style.animation = '';
+  });
+}
+window.restartStaggerAnimations = restartStaggerAnimations;
+
 function switchAuthMode(targetMode) {
   if (isAuthModeSwitching) return;
   isAuthModeSwitching = true;
@@ -2653,6 +2677,7 @@ function switchAuthMode(targetMode) {
   const paneLogin = document.getElementById('auth-login-pane');
   const paneRegister = document.getElementById('auth-register-pane');
   const badge = document.getElementById('glassyMorphBadge');
+  const wrapper = document.getElementById('glassyV3Wrapper');
 
   if (!paneLogin || !paneRegister) {
     isAuthModeSwitching = false;
@@ -2660,6 +2685,14 @@ function switchAuthMode(targetMode) {
   }
 
   const isToRegister = (targetMode === 'register' || targetMode === 'auth-register-pane');
+  isSignUp = isToRegister;
+  window.isSignUp = isSignUp;
+
+  if (wrapper) {
+    wrapper.classList.toggle('mode-signup', isToRegister);
+    wrapper.classList.toggle('mode-signin', !isToRegister);
+  }
+
   const currentPane = isToRegister ? paneLogin : paneRegister;
   const nextPane = isToRegister ? paneRegister : paneLogin;
 
@@ -2670,8 +2703,12 @@ function switchAuthMode(targetMode) {
     currentPane.classList.add('is-hidden');
     currentPane.classList.remove('is-exiting');
 
-    // Fase 2: Badge central de cristal con giro y destello (180ms - 480ms)
+    // Fase 2: Badge central de cristal con giro y destello por 300ms (180ms - 480ms)
+    pulseHudCorners();
     if (badge) {
+      badge.style.animation = 'none';
+      void badge.offsetWidth;
+      badge.style.animation = '';
       badge.classList.remove('is-exiting');
       badge.classList.add('active');
     }
@@ -2686,14 +2723,10 @@ function switchAuthMode(targetMode) {
           badge.classList.remove('active', 'is-exiting');
         }
 
-        // Fase 3: Entrada en cascada del nuevo formulario (480ms - 750ms)
+        // Fase 3: Desplegar el nuevo formulario con animación en cascada (staggerFadeDown)
         nextPane.classList.remove('is-hidden');
-        const staggers = nextPane.querySelectorAll('.stagger-item');
-        staggers.forEach(s => {
-          s.style.animation = 'none';
-          void s.offsetHeight; // trigger reflow
-          s.style.animation = '';
-        });
+        restartStaggerAnimations(nextPane);
+        pulseHudCorners();
 
         setTimeout(() => {
           isAuthModeSwitching = false;
@@ -2718,24 +2751,17 @@ function openAuthModal(defaultTab = 'auth-login-pane') {
   isAuthModeSwitching = false;
 
   const isToRegister = (defaultTab === 'auth-register-pane' || defaultTab === 'register');
+  pulseHudCorners();
   if (isToRegister) {
     if (paneRegister) {
       paneRegister.classList.remove('is-hidden', 'is-exiting');
-      paneRegister.querySelectorAll('.stagger-item').forEach(s => {
-        s.style.animation = 'none';
-        void s.offsetHeight;
-        s.style.animation = '';
-      });
+      restartStaggerAnimations(paneRegister);
     }
     if (paneLogin) paneLogin.classList.add('is-hidden');
   } else {
     if (paneLogin) {
       paneLogin.classList.remove('is-hidden', 'is-exiting');
-      paneLogin.querySelectorAll('.stagger-item').forEach(s => {
-        s.style.animation = 'none';
-        void s.offsetHeight;
-        s.style.animation = '';
-      });
+      restartStaggerAnimations(paneLogin);
     }
     if (paneRegister) paneRegister.classList.add('is-hidden');
   }
