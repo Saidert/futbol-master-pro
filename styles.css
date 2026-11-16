@@ -17054,412 +17054,991 @@ header.global-spa-header .header-brand,
     inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
 }
 
+
 /* =============================================================================
-   DASHBOARD V22: BENTO GRID 3 COLUMNAS (#/admin y #/club)
+   DASHBOARD V22: REPLICA EXACTA CON PILL DOCK, MORPH SPLASH Y 3 VISTAS 3D
+   Paleta: Cyan (#1EC1CB) + Esmeralda (#10B981) + Deep Abyss (#051419 / #081e22)
    ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   0. FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s)
+   ----------------------------------------------------------------------------- */
+.dashboard-splash-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99998 !important;
+  background: #081e22 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.35s ease !important;
+}
+
+.dashboard-splash-overlay.is-hidden {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.splash-center-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  position: relative !important;
+}
+
+.splash-icon-box {
+  width: 76px !important;
+  height: 76px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 35%, rgba(165, 243, 252, 0.45) 0%, rgba(30, 193, 203, 0.3) 40%, rgba(8, 30, 36, 0.95) 100%) !important;
+  border: 2px solid #1ec1cb !important;
+  box-shadow: 0 0 35px rgba(30, 193, 203, 0.75), inset 0 0 16px rgba(165, 243, 252, 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 1.25rem !important;
+  position: relative !important;
+  transition: transform 0.48s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease !important;
+}
+
+.splash-icon-box.morphing-to-dock {
+  transform: translate(calc(-44vw + 50px), calc(-40vh + 45px)) scale(0.63) !important;
+}
+
+.splash-title {
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.5px !important;
+  margin: 0 0 0.5rem 0 !important;
+  text-shadow: 0 0 20px rgba(30, 193, 203, 0.6) !important;
+  transition: opacity 0.25s ease, transform 0.25s ease !important;
+}
+
+.splash-subtitle {
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  color: #a5f3fc !important;
+  margin: 0 !important;
+  animation: pulseGlow 1.8s infinite ease-in-out !important;
+  transition: opacity 0.25s ease, transform 0.25s ease !important;
+}
+
+.splash-center-content.text-fade-out .splash-title,
+.splash-center-content.text-fade-out .splash-subtitle {
+  opacity: 0 !important;
+  transform: translateY(-12px) !important;
+}
+
+@keyframes pulseGlow {
+  0% { opacity: 0.7; text-shadow: 0 0 10px rgba(30, 193, 203, 0.4); }
+  50% { opacity: 1; text-shadow: 0 0 22px rgba(165, 243, 252, 0.8), 0 0 32px rgba(30, 193, 203, 0.6); }
+  100% { opacity: 0.7; text-shadow: 0 0 10px rgba(30, 193, 203, 0.4); }
+}
+
+@keyframes dashboardExpand {
+  0% { transform: scale(0.92); opacity: 0; border-radius: 36px; }
+  100% { transform: scale(1); opacity: 1; border-radius: 24px; }
+}
+
+.admin-panel-container.entrance-expanding {
+  animation: dashboardExpand 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+/* -----------------------------------------------------------------------------
+   1. PILL SIDEBAR FLOTANTE VERTICAL & ACTIVE SLIDING INDICATOR
+   ----------------------------------------------------------------------------- */
 .admin-bento-layout,
 .coach-bento-layout {
   display: flex !important;
   align-items: flex-start !important;
   gap: 1.5rem !important;
-  max-width: 1560px !important;
+  max-width: 1600px !important;
   margin: 0 auto !important;
   padding: 1.5rem 1rem !important;
   box-sizing: border-box !important;
   position: relative !important;
 }
 
-/* 1. PILL SIDEBAR FLOTANTE (Izquierda - 68px) */
-.pill-sidebar {
-  width: 68px !important;
-  min-width: 68px !important;
-  max-width: 68px !important;
+/* Wrapper izquierdo vertical */
+.pill-sidebar-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 14px !important;
   position: sticky !important;
   top: 80px !important;
-  height: fit-content !important;
-  min-height: 480px !important;
+  width: 56px !important;
+  min-width: 56px !important;
+  max-width: 56px !important;
+  z-index: 60 !important;
+}
+
+/* Botón Superior Independiente (48px x 48px) con Logo */
+.pill-sidebar-top-logo {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 35%, rgba(30, 193, 203, 0.35) 0%, rgba(8, 28, 34, 0.95) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.5) !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.pill-sidebar-top-logo:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 28px rgba(30, 193, 203, 0.75), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+}
+
+.top-logo-sphere {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Cápsula Principal Vertical (Pill Dock de 52px de ancho) */
+.pill-dock-capsule {
+  width: 52px !important;
+  min-width: 52px !important;
+  max-width: 52px !important;
   border-radius: 9999px !important;
-  background: linear-gradient(180deg, rgba(6, 26, 33, 0.85) 0%, rgba(4, 18, 23, 0.95) 100%) !important;
-  backdrop-filter: blur(32px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
-  border: 1px solid rgba(165, 243, 252, 0.3) !important;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
-  box-shadow: 0 20px 45px rgba(0, 10, 15, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
-  padding: 18px 8px !important;
+  background: rgba(8, 28, 34, 0.75) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 20px 48px rgba(0, 10, 15, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+  padding: 10px 6px !important;
   box-sizing: border-box !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  z-index: 50 !important;
+  gap: 8px !important;
+  position: relative !important;
 }
 
-.pill-sidebar-brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(30, 193, 203, 0.3) 0%, rgba(16, 185, 129, 0.15) 100%);
-  border: 1px solid rgba(165, 243, 252, 0.4);
-  margin-bottom: 12px;
-  box-shadow: 0 0 15px rgba(30, 193, 203, 0.35);
+/* Indicador Activo Deslizante (Sliding Active Pill) */
+.pill-dock-sliding-indicator {
+  position: absolute !important;
+  top: 10px !important;
+  left: 6px !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #1EC1CB 0%, #10B981 100%) !important;
+  box-shadow: 0 0 18px rgba(30, 193, 203, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  transform: translateY(calc(var(--active-index, 0) * 48px)) !important;
 }
 
-.pill-brand-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #1ec1cb;
-  box-shadow: 0 0 10px #1ec1cb, 0 0 18px #a5f3fc;
-  animation: pulseDot 2.2s infinite ease-in-out;
-}
-
-@keyframes pulseDot {
-  0% { transform: scale(0.9); opacity: 0.75; }
-  50% { transform: scale(1.15); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.75; }
-}
-
-.pill-nav-group {
+/* Botones de Vista dentro del Pill Dock */
+.pill-dock-group {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 8px !important;
   width: 100% !important;
   align-items: center !important;
+  position: relative !important;
 }
 
-.pill-nav-item {
-  width: 48px !important;
-  height: 48px !important;
+.pill-dock-btn {
+  width: 40px !important;
+  height: 40px !important;
   border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: transparent !important;
+  border: none !important;
   color: #94a3b8 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  font-size: 1.25rem !important;
   cursor: pointer !important;
   position: relative !important;
-  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  z-index: 2 !important;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s ease !important;
   padding: 0 !important;
+  outline: none !important;
 }
 
-.pill-nav-item:hover {
-  background: rgba(30, 193, 203, 0.18) !important;
-  border-color: #1ec1cb !important;
+.pill-dock-btn:hover {
+  transform: scale(1.12) !important;
   color: #ffffff !important;
-  transform: scale(1.08) !important;
-  box-shadow: 0 0 18px rgba(30, 193, 203, 0.4) !important;
 }
 
-.pill-nav-item.active {
-  background: linear-gradient(135deg, rgba(30, 193, 203, 0.45) 0%, rgba(16, 185, 129, 0.35) 100%) !important;
-  border: 1.5px solid #1ec1cb !important;
+.pill-dock-btn.active {
   color: #ffffff !important;
-  box-shadow: 0 0 22px rgba(30, 193, 203, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
-  transform: scale(1.05) !important;
+  font-weight: 800 !important;
 }
 
-.pill-tooltip {
-  position: absolute;
-  left: 60px;
-  background: rgba(4, 16, 20, 0.95);
-  color: #ffffff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: all 0.2s ease;
-  border: 1px solid rgba(30, 193, 203, 0.3);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
-  z-index: 100;
+.pill-dock-btn svg {
+  width: 20px !important;
+  height: 20px !important;
+  stroke: currentColor !important;
+  transition: stroke 0.2s ease !important;
 }
 
-.pill-nav-item:hover .pill-tooltip {
-  opacity: 1;
-  transform: translateX(0);
+/* Tooltips Flotantes para la Barra en Píldora */
+.pill-dock-btn .dock-tooltip {
+  position: absolute !important;
+  left: 56px !important;
+  background: rgba(4, 16, 20, 0.95) !important;
+  color: #ffffff !important;
+  padding: 5px 11px !important;
+  border-radius: 8px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+  transform: translateX(-8px) !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6) !important;
+  z-index: 100 !important;
 }
 
-.pill-nav-footer {
+.pill-dock-btn:hover .dock-tooltip {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+}
+
+/* Separador sutil */
+.pill-dock-divider {
+  width: 24px !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  margin: 4px 0 !important;
+  z-index: 2 !important;
+}
+
+/* Botones de acción rápida inferiores (+ y LogOut) */
+.pill-dock-actions {
   display: flex !important;
   flex-direction: column !important;
-  gap: 10px !important;
+  gap: 8px !important;
   width: 100% !important;
   align-items: center !important;
-  margin-top: 14px !important;
-  padding-top: 12px !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+  z-index: 2 !important;
 }
 
-.pill-action-item {
-  width: 44px !important;
-  height: 44px !important;
+.pill-dock-action-btn {
+  width: 38px !important;
+  height: 38px !important;
   border-radius: 50% !important;
-  background: rgba(16, 185, 129, 0.15) !important;
-  border: 1px solid rgba(16, 185, 129, 0.35) !important;
-  color: #34d399 !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   cursor: pointer !important;
-  font-size: 1.15rem !important;
-  font-weight: 800 !important;
   transition: all 0.25s ease !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
 }
 
-.pill-action-item:hover {
+.pill-dock-action-btn.btn-action-add {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34d399 !important;
+  font-size: 1.25rem !important;
+  font-weight: 800 !important;
+}
+
+.pill-dock-action-btn.btn-action-add:hover {
   background: #10b981 !important;
   color: #041014 !important;
   transform: scale(1.1) !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
 }
 
-/* 2. ÁREA CENTRAL (Bento Grid) */
-.bento-central-area {
+.pill-dock-action-btn.btn-action-logout {
+  background: rgba(239, 68, 68, 0.14) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  color: #f87171 !important;
+}
+
+.pill-dock-action-btn.btn-action-logout:hover {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.6) !important;
+}
+
+/* -----------------------------------------------------------------------------
+   2. SHIMMER & MICRO-SKELETON (Fase 2 & Switch de Vistas)
+   ----------------------------------------------------------------------------- */
+@keyframes shimmerSkeleton {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.is-micro-skeleton {
+  pointer-events: none !important;
+}
+
+.is-micro-skeleton .liquid-glass-card,
+.is-micro-skeleton .v22-card {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.is-micro-skeleton .liquid-glass-card::after,
+.is-micro-skeleton .v22-card::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(165, 243, 252, 0.15) 50%, transparent 100%) !important;
+  background-size: 200% 100% !important;
+  animation: shimmerSkeleton 1.1s infinite !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+/* Entrada escalonada al cambiar de vista */
+.fade-stagger-in {
+  animation: fadeInUpView 0.38s cubic-bezier(0.22, 1, 0.36, 1) both !important;
+}
+
+@keyframes fadeInUpView {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* -----------------------------------------------------------------------------
+   3. ESTÉTICA CYAN LIQUID GLASS COMÚN
+   ----------------------------------------------------------------------------- */
+.liquid-glass-card,
+.v22-card {
+  background: rgba(8, 28, 34, 0.72) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.22) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+  border-left: 1.5px solid rgba(165, 243, 252, 0.4) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 20px 48px rgba(0, 10, 15, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+}
+
+.liquid-glass-card:hover,
+.v22-card:hover {
+  border-color: rgba(30, 193, 203, 0.45) !important;
+  box-shadow: 0 24px 55px rgba(0, 10, 15, 0.65), 0 0 25px rgba(30, 193, 203, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+}
+
+/* -----------------------------------------------------------------------------
+   4. VISTA 1: BENTO GRID + PANEL DERECHO DE 330px
+   ----------------------------------------------------------------------------- */
+.v22-dashboard-wrapper {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.v22-main-column {
   flex: 1 1 0% !important;
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 1.5rem !important;
-}
-
-.bento-inner-grid {
-  display: grid !important;
-  grid-template-columns: repeat(12, 1fr) !important;
   gap: 1.25rem !important;
-  align-items: stretch !important;
 }
 
-.bento-col-12 { grid-column: span 12 !important; }
-.bento-col-8 { grid-column: span 8 !important; }
-.bento-col-7 { grid-column: span 7 !important; }
-.bento-col-6 { grid-column: span 6 !important; }
-.bento-col-5 { grid-column: span 5 !important; }
-.bento-col-4 { grid-column: span 4 !important; }
-
-/* Gráfica de Barras Iluminada en Cyan (#1EC1CB) */
-.bento-analytics-card {
-  padding: 1.5rem !important;
-  border-radius: 24px !important;
-}
-
-.cyan-bar-chart-container {
+/* 4.1 Banner Hero Oscuro con Foto Circular a la Derecha */
+.v22-hero-banner {
+  padding: 2rem 2.25rem !important;
   display: flex !important;
-  align-items: flex-end !important;
+  align-items: center !important;
   justify-content: space-between !important;
-  height: 180px !important;
-  padding: 1.25rem 0.5rem 0.5rem !important;
-  gap: 1rem !important;
-  box-sizing: border-box !important;
-}
-
-.chart-bar-col {
-  flex: 1 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  height: 100% !important;
-  justify-content: flex-end !important;
-  gap: 8px !important;
-}
-
-.bar-value {
-  font-size: 0.76rem !important;
-  font-weight: 800 !important;
-  color: #a5f3fc !important;
-  font-family: monospace !important;
-  text-shadow: 0 0 8px rgba(30, 193, 203, 0.6) !important;
-}
-
-.chart-bar-track {
-  width: 100% !important;
-  max-width: 32px !important;
-  height: 120px !important;
-  background: rgba(255, 255, 255, 0.04) !important;
-  border-radius: 12px !important;
-  display: flex !important;
-  align-items: flex-end !important;
+  gap: 2rem !important;
+  background: linear-gradient(135deg, rgba(8, 28, 34, 0.85) 0%, rgba(4, 18, 23, 0.95) 100%) !important;
   overflow: hidden !important;
-  border: 1px solid rgba(165, 243, 252, 0.1) !important;
 }
 
-.chart-bar-fill {
-  width: 100% !important;
-  border-radius: 12px 12px 0 0 !important;
-  background: linear-gradient(180deg, #a5f3fc 0%, #1ec1cb 50%, rgba(16, 185, 129, 0.8) 100%) !important;
-  box-shadow: 0 0 16px rgba(30, 193, 203, 0.6), inset 0 1px 1px #ffffff !important;
-  transition: height 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+.hero-text-content {
+  flex: 1 !important;
+  min-width: 0 !important;
 }
 
-.bar-label {
-  font-size: 0.74rem !important;
-  font-weight: 700 !important;
-  color: #94a3b8 !important;
-  letter-spacing: 0.4px !important;
-}
-
-.telemetry-badge-cyan {
-  font-size: 0.68rem !important;
-  font-weight: 800 !important;
-  color: #1ec1cb !important;
-  border: 1px solid rgba(30, 193, 203, 0.35) !important;
-  background: rgba(30, 193, 203, 0.12) !important;
-  padding: 3px 8px !important;
+.hero-pill-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  padding: 4px 12px !important;
   border-radius: 9999px !important;
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  color: #1ec1cb !important;
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
   letter-spacing: 0.6px !important;
+  margin-bottom: 0.85rem !important;
 }
 
-/* Avatares Circulares de Clubes & Jugadores Destacados */
-.bento-featured-clubs-card {
-  padding: 1.5rem !important;
-  border-radius: 24px !important;
+.hero-title {
+  font-size: 1.85rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.5px !important;
+  line-height: 1.2 !important;
+  margin: 0 0 0.65rem 0 !important;
 }
 
-.featured-clubs-circles-row {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
-  gap: 1rem !important;
-  margin-top: 1rem !important;
-  align-items: center !important;
-  text-align: center !important;
+.hero-desc {
+  font-size: 0.9rem !important;
+  color: #cbd5e1 !important;
+  line-height: 1.5 !important;
+  margin: 0 0 1.25rem 0 !important;
+  max-width: 580px !important;
 }
 
-.club-circle-item {
+.hero-meta-row {
   display: flex !important;
-  flex-direction: column !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 0.75rem !important;
+  flex-wrap: wrap !important;
 }
 
-.club-avatar-ring {
-  width: 58px !important;
-  height: 58px !important;
+.hero-meta-pill {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  color: #a5f3fc !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(165, 243, 252, 0.2) !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+}
+
+.hero-cta-btn {
+  padding: 8px 18px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(135deg, #1ec1cb 0%, #10b981 100%) !important;
+  color: #041014 !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  border: none !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.45) !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.hero-cta-btn:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 0 28px rgba(30, 193, 203, 0.7) !important;
+}
+
+/* Foto Circular a la Derecha con Anillo Glow */
+.hero-photo-container {
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+
+.hero-photo-ring {
+  width: 140px !important;
+  height: 140px !important;
   border-radius: 50% !important;
+  padding: 4px !important;
+  background: linear-gradient(135deg, #1ec1cb, #10b981, #a5f3fc) !important;
+  box-shadow: 0 0 30px rgba(30, 193, 203, 0.5) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  position: relative !important;
+}
+
+.hero-photo-img {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
+
+.hero-live-badge {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  background: rgba(4, 16, 20, 0.9) !important;
+  border: 1px solid #10b981 !important;
+  color: #34d399 !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+.hero-live-dot {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 8px #10b981 !important;
+  animation: pulseDot 1.8s infinite ease-in-out !important;
+}
+
+/* 4.2 Filas de 2 Tarjetas Lado a Lado */
+.v22-two-cards-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 1.25rem !important;
+}
+
+.v22-card {
+  padding: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+}
+
+.v22-card-header {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-bottom: 0.75rem !important;
+}
+
+.v22-card-title {
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 0 0.25rem 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.v22-card-sub {
+  font-size: 0.76rem !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+}
+
+.v22-icon-add-btn {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  color: #1ec1cb !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.v22-icon-add-btn:hover {
+  background: #1ec1cb !important;
+  color: #041014 !important;
+  transform: scale(1.1) !important;
+}
+
+.v22-badge-green {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+}
+
+.v22-badge-cyan {
+  background: rgba(30, 193, 203, 0.18) !important;
+  color: #a5f3fc !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+}
+
+/* Grilla Compacta de Clubes Inscritos */
+.v22-clubs-grid-compact {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 0.75rem !important;
+  margin-top: 0.25rem !important;
+}
+
+.v22-club-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 8px 10px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.2s ease !important;
+}
+
+.v22-club-item:hover {
+  background: rgba(30, 193, 203, 0.12) !important;
+  border-color: rgba(30, 193, 203, 0.3) !important;
+  transform: translateY(-2px) !important;
+}
+
+.v22-club-crest-mini {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
   background: rgba(4, 16, 20, 0.8) !important;
-  border: 2px solid #1ec1cb !important;
-  box-shadow: 0 0 18px rgba(30, 193, 203, 0.5), inset 0 0 10px rgba(30, 193, 203, 0.3) !important;
-  font-size: 1.4rem !important;
-  transition: transform 0.3s ease !important;
+  border: 1.5px solid #1ec1cb !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9rem !important;
+  flex-shrink: 0 !important;
 }
 
-.club-avatar-ring:hover {
-  transform: scale(1.12) rotate(4deg) !important;
+.v22-club-meta {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-.club-avatar-ring.ring-gold {
-  border-color: #fbbf24 !important;
-  box-shadow: 0 0 18px rgba(251, 191, 36, 0.6) !important;
-}
-
-.club-avatar-ring.ring-emerald {
-  border-color: #10b981 !important;
-  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
-}
-
-.club-circle-name {
-  font-size: 0.8rem !important;
+.v22-club-name {
+  font-size: 0.78rem !important;
   font-weight: 700 !important;
   color: #ffffff !important;
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
-  max-width: 100px !important;
 }
 
-.club-circle-tag {
-  font-size: 0.64rem !important;
-  font-weight: 800 !important;
-  padding: 2px 7px !important;
+.v22-club-dt {
+  font-size: 0.68rem !important;
+  color: #94a3b8 !important;
+}
+
+.v22-club-status-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  flex-shrink: 0 !important;
+}
+
+.v22-club-status-dot.ok {
+  background: #10b981 !important;
+  box-shadow: 0 0 6px #10b981 !important;
+}
+
+.v22-club-status-dot.pending {
+  background: #f59e0b !important;
+  box-shadow: 0 0 6px #f59e0b !important;
+}
+
+/* Progreso de Partidos (Giant Counter + Mini Stats) */
+.v22-kpi-giant-box {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 1.5rem !important;
+  padding: 0.5rem 0 !important;
+}
+
+.v22-big-num-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.v22-big-num {
+  font-size: 2.8rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  font-family: monospace, sans-serif !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 20px rgba(30, 193, 203, 0.5) !important;
+}
+
+.v22-big-sub {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  color: #a5f3fc !important;
+  margin-top: 4px !important;
+}
+
+.v22-big-stat-duo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.stat-mini {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.stat-mini-val {
+  font-size: 1.35rem !important;
+  font-weight: 900 !important;
+  color: #34d399 !important;
+  font-family: monospace, sans-serif !important;
+}
+
+.stat-mini-lbl {
+  font-size: 0.65rem !important;
+  color: #94a3b8 !important;
+  white-space: nowrap !important;
+}
+
+.stat-divider {
+  width: 1px !important;
+  height: 24px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.v22-progress-track {
+  width: 100% !important;
+  height: 8px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   border-radius: 9999px !important;
-  letter-spacing: 0.4px !important;
-  text-transform: uppercase !important;
+  overflow: hidden !important;
 }
 
-.tag-leader { background: rgba(251, 191, 36, 0.18) !important; color: #fbbf24 !important; border: 1px solid rgba(251, 191, 36, 0.35) !important; }
-.tag-top { background: rgba(30, 193, 203, 0.18) !important; color: #a5f3fc !important; border: 1px solid rgba(30, 193, 203, 0.35) !important; }
-.tag-defense { background: rgba(16, 185, 129, 0.18) !important; color: #34d399 !important; border: 1px solid rgba(16, 185, 129, 0.35) !important; }
-.tag-pichichi { background: rgba(14, 165, 233, 0.18) !important; color: #38bdf8 !important; border: 1px solid rgba(14, 165, 233, 0.35) !important; }
+.v22-progress-fill {
+  height: 100% !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(90deg, #1ec1cb 0%, #10b981 100%) !important;
+  box-shadow: 0 0 10px rgba(30, 193, 203, 0.7) !important;
+  transition: width 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
 
-/* 3. PANEL DERECHO (320px) */
-.bento-right-panel {
-  width: 320px !important;
-  min-width: 320px !important;
-  max-width: 320px !important;
+/* Estadísticas de Goles (Numbers + 5 Vertical Bars) */
+.v22-goals-body {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 1.5rem !important;
+  height: 140px !important;
+}
+
+.v22-goals-numbers {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  justify-content: center !important;
+}
+
+.goals-big-item {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.goals-big-num {
+  font-size: 1.85rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  font-family: monospace, sans-serif !important;
+  line-height: 1 !important;
+  text-shadow: 0 0 14px rgba(30, 193, 203, 0.5) !important;
+}
+
+.goals-big-lbl {
+  font-size: 0.72rem !important;
+  color: #94a3b8 !important;
+  margin-top: 3px !important;
+}
+
+.v22-bars-5-container {
+  flex: 1 !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-around !important;
+  height: 100% !important;
+  padding-bottom: 4px !important;
+}
+
+.v22-goal-bar-col {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  height: 100% !important;
+  justify-content: flex-end !important;
+  gap: 6px !important;
+  width: 28px !important;
+}
+
+.v22-bar-val {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: #a5f3fc !important;
+  font-family: monospace !important;
+}
+
+.v22-bar-track {
+  width: 14px !important;
+  height: 90px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 9999px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  overflow: hidden !important;
+}
+
+.v22-bar-fill {
+  width: 100% !important;
+  border-radius: 9999px !important;
+  background: rgba(148, 163, 184, 0.35) !important;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.v22-bar-fill.highlight {
+  background: linear-gradient(180deg, #a5f3fc 0%, #1ec1cb 100%) !important;
+  box-shadow: 0 0 14px rgba(30, 193, 203, 0.75) !important;
+}
+
+.v22-bar-lbl {
+  font-size: 0.68rem !important;
+  color: #94a3b8 !important;
+  font-weight: 700 !important;
+}
+
+/* Modo Estadio & TV */
+.v22-stadium-card-content {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+}
+
+.v22-meter-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.v22-meter-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 0.78rem !important;
+  color: #cbd5e1 !important;
+}
+
+.v22-meter-header strong {
+  color: #ffffff !important;
+}
+
+.v22-meter-bar {
+  width: 100% !important;
+  height: 6px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+}
+
+.v22-meter-fill {
+  height: 100% !important;
+  border-radius: 9999px !important;
+}
+
+.v22-meter-fill.cyan {
+  background: linear-gradient(90deg, #1ec1cb, #a5f3fc) !important;
+  box-shadow: 0 0 8px #1ec1cb !important;
+}
+
+.v22-meter-fill.emerald {
+  background: linear-gradient(90deg, #10b981, #34d399) !important;
+  box-shadow: 0 0 8px #10b981 !important;
+}
+
+.btn-activate-tv-mode {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  color: #ffffff !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-activate-tv-mode:hover {
+  background: linear-gradient(135deg, #1ec1cb 0%, #10b981 100%) !important;
+  color: #041014 !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* 4.3 Panel Derecho de 330px */
+.v22-right-panel {
+  width: 330px !important;
+  min-width: 330px !important;
+  max-width: 330px !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 1.25rem !important;
 }
 
-.bento-side-card {
+.v22-side-card {
   padding: 1.25rem !important;
-  border-radius: 24px !important;
   display: flex !important;
   flex-direction: column !important;
   gap: 0.85rem !important;
 }
 
-.side-card-header {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-  padding-bottom: 0.65rem !important;
-}
-
-.side-card-title {
+.v22-side-title {
   font-size: 0.88rem !important;
   font-weight: 800 !important;
   color: #ffffff !important;
   margin: 0 !important;
-  letter-spacing: 0.3px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
 }
 
-.badge-status-pill-cyan {
-  font-size: 0.65rem !important;
-  font-weight: 800 !important;
-  color: #1ec1cb !important;
-  background: rgba(30, 193, 203, 0.15) !important;
-  border: 1px solid rgba(30, 193, 203, 0.4) !important;
-  padding: 2px 8px !important;
-  border-radius: 9999px !important;
-  letter-spacing: 0.6px !important;
-}
-
-.live-ping-dot {
-  width: 8px !important;
-  height: 8px !important;
-  border-radius: 50% !important;
-  background: #10b981 !important;
-  box-shadow: 0 0 8px #10b981, 0 0 14px rgba(16, 185, 129, 0.8) !important;
-  animation: pulseDot 2s infinite ease-in-out !important;
-}
-
-.mini-calendar-grid {
+/* Mini Calendario Noviembre 2026 */
+.v22-calendar-grid {
   display: grid !important;
   grid-template-columns: repeat(7, 1fr) !important;
   gap: 4px !important;
   text-align: center !important;
-  font-size: 0.74rem !important;
+  font-size: 0.72rem !important;
 }
 
-.cal-day-name {
+.v22-cal-header-day {
   font-weight: 800 !important;
   color: #1ec1cb !important;
   padding-bottom: 4px !important;
 }
 
-.cal-day-cell {
+.v22-cal-cell {
   height: 28px !important;
   display: flex !important;
   align-items: center !important;
@@ -17471,15 +18050,15 @@ header.global-spa-header .header-brand,
   transition: all 0.2s ease !important;
 }
 
-.cal-day-cell:hover {
-  background: rgba(30, 193, 203, 0.25) !important;
+.v22-cal-cell:hover {
+  background: rgba(30, 193, 203, 0.2) !important;
   color: #ffffff !important;
 }
 
-.cal-day-cell.has-match::after {
+.v22-cal-cell.has-game::after {
   content: "" !important;
   position: absolute !important;
-  bottom: 2px !important;
+  bottom: 3px !important;
   width: 5px !important;
   height: 5px !important;
   border-radius: 50% !important;
@@ -17487,56 +18066,491 @@ header.global-spa-header .header-brand,
   box-shadow: 0 0 6px #1ec1cb !important;
 }
 
-.cal-day-cell.today {
+.v22-cal-cell.today {
   background: linear-gradient(135deg, rgba(30, 193, 203, 0.4) 0%, rgba(16, 185, 129, 0.3) 100%) !important;
   border: 1px solid #1ec1cb !important;
   color: #ffffff !important;
   font-weight: 800 !important;
 }
 
-.cal-legend-footer {
-  font-size: 0.68rem !important;
-  color: #94a3b8 !important;
+/* Torneos Destacados 3D en Barra Lateral */
+.v22-tourney-side-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px !important;
+  border-radius: 12px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.v22-tourney-side-item:hover {
+  background: rgba(30, 193, 203, 0.12) !important;
+  border-color: rgba(30, 193, 203, 0.3) !important;
+  transform: translateX(4px) !important;
+}
+
+.v22-tourney-sphere-thumb {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 35%, #a5f3fc 0%, #1ec1cb 60%, #041014 100%) !important;
+  box-shadow: 0 0 12px rgba(30, 193, 203, 0.5) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 6px !important;
-  padding-top: 4px !important;
-}
-
-.cal-dot-indicator {
-  width: 6px !important;
-  height: 6px !important;
-  border-radius: 50% !important;
-  display: inline-block !important;
-}
-.dot-cyan { background: #1ec1cb !important; box-shadow: 0 0 6px #1ec1cb !important; }
-.dot-emerald { background: #10b981 !important; box-shadow: 0 0 6px #10b981 !important; }
-
-.side-feed-item {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 8px !important;
-  font-size: 0.78rem !important;
-  color: #cbd5e1 !important;
-  padding: 6px 0 !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-.side-feed-icon {
-  font-size: 0.9rem !important;
+  font-size: 1rem !important;
   flex-shrink: 0 !important;
 }
 
-/* 4. RESPONSIVIDAD TOTAL (<= 1024px) */
+.v22-tourney-side-meta {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.v22-tourney-side-title {
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.v22-tourney-side-sub {
+  font-size: 0.68rem !important;
+  color: #34d399 !important;
+}
+
+/* Alertas & Auditoría en Vivo */
+.v22-alert-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  padding: 6px 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  font-size: 0.75rem !important;
+  color: #cbd5e1 !important;
+}
+
+.v22-alert-icon {
+  font-size: 0.85rem !important;
+  flex-shrink: 0 !important;
+}
+
+.v22-alert-text {
+  flex: 1 !important;
+  line-height: 1.35 !important;
+}
+
+/* -----------------------------------------------------------------------------
+   5. VISTA 2: PERFIL DE COMPETICIÓN / CLUB & TELEMETRÍA (3 KPIs + 7 BARRAS)
+   ----------------------------------------------------------------------------- */
+.v22-profile-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+}
+
+/* Cabecera Tipo Banner Ancho */
+.v22-profile-banner {
+  border-radius: 28px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  background: rgba(8, 28, 34, 0.8) !important;
+  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+}
+
+.profile-top-half-gradient {
+  height: 120px !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.45) 0%, rgba(16, 185, 129, 0.35) 50%, rgba(4, 18, 23, 0.9) 100%) !important;
+  position: relative !important;
+}
+
+.profile-lower-content {
+  padding: 1.25rem 2rem 1.75rem 2rem !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  gap: 1.5rem !important;
+  position: relative !important;
+}
+
+.profile-avatar-superposed {
+  width: 90px !important;
+  height: 90px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 35%, #a5f3fc 0%, #1ec1cb 60%, #081e22 100%) !important;
+  border: 3px solid #ffffff !important;
+  box-shadow: 0 0 25px rgba(30, 193, 203, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 2.2rem !important;
+  margin-top: -55px !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  z-index: 5 !important;
+}
+
+.profile-identity-info {
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.profile-badge-fcf {
+  display: inline-block !important;
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  font-size: 0.7rem !important;
+  font-weight: 800 !important;
+  padding: 2px 8px !important;
+  border-radius: 9999px !important;
+  margin-bottom: 0.35rem !important;
+}
+
+.profile-main-title {
+  font-size: 1.65rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  margin: 0 0 0.35rem 0 !important;
+}
+
+.profile-sub-meta {
+  font-size: 0.84rem !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+}
+
+.profile-action-btns {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+}
+
+/* Fila de 3 Tarjetas de Contadores Gigantes */
+.v22-kpi-3-row {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+}
+
+.v22-kpi-3-card {
+  padding: 1.5rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+}
+
+.kpi-3-label {
+  font-size: 0.8rem !important;
+  font-weight: 800 !important;
+  color: #94a3b8 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+.kpi-3-num {
+  font-size: 2.5rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  font-family: monospace, sans-serif !important;
+  line-height: 1.1 !important;
+  text-shadow: 0 0 16px rgba(30, 193, 203, 0.5) !important;
+}
+
+.kpi-3-sub {
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  color: #34d399 !important;
+}
+
+/* Fila Inferior (2 Paneles Anchos) */
+.v22-profile-bottom-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1.3fr !important;
+  gap: 1.25rem !important;
+}
+
+/* Panel Izquierdo: Reglas & Actividad */
+.rules-list {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.65rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.rule-pill-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 0.8rem !important;
+  color: #cbd5e1 !important;
+  padding: 6px 10px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 8px !important;
+}
+
+.recent-match-result {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  margin-top: 0.5rem !important;
+  font-size: 0.82rem !important;
+}
+
+/* Panel Derecho: Gráfica de 7 Barras Verticales (J1 a J7) */
+.v22-chart-7-bars {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  height: 220px !important;
+  padding: 1.5rem 1rem 0.5rem 1rem !important;
+  gap: 1rem !important;
+}
+
+.chart-7-col {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  height: 100% !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+
+.chart-7-val {
+  font-size: 0.74rem !important;
+  font-weight: 800 !important;
+  color: #a5f3fc !important;
+  font-family: monospace !important;
+}
+
+.chart-7-track {
+  width: 100% !important;
+  max-width: 38px !important;
+  height: 150px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(165, 243, 252, 0.1) !important;
+}
+
+.chart-7-fill {
+  width: 100% !important;
+  border-radius: 12px 12px 0 0 !important;
+  background: linear-gradient(180deg, #a5f3fc 0%, #1ec1cb 50%, rgba(16, 185, 129, 0.8) 100%) !important;
+  box-shadow: 0 0 16px rgba(30, 193, 203, 0.6) !important;
+  transition: height 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.chart-7-fill.dimmed {
+  background: rgba(148, 163, 184, 0.3) !important;
+  box-shadow: none !important;
+}
+
+.chart-7-lbl {
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+}
+
+/* -----------------------------------------------------------------------------
+   6. VISTA 3: COMPETICIONES Y CANCHAS (3x2 GRID 3D + COLECCIONES)
+   ----------------------------------------------------------------------------- */
+.v22-v3-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 1.25rem !important;
+}
+
+.v22-v3-title {
+  font-size: 1.6rem !important;
+  font-weight: 900 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+}
+
+.v22-v3-search-input {
+  width: 260px !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  color: #ffffff !important;
+  padding: 8px 14px !important;
+  border-radius: 9999px !important;
+  font-size: 0.82rem !important;
+  outline: none !important;
+}
+
+.v22-v3-search-input:focus {
+  border-color: #1ec1cb !important;
+  box-shadow: 0 0 14px rgba(30, 193, 203, 0.5) !important;
+}
+
+.v22-v3-layout {
+  display: grid !important;
+  grid-template-columns: 1fr 280px !important;
+  gap: 1.5rem !important;
+}
+
+/* Grilla de 3x2 Tarjetas con Arte 3D Cristalino */
+.v22-grid-3x2 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.25rem !important;
+}
+
+.v22-crystal-3d-card {
+  padding: 1.25rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.crystal-sphere-art {
+  width: 72px !important;
+  height: 72px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle at 35% 35%, #a5f3fc 0%, #1ec1cb 55%, #051419 100%) !important;
+  border: 2px solid rgba(165, 243, 252, 0.6) !important;
+  box-shadow: 0 0 25px rgba(30, 193, 203, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.8rem !important;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.v22-crystal-3d-card:hover .crystal-sphere-art {
+  transform: scale(1.12) rotate(6deg) !important;
+  box-shadow: 0 0 35px rgba(30, 193, 203, 0.85) !important;
+}
+
+.crystal-card-badge {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  color: #1ec1cb !important;
+}
+
+.crystal-card-title {
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  line-height: 1.3 !important;
+}
+
+.crystal-card-progress {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+}
+
+.crystal-progress-labels {
+  display: flex !important;
+  justify-content: space-between !important;
+  font-size: 0.7rem !important;
+  color: #94a3b8 !important;
+}
+
+.crystal-card-actions {
+  display: flex !important;
+  gap: 6px !important;
+  width: 100% !important;
+  margin-top: 0.25rem !important;
+}
+
+.crystal-btn-action {
+  flex: 1 !important;
+  padding: 6px 0 !important;
+  border-radius: 8px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #cbd5e1 !important;
+  transition: all 0.2s ease !important;
+}
+
+.crystal-btn-action:hover {
+  background: rgba(30, 193, 203, 0.2) !important;
+  border-color: #1ec1cb !important;
+  color: #ffffff !important;
+}
+
+/* Panel Lateral Derecho de Colecciones / Categorías */
+.v22-collections-sidebar {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+}
+
+.collection-filter-card {
+  padding: 1rem !important;
+  border-radius: 16px !important;
+  background: rgba(8, 28, 34, 0.65) !important;
+  border: 1px solid rgba(165, 243, 252, 0.18) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  transition: all 0.25s ease !important;
+}
+
+.collection-filter-card:hover {
+  background: rgba(30, 193, 203, 0.15) !important;
+  border-color: #1ec1cb !important;
+  transform: translateX(4px) !important;
+}
+
+.collection-meta-title {
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+}
+
+.collection-meta-count {
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  padding: 2px 8px !important;
+  border-radius: 9999px !important;
+  background: rgba(16, 185, 129, 0.2) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+}
+
+/* -----------------------------------------------------------------------------
+   7. RESPONSIVIDAD TOTAL (<= 1024px & <= 768px)
+   ----------------------------------------------------------------------------- */
 @media (max-width: 1024px) {
   .admin-bento-layout,
   .coach-bento-layout {
     flex-direction: column !important;
-    padding-bottom: 95px !important; /* Espacio para el dock inferior tipo iOS */
+    padding-bottom: 95px !important;
   }
 
-  .pill-sidebar {
+  .pill-sidebar-wrapper {
     position: fixed !important;
     bottom: 16px !important;
     left: 50% !important;
@@ -17545,39 +18559,61 @@ header.global-spa-header .header-brand,
     width: auto !important;
     min-width: auto !important;
     max-width: 95vw !important;
-    min-height: auto !important;
-    height: 62px !important;
     flex-direction: row !important;
-    padding: 6px 14px !important;
-    border-radius: 9999px !important;
-    z-index: 999 !important;
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(30, 193, 203, 0.35) !important;
+    z-index: 9999 !important;
   }
 
-  .pill-sidebar-brand { display: none !important; }
-  .pill-nav-group { flex-direction: row !important; gap: 8px !important; }
-  .pill-nav-footer {
+  .pill-sidebar-top-logo {
+    display: none !important;
+  }
+
+  .pill-dock-capsule {
     flex-direction: row !important;
-    margin-top: 0 !important;
-    padding-top: 0 !important;
-    padding-left: 8px !important;
-    border-top: none !important;
-    border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: 90vw !important;
+    padding: 6px 12px !important;
   }
 
-  .bento-inner-grid {
-    grid-template-columns: 1fr !important;
+  .pill-dock-group {
+    flex-direction: row !important;
+    gap: 8px !important;
   }
 
-  .bento-col-12, .bento-col-8, .bento-col-7, .bento-col-6, .bento-col-5, .bento-col-4 {
-    grid-column: span 1 !important;
+  .pill-dock-sliding-indicator {
+    top: 6px !important;
+    left: 12px !important;
+    transform: translateX(calc(var(--active-index, 0) * 48px)) !important;
   }
 
-  .bento-right-panel {
+  .pill-dock-divider {
+    width: 1px !important;
+    height: 24px !important;
+    margin: 0 6px !important;
+  }
+
+  .pill-dock-actions {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
+
+  .v22-dashboard-wrapper,
+  .v22-v3-layout,
+  .v22-profile-bottom-grid {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+
+  .v22-right-panel {
     width: 100% !important;
     min-width: 100% !important;
     max-width: 100% !important;
   }
-}
 
+  .v22-two-cards-row,
+  .v22-kpi-3-row,
+  .v22-grid-3x2 {
+    grid-template-columns: 1fr !important;
+  }
+}
 

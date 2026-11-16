@@ -5323,6 +5323,210 @@ function exportAuditLogCsv() {
   if (typeof showToast === 'function') showToast('Auditoría exportada a CSV exitosamente', 'success', 3000);
 }
 
+
+// =============================================================================
+// DASHBOARD V22: COREOGRAFÍA DE CARGA, COUNT-UP Y NAVEGACIÓN EN PÍLDORA (VISTAS 1, 2, 3)
+// =============================================================================
+
+/**
+ * Hook / Función useCountUp: Anima números progresivamente cuadro por cuadro
+ */
+function useCountUp(el, targetValue, duration = 900, decimals = 0, prefix = '', suffix = '') {
+  if (!el) return;
+  const target = parseFloat(targetValue) || 0;
+  const isCurrency = el.dataset.currency === 'true';
+  const start = 0;
+  const startTime = performance.now();
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function updateNumber(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutCubic(progress);
+    const current = start + (target - start) * easedProgress;
+
+    let formatted = '';
+    if (isCurrency) {
+      formatted = prefix + Math.round(current).toLocaleString('es-CO') + ' COP';
+    } else if (decimals > 0) {
+      formatted = prefix + current.toFixed(decimals).replace('.', ',') + suffix;
+    } else {
+      formatted = prefix + Math.round(current).toString().padStart(target >= 10 ? 2 : 2, '0') + suffix;
+    }
+
+    el.textContent = formatted;
+
+    if (progress < 1) {
+      requestAnimationFrame(updateNumber);
+    } else {
+      if (isCurrency) {
+        el.textContent = prefix + Math.round(target).toLocaleString('es-CO') + ' COP';
+      } else if (decimals > 0) {
+        el.textContent = prefix + target.toFixed(decimals).replace('.', ',') + suffix;
+      } else {
+        el.textContent = prefix + Math.round(target).toString().padStart(target >= 10 ? 2 : 2, '0') + suffix;
+      }
+    }
+  }
+
+  requestAnimationFrame(updateNumber);
+}
+window.useCountUp = useCountUp;
+
+function animateAllCountUps(container = document) {
+  const elements = container.querySelectorAll('.count-up');
+  elements.forEach(el => {
+    const target = el.dataset.target || el.textContent.replace(/[^0-9.]/g, '') || 0;
+    const decimals = parseInt(el.dataset.decimals || '0', 10);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    useCountUp(el, target, 900, decimals, prefix, suffix);
+  });
+}
+window.animateAllCountUps = animateAllCountUps;
+
+function animateAllBars(container = document) {
+  const bars = container.querySelectorAll('.v22-bar-dynamic');
+  bars.forEach(bar => {
+    bar.style.height = '0%';
+    const targetHeight = bar.dataset.height || '60';
+    setTimeout(() => {
+      bar.style.height = targetHeight + '%';
+    }, 60);
+  });
+}
+window.animateAllBars = animateAllBars;
+
+function updatePillSlidingIndicator(index) {
+  const indicator = document.getElementById('pillSlidingIndicator');
+  const capsule = document.querySelector('.pill-dock-capsule');
+  if (capsule) {
+    capsule.style.setProperty('--active-index', index);
+  }
+  if (indicator) {
+    const isMobile = window.innerWidth <= 1024;
+    if (isMobile) {
+      indicator.style.transform = `translateX(${index * 48}px)`;
+    } else {
+      indicator.style.transform = `translateY(${index * 48}px)`;
+    }
+  }
+}
+window.updatePillSlidingIndicator = updatePillSlidingIndicator;
+
+function triggerMicroSkeleton(targetPane, callback) {
+  if (!targetPane) return;
+  targetPane.classList.add('is-micro-skeleton');
+  setTimeout(() => {
+    targetPane.classList.remove('is-micro-skeleton');
+    targetPane.classList.add('fade-stagger-in');
+    setTimeout(() => targetPane.classList.remove('fade-stagger-in'), 400);
+    if (typeof callback === 'function') callback();
+  }, 250);
+}
+window.triggerMicroSkeleton = triggerMicroSkeleton;
+
+function handleAdminSubtabSwitch(btn) {
+  if (!btn) return;
+  const targetSubtab = btn.getAttribute('data-subtab');
+  const index = parseInt(btn.getAttribute('data-index') || '0', 10);
+
+  // 1. Botones activos
+  document.querySelectorAll('.admin-subtab-btn').forEach(b => {
+    b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab);
+  });
+
+  // 2. Desplazamiento suave del indicador deslizante
+  updatePillSlidingIndicator(index);
+
+  // 3. Cambio de panel con micro-skeleton de 250ms
+  const targetPane = document.getElementById(targetSubtab);
+  document.querySelectorAll('.admin-subtab-pane').forEach(p => {
+    if (p !== targetPane) p.classList.remove('active');
+  });
+
+  if (targetPane) {
+    targetPane.classList.add('active');
+    triggerMicroSkeleton(targetPane, () => {
+      animateAllCountUps(targetPane);
+      animateAllBars(targetPane);
+    });
+  }
+
+  // 4. Renderizado según subpestaña
+  if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
+    renderAdminLiveDashboard();
+    renderAdminAuditTable();
+  } else if (targetSubtab === 'admin-tab-profile') {
+    renderAdminProfileTab();
+  } else if (targetSubtab === 'admin-tab-tournaments' || targetSubtab === 'admin-tab-corrections') {
+    renderAdminTournamentsTable();
+    renderAdminCorrectionsTab();
+  } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
+    renderAdminOrganizerTab();
+  } else if (targetSubtab === 'admin-tab-venues') {
+    renderAdminVenuesCatalog();
+  } else if (targetSubtab === 'admin-tab-users') {
+    renderAdminUsersTable();
+  }
+}
+window.handleAdminSubtabSwitch = handleAdminSubtabSwitch;
+
+function renderAdminProfileTab() {
+  const titleEl = document.getElementById('v22ProfileTournamentTitle');
+  const activeT = tournamentState?.config?.name ? tournamentState : ((typeof savedTournaments !== 'undefined' && savedTournaments.find(t => t.id === activeTournamentId)) || (typeof FMPStore !== 'undefined' && FMPStore.getTournaments()[0]));
+  if (titleEl && activeT) {
+    titleEl.textContent = activeT.config?.name || activeT.name || 'Superliga Andina Nocturna 2026';
+  }
+}
+window.renderAdminProfileTab = renderAdminProfileTab;
+
+function runDashboardEntranceSequence() {
+  const overlay = document.getElementById('dashboardSplashOverlay');
+  const splashContent = document.getElementById('splashCenterContent');
+  const splashIcon = document.getElementById('splashIconBox');
+  const container = document.querySelector('.admin-panel-container');
+
+  if (!overlay) return;
+
+  // Fase 1: Splash screen & morph
+  overlay.style.display = 'flex';
+  overlay.classList.remove('is-hidden');
+  if (splashContent) splashContent.classList.remove('text-fade-out');
+  if (splashIcon) splashIcon.classList.remove('morphing-to-dock');
+
+  // A los 0.5s: morph de logo y fadeout de subtítulo
+  setTimeout(() => {
+    if (splashContent) splashContent.classList.add('text-fade-out');
+    if (splashIcon) splashIcon.classList.add('morphing-to-dock');
+    if (container) container.classList.add('entrance-expanding');
+  }, 500);
+
+  // A los 0.7s: ocultar splash overlay y entrar a Fase 2 (shimmer)
+  setTimeout(() => {
+    overlay.classList.add('is-hidden');
+    setTimeout(() => { overlay.style.display = 'none'; }, 350);
+
+    // Fase 2: Shimmer skeleton (0.45s)
+    const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
+    if (activePane) {
+      activePane.classList.add('is-micro-skeleton');
+      setTimeout(() => {
+        activePane.classList.remove('is-micro-skeleton');
+        activePane.classList.add('fade-stagger-in');
+
+        // Fase 3: Count-up & crecimiento de barras
+        animateAllCountUps(activePane);
+        animateAllBars(activePane);
+      }, 450);
+    }
+  }, 700);
+}
+window.runDashboardEntranceSequence = runDashboardEntranceSequence;
+
 function initAdminPanelControls() {
   // Listener para Corrección Auditada de Resultados (Fase 3)
   const formCorrection = document.getElementById('adminFormCorrection');
@@ -5363,29 +5567,13 @@ function initAdminPanelControls() {
     });
   }
 
-  // 1. Navegación por subpestañas
+  // 1. Navegación por subpestañas con Pill Dock y Micro-Skeleton
   const subtabBtns = document.querySelectorAll('.admin-subtab-btn');
   subtabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetSubtab = btn.getAttribute('data-subtab');
-      subtabBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab));
-      document.querySelectorAll('.admin-subtab-pane').forEach(pane => {
-        pane.classList.toggle('active', pane.id === targetSubtab);
-      });
-      if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
-        renderAdminLiveDashboard();
-        renderAdminAuditTable();
-      } else if (targetSubtab === 'admin-tab-tournaments' || targetSubtab === 'admin-tab-corrections') {
-        renderAdminTournamentsTable();
-        renderAdminCorrectionsTab();
-      } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
-        renderAdminOrganizerTab();
-      } else if (targetSubtab === 'admin-tab-venues') {
-        renderAdminVenuesCatalog();
-      } else if (targetSubtab === 'admin-tab-users') {
-        renderAdminUsersTable();
-      }
-    });
+    if (!btn.dataset.v22Attached) {
+      btn.dataset.v22Attached = 'true';
+      btn.addEventListener('click', () => handleAdminSubtabSwitch(btn));
+    }
   });
 
   const orgSelect = document.getElementById('orgDashboardTournamentSelect');
@@ -5724,24 +5912,19 @@ function renderAdminView() {
   const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const role = normalizeRole(session?.role || 'fan');
 
-  // Si el usuario es Organizador, activar la pestaña de Clubes & Finanzas
-  if (role === 'organizer') {
-    const orgSubtabBtn = document.getElementById('btnAdminSubtabClubsFinances') || document.getElementById('btnAdminSubtabOrg');
-    if (orgSubtabBtn) {
-      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.remove('active'));
-      orgSubtabBtn.classList.add('active');
-      const orgPane = document.getElementById('admin-tab-clubs-finances') || document.getElementById('admin-tab-organizador');
-      if (orgPane) orgPane.classList.add('active');
-    }
-  } else {
-    // Si no hay pestaña activa, activar Vista General
-    const activeSubtab = document.querySelector('.admin-subtab-btn.active') || document.getElementById('btnAdminSubtabOverview');
-    if (activeSubtab) {
-      const paneId = activeSubtab.getAttribute('data-subtab');
-      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === paneId));
-      document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
-    }
+  // Asegurar botón activo y posición del Pill Dock
+  let activeSubtab = document.querySelector('.admin-subtab-btn.active');
+  if (!activeSubtab) {
+    activeSubtab = document.querySelector('.pill-dock-btn[data-subtab="admin-tab-overview"]') || document.querySelector('.admin-subtab-btn');
+    if (activeSubtab) activeSubtab.classList.add('active');
+  }
+
+  if (activeSubtab) {
+    const paneId = activeSubtab.getAttribute('data-subtab');
+    const idx = parseInt(activeSubtab.getAttribute('data-index') || '0', 10);
+    updatePillSlidingIndicator(idx);
+    document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === paneId));
+    document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
   }
 
   renderAdminLiveDashboard();
@@ -5752,6 +5935,10 @@ function renderAdminView() {
   renderAdminUsersTable();
   renderAdminCorrectionsTab();
   renderAdminOrganizerTab();
+  renderAdminProfileTab();
+
+  // Coreografía exacta de entrada V22 (00:00.0s a 00:02.5s)
+  runDashboardEntranceSequence();
 }
 
 function renderAdminStats() {
@@ -15214,30 +15401,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Navegación de Subpestañas en Admin
+  // Navegación de Subpestañas en Admin V22
   document.querySelectorAll('.admin-subtab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const targetSubtab = btn.getAttribute('data-subtab');
-      document.querySelectorAll('.admin-subtab-btn').forEach(b => {
-        b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab);
-      });
-      document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.remove('active'));
-      const pane = document.getElementById(targetSubtab);
-      if (pane) pane.classList.add('active');
-
-      if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
-        renderAdminLiveDashboard();
-        renderAdminAuditTable();
-      } else if (targetSubtab === 'admin-tab-tournaments') {
-        renderAdminTournamentsTable();
-        renderAdminCorrectionsTab();
-      } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
-        renderAdminOrganizerTab();
-      } else if (targetSubtab === 'admin-tab-venues') {
-        renderAdminVenuesCatalog();
-      } else if (targetSubtab === 'admin-tab-users') {
-        renderAdminUsersTable();
-      }
-    });
+    if (!btn.dataset.v22Attached) {
+      btn.dataset.v22Attached = 'true';
+      btn.addEventListener('click', () => handleAdminSubtabSwitch(btn));
+    }
   });
 });
