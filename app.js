@@ -2336,7 +2336,7 @@ function updatePublicModeBannerVisibility() {
   const isVisitorOrFan = (!session || !session.loggedIn || role === 'fan' || role === 'guest');
 
   // Solo se muestra dentro del detalle de un torneo cuando el usuario está en modo espectador/visitante
-  const shouldShow = (tournamentState.isPublicMode || isVisitorOrFan) && isManagingTournament && internalTournamentViews.includes(currentRoute);
+  const shouldShow = (tournamentState.isPublicMode || isVisitorOrFan) && isManagingTournament && internalTournamentViews.includes(currentRoute) && currentRoute !== 'home' && currentRoute !== 'canchas';
   banner.style.display = shouldShow ? 'block' : 'none';
 }
 
@@ -2390,6 +2390,8 @@ function updateAuthUI() {
       userAvatarBadge.style.display = 'inline-flex';
       userAvatarBadge.textContent = initials;
     }
+    const authIconSvg = document.getElementById('authIconSvg');
+    if (authIconSvg) authIconSvg.style.display = 'none';
 
     if (dropdownUserName) dropdownUserName.textContent = userName;
     if (dropdownUserEmail) dropdownUserEmail.textContent = session.email || (role === 'admin' ? 'admin@futbolmaster.co' : 'usuario@futbolmaster.co');
@@ -2447,21 +2449,23 @@ function updateAuthUI() {
     if (navCanchasLink) navCanchasLink.style.display = 'inline-flex';
     if (mobileNavCanchasLink) mobileNavCanchasLink.style.display = 'flex';
 
-    // 2. Mi Club / Mi Equipo exclusivo y destacado para DT / Delegado
-    if (navCoachLink) navCoachLink.style.display = (role === 'coach') ? 'inline-flex' : 'none';
-    if (mobileNavCoachLink) mobileNavCoachLink.style.display = (role === 'coach') ? 'flex' : 'none';
-    if (dropdownLinkCoach) dropdownLinkCoach.style.display = (role === 'coach') ? 'flex' : 'none';
+    // 2. Mi Club / Mi Equipo exclusivo y destacado para DT / Delegado y SuperAdmin
+    const canSeeCoach = (role === 'coach' || role === 'admin');
+    if (navCoachLink) navCoachLink.style.display = canSeeCoach ? 'inline-flex' : 'none';
+    if (mobileNavCoachLink) mobileNavCoachLink.style.display = canSeeCoach ? 'flex' : 'none';
+    if (dropdownLinkCoach) dropdownLinkCoach.style.display = canSeeCoach ? 'flex' : 'none';
 
-    // 3. Dashboard Organizador / Admin exclusivo para Organizador y Admin
+    // 3. Dashboard Organizador / Admin exclusivo para Organizador y SuperAdmin
     const isOrgOrAdmin = (role === 'admin' || role === 'organizer');
     if (navAdminLink) navAdminLink.style.display = isOrgOrAdmin ? 'inline-flex' : 'none';
     if (mobileNavAdminLink) mobileNavAdminLink.style.display = isOrgOrAdmin ? 'flex' : 'none';
     if (btnHeaderCrear) btnHeaderCrear.style.display = isOrgOrAdmin ? 'inline-flex' : 'none';
     if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = isOrgOrAdmin ? 'flex' : 'none';
 
-    // Textos de pestaña Torneos
-    if (navLinkTorneosText) navLinkTorneosText.textContent = isOrgOrAdmin ? 'Mis Torneos' : 'Torneos Disponibles';
-    if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = isOrgOrAdmin ? 'Mis Torneos' : 'Torneos Disponibles';
+    // Textos cortos de pestaña Torneos
+    const torneosLabel = (isOrgOrAdmin || role === 'coach') ? 'Mis Torneos' : 'Torneos';
+    if (navLinkTorneosText) navLinkTorneosText.textContent = torneosLabel;
+    if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = torneosLabel;
 
     // 4. Filtrar pestañas internas de torneo según permisos
     filterTournamentTabsByRole(role);
@@ -2478,20 +2482,22 @@ function updateAuthUI() {
   } else {
     // Visitante / Aficionado (Sin sesión activa)
     document.body.classList.add('role-guest');
-    if (authBtnText) authBtnText.textContent = 'Iniciar Sesión / Registrarse';
-    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión / Registrarse';
+    if (authBtnText) authBtnText.textContent = 'Iniciar Sesión';
+    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión';
     if (userAvatarBadge) {
       userAvatarBadge.style.display = 'none';
-      userAvatarBadge.textContent = '👤';
+      userAvatarBadge.textContent = '';
     }
+    const authIconSvg = document.getElementById('authIconSvg');
+    if (authIconSvg) authIconSvg.style.display = 'inline-block';
     if (userDropdownMenu) userDropdownMenu.style.display = 'none';
     if (dropdownUserName) dropdownUserName.textContent = 'Visitante';
     if (dropdownUserEmail) dropdownUserEmail.textContent = 'Sin sesión iniciada';
 
     if (userDropdownDemoSection) userDropdownDemoSection.style.display = 'none';
 
-    if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos Disponibles';
-    if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos Disponibles';
+    if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos';
+    if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos';
     if (btnHeaderCrear) btnHeaderCrear.style.display = 'none';
 
     // Visitante ve Inicio, Torneos y Canchas
@@ -3771,6 +3777,13 @@ function navigateToView(targetRoute, updateHash = true) {
   }
   const routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
 
+  // Sincronizar data-route y clases en body para selectores CSS de ocultamiento
+  document.body.setAttribute('data-route', routeId);
+  ['home', 'torneos', 'canchas', 'crear', 'admin', 'club', 'equipos', 'calendario', 'clasificacion', 'cuadro', 'herramientas', 'tv', 'solicitudes'].forEach(r => {
+    document.body.classList.remove('route-' + r);
+  });
+  document.body.classList.add('route-' + routeId);
+
   // Control estricto de visibilidad del Header según ruta:
   // En Inicio, Mis Torneos, Crear Torneo, Admin y Club se muestra el Header general
   // En Equipos, Calendario, Clasificación, Cuadro, Herramientas y TV se activa el MODO DASHBOARD
@@ -4118,7 +4131,7 @@ function startNewTournamentDraft() {
  */
 function renderHomeView() {
   const d = (typeof dom !== 'undefined' && dom) ? dom : (window.dom || {});
-  const list = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0) ? FMPStore.getTournaments() : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments)) ? savedTournaments : []);
+  const list = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0) ? FMPStore.getTournaments() : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments) && savedTournaments.length > 0) ? savedTournaments : ((typeof DEMO_TOURNAMENTS_SEED !== 'undefined' && Array.isArray(DEMO_TOURNAMENTS_SEED)) ? DEMO_TOURNAMENTS_SEED : []));
   const totalTournaments = list.length;
 
   let totalTeams = 0;
@@ -4150,21 +4163,21 @@ function renderHomeView() {
   const statMatches = d.statHomeMatches || document.getElementById('statHomeMatches');
   const statGoals = d.statHomeGoals || document.getElementById('statHomeGoals');
 
-  if (statTournaments) statTournaments.textContent = totalTournaments;
-  if (statTeams) statTeams.textContent = totalTeams;
-  if (statMatches) statMatches.textContent = totalFinishedMatches;
-  if (statGoals) statGoals.textContent = totalGoals;
+  const displayTourneys = totalTournaments > 0 ? totalTournaments : 6;
+  const displayClubs = totalTeams > 0 ? totalTeams : 16;
+  const displayMatches = totalScheduledMatches > 0 ? totalScheduledMatches : 24;
+  const displayGoals = totalGoals > 0 ? totalGoals : 13;
+
+  if (statTournaments) statTournaments.textContent = displayTourneys;
+  if (statTeams) statTeams.textContent = displayClubs;
+  if (statMatches) statMatches.textContent = totalFinishedMatches > 0 ? totalFinishedMatches : 10;
+  if (statGoals) statGoals.textContent = displayGoals;
 
   // Sincronizar Vista Previa del Dashboard en Tiempo Real (Home) con datos vivos y consistentes
   const prevTourneys = document.getElementById('statPreviewTournaments');
   const prevClubs = document.getElementById('statPreviewClubs');
   const prevMatches = document.getElementById('statPreviewMatches');
   const prevGoals = document.getElementById('statPreviewGoals');
-
-  const displayTourneys = totalTournaments > 0 ? totalTournaments : 6;
-  const displayClubs = totalTeams > 0 ? totalTeams : 16;
-  const displayMatches = totalScheduledMatches > 0 ? totalScheduledMatches : 24;
-  const displayGoals = totalGoals > 0 ? totalGoals : 13;
 
   if (prevTourneys) prevTourneys.textContent = displayTourneys;
   if (prevClubs) prevClubs.textContent = displayClubs;
@@ -4195,7 +4208,7 @@ function renderHomeView() {
         const ta = new Date(a.updatedAt || a.createdAt || 0).getTime();
         const tb = new Date(b.updatedAt || b.createdAt || 0).getTime();
         return tb - ta;
-      }).slice(0, 4);
+      }).slice(0, 6);
 
       homeRecentGrid.innerHTML = recentList.map(t => {
         const st = t.status || determineTournamentStatus(t.matches);

@@ -8288,10 +8288,10 @@ body.blue-theme .card-tag {
 }
 
 .header-nav-center {
-  position: absolute !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  margin: 0 !important;
+  position: relative !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -11277,11 +11277,11 @@ body.blue-theme .hero-football-wrap {
 }
 
 .header-nav-center {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  margin: 0 !important;
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -11415,20 +11415,14 @@ body.blue-theme .hero-football-wrap {
 }
 
 #headerNavCenter {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  margin: 0 !important;
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
 }
 
-/* Ocultar Canchas Colombia y Crear Torneo para visitantes, aficionados y técnicos */
-body.role-guest #navCanchasLink,
-body.role-fan #navCanchasLink,
-body.role-coach #navCanchasLink,
-body:not(.role-admin):not(.role-organizer) #navCanchasLink {
-  display: none !important;
-}
+/* Canchas Colombia disponible para todos los roles */
 
 body.role-guest .btn-create-header,
 body.role-fan .btn-create-header,
@@ -13852,29 +13846,33 @@ button:active,
 .header-main-bar {
   position: relative !important;
   height: 100% !important;
-  max-width: 1220px !important;
+  max-width: 1440px !important;
   margin: 0 auto !important;
-  padding: 0 clamp(1.5rem, 3.5vw, 3rem) !important;
+  padding: 0 clamp(1rem, 2.5vw, 2.5rem) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
+  gap: 20px !important;
+  box-sizing: border-box !important;
 }
 
 #headerNavCenter {
-  position: absolute !important;
-  left: 50% !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  margin: 0 !important;
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
+  margin: 0 auto !important;
+  flex-shrink: 0 !important;
   display: flex !important;
   align-items: center !important;
+  gap: 3px !important;
   background: rgba(10, 20, 28, 0.65) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
   border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-top-color: rgba(255, 255, 255, 0.32) !important;
   border-radius: 9999px !important;
-  padding: 3px !important;
+  padding: 3px 6px !important;
   height: 38px !important;
   box-sizing: border-box !important;
   box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
@@ -13917,11 +13915,7 @@ button:active,
   font-weight: 700 !important;
 }
 
-/* Visibilidad de roles en Header */
-body.role-guest #navCanchasLink,
-body.role-fan #navCanchasLink,
-body.role-coach #navCanchasLink,
-body:not(.role-admin):not(.role-organizer) #navCanchasLink,
+/* Visibilidad de roles en Header: Canchas siempre visible, Crear Torneo solo Admin/Org */
 body.role-guest .btn-create-header,
 body.role-fan .btn-create-header,
 body.role-coach .btn-create-header,
@@ -15347,6 +15341,192 @@ body.role-organizer .btn-create-header {
 
 @media print {
   #printReportHeader {
+    display: block !important;
+  }
+}
+
+
+/* ==========================================================================
+   MASTER RESPONSIVE & LAYOUT CONTROLLER (MOBILE, TABLET & LAPTOPS)
+   ========================================================================== */
+
+/* 1. Header Flexbox de 3 Zonas sin Colisiones */
+.header-brand {
+  flex-shrink: 0 !important;
+  min-width: 190px !important;
+  z-index: 5 !important;
+}
+
+.header-nav-center .nav-link {
+  padding: 6px 12px !important;
+  font-size: 0.81rem !important;
+  font-weight: 600 !important;
+  white-space: nowrap !important;
+}
+
+.header-nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex-shrink: 0 !important;
+  z-index: 5 !important;
+}
+
+/* 2. Responsividad del Header en Pantallas Menores a 1080px */
+@media (max-width: 1080px) {
+  #headerNavCenter,
+  .header-nav-center {
+    display: none !important;
+  }
+  .btn-hamburger {
+    display: flex !important;
+  }
+  .btn-create-header {
+    display: none !important;
+  }
+  .header-main-bar {
+    padding: 0 1rem !important;
+    gap: 10px !important;
+  }
+}
+
+@media (min-width: 1081px) {
+  .btn-hamburger {
+    display: none !important;
+  }
+}
+
+/* 3. Hero Section y Estadísticas Responsivas */
+.hero-main-title {
+  font-size: clamp(2rem, 5vw, 3.8rem) !important;
+  line-height: 1.15 !important;
+}
+
+.hero-stats-strip {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 16px !important;
+  max-width: 900px !important;
+  margin: 0 auto !important;
+  width: 100% !important;
+}
+
+@media (max-width: 768px) {
+  .hero-stats-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .home-preview-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .hero-football-wrap {
+    padding: 1.5rem 0 3rem 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-stats-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .home-preview-kpi-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 4. Tablas 100% Responsivas con Desplazamiento Táctil */
+.table-responsive-wrapper,
+.admin-table-container,
+.group-tables-container {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+  border-radius: 12px !important;
+}
+
+.standings-table,
+.admin-data-table,
+.scorers-table,
+.admin-live-table {
+  min-width: 620px !important;
+  width: 100% !important;
+}
+
+/* 5. Dashboards y Grillas Auto-adaptables */
+.coach-dashboard-summary-grid,
+.admin-live-kpi-grid,
+.coach-disciplinary-cards-grid,
+.admin-live-main-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: 1rem !important;
+  width: 100% !important;
+}
+
+@media (max-width: 640px) {
+  .coach-dashboard-summary-grid,
+  .admin-live-kpi-grid,
+  .admin-live-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* 6. Cuadro Eliminatorio (Brackets) */
+.brackets-container-wrapper {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  padding-bottom: 1.5rem !important;
+  width: 100% !important;
+}
+
+/* 7. Modales 100% Responsivos */
+.modal-dialog {
+  width: min(92vw, 540px) !important;
+  max-width: 92vw !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  margin: auto !important;
+  box-sizing: border-box !important;
+}
+
+.modal-dialog.modal-wide,
+#modalOfficialPdfViewer .modal-dialog,
+#modalReviewApplicationRoster .modal-dialog {
+  width: min(94vw, 860px) !important;
+  max-width: 94vw !important;
+}
+
+/* 8. Ocultamiento Estricto de Banner Solo Lectura y Sub-barra en Portada y Canchas */
+body:not(.managing-tournament) #publicModeBanner,
+#view-home.active ~ #publicModeBanner,
+body[data-route="home"] #publicModeBanner,
+body[data-route="canchas"] #publicModeBanner,
+body.route-home #publicModeBanner,
+body.route-canchas #publicModeBanner,
+#view-home.active #publicModeBanner,
+#view-canchas.active #publicModeBanner {
+  display: none !important;
+}
+
+body:not(.managing-tournament) #tournamentSubnavBar,
+body[data-route="home"] #tournamentSubnavBar,
+body[data-route="canchas"] #tournamentSubnavBar,
+body.route-home #tournamentSubnavBar,
+body.route-canchas #tournamentSubnavBar {
+  display: none !important;
+}
+
+/* 9. Ocultamiento Estricto del Encabezado de Impresión en Pantalla */
+#printReportHeader,
+.print-only-header {
+  display: none !important;
+}
+
+@media print {
+  #printReportHeader,
+  .print-only-header {
     display: block !important;
   }
 }
