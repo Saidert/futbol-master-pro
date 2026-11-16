@@ -8652,13 +8652,22 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 10000;
-  display: flex !important;
+  display: none;
   align-items: center !important;
   justify-content: center !important;
   padding: 1rem !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
+}
+
+.auth-modal-overlay.active,
+.auth-modal-overlay[style*="display: flex"] {
+  display: flex !important;
+}
+
+.auth-modal-overlay[style*="display: none"] {
+  display: none !important;
 }
 
 /* Fondo de Física Líquida Dinámica (Efecto Mercurio con Filtro SVG Gooey) */
@@ -14745,13 +14754,23 @@ body.role-organizer .btn-create-header {
   backdrop-filter: blur(16px) !important;
   -webkit-backdrop-filter: blur(16px) !important;
   z-index: 10000 !important;
-  display: flex !important;
+  display: none;
   align-items: center !important;
   justify-content: center !important;
   padding: 1rem !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
+}
+
+.auth-modal-close {
+  font-size: 1.35rem !important;
+  padding: 0 4px !important;
+  line-height: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 20 !important;
 }
 
 .auth-modal-card {
@@ -14792,6 +14811,10 @@ body.role-organizer .btn-create-header {
   font-size: 1.35rem !important;
   padding: 0 4px !important;
   line-height: 1 !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 20 !important;
 }
 
 .auth-modal-tabs {

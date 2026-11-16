@@ -12,7 +12,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20261115b">
+  <style>
+    /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
+    #authModalOverlay,
+    .auth-modal-overlay {
+      display: none !important;
+    }
+    #authModalOverlay.active,
+    .auth-modal-overlay.active {
+      display: flex !important;
+    }
+    .auth-modal-close {
+      cursor: pointer !important;
+      pointer-events: auto !important;
+      position: relative !important;
+      z-index: 99999 !important;
+    }
+  </style>
 </head>
 <body class="role-guest">
     <!-- Fondo de estadio con iluminación de focos -->
@@ -4175,7 +4192,7 @@
   </div>
 
   <!-- Modal Elegante de Autenticación Multi-Rol (.glass) con Física Líquida MercuryLogin (NEURAL ACCESS) -->
-  <div class="auth-modal-overlay" id="authModalOverlay" style="display: none;">
+  <div class="auth-modal-overlay" id="authModalOverlay" style="display: none !important;">
     <!-- SVG Filter Gooey para Simulación de Mercurio / Física Líquida -->
     <svg class="svg-filter-hidden" aria-hidden="true" style="position: absolute; width: 0; height: 0; pointer-events: none;">
       <defs>
@@ -4203,7 +4220,7 @@
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
           <span>FÚTBOL MASTER PRO 🇨🇴 // NEURAL ACCESS</span>
         </div>
-        <button type="button" class="auth-modal-close" id="btnCloseAuthModal" aria-label="Cerrar modal">&times;</button>
+        <button type="button" class="auth-modal-close" id="btnCloseAuthModal" aria-label="Cerrar modal" onclick="if(window.closeAuthModal){closeAuthModal();} var m=document.getElementById('authModalOverlay'); if(m){ m.classList.remove('active'); m.style.setProperty('display','none','important'); m.style.display='none'; } document.body.classList.remove('auth-modal-open');" title="Cerrar ventana">&times;</button>
       </div>
 
       <!-- Pestañas de Autenticación -->
@@ -4973,7 +4990,7 @@
   <!-- Datalist global para autocompletar escenarios deportivos de Colombia en las tarjetas de partidos -->
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=20261115b"></script>
 </body>
 </html>
 
