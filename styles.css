@@ -102,6 +102,15 @@ body {
    MOTOR DE FÍSICA LÍQUIDA GLOBAL (MERCURY / BLOBS PARALLAX)
    Fondo Global Fijo de toda la Plataforma (visionOS / iOS 18 Liquid Glass)
    ============================================================================= */
+body, main, .mercury-global-stage {
+  background-color: #051419 !important;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(30, 193, 203, 0.32) 0%, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(16, 185, 129, 0.22) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 60%) !important;
+  background-attachment: fixed !important;
+}
+
 .mercury-global-stage,
 .stage,
 .mercury-stage,
@@ -111,10 +120,9 @@ body {
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: -1 !important;
+  z-index: -999 !important;
   pointer-events: none !important;
   overflow: hidden !important;
-  background-color: #040b09 !important;
 }
 
 .mercury-global-stage *,
@@ -140,11 +148,11 @@ body {
 .stage .blob {
   position: absolute !important;
   border-radius: 50% !important;
-  filter: blur(34px) !important;
-  opacity: 0.38 !important; /* Atenuado para dar profundidad sin competir con los textos */
+  filter: blur(28px) !important;
+  opacity: 0.65 !important; /* Luminoso y vibrante sobre el Cyan Abisal */
   pointer-events: none !important;
   will-change: transform, opacity !important;
-  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 0 0 45px rgba(30, 193, 203, 0.3) !important;
+  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.5), 0 0 65px rgba(30, 193, 203, 0.5) !important;
 }
 
 /* 6 Blobs con Trayectorias Autónomas Desfasadas y Gradientes Cyan Liquid Glass */
@@ -248,9 +256,9 @@ body {
 }
 
 @keyframes pulseBlob {
-  0%   { opacity: 0.30; filter: blur(30px); }
-  50%  { opacity: 0.44; filter: blur(38px); }
-  100% { opacity: 0.34; filter: blur(32px); }
+  0%   { opacity: 0.52; filter: blur(28px); }
+  50%  { opacity: 0.78; filter: blur(34px); }
+  100% { opacity: 0.58; filter: blur(26px); }
 }
 
 @keyframes floatMercuryLive {
@@ -16645,7 +16653,7 @@ body.role-admin #mobileBtnCreateNew {
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: -1 !important;
+  z-index: -999 !important;
   pointer-events: none !important;
   overflow: hidden !important;
 }
@@ -16690,7 +16698,7 @@ header.global-spa-header .header-brand,
 #btnAuthHeader,
 #btnMobileAuth {
   position: relative !important;
-  z-index: 100 !important;
+  z-index: 1000 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
 }
@@ -16905,4 +16913,568 @@ header.global-spa-header .header-brand,
   padding-left: 8px !important;
   letter-spacing: 0.6px !important;
 }
+
+/* =============================================================================
+   CALIDAD ÓPTICA DEL LIQUID GLASS (EFECTO CRISTAL CLARO APPLE iOS 18 / visionOS)
+   ============================================================================= */
+.glass-card,
+.tournament-card,
+.recent-tournament-card,
+.feature-card,
+.step-card,
+.kpi-card,
+.bento-card,
+.coach-next-match-card,
+.coach-stats-card,
+.coach-disciplinary-section,
+.admin-live-standings-card,
+.admin-live-fixtures-card,
+.admin-live-dashboard-card,
+.bento-analytics-card,
+.bento-featured-clubs-card,
+.bento-side-card,
+.pill-sidebar,
+.bento-card-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(30, 193, 203, 0.15) 50%,
+    rgba(10, 35, 42, 0.4) 100%
+  ) !important;
+  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  border: 1px solid rgba(165, 243, 252, 0.3) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  border-left: 1.5px solid rgba(165, 243, 252, 0.55) !important;
+  box-shadow: 
+    0 24px 48px rgba(0, 10, 15, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+}
+
+/* =============================================================================
+   DASHBOARD V22: BENTO GRID 3 COLUMNAS (#/admin y #/club)
+   ============================================================================= */
+.admin-bento-layout,
+.coach-bento-layout {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1.5rem !important;
+  max-width: 1560px !important;
+  margin: 0 auto !important;
+  padding: 1.5rem 1rem !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+/* 1. PILL SIDEBAR FLOTANTE (Izquierda - 68px) */
+.pill-sidebar {
+  width: 68px !important;
+  min-width: 68px !important;
+  max-width: 68px !important;
+  position: sticky !important;
+  top: 80px !important;
+  height: fit-content !important;
+  min-height: 480px !important;
+  border-radius: 9999px !important;
+  background: linear-gradient(180deg, rgba(6, 26, 33, 0.85) 0%, rgba(4, 18, 23, 0.95) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.3) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 20px 45px rgba(0, 10, 15, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+  padding: 18px 8px !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  z-index: 50 !important;
+}
+
+.pill-sidebar-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(30, 193, 203, 0.3) 0%, rgba(16, 185, 129, 0.15) 100%);
+  border: 1px solid rgba(165, 243, 252, 0.4);
+  margin-bottom: 12px;
+  box-shadow: 0 0 15px rgba(30, 193, 203, 0.35);
+}
+
+.pill-brand-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #1ec1cb;
+  box-shadow: 0 0 10px #1ec1cb, 0 0 18px #a5f3fc;
+  animation: pulseDot 2.2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.75; }
+  50% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.75; }
+}
+
+.pill-nav-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  align-items: center !important;
+}
+
+.pill-nav-item {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #94a3b8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.25rem !important;
+  cursor: pointer !important;
+  position: relative !important;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  padding: 0 !important;
+}
+
+.pill-nav-item:hover {
+  background: rgba(30, 193, 203, 0.18) !important;
+  border-color: #1ec1cb !important;
+  color: #ffffff !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 18px rgba(30, 193, 203, 0.4) !important;
+}
+
+.pill-nav-item.active {
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.45) 0%, rgba(16, 185, 129, 0.35) 100%) !important;
+  border: 1.5px solid #1ec1cb !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 22px rgba(30, 193, 203, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  transform: scale(1.05) !important;
+}
+
+.pill-tooltip {
+  position: absolute;
+  left: 60px;
+  background: rgba(4, 16, 20, 0.95);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(30, 193, 203, 0.3);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.pill-nav-item:hover .pill-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.pill-nav-footer {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  align-items: center !important;
+  margin-top: 14px !important;
+  padding-top: 12px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.pill-action-item {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+  color: #34d399 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 1.15rem !important;
+  font-weight: 800 !important;
+  transition: all 0.25s ease !important;
+}
+
+.pill-action-item:hover {
+  background: #10b981 !important;
+  color: #041014 !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+}
+
+/* 2. ÁREA CENTRAL (Bento Grid) */
+.bento-central-area {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.5rem !important;
+}
+
+.bento-inner-grid {
+  display: grid !important;
+  grid-template-columns: repeat(12, 1fr) !important;
+  gap: 1.25rem !important;
+  align-items: stretch !important;
+}
+
+.bento-col-12 { grid-column: span 12 !important; }
+.bento-col-8 { grid-column: span 8 !important; }
+.bento-col-7 { grid-column: span 7 !important; }
+.bento-col-6 { grid-column: span 6 !important; }
+.bento-col-5 { grid-column: span 5 !important; }
+.bento-col-4 { grid-column: span 4 !important; }
+
+/* Gráfica de Barras Iluminada en Cyan (#1EC1CB) */
+.bento-analytics-card {
+  padding: 1.5rem !important;
+  border-radius: 24px !important;
+}
+
+.cyan-bar-chart-container {
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: space-between !important;
+  height: 180px !important;
+  padding: 1.25rem 0.5rem 0.5rem !important;
+  gap: 1rem !important;
+  box-sizing: border-box !important;
+}
+
+.chart-bar-col {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  height: 100% !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+}
+
+.bar-value {
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  color: #a5f3fc !important;
+  font-family: monospace !important;
+  text-shadow: 0 0 8px rgba(30, 193, 203, 0.6) !important;
+}
+
+.chart-bar-track {
+  width: 100% !important;
+  max-width: 32px !important;
+  height: 120px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: flex-end !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(165, 243, 252, 0.1) !important;
+}
+
+.chart-bar-fill {
+  width: 100% !important;
+  border-radius: 12px 12px 0 0 !important;
+  background: linear-gradient(180deg, #a5f3fc 0%, #1ec1cb 50%, rgba(16, 185, 129, 0.8) 100%) !important;
+  box-shadow: 0 0 16px rgba(30, 193, 203, 0.6), inset 0 1px 1px #ffffff !important;
+  transition: height 0.8s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.bar-label {
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  color: #94a3b8 !important;
+  letter-spacing: 0.4px !important;
+}
+
+.telemetry-badge-cyan {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: #1ec1cb !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  background: rgba(30, 193, 203, 0.12) !important;
+  padding: 3px 8px !important;
+  border-radius: 9999px !important;
+  letter-spacing: 0.6px !important;
+}
+
+/* Avatares Circulares de Clubes & Jugadores Destacados */
+.bento-featured-clubs-card {
+  padding: 1.5rem !important;
+  border-radius: 24px !important;
+}
+
+.featured-clubs-circles-row {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)) !important;
+  gap: 1rem !important;
+  margin-top: 1rem !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+
+.club-circle-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.club-avatar-ring {
+  width: 58px !important;
+  height: 58px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(4, 16, 20, 0.8) !important;
+  border: 2px solid #1ec1cb !important;
+  box-shadow: 0 0 18px rgba(30, 193, 203, 0.5), inset 0 0 10px rgba(30, 193, 203, 0.3) !important;
+  font-size: 1.4rem !important;
+  transition: transform 0.3s ease !important;
+}
+
+.club-avatar-ring:hover {
+  transform: scale(1.12) rotate(4deg) !important;
+}
+
+.club-avatar-ring.ring-gold {
+  border-color: #fbbf24 !important;
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.6) !important;
+}
+
+.club-avatar-ring.ring-emerald {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 18px rgba(16, 185, 129, 0.6) !important;
+}
+
+.club-circle-name {
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: 100px !important;
+}
+
+.club-circle-tag {
+  font-size: 0.64rem !important;
+  font-weight: 800 !important;
+  padding: 2px 7px !important;
+  border-radius: 9999px !important;
+  letter-spacing: 0.4px !important;
+  text-transform: uppercase !important;
+}
+
+.tag-leader { background: rgba(251, 191, 36, 0.18) !important; color: #fbbf24 !important; border: 1px solid rgba(251, 191, 36, 0.35) !important; }
+.tag-top { background: rgba(30, 193, 203, 0.18) !important; color: #a5f3fc !important; border: 1px solid rgba(30, 193, 203, 0.35) !important; }
+.tag-defense { background: rgba(16, 185, 129, 0.18) !important; color: #34d399 !important; border: 1px solid rgba(16, 185, 129, 0.35) !important; }
+.tag-pichichi { background: rgba(14, 165, 233, 0.18) !important; color: #38bdf8 !important; border: 1px solid rgba(14, 165, 233, 0.35) !important; }
+
+/* 3. PANEL DERECHO (320px) */
+.bento-right-panel {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+}
+
+.bento-side-card {
+  padding: 1.25rem !important;
+  border-radius: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.85rem !important;
+}
+
+.side-card-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  padding-bottom: 0.65rem !important;
+}
+
+.side-card-title {
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  letter-spacing: 0.3px !important;
+}
+
+.badge-status-pill-cyan {
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  color: #1ec1cb !important;
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  padding: 2px 8px !important;
+  border-radius: 9999px !important;
+  letter-spacing: 0.6px !important;
+}
+
+.live-ping-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #10b981 !important;
+  box-shadow: 0 0 8px #10b981, 0 0 14px rgba(16, 185, 129, 0.8) !important;
+  animation: pulseDot 2s infinite ease-in-out !important;
+}
+
+.mini-calendar-grid {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 4px !important;
+  text-align: center !important;
+  font-size: 0.74rem !important;
+}
+
+.cal-day-name {
+  font-weight: 800 !important;
+  color: #1ec1cb !important;
+  padding-bottom: 4px !important;
+}
+
+.cal-day-cell {
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 8px !important;
+  color: #cbd5e1 !important;
+  position: relative !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.cal-day-cell:hover {
+  background: rgba(30, 193, 203, 0.25) !important;
+  color: #ffffff !important;
+}
+
+.cal-day-cell.has-match::after {
+  content: "" !important;
+  position: absolute !important;
+  bottom: 2px !important;
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 50% !important;
+  background: #1ec1cb !important;
+  box-shadow: 0 0 6px #1ec1cb !important;
+}
+
+.cal-day-cell.today {
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.4) 0%, rgba(16, 185, 129, 0.3) 100%) !important;
+  border: 1px solid #1ec1cb !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+.cal-legend-footer {
+  font-size: 0.68rem !important;
+  color: #94a3b8 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding-top: 4px !important;
+}
+
+.cal-dot-indicator {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+}
+.dot-cyan { background: #1ec1cb !important; box-shadow: 0 0 6px #1ec1cb !important; }
+.dot-emerald { background: #10b981 !important; box-shadow: 0 0 6px #10b981 !important; }
+
+.side-feed-item {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  font-size: 0.78rem !important;
+  color: #cbd5e1 !important;
+  padding: 6px 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.side-feed-icon {
+  font-size: 0.9rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* 4. RESPONSIVIDAD TOTAL (<= 1024px) */
+@media (max-width: 1024px) {
+  .admin-bento-layout,
+  .coach-bento-layout {
+    flex-direction: column !important;
+    padding-bottom: 95px !important; /* Espacio para el dock inferior tipo iOS */
+  }
+
+  .pill-sidebar {
+    position: fixed !important;
+    bottom: 16px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    top: auto !important;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: 95vw !important;
+    min-height: auto !important;
+    height: 62px !important;
+    flex-direction: row !important;
+    padding: 6px 14px !important;
+    border-radius: 9999px !important;
+    z-index: 999 !important;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(30, 193, 203, 0.35) !important;
+  }
+
+  .pill-sidebar-brand { display: none !important; }
+  .pill-nav-group { flex-direction: row !important; gap: 8px !important; }
+  .pill-nav-footer {
+    flex-direction: row !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    padding-left: 8px !important;
+    border-top: none !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  }
+
+  .bento-inner-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .bento-col-12, .bento-col-8, .bento-col-7, .bento-col-6, .bento-col-5, .bento-col-4 {
+    grid-column: span 1 !important;
+  }
+
+  .bento-right-panel {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
 

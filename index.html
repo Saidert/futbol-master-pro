@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_hightech_3d">
+  <link rel="stylesheet" href="styles.css?v=20261116_bento_v22">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -3378,10 +3378,50 @@
   </section>
 
   <!-- VISTA 10: PANEL DE ADMINISTRACIÓN GENERAL Y AUDITORÍA -->
-    <section id="view-admin" class="spa-view">
+  <section id="view-admin" class="spa-view">
     <div class="admin-panel-container">
-      <!-- Encabezado del Panel Admin -->
-      <div class="admin-header-strip">
+      <div class="admin-bento-layout">
+        <!-- 1. PILL SIDEBAR FLOTANTE (Izquierda - 68px) -->
+        <aside class="pill-sidebar" id="adminPillSidebar" aria-label="Navegación Rápida Bento">
+          <div class="pill-sidebar-brand" title="Fútbol Master Pro eSports">
+            <span class="pill-brand-dot"></span>
+          </div>
+          <div class="pill-nav-group">
+            <button type="button" class="pill-nav-item admin-subtab-btn active" data-subtab="admin-tab-overview" title="Vista General & En Vivo" id="pillBtnOverview">
+              <span class="pill-icon">📊</span>
+              <span class="pill-tooltip">Overview</span>
+            </button>
+            <button type="button" class="pill-nav-item admin-subtab-btn" data-subtab="admin-tab-tournaments" title="Todos los Torneos" id="pillBtnTournaments">
+              <span class="pill-icon">🏆</span>
+              <span class="pill-tooltip">Torneos</span>
+            </button>
+            <button type="button" class="pill-nav-item admin-subtab-btn" data-subtab="admin-tab-clubs-finances" title="Clubes, Solicitudes & Finanzas" id="pillBtnFinances">
+              <span class="pill-icon">🛡️</span>
+              <span class="pill-tooltip">Finanzas</span>
+            </button>
+            <button type="button" class="pill-nav-item admin-subtab-btn" data-subtab="admin-tab-venues" title="Canchas Colombia" id="pillBtnVenues">
+              <span class="pill-icon">🏟️</span>
+              <span class="pill-tooltip">Canchas</span>
+            </button>
+            <button type="button" class="pill-nav-item admin-subtab-btn" data-subtab="admin-tab-users" title="Usuarios & Auditoría" id="pillBtnUsers">
+              <span class="pill-icon">👥</span>
+              <span class="pill-tooltip">Usuarios</span>
+            </button>
+          </div>
+          <div class="pill-nav-footer">
+            <button type="button" class="pill-action-item" onclick="navigateTo('crear')" title="Nuevo Torneo">
+              <span>+</span>
+            </button>
+            <button type="button" class="pill-action-item" onclick="handleLogout(event)" title="Cerrar Sesión">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            </button>
+          </div>
+        </aside>
+
+        <!-- 2. ÁREA CENTRAL (Bento Grid) -->
+        <div class="bento-central-area" id="adminBentoCentral">
+          <!-- Encabezado del Panel Admin -->
+          <div class="admin-header-strip">
         <div>
           <div class="admin-badge-co">
             <span>🇨🇴 GESTIÓN NACIONAL • REPUBLICA DE COLOMBIA</span>
@@ -3468,6 +3508,93 @@
                 <span class="kpi-label">Goles Marcados</span>
                 <span class="kpi-val accent" id="adminLiveKpiGoals">218</span>
                 <span class="kpi-sub" id="adminLiveKpiGoalsSub">Promedio 2.3 por partido</span>
+              </div>
+            </div>
+
+            <!-- MÓDULOS BENTO GRID: GRÁFICA DE RENDIMIENTO CYAN + CUADRO DE HONOR -->
+            <div class="bento-inner-grid" style="margin-bottom: 1.5rem;">
+              <!-- Gráfica de Barras Iluminada en Cyan (#1EC1CB) (Span 7) -->
+              <div class="bento-col-7 bento-analytics-card">
+                <div class="live-card-header">
+                  <div>
+                    <h4 class="live-card-title">📈 Goles y Rendimiento por Jornada (FCF Data)</h4>
+                    <p class="live-card-desc">Promedio ofensivo en tiempo real • Temporada Oficial 2026</p>
+                  </div>
+                  <span class="telemetry-badge-cyan">TELEMETRÍA HUD 60 FPS</span>
+                </div>
+                <div class="cyan-bar-chart-container" id="cyanBarChartContainer">
+                  <div class="chart-bar-col">
+                    <span class="bar-value">18</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 65%;"></div></div>
+                    <span class="bar-label">J1</span>
+                  </div>
+                  <div class="chart-bar-col">
+                    <span class="bar-value">24</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 82%;"></div></div>
+                    <span class="bar-label">J2</span>
+                  </div>
+                  <div class="chart-bar-col">
+                    <span class="bar-value">28</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 94%;"></div></div>
+                    <span class="bar-label">J3</span>
+                  </div>
+                  <div class="chart-bar-col">
+                    <span class="bar-value">21</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 72%;"></div></div>
+                    <span class="bar-label">J4</span>
+                  </div>
+                  <div class="chart-bar-col">
+                    <span class="bar-value">31</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 100%;"></div></div>
+                    <span class="bar-label">J5</span>
+                  </div>
+                  <div class="chart-bar-col">
+                    <span class="bar-value">19</span>
+                    <div class="chart-bar-track"><div class="chart-bar-fill" style="height: 68%;"></div></div>
+                    <span class="bar-label">J6</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Avatares Circulares de Clubes & Jugadores Destacados (Span 5) -->
+              <div class="bento-col-5 bento-featured-clubs-card">
+                <div class="live-card-header">
+                  <div>
+                    <h4 class="live-card-title">🛡️ Cuadro de Honor &amp; Figuras</h4>
+                    <p class="live-card-desc">Líderes de tabla y distinciones individuales</p>
+                  </div>
+                  <span class="badge-accent-cyan">TOP 2026</span>
+                </div>
+                <div class="featured-clubs-circles-row">
+                  <div class="club-circle-item">
+                    <div class="club-avatar-ring ring-gold">
+                      <span class="club-avatar-emoji">👑</span>
+                    </div>
+                    <span class="club-circle-name">Real Bogotá FC</span>
+                    <span class="club-circle-tag tag-leader">Líder</span>
+                  </div>
+                  <div class="club-circle-item">
+                    <div class="club-avatar-ring ring-cyan">
+                      <span class="club-avatar-emoji">⚡</span>
+                    </div>
+                    <span class="club-circle-name">Atl. Medellín</span>
+                    <span class="club-circle-tag tag-top">Goleador</span>
+                  </div>
+                  <div class="club-circle-item">
+                    <div class="club-avatar-ring ring-emerald">
+                      <span class="club-avatar-emoji">🛡️</span>
+                    </div>
+                    <span class="club-circle-name">Dep. Cali</span>
+                    <span class="club-circle-tag tag-defense">Valla Menos</span>
+                  </div>
+                  <div class="club-circle-item">
+                    <div class="club-avatar-ring ring-cyan">
+                      <span class="club-avatar-emoji">⚽</span>
+                    </div>
+                    <span class="club-circle-name">C. Rodríguez</span>
+                    <span class="club-circle-tag tag-pichichi">Pichichi (9)</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -3848,7 +3975,78 @@
           </table>
         </div>
       </div>
-    </div>
+        </div> <!-- /bento-central-area -->
+
+        <!-- 3. PANEL DERECHO (320px) -->
+        <aside class="bento-right-panel" id="adminBentoRightPanel" aria-label="Panel Lateral Deportivo">
+          <!-- Mini Calendario Interactivo del Mes -->
+          <div class="bento-side-card mini-calendar-card">
+            <div class="side-card-header">
+              <h4 class="side-card-title">📅 Noviembre 2026</h4>
+              <span class="badge-status-pill-cyan">TEMPORADA FCF</span>
+            </div>
+            <div class="mini-calendar-grid" id="miniCalendarGrid">
+              <span class="cal-day-name">L</span>
+              <span class="cal-day-name">M</span>
+              <span class="cal-day-name">M</span>
+              <span class="cal-day-name">J</span>
+              <span class="cal-day-name">V</span>
+              <span class="cal-day-name">S</span>
+              <span class="cal-day-name">D</span>
+            </div>
+            <div class="cal-legend-footer">
+              <span class="cal-dot-indicator dot-cyan"></span> Partidos
+              <span class="cal-dot-indicator dot-emerald" style="margin-left: 8px;"></span> Finales
+            </div>
+          </div>
+
+          <!-- Próximos Partidos de la Jornada -->
+          <div class="bento-side-card upcoming-fixtures-side-card">
+            <div class="side-card-header">
+              <h4 class="side-card-title">⚽ Próximos Partidos</h4>
+              <span class="badge-status-pill-cyan">EN VIVO</span>
+            </div>
+            <div class="side-fixtures-list" id="sideFixturesList">
+              <div style="background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(165,243,252,0.15); margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #a5f3fc; font-weight: 700; margin-bottom: 4px;">
+                  <span>FINAL COPA 2026</span>
+                  <span style="color: #10b981;">18:00</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800; color: #fff;">
+                  <span>Real Madrid</span>
+                  <span style="color: #1ec1cb; background: rgba(30,193,203,0.15); padding: 1px 6px; border-radius: 4px;">VS</span>
+                  <span>Man. City</span>
+                </div>
+                <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 4px;">🏟️ Estadio Metropolitano</div>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(165,243,252,0.15);">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #a5f3fc; font-weight: 700; margin-bottom: 4px;">
+                  <span>3° PUESTO</span>
+                  <span style="color: #10b981;">15:30</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800; color: #fff;">
+                  <span>Bayern Múnich</span>
+                  <span style="color: #1ec1cb; background: rgba(30,193,203,0.15); padding: 1px 6px; border-radius: 4px;">VS</span>
+                  <span>Arsenal FC</span>
+                </div>
+                <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 4px;">🏟️ Cancha Central Salitre</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feed de Solicitudes y Alertas en Vivo -->
+          <div class="bento-side-card live-feed-side-card">
+            <div class="side-card-header">
+              <h4 class="side-card-title">⚡ Solicitudes &amp; Paz y Salvo</h4>
+              <span class="live-ping-dot"></span>
+            </div>
+            <div class="side-feed-list" id="sideLiveFeedList">
+              <!-- Renderizado dinámicamente -->
+            </div>
+          </div>
+        </aside>
+      </div> <!-- /admin-bento-layout -->
+    </div> <!-- /admin-panel-container -->
   </section>
 
   <!-- VISTA 11: PANEL MI CLUB / DIRECTOR TÉCNICO Y PLANTILLAS -->
@@ -5603,7 +5801,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_hightech_3d"></script>
+  <script src="app.js?v=20261116_bento_v22"></script>
 </body>
 </html>
 

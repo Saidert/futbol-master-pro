@@ -5369,7 +5369,7 @@ function initAdminPanelControls() {
   subtabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       const targetSubtab = btn.getAttribute('data-subtab');
-      subtabBtns.forEach(b => b.classList.toggle('active', b === btn));
+      subtabBtns.forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab));
       document.querySelectorAll('.admin-subtab-pane').forEach(pane => {
         pane.classList.toggle('active', pane.id === targetSubtab);
       });
@@ -5666,6 +5666,59 @@ function renderAdminLiveDashboard() {
       }).join('');
     }
   }
+
+  // 6. Módulos Bento Grid: Mini Calendario y Feed de Actividad en Vivo
+  initBentoMiniCalendar();
+  renderBentoSideFeed();
+}
+
+function initBentoMiniCalendar() {
+  const grid = document.getElementById('miniCalendarGrid');
+  if (!grid) return;
+  const daysHeader = `
+    <span class="cal-day-name">L</span>
+    <span class="cal-day-name">M</span>
+    <span class="cal-day-name">M</span>
+    <span class="cal-day-name">J</span>
+    <span class="cal-day-name">V</span>
+    <span class="cal-day-name">S</span>
+    <span class="cal-day-name">D</span>
+  `;
+  let html = daysHeader;
+  for (let i = 1; i < 7; i++) {
+    html += `<span class="cal-day-cell cal-empty" style="opacity: 0.2;">•</span>`;
+  }
+  const matchDays = [3, 7, 10, 14, 16, 17, 21, 24, 28];
+  const today = 16;
+  for (let d = 1; d <= 30; d++) {
+    const isToday = d === today ? 'today' : '';
+    const hasMatch = matchDays.includes(d) ? 'has-match' : '';
+    html += `<span class="cal-day-cell ${isToday} ${hasMatch}" title="Jornada ${d} de Noviembre">${d}</span>`;
+  }
+  grid.innerHTML = html;
+}
+
+function renderBentoSideFeed() {
+  const feedEl = document.getElementById('sideLiveFeedList');
+  if (!feedEl) return;
+  feedEl.innerHTML = `
+    <div class="side-feed-item">
+      <span class="side-feed-icon">📝</span>
+      <div><strong style="color:#a5f3fc;">Atlético Bogotá FC</strong> postuló plantilla oficial con 18 jugadores.<br><small style="color:#94a3b8">Hace 8 min • Verificado</small></div>
+    </div>
+    <div class="side-feed-item">
+      <span class="side-feed-icon">⚽</span>
+      <div><strong style="color:#ffffff;">Real Madrid 3 - 2 Man. City</strong> acta de partido finalizada.<br><small style="color:#10b981">Hace 22 min • 3 puntos sumados</small></div>
+    </div>
+    <div class="side-feed-item">
+      <span class="side-feed-icon">⚖️</span>
+      <div>Paz y Salvo Disciplinario emitido para <strong style="color:#34d399;">Deportivo Cali</strong>.<br><small style="color:#94a3b8">Hace 45 min • Mesa de Control</small></div>
+    </div>
+    <div class="side-feed-item">
+      <span class="side-feed-icon">🏟️</span>
+      <div>Cancha Central Salitre reservada para <strong style="color:#a5f3fc;">Jornada 7</strong>.<br><small style="color:#94a3b8">Hoy 14:00 • Programación</small></div>
+    </div>
+  `;
 }
 
 function renderAdminView() {
@@ -5687,7 +5740,7 @@ function renderAdminView() {
     const activeSubtab = document.querySelector('.admin-subtab-btn.active') || document.getElementById('btnAdminSubtabOverview');
     if (activeSubtab) {
       const paneId = activeSubtab.getAttribute('data-subtab');
-      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b === activeSubtab));
+      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === paneId));
       document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
     }
   }
@@ -15166,10 +15219,10 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.admin-subtab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetSubtab = btn.getAttribute('data-subtab');
-      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-subtab-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab);
+      });
       document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.remove('active'));
-
-      btn.classList.add('active');
       const pane = document.getElementById(targetSubtab);
       if (pane) pane.classList.add('active');
 
