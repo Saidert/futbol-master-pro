@@ -17064,8 +17064,11 @@ header.global-spa-header .header-brand,
    ----------------------------------------------------------------------------- */
 .dashboard-splash-overlay {
   position: fixed !important;
-  inset: 0 !important;
-  z-index: 99998 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999999 !important;
   background: #081e22 !important;
   display: flex !important;
   align-items: center !important;
@@ -17141,8 +17144,8 @@ header.global-spa-header .header-brand,
 }
 
 @keyframes dashboardExpand {
-  0% { transform: scale(0.90); opacity: 0; filter: blur(8px); border-radius: 36px; }
-  100% { transform: scale(1); opacity: 1; filter: blur(0px); border-radius: 24px; }
+  0% { opacity: 0; filter: blur(12px); transform: translateY(12px); }
+  100% { opacity: 1; filter: blur(0px); transform: translateY(0px); }
 }
 
 .admin-panel-container.entrance-expanding {

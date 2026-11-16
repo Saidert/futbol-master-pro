@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_v22_fullscreen">
+  <link rel="stylesheet" href="styles.css?v=20261116_v22_dock_final">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -123,6 +123,20 @@
   </script>
 </head>
 <body class="role-guest not-logged-in" data-route="home">
+
+  <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
+    <div class="dashboard-splash-overlay" id="dashboardSplashOverlay">
+      <div class="splash-center-content" id="splashCenterContent">
+        <div class="splash-icon-box" id="splashIconBox">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="12 6 15 10 13 15 11 15 9 10 12 6"></polygon>
+          </svg>
+        </div>
+        <h2 class="splash-title" id="splashTitle">Fútbol Master Pro • Control Center</h2>
+        <p class="splash-subtitle" id="splashSubtitle">Iniciando telemetría oficial FCF...</p>
+      </div>
+    </div>
   <!-- SVG Filter Gooey para Simulación Global de Mercurio / Física Líquida -->
   <svg class="svg-filter-hidden" aria-hidden="true" style="position: absolute; width: 0; height: 0; pointer-events: none;">
     <defs>
@@ -3460,20 +3474,6 @@
   <!-- VISTA 10: PANEL DE ADMINISTRACIÓN GENERAL Y AUDITORÍA -->
   <section id="view-admin" class="spa-view">
 
-    <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
-    <div class="dashboard-splash-overlay" id="dashboardSplashOverlay">
-      <div class="splash-center-content" id="splashCenterContent">
-        <div class="splash-icon-box" id="splashIconBox">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polygon points="12 6 15 10 13 15 11 15 9 10 12 6"></polygon>
-          </svg>
-        </div>
-        <h2 class="splash-title" id="splashTitle">Fútbol Master Pro • Control Center</h2>
-        <p class="splash-subtitle" id="splashSubtitle">Iniciando telemetría oficial FCF...</p>
-      </div>
-    </div>
-
     <div class="admin-panel-container">
       <div class="admin-bento-layout">
         <!-- 1. PILL SIDEBAR FLOTANTE VERTICAL (Capsule 52px + Top Logo 48px + Sliding Indicator) -->
@@ -6301,7 +6301,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_v22_fullscreen"></script>
+  <script src="app.js?v=20261116_v22_dock_final"></script>
 </body>
 </html>
 

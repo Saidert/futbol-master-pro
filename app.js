@@ -3922,10 +3922,10 @@ function navigateToView(targetRoute, updateHash = true) {
   }
   let routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
 
-  // Modo Exclusivo de Admin: No salir del Dashboard general #/admin
+  // Modo Exclusivo de Admin: Permitir admin, crear y home
   const sessionCheck = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   if (sessionCheck && sessionCheck.loggedIn && normalizeRole(sessionCheck.role) === 'admin') {
-    if (routeId !== 'admin' && routeId !== 'crear') {
+    if (routeId !== 'admin' && routeId !== 'crear' && routeId !== 'home') {
       routeId = 'admin';
     }
   }
@@ -4071,8 +4071,8 @@ function navigateToView(targetRoute, updateHash = true) {
     renderSolicitudesView();
   }
 
-  // Desplazamiento suave al tope de página
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  // Desplazamiento instantáneo al tope de página
+  window.scrollTo(0, 0);
 }
 
 /**
@@ -5484,49 +5484,85 @@ function renderAdminProfileTab() {
 }
 window.renderAdminProfileTab = renderAdminProfileTab;
 
+let isDashboardEntranceRunning = false;
+
 function runDashboardEntranceSequence() {
+  if (isDashboardEntranceRunning) return;
+
   const overlay = document.getElementById('dashboardSplashOverlay');
   const splashContent = document.getElementById('splashCenterContent');
   const splashIcon = document.getElementById('splashIconBox');
   const container = document.querySelector('.admin-panel-container');
 
   if (!overlay) return;
+  isDashboardEntranceRunning = true;
 
-  // Fase 1: Splash screen visible con pulso luminoso (0.0s - 1.1s)
+  // Asegurar desplazamiento instantáneo al tope (0, 0)
+  try {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  } catch (e) {
+    window.scrollTo(0, 0);
+  }
+
+  // Medir posición de destino (#pillSidebarTopLogo) en reposo ANTES de cualquier animación
+  const topLogo = document.getElementById('pillSidebarTopLogo');
+  let targetX = 35;
+  let targetY = 104;
+  let scaleFactor = 48 / 76; // ~0.632
+
+  if (topLogo) {
+    const tr = topLogo.getBoundingClientRect();
+    if (tr.width > 0 && tr.left >= 0 && tr.top > 0) {
+      targetX = tr.left + tr.width / 2;
+      targetY = tr.top + tr.height / 2;
+      scaleFactor = tr.width / 76;
+    }
+  }
+
+  // Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.2s)
   overlay.style.display = 'flex';
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
   if (splashIcon) {
     splashIcon.classList.remove('morphing-to-dock');
-    splashIcon.style.transform = '';
+    splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
   }
 
-  // A los 1.1s: inicio de morph dinámico con cálculo exacto hacia el Pill Dock
+  // A los 1.2s: Morph cinematográfico hacia el botón superior del Pill Sidebar (Foto 2)
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
 
     if (splashIcon) {
-      const topLogo = document.getElementById('pillSidebarTopLogo');
+      // Re-verificar si topLogo está visible y estable
       if (topLogo) {
-        const targetRect = topLogo.getBoundingClientRect();
-        const iconRect = splashIcon.getBoundingClientRect();
-        const dx = (targetRect.left + targetRect.width / 2) - (iconRect.left + iconRect.width / 2);
-        const dy = (targetRect.top + targetRect.height / 2) - (iconRect.top + iconRect.height / 2);
-        splashIcon.style.transform = `translate(${dx}px, ${dy}px) scale(0.63)`;
-      } else {
-        splashIcon.classList.add('morphing-to-dock');
+        const tr = topLogo.getBoundingClientRect();
+        if (tr.width > 0 && tr.left >= 0 && tr.top > 0) {
+          targetX = tr.left + tr.width / 2;
+          targetY = tr.top + tr.height / 2;
+          scaleFactor = tr.width / 76;
+        }
       }
+
+      const iconRect = splashIcon.getBoundingClientRect();
+      const currentCenterX = iconRect.left + iconRect.width / 2;
+      const currentCenterY = iconRect.top + iconRect.height / 2;
+
+      // Calcular vector de traslación exacto
+      const dx = targetX - currentCenterX;
+      const dy = targetY - currentCenterY;
+
+      splashIcon.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${scaleFactor.toFixed(3)})`;
     }
 
     if (container) container.classList.add('entrance-expanding');
-  }, 1100);
+  }, 1200);
 
-  // A los 1.95s: ocultar splash overlay y entrar en Fase 2 (Shimmer Skeleton durante 0.8s)
+  // A los 2.2s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
   setTimeout(() => {
     overlay.classList.add('is-hidden');
-    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+    setTimeout(() => { overlay.style.display = 'none'; }, 450);
 
-    // Fase 2: Shimmer Skeleton en tarjetas (0.8s)
+    // Fase 2: Shimmer Skeleton en tarjetas (0.9s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
     if (activePane) {
       activePane.classList.add('is-micro-skeleton');
@@ -5537,9 +5573,14 @@ function runDashboardEntranceSequence() {
         // Fase 3: Count-up cinematográfico de 1400ms & crecimiento elástico de barras
         animateAllCountUps(activePane, 1400);
         animateAllBars(activePane);
-      }, 800);
+      }, 900);
     }
-  }, 1950);
+
+    // Liberar bloqueo de entrada tras completar la coreografía
+    setTimeout(() => {
+      isDashboardEntranceRunning = false;
+    }, 1500);
+  }, 2200);
 }
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
 
