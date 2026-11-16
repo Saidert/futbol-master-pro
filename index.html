@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_unified_glass">
+  <link rel="stylesheet" href="styles.css?v=20261116_fields_glass">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -4769,9 +4769,9 @@
 
               <div class="form-group">
                 <label for="regPhone">Teléfono Móvil (Colombia) *</label>
-                <div class="auth-input-wrapper" style="position: relative;">
-                  <span class="phone-prefix-tag" style="position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); font-weight: 800; color: #10b981; font-size: 0.85rem;">+57</span>
-                  <input type="tel" id="regPhone" placeholder="310 123 4567" pattern="[0-9]{10}" title="10 dígitos del celular en Colombia" required style="padding-left: 3.2rem;">
+                <div class="auth-input-wrapper">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <input type="tel" id="regPhone" placeholder="+57 310 123 4567" pattern="[0-9+ ]{10,15}" title="Número de celular en Colombia" required>
                 </div>
               </div>
             </div>
@@ -4779,28 +4779,40 @@
             <div class="form-row-2col">
               <div class="form-group">
                 <label for="regRole">Rol Principal *</label>
-                <select id="regRole" class="auth-select" required>
-                  <option value="organizer" selected>Organizador de Torneo (Crear y administrar)</option>
-                  <option value="coach">Director Técnico / Delegado (Inscribir equipos)</option>
-                  <option value="fan">Aficionado / Visitante (Consultar resultados)</option>
-                </select>
+                <div class="auth-input-wrapper">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                  <select id="regRole" class="auth-select" required>
+                    <option value="organizer" selected>Organizador de Torneo</option>
+                    <option value="coach">Director Técnico / Delegado</option>
+                    <option value="fan">Aficionado / Visitante</option>
+                  </select>
+                </div>
               </div>
 
               <div class="form-group" id="groupClubName">
                 <label for="regClubName">Nombre de Club / Entidad</label>
-                <input type="text" id="regClubName" class="auth-plain-input" placeholder="Ej: Real Bogotá FC">
+                <div class="auth-input-wrapper">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <input type="text" id="regClubName" placeholder="Ej: Real Bogotá FC">
+                </div>
               </div>
             </div>
 
             <div class="form-row-2col">
               <div class="form-group">
                 <label for="regPassword">Contraseña *</label>
-                <input type="password" id="regPassword" class="auth-plain-input" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                <div class="auth-input-wrapper">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
+                </div>
               </div>
 
               <div class="form-group">
                 <label for="regPasswordConfirm">Confirmar Contraseña *</label>
-                <input type="password" id="regPasswordConfirm" class="auth-plain-input" placeholder="Repite contraseña" minlength="6" required>
+                <div class="auth-input-wrapper">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <input type="password" id="regPasswordConfirm" placeholder="Repite contraseña" minlength="6" required>
+                </div>
               </div>
             </div>
 
@@ -5586,7 +5598,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_unified_glass"></script>
+  <script src="app.js?v=20261116_fields_glass"></script>
 </body>
 </html>
 
