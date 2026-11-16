@@ -5376,14 +5376,14 @@ function useCountUp(el, targetValue, duration = 900, decimals = 0, prefix = '', 
 }
 window.useCountUp = useCountUp;
 
-function animateAllCountUps(container = document) {
+function animateAllCountUps(container = document, duration = 1400) {
   const elements = container.querySelectorAll('.count-up');
   elements.forEach(el => {
     const target = el.dataset.target || el.textContent.replace(/[^0-9.]/g, '') || 0;
     const decimals = parseInt(el.dataset.decimals || '0', 10);
     const prefix = el.dataset.prefix || '';
     const suffix = el.dataset.suffix || '';
-    useCountUp(el, target, 900, decimals, prefix, suffix);
+    useCountUp(el, target, duration, decimals, prefix, suffix);
   });
 }
 window.animateAllCountUps = animateAllCountUps;
@@ -5492,25 +5492,41 @@ function runDashboardEntranceSequence() {
 
   if (!overlay) return;
 
-  // Fase 1: Splash screen & morph
+  // Fase 1: Splash screen visible con pulso luminoso (0.0s - 1.1s)
   overlay.style.display = 'flex';
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
-  if (splashIcon) splashIcon.classList.remove('morphing-to-dock');
+  if (splashIcon) {
+    splashIcon.classList.remove('morphing-to-dock');
+    splashIcon.style.transform = '';
+  }
 
-  // A los 0.5s: morph de logo y fadeout de subtítulo
+  // A los 1.1s: inicio de morph dinámico con cálculo exacto hacia el Pill Dock
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
-    if (splashIcon) splashIcon.classList.add('morphing-to-dock');
-    if (container) container.classList.add('entrance-expanding');
-  }, 500);
 
-  // A los 0.7s: ocultar splash overlay y entrar a Fase 2 (shimmer)
+    if (splashIcon) {
+      const topLogo = document.getElementById('pillSidebarTopLogo');
+      if (topLogo) {
+        const targetRect = topLogo.getBoundingClientRect();
+        const iconRect = splashIcon.getBoundingClientRect();
+        const dx = (targetRect.left + targetRect.width / 2) - (iconRect.left + iconRect.width / 2);
+        const dy = (targetRect.top + targetRect.height / 2) - (iconRect.top + iconRect.height / 2);
+        splashIcon.style.transform = `translate(${dx}px, ${dy}px) scale(0.63)`;
+      } else {
+        splashIcon.classList.add('morphing-to-dock');
+      }
+    }
+
+    if (container) container.classList.add('entrance-expanding');
+  }, 1100);
+
+  // A los 1.95s: ocultar splash overlay y entrar en Fase 2 (Shimmer Skeleton durante 0.8s)
   setTimeout(() => {
     overlay.classList.add('is-hidden');
-    setTimeout(() => { overlay.style.display = 'none'; }, 350);
+    setTimeout(() => { overlay.style.display = 'none'; }, 400);
 
-    // Fase 2: Shimmer skeleton (0.45s)
+    // Fase 2: Shimmer Skeleton en tarjetas (0.8s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
     if (activePane) {
       activePane.classList.add('is-micro-skeleton');
@@ -5518,12 +5534,12 @@ function runDashboardEntranceSequence() {
         activePane.classList.remove('is-micro-skeleton');
         activePane.classList.add('fade-stagger-in');
 
-        // Fase 3: Count-up & crecimiento de barras
-        animateAllCountUps(activePane);
+        // Fase 3: Count-up cinematográfico de 1400ms & crecimiento elástico de barras
+        animateAllCountUps(activePane, 1400);
         animateAllBars(activePane);
-      }, 450);
+      }, 800);
     }
-  }, 700);
+  }, 1950);
 }
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
 
