@@ -4459,7 +4459,6 @@ function renderHomeView() {
       });
     }
   }
-}
 
 /**
  * Renderiza la Vista "Mis Torneos" con tarjetas interactivas de cada torneo guardado en FMPStore

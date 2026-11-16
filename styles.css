@@ -148,14 +148,14 @@ body, main, .mercury-global-stage {
 .stage .blob {
   position: absolute !important;
   border-radius: 50% !important;
-  filter: blur(28px) !important;
-  opacity: 0.65 !important; /* Luminoso y vibrante sobre el Cyan Abisal */
+  filter: blur(18px) !important;
+  opacity: 0.6 !important; /* Luminoso y vibrante sobre el Cyan Abisal sin saturar */
   pointer-events: none !important;
   will-change: transform, opacity !important;
-  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.5), 0 0 65px rgba(30, 193, 203, 0.5) !important;
+  box-shadow: inset -6px -6px 16px rgba(0, 0, 0, 0.45), 0 0 45px rgba(30, 193, 203, 0.45) !important;
 }
 
-/* 6 Blobs con Trayectorias Autónomas Desfasadas y Gradientes Cyan Liquid Glass */
+/* 9 Blobs Compactos con Trayectorias Autónomas Desfasadas y Gradientes Cyan Liquid Glass */
 .mercury-blob.blob-1,
 .mercury-blob:nth-child(1) {
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(30, 193, 203, 0.75) 40%, rgba(4, 16, 20, 0.85) 100%) !important;
@@ -196,6 +196,27 @@ body, main, .mercury-global-stage {
   background: radial-gradient(circle at 30% 30%, rgba(165, 243, 252, 0.95) 0%, rgba(14, 165, 233, 0.7) 45%, rgba(4, 16, 20, 0.88) 100%) !important;
   animation: floatBlob6 21s infinite alternate ease-in-out, pulseBlob 17s infinite alternate ease-in-out !important;
   animation-delay: -18s, -6s !important;
+}
+
+.mercury-blob.blob-7,
+.mercury-blob:nth-child(7) {
+  background: radial-gradient(circle at 35% 35%, rgba(165, 243, 252, 0.95) 0%, rgba(30, 193, 203, 0.72) 40%, rgba(4, 16, 20, 0.88) 100%) !important;
+  animation: floatBlob7 25s infinite alternate ease-in-out, pulseBlob 15s infinite alternate ease-in-out !important;
+  animation-delay: -10s, -3s !important;
+}
+
+.mercury-blob.blob-8,
+.mercury-blob:nth-child(8) {
+  background: radial-gradient(circle at 40% 30%, rgba(204, 251, 241, 0.95) 0%, rgba(16, 185, 129, 0.68) 45%, rgba(4, 16, 20, 0.88) 100%) !important;
+  animation: floatBlob8 23s infinite alternate ease-in-out, pulseBlob 19s infinite alternate ease-in-out !important;
+  animation-delay: -14s, -7s !important;
+}
+
+.mercury-blob.blob-9,
+.mercury-blob:nth-child(9) {
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.92) 0%, rgba(30, 193, 203, 0.7) 40%, rgba(14, 165, 233, 0.5) 70%, rgba(4, 16, 20, 0.9) 100%) !important;
+  animation: floatBlob9 27s infinite alternate ease-in-out, pulseBlob 16s infinite alternate ease-in-out !important;
+  animation-delay: -5s, -12s !important;
 }
 
 /* Keyframes de Movimiento Autónomo Continuo en Múltiples Ejes */
@@ -255,10 +276,34 @@ body, main, .mercury-global-stage {
   100% { transform: translate(14vw, -6vh) scale(1); }
 }
 
+@keyframes floatBlob7 {
+  0%   { transform: translate(0vw, 0vh) scale(1); }
+  25%  { transform: translate(10vw, -12vh) scale(1.15); }
+  50%  { transform: translate(-12vw, 14vh) scale(0.9); }
+  75%  { transform: translate(8vw, 8vh) scale(1.1); }
+  100% { transform: translate(-8vw, -10vh) scale(0.95); }
+}
+
+@keyframes floatBlob8 {
+  0%   { transform: translate(0vw, 0vh) scale(1.05); }
+  25%  { transform: translate(-12vw, 10vh) scale(0.9); }
+  50%  { transform: translate(14vw, -12vh) scale(1.18); }
+  75%  { transform: translate(-8vw, -10vh) scale(1.02); }
+  100% { transform: translate(10vw, 8vh) scale(0.92); }
+}
+
+@keyframes floatBlob9 {
+  0%   { transform: translate(0vw, 0vh) scale(0.95); }
+  25%  { transform: translate(14vw, 12vh) scale(1.2); }
+  50%  { transform: translate(-10vw, -14vh) scale(0.88); }
+  75%  { transform: translate(12vw, -8vh) scale(1.1); }
+  100% { transform: translate(-12vw, 10vh) scale(1.02); }
+}
+
 @keyframes pulseBlob {
-  0%   { opacity: 0.52; filter: blur(28px); }
-  50%  { opacity: 0.78; filter: blur(34px); }
-  100% { opacity: 0.58; filter: blur(26px); }
+  0%   { opacity: 0.52; filter: blur(18px); }
+  50%  { opacity: 0.76; filter: blur(24px); }
+  100% { opacity: 0.58; filter: blur(18px); }
 }
 
 @keyframes floatMercuryLive {
