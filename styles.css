@@ -7259,9 +7259,9 @@ body.public-mode-active .btn-ghost-sm#btnTogglePublicMode {
    ========================================================================== */
 
 :root {
-  --bg-inner: #0b8a78;
-  --bg-mid: #044e3b;
-  --bg-outer: #011411;
+  --bg-inner: #061914;
+  --bg-mid: #030b09;
+  --bg-outer: #020605;
   --font-bebas: 'Bebas Neue', sans-serif;
   --font-galada: 'Galada', cursive;
   --font-manrope: 'Manrope', sans-serif;
@@ -7273,17 +7273,23 @@ body.public-mode-active .btn-ghost-sm#btnTogglePublicMode {
   --accent-blue-glow: rgba(59, 130, 246, 0.4);
 }
 
-body {
-  background: radial-gradient(circle at 50% 35%, var(--bg-inner) 0%, var(--bg-mid) 42%, var(--bg-outer) 92%) !important;
+body, main {
+  background-color: #040b09 !important;
+  background-image: 
+    radial-gradient(circle at 20% 25%, rgba(16, 185, 129, 0.25) 0%, transparent 40%),
+    radial-gradient(circle at 80% 60%, rgba(52, 211, 153, 0.18) 0%, transparent 45%),
+    radial-gradient(circle at 40% 85%, rgba(6, 182, 212, 0.12) 0%, transparent 40%) !important;
   background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
   transition: background 0.8s ease;
   overflow-x: hidden;
 }
 
 body.blue-theme {
-  --bg-inner: #0b4f8a;
-  --bg-mid: #04294e;
-  --bg-outer: #010c14;
+  --bg-inner: #04121e;
+  --bg-mid: #020912;
+  --bg-outer: #01050a;
 }
 
 /* Contenedor de Burbujas Ascendentes Football */
@@ -14362,13 +14368,17 @@ body.role-organizer .btn-create-header {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: rgba(4, 10, 16, 0.72) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
-  border-radius: 16px !important;
-  padding: 0.75rem 0.5rem !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+  border-radius: 18px !important;
+  padding: 0.75rem 0.65rem !important;
   margin: 0.85rem 0 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
 }
 
 /* Cada columna de métrica: NADA de círculos, fondos oscuros ni bordes circulares */
@@ -14397,7 +14407,7 @@ body.role-organizer .btn-create-header {
   top: 15% !important;
   height: 70% !important;
   width: 1px !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
   border-radius: 0 !important;
   border: none !important;
 }
@@ -14408,10 +14418,11 @@ body.role-organizer .btn-create-header {
   border-radius: 0 !important;
   box-shadow: none !important;
   font-size: 1.05rem !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   color: #ffffff !important;
   line-height: 1.2 !important;
   letter-spacing: -0.015em !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
 }
 
 .recent-stats-row .stat-mini-lbl {
@@ -14422,7 +14433,7 @@ body.role-organizer .btn-create-header {
   font-size: 0.68rem !important;
   color: #94a3b8 !important;
   text-transform: uppercase !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   letter-spacing: 0.05em !important;
   margin-top: 0.2rem !important;
 }
@@ -14432,13 +14443,17 @@ body.role-organizer .btn-create-header {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: rgba(4, 10, 16, 0.72) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
-  border-radius: 16px !important;
-  padding: 0.75rem 0.5rem !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+  border-radius: 18px !important;
+  padding: 0.75rem 0.65rem !important;
   margin: 0.85rem 0 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
 }
 
 .t-card-stats-grid .t-mini-stat {
@@ -14465,7 +14480,7 @@ body.role-organizer .btn-create-header {
   top: 15% !important;
   height: 70% !important;
   width: 1px !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.14) !important;
   border-radius: 0 !important;
   border: none !important;
 }
@@ -14475,9 +14490,10 @@ body.role-organizer .btn-create-header {
   border: none !important;
   border-radius: 0 !important;
   font-size: 1.05rem !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
   color: #ffffff !important;
   line-height: 1.2 !important;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5) !important;
 }
 
 .t-card-stats-grid .t-stat-lbl {
@@ -14487,7 +14503,7 @@ body.role-organizer .btn-create-header {
   font-size: 0.68rem !important;
   color: #94a3b8 !important;
   text-transform: uppercase !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
   letter-spacing: 0.05em !important;
   margin-top: 0.2rem !important;
 }
@@ -16072,6 +16088,82 @@ body.role-admin #mobileBtnCreateNew {
     0 26px 65px rgba(0, 0, 0, 0.6),
     0 0 25px rgba(16, 185, 129, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+}
+
+/* 5.1 Tarjetas de Alto Impacto Translúcidas Apple visionOS (Liquid Glass Puro) */
+.feature-card,
+.feature-card-item,
+.recent-tournament-card,
+.tournament-card-item {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(16, 185, 129, 0.05) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.38) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease !important;
+}
+
+.feature-card:hover,
+.feature-card-item:hover,
+.recent-tournament-card:hover,
+.tournament-card-item:hover {
+  transform: translateY(-4px) !important;
+  border-top-color: rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 
+    0 28px 65px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(16, 185, 129, 0.18),
+    inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+}
+
+.feature-icon-box {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(59, 130, 246, 0.12) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  color: #34d399 !important;
+}
+
+.feature-card .feature-title,
+.feature-card h3 {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.feature-card .feature-desc,
+.feature-card p {
+  color: #cbd5e1 !important;
+}
+
+.t-card-progress-wrap {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 14px !important;
+  padding: 0.5rem 0.75rem !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12) !important;
+}
+
+.t-progress-bar {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 9999px !important;
+  height: 6px !important;
+  overflow: hidden !important;
+}
+
+.t-progress-fill {
+  background: linear-gradient(90deg, #10b981 0%, #34d399 100%) !important;
+  box-shadow: 0 0 10px rgba(52, 211, 153, 0.6) !important;
 }
 
 /* 6. Subtabs de Navegación Administrador y DT (Pills Suaves) */
