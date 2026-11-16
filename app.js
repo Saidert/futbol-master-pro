@@ -2783,31 +2783,13 @@ function initAuthControls() {
       }
     });
 
-    // Parallax Reactivo al Mouse para el Motor Global de Física Líquida (Mercury / Blobs Parallax)
+    // Fondo con Movimiento Autónomo Continuo 100% CSS (Desacoplado del mouse para fluidez nativa iOS)
     const mercuryBlobs = document.querySelectorAll('.mercury-blob, .stage .blob, .blobs-gooey-layer .blob');
     if (mercuryBlobs.length > 0) {
-      let isRafRunning = false;
-      let lastX = 0;
-      let lastY = 0;
-
-      window.addEventListener('mousemove', (e) => {
-        // Cálculo suave normalizado entre -0.5 y 0.5 respecto al centro de pantalla
-        lastX = (e.clientX / window.innerWidth) - 0.5;
-        lastY = (e.clientY / window.innerHeight) - 0.5;
-
-        if (!isRafRunning) {
-          isRafRunning = true;
-          requestAnimationFrame(() => {
-            mercuryBlobs.forEach((blob, idx) => {
-              // Factor de profundidad diferenciado por blob para sensación tridimensional
-              const depthFactor = (idx + 1) * 24;
-              blob.style.marginLeft = `${lastX * depthFactor}px`;
-              blob.style.marginTop = `${lastY * depthFactor}px`;
-            });
-            isRafRunning = false;
-          });
-        }
-      }, { passive: true });
+      mercuryBlobs.forEach(blob => {
+        blob.style.marginLeft = '0px';
+        blob.style.marginTop = '0px';
+      });
     }
   }
 
@@ -4298,7 +4280,20 @@ function startNewTournamentDraft() {
  */
 function renderHomeView() {
   const d = (typeof dom !== 'undefined' && dom) ? dom : (window.dom || {});
-  const list = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0) ? FMPStore.getTournaments() : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments) && savedTournaments.length > 0) ? savedTournaments : ((typeof DEMO_TOURNAMENTS_SEED !== 'undefined' && Array.isArray(DEMO_TOURNAMENTS_SEED)) ? DEMO_TOURNAMENTS_SEED : []));
+  const rawList = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0)
+    ? FMPStore.getTournaments()
+    : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments) && savedTournaments.length > 0)
+      ? savedTournaments
+      : ((typeof DEMO_TOURNAMENTS_SEED !== 'undefined' && Array.isArray(DEMO_TOURNAMENTS_SEED)) ? DEMO_TOURNAMENTS_SEED : []));
+
+  // Filtrar estrictamente cualquier torneo vacío de relleno o "Torneo Sin Título"
+  const list = rawList.filter(t => {
+    const name = (t.config?.name || t.name || '').trim();
+    const isFiller = !name || name.toLowerCase() === 'torneo sin título' || name.toLowerCase() === 'sin título';
+    const hasData = (Array.isArray(t.teams) && t.teams.length > 0) || (Array.isArray(t.matches) && t.matches.length > 0);
+    return !isFiller && hasData;
+  });
+
   const totalTournaments = list.length;
 
   let totalTeams = 0;
@@ -4351,31 +4346,19 @@ function renderHomeView() {
   if (prevMatches) prevMatches.textContent = displayMatches;
   if (prevGoals) prevGoals.textContent = displayGoals;
 
-  // Renderizar la seccion de torneos recientes conectada a localStorage
+  // Renderizar la seccion de torneos recientes (Ocultar si solo hay borradores sin contenido o vacíos)
   const recentSectionEl = document.getElementById('homeRecentSection');
   if (recentSectionEl) {
-    recentSectionEl.style.display = 'block';
+    recentSectionEl.style.display = list.length > 0 ? 'block' : 'none';
   }
 
   const homeRecentGrid = d.homeRecentGrid || document.getElementById('homeRecentGrid');
-  if (homeRecentGrid) {
-    if (list.length === 0) {
-      homeRecentGrid.innerHTML = `
-        <div class="home-empty-recents-card">
-          <div class="empty-icon-circle">⚽</div>
-          <h3>Todavía no tienes torneos</h3>
-          <p>Crea el primero y empieza a organizar tu competición con fixtures automáticos y tablas de clasificación en tiempo real.</p>
-          <button type="button" class="btn-primary-neon" onclick="startNewTournamentDraft()">
-            <span>🏆 Crear mi primer torneo</span>
-          </button>
-        </div>
-      `;
-    } else {
-      const recentList = [...list].sort((a, b) => {
-        const ta = new Date(a.updatedAt || a.createdAt || 0).getTime();
-        const tb = new Date(b.updatedAt || b.createdAt || 0).getTime();
-        return tb - ta;
-      }).slice(0, 6);
+  if (homeRecentGrid && list.length > 0) {
+    const recentList = [...list].sort((a, b) => {
+      const ta = new Date(a.updatedAt || a.createdAt || 0).getTime();
+      const tb = new Date(b.updatedAt || b.createdAt || 0).getTime();
+      return tb - ta;
+    }).slice(0, 6);
 
       homeRecentGrid.innerHTML = recentList.map(t => {
         const st = t.status || determineTournamentStatus(t.matches);

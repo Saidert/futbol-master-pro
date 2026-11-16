@@ -131,49 +131,116 @@ body {
   position: absolute !important;
   border-radius: 50% !important;
   filter: blur(28px) !important;
-  opacity: 0.62 !important; /* Presencia luminosa óptima sobre el fondo oscuro */
+  opacity: 0.62 !important;
   pointer-events: none !important;
-  will-change: margin, transform !important;
-  transition: margin 0.14s ease-out !important;
-  animation: floatMercuryLive 22s infinite alternate ease-in-out !important;
+  will-change: transform, opacity !important;
   box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 0 0 55px rgba(30, 193, 203, 0.4) !important;
 }
 
-/* 6 Blobs con Gradientes de Mercurio Líquido, Electric Cyan y Esmeralda */
+/* 6 Blobs con Trayectorias Autónomas Desfasadas y Gradientes Cyan Liquid Glass */
 .mercury-blob.blob-1,
 .mercury-blob:nth-child(1) {
   background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.95) 0%, rgba(30, 193, 203, 0.75) 40%, rgba(4, 16, 20, 0.85) 100%) !important;
-  animation-duration: 22s !important;
+  animation: floatBlob1 24s infinite alternate ease-in-out, pulseBlob 14s infinite alternate ease-in-out !important;
+  animation-delay: -3s, -1s !important;
 }
 
 .mercury-blob.blob-2,
 .mercury-blob:nth-child(2) {
   background: radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(16, 185, 129, 0.7) 45%, rgba(4, 16, 20, 0.88) 100%) !important;
-  animation-duration: 18s !important;
+  animation: floatBlob2 20s infinite alternate ease-in-out, pulseBlob 16s infinite alternate ease-in-out !important;
+  animation-delay: -7s, -5s !important;
 }
 
 .mercury-blob.blob-3,
 .mercury-blob:nth-child(3) {
   background: radial-gradient(circle at 30% 35%, rgba(165, 243, 252, 0.95) 0%, rgba(30, 193, 203, 0.75) 50%, rgba(4, 11, 9, 0.9) 100%) !important;
-  animation-duration: 26s !important;
+  animation: floatBlob3 28s infinite alternate ease-in-out, pulseBlob 18s infinite alternate ease-in-out !important;
+  animation-delay: -12s, -9s !important;
 }
 
 .mercury-blob.blob-4,
 .mercury-blob:nth-child(4) {
   background: radial-gradient(circle at 45% 35%, rgba(255, 255, 255, 0.9) 0%, rgba(16, 185, 129, 0.68) 45%, rgba(4, 16, 20, 0.88) 100%) !important;
-  animation-duration: 20s !important;
+  animation: floatBlob4 22s infinite alternate ease-in-out, pulseBlob 15s infinite alternate ease-in-out !important;
+  animation-delay: -15s, -4s !important;
 }
 
 .mercury-blob.blob-5,
 .mercury-blob:nth-child(5) {
   background: radial-gradient(circle at 35% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(30, 193, 203, 0.75) 40%, rgba(16, 185, 129, 0.45) 70%, rgba(4, 11, 9, 0.9) 100%) !important;
-  animation-duration: 24s !important;
+  animation: floatBlob5 26s infinite alternate ease-in-out, pulseBlob 20s infinite alternate ease-in-out !important;
+  animation-delay: -8s, -11s !important;
 }
 
 .mercury-blob.blob-6,
 .mercury-blob:nth-child(6) {
   background: radial-gradient(circle at 30% 30%, rgba(165, 243, 252, 0.95) 0%, rgba(14, 165, 233, 0.7) 45%, rgba(4, 16, 20, 0.88) 100%) !important;
-  animation-duration: 19s !important;
+  animation: floatBlob6 21s infinite alternate ease-in-out, pulseBlob 17s infinite alternate ease-in-out !important;
+  animation-delay: -18s, -6s !important;
+}
+
+/* Keyframes de Movimiento Autónomo Continuo en Múltiples Ejes */
+@keyframes floatBlob {
+  0% { transform: translate(0vw, 0vh) scale(1); }
+  25% { transform: translate(12vw, -15vh) scale(1.25); }
+  50% { transform: translate(-8vw, 18vh) scale(0.85); }
+  75% { transform: translate(15vw, 10vh) scale(1.1); }
+  100% { transform: translate(-10vw, -10vh) scale(1); }
+}
+
+@keyframes floatBlob1 {
+  0%   { transform: translate(0vw, 0vh) scale(1); }
+  25%  { transform: translate(12vw, -15vh) scale(1.22); }
+  50%  { transform: translate(-8vw, 18vh) scale(0.88); }
+  75%  { transform: translate(15vw, 10vh) scale(1.12); }
+  100% { transform: translate(-10vw, -10vh) scale(1); }
+}
+
+@keyframes floatBlob2 {
+  0%   { transform: translate(0vw, 0vh) scale(1.1); }
+  25%  { transform: translate(-14vw, 12vh) scale(0.9); }
+  50%  { transform: translate(10vw, -16vh) scale(1.2); }
+  75%  { transform: translate(-12vw, -8vh) scale(1.05); }
+  100% { transform: translate(8vw, 14vh) scale(0.95); }
+}
+
+@keyframes floatBlob3 {
+  0%   { transform: translate(0vw, 0vh) scale(0.95); }
+  25%  { transform: translate(16vw, -10vh) scale(1.15); }
+  50%  { transform: translate(8vw, 16vh) scale(1.25); }
+  75%  { transform: translate(-14vw, 8vh) scale(0.85); }
+  100% { transform: translate(10vw, -12vh) scale(1.05); }
+}
+
+@keyframes floatBlob4 {
+  0%   { transform: translate(0vw, 0vh) scale(1.05); }
+  25%  { transform: translate(-10vw, -14vh) scale(0.85); }
+  50%  { transform: translate(14vw, -8vh) scale(1.2); }
+  75%  { transform: translate(-8vw, 16vh) scale(0.95); }
+  100% { transform: translate(12vw, 10vh) scale(1.1); }
+}
+
+@keyframes floatBlob5 {
+  0%   { transform: translate(0vw, 0vh) scale(1); }
+  25%  { transform: translate(14vw, 14vh) scale(1.18); }
+  50%  { transform: translate(-12vw, -12vh) scale(0.92); }
+  75%  { transform: translate(8vw, -18vh) scale(1.1); }
+  100% { transform: translate(-15vw, 12vh) scale(1.02); }
+}
+
+@keyframes floatBlob6 {
+  0%   { transform: translate(0vw, 0vh) scale(0.9); }
+  25%  { transform: translate(-16vw, 10vh) scale(1.22); }
+  50%  { transform: translate(12vw, 14vh) scale(0.88); }
+  75%  { transform: translate(-10vw, -16vh) scale(1.15); }
+  100% { transform: translate(14vw, -6vh) scale(1); }
+}
+
+@keyframes pulseBlob {
+  0%   { opacity: 0.55; filter: blur(28px); }
+  50%  { opacity: 0.72; filter: blur(34px); }
+  100% { opacity: 0.58; filter: blur(26px); }
 }
 
 @keyframes floatMercuryLive {
@@ -14277,6 +14344,10 @@ body.role-organizer .btn-create-header {
   box-sizing: border-box !important;
 }
 
+#home-features-section {
+  margin-top: 90px !important;
+}
+
 .home-live-dashboard-card {
   position: relative !important;
   z-index: 1 !important;
@@ -14745,23 +14816,26 @@ body.role-organizer .btn-create-header {
 .step-card,
 .faq-item {
   background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(16, 185, 129, 0.10) 42%,
-    rgba(8, 20, 28, 0.62) 100%
+    135deg,
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(30, 193, 203, 0.18) 50%,
+    rgba(8, 30, 36, 0.3) 100%
   ) !important;
-  backdrop-filter: blur(30px) saturate(195%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(195%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.42) !important;
-  border-left: 1px solid rgba(167, 243, 208, 0.32) !important;
-  border-radius: 26px !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
+  border-radius: 28px !important;
+  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  border-left: 1.5px solid rgba(165, 243, 252, 0.55) !important;
+  border-right: 1px solid rgba(165, 243, 252, 0.18) !important;
+  border-bottom: 1px solid rgba(8, 30, 36, 0.35) !important;
   box-shadow:
-    0 20px 40px -12px rgba(0, 0, 0, 0.5),
-    0 0 24px -6px rgba(16, 185, 129, 0.16),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.38) !important;
+    0 24px 48px rgba(0, 8, 12, 0.55),
+    0 0 30px rgba(30, 193, 203, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.65),
+    inset 0 -10px 25px rgba(30, 193, 203, 0.18) !important;
   padding: 1.75rem !important;
-  transition: transform 0.32s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.32s ease, border-color 0.32s ease !important;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease !important;
 }
 
 .feature-card:hover,
@@ -16387,12 +16461,12 @@ body.role-admin #mobileBtnCreateNew {
 .penalties-section {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(30, 193, 203, 0.22) 45%,
-    rgba(8, 30, 36, 0.35) 100%
+    rgba(255, 255, 255, 0.15) 0%,
+    rgba(30, 193, 203, 0.18) 50%,
+    rgba(8, 30, 36, 0.3) 100%
   ) !important;
-  backdrop-filter: blur(32px) saturate(210%) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.12) !important;
+  backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
   border-radius: 28px !important;
   /* Borde de vidrio iluminado con Cyan hielo arriba y a la izquierda */
   border: 1px solid rgba(165, 243, 252, 0.25) !important;
