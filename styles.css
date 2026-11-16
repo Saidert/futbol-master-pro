@@ -17068,9 +17068,9 @@ header.global-spa-header .header-brand,
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 9999999 !important;
+  z-index: 99998 !important;
   background: #081e22 !important;
-  display: flex !important;
+  display: none !important;
   align-items: center !important;
   justify-content: center !important;
   opacity: 1;
@@ -18639,3 +18639,430 @@ header.global-spa-header .header-brand,
   }
 }
 
+
+
+/* =============================================================================
+   GLASSY LOGIN FORM V3: SCI-FI CHAMFERED GLASS CARD + ESQUINAS HUD
+   ============================================================================= */
+
+/* Wrapper Principal */
+.glassy-v3-wrapper {
+  position: relative !important;
+  width: 440px !important;
+  max-width: 92vw !important;
+  filter: drop-shadow(0 25px 60px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 35px rgba(30, 193, 203, 0.25)) !important;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  margin: auto !important;
+  z-index: 1000 !important;
+}
+
+/* Esquina HUD Superior Izquierda (58px x 58px) */
+.hud-corner-tl {
+  position: absolute !important;
+  top: -10px !important;
+  left: -10px !important;
+  width: 58px !important;
+  height: 58px !important;
+  clip-path: polygon(0 0, 100% 0, 0 100%) !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.45), rgba(14, 165, 233, 0.1)) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.7) !important;
+  border-radius: 10px 0 0 0 !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.4) !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+/* Esquina HUD Inferior Derecha (58px x 58px) */
+.hud-corner-br {
+  position: absolute !important;
+  bottom: -10px !important;
+  right: -10px !important;
+  width: 58px !important;
+  height: 58px !important;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%) !important;
+  background: linear-gradient(315deg, rgba(30, 193, 203, 0.55), rgba(14, 165, 233, 0.15)) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.8) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 0 25px rgba(30, 193, 203, 0.5) !important;
+  pointer-events: none !important;
+  z-index: 20 !important;
+}
+
+/* Marco biselado de 38px con borde luminoso degradado */
+.glassy-v3-frame {
+  background: linear-gradient(135deg, rgba(165, 243, 252, 0.85) 0%, rgba(30, 193, 203, 0.5) 30%, rgba(14, 165, 233, 0.3) 70%, rgba(56, 189, 248, 0.7) 100%) !important;
+  padding: 1.5px !important;
+  clip-path: polygon(0 0, calc(100% - 38px) 0, 100% 38px, 100% 100%, 38px 100%, 0 calc(100% - 38px)) !important;
+  border-radius: 4px !important;
+  transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Placa Principal Biselada */
+.glassy-v3-card {
+  background: linear-gradient(145deg, rgba(12, 28, 38, 0.78) 0%, rgba(6, 16, 24, 0.88) 100%) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  clip-path: polygon(0 0, calc(100% - 37px) 0, 100% 37px, 100% 100%, 37px 100%, 0 calc(100% - 37px)) !important;
+  padding: 2.25rem 2rem 1.85rem 2rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 440px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.75),
+    0 0 35px rgba(30, 193, 203, 0.18),
+    inset 0 1px 2px rgba(255, 255, 255, 0.55),
+    inset 0 0 24px rgba(30, 193, 203, 0.12) !important;
+}
+
+/* Botón de cierre elegante */
+.glassy-v3-close {
+  position: absolute !important;
+  top: 14px !important;
+  right: 22px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(165, 243, 252, 0.2) !important;
+  color: #94a3b8 !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  z-index: 40 !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+}
+.glassy-v3-close:hover {
+  color: #ffffff !important;
+  border-color: #1ec1cb !important;
+  background: rgba(30, 193, 203, 0.2) !important;
+  box-shadow: 0 0 12px rgba(30, 193, 203, 0.4) !important;
+  transform: scale(1.08) !important;
+}
+
+/* Tipografía de Formulario */
+.glassy-v3-title {
+  font-size: 1.65rem !important;
+  font-weight: 800 !important;
+  margin: 0 0 0.45rem 0 !important;
+  letter-spacing: -0.5px !important;
+  color: #ffffff !important;
+}
+.glassy-v3-title .highlight-cyan {
+  background: linear-gradient(90deg, #38bdf8, #1ec1cb) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+.glassy-v3-sub {
+  font-size: 0.85rem !important;
+  color: #94a3b8 !important;
+  margin: 0 0 1.45rem 0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Paneles de Formulario y Animación de Salida (Fase 1) */
+.glassy-form-pane {
+  width: 100% !important;
+  transition: opacity 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+.glassy-form-pane.is-exiting {
+  opacity: 0 !important;
+  transform: scale(0.96) !important;
+  pointer-events: none !important;
+}
+.glassy-form-pane.is-hidden {
+  display: none !important;
+}
+
+/* Entrada en Cascada (Fase 3: @keyframes staggerFadeDown) */
+.glassy-form-pane .stagger-item {
+  opacity: 0;
+  transform: translateY(-8px);
+  animation: staggerFadeDown 0.36s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.glassy-form-pane .stagger-item:nth-child(1) { animation-delay: 0.04s; }
+.glassy-form-pane .stagger-item:nth-child(2) { animation-delay: 0.08s; }
+.glassy-form-pane .stagger-item:nth-child(3) { animation-delay: 0.12s; }
+.glassy-form-pane .stagger-item:nth-child(4) { animation-delay: 0.16s; }
+.glassy-form-pane .stagger-item:nth-child(5) { animation-delay: 0.20s; }
+.glassy-form-pane .stagger-item:nth-child(6) { animation-delay: 0.24s; }
+.glassy-form-pane .stagger-item:nth-child(7) { animation-delay: 0.28s; }
+
+@keyframes staggerFadeDown {
+  0% { opacity: 0; transform: translateY(-8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Inputs de Cristal Oscuro */
+.glassy-input-group {
+  margin-bottom: 1.05rem !important;
+  width: 100% !important;
+}
+.glassy-label {
+  display: block !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  color: #cbd5e1 !important;
+  margin-bottom: 0.35rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+}
+.glassy-input-wrap {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+}
+.glassy-input-wrap svg.icon-left {
+  position: absolute !important;
+  left: 14px !important;
+  color: #38bdf8 !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+.glassy-input {
+  width: 100% !important;
+  padding: 12px 42px 12px 42px !important;
+  background: rgba(6, 18, 26, 0.65) !important;
+  border: 1px solid rgba(165, 243, 252, 0.22) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  outline: none !important;
+  transition: all 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+.glassy-input.no-toggle {
+  padding-right: 14px !important;
+}
+.glassy-input:focus {
+  border-color: #1ec1cb !important;
+  box-shadow: 0 0 14px rgba(30, 193, 203, 0.35) !important;
+  background: rgba(6, 18, 26, 0.85) !important;
+}
+
+/* Corrección Autofill del Navegador */
+.glassy-input:-webkit-autofill,
+.glassy-input:-webkit-autofill:hover,
+.glassy-input:-webkit-autofill:focus,
+.glassy-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #071620 inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+/* Botón de toggle eye para contraseña */
+.btn-toggle-eye {
+  position: absolute !important;
+  right: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  color: #64748b !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.2s ease !important;
+  outline: none !important;
+  z-index: 5 !important;
+}
+.btn-toggle-eye:hover {
+  color: #38bdf8 !important;
+}
+
+/* Fila Auxiliar (Recordarme + Olvidé contraseña) */
+.glassy-aux-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 1.15rem !important;
+  font-size: 0.82rem !important;
+}
+.glassy-checkbox-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  color: #94a3b8 !important;
+}
+.glassy-checkbox-label input[type="checkbox"] {
+  accent-color: #1ec1cb !important;
+  width: 16px !important;
+  height: 16px !important;
+  cursor: pointer !important;
+}
+.auth-link-forgot {
+  color: #38bdf8 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}
+.auth-link-forgot:hover {
+  color: #a5f3fc !important;
+  text-decoration: underline !important;
+}
+
+/* Fila doble de 2 columnas */
+.glassy-two-col-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 12px !important;
+}
+
+/* Selector de Roles Compacto en Píldoras */
+.glassy-role-selector {
+  margin-bottom: 1rem !important;
+  width: 100% !important;
+}
+.role-pills-row {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 8px !important;
+}
+.role-pill-btn {
+  padding: 8px 6px !important;
+  background: rgba(6, 18, 26, 0.65) !important;
+  border: 1px solid rgba(165, 243, 252, 0.2) !important;
+  border-radius: 8px !important;
+  color: #94a3b8 !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.22s ease !important;
+  outline: none !important;
+}
+.role-pill-btn:hover {
+  border-color: rgba(30, 193, 203, 0.4) !important;
+  color: #cbd5e1 !important;
+  background: rgba(14, 165, 233, 0.1) !important;
+}
+.role-pill-btn.active {
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.25), rgba(14, 165, 233, 0.35)) !important;
+  border-color: #1ec1cb !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 12px rgba(30, 193, 203, 0.35) !important;
+}
+
+/* Botón Principal Luminoso Cyan / Azul Eléctrico */
+.glassy-btn-submit {
+  width: 100% !important;
+  padding: 13px !important;
+  border: none !important;
+  border-radius: 10px !important;
+  background: linear-gradient(90deg, #0EA5E9 0%, #1EC1CB 50%, #38BDF8 100%) !important;
+  color: #041014 !important;
+  font-weight: 800 !important;
+  font-size: 0.98rem !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 24px rgba(30, 193, 203, 0.5) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  transition: all 0.25s ease !important;
+  outline: none !important;
+}
+.glassy-btn-submit:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 0 32px rgba(30, 193, 203, 0.7) !important;
+}
+.glassy-btn-submit:active {
+  transform: translateY(1px) !important;
+}
+
+/* Pie de Formulario y Switch */
+.glassy-footer-switch {
+  margin-top: 1.25rem !important;
+  text-align: center !important;
+}
+.glassy-divider {
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent 0%, rgba(165, 243, 252, 0.2) 50%, transparent 100%) !important;
+  margin-bottom: 1rem !important;
+}
+.switch-text {
+  font-size: 0.85rem !important;
+  color: #94a3b8 !important;
+  margin: 0 !important;
+}
+.btn-auth-switch {
+  background: transparent !important;
+  border: none !important;
+  color: #38bdf8 !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  padding: 0 4px !important;
+  text-decoration: underline !important;
+  transition: color 0.2s ease !important;
+}
+.btn-auth-switch:hover {
+  color: #a5f3fc !important;
+}
+
+/* Fase 2: Badge Central de Cristal con Giro y Destello */
+.glassy-morph-badge {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 25 !important;
+  pointer-events: none !important;
+  display: none;
+}
+.glassy-morph-badge.active {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: badgePulseRotate 0.32s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+.badge-cube {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.4), rgba(14, 165, 233, 0.7)) !important;
+  border: 1.5px solid #A5F3FC !important;
+  box-shadow: 0 0 30px rgba(30, 193, 203, 0.6) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+.badge-shimmer {
+  position: absolute !important;
+  inset: -60% !important;
+  background: linear-gradient(45deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%) !important;
+  animation: badgeShimmerSweep 0.32s ease forwards !important;
+}
+@keyframes badgePulseRotate {
+  0% { transform: scale(0.6) rotate(-15deg); opacity: 0; }
+  50% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1.0) rotate(0deg); opacity: 1; }
+}
+@keyframes badgeShimmerSweep {
+  0% { transform: translateX(-100%) translateY(-100%); }
+  100% { transform: translateX(100%) translateY(100%); }
+}
+.glassy-morph-badge.is-exiting {
+  animation: badgeFadeOut 0.18s ease forwards !important;
+}
+@keyframes badgeFadeOut {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0; }
+}

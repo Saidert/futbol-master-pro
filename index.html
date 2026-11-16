@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_v22_dock_final">
+  <link rel="stylesheet" href="styles.css?v=20261116_glassy_v3">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -125,7 +125,7 @@
 <body class="role-guest not-logged-in" data-route="home">
 
   <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
-    <div class="dashboard-splash-overlay" id="dashboardSplashOverlay">
+    <div class="dashboard-splash-overlay" id="dashboardSplashOverlay" style="display: none !important;">
       <div class="splash-center-content" id="splashCenterContent">
         <div class="splash-icon-box" id="splashIconBox">
           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -5392,169 +5392,181 @@
 
   <!-- Modal Elegante de Autenticación Multi-Rol (.glass) (NEURAL ACCESS) -->
   <div class="auth-modal-overlay" id="authModalOverlay" style="display: none !important;">
-    <div class="auth-modal-card glass">
-      <div class="auth-modal-header">
-        <div class="auth-brand-badge">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
-          <span>FÚTBOL MASTER PRO 🇨🇴 // NEURAL ACCESS</span>
-        </div>
-        <button type="button" class="auth-modal-close" id="btnCloseAuthModal" aria-label="Cerrar modal" onclick="if(window.closeAuthModal){closeAuthModal();} var m=document.getElementById('authModalOverlay'); if(m){ m.classList.remove('active'); m.style.setProperty('display','none','important'); m.style.display='none'; } document.body.classList.remove('auth-modal-open');" title="Cerrar ventana">&times;</button>
-      </div>
+    <div class="glassy-v3-wrapper" id="glassyV3Wrapper">
+      <!-- HUD Corner Top-Left -->
+      <div class="hud-corner-tl" aria-hidden="true"></div>
+      <!-- HUD Corner Bottom-Right -->
+      <div class="hud-corner-br" aria-hidden="true"></div>
 
-      <!-- Pestañas de Autenticación -->
-      <div class="auth-modal-tabs" id="authModalTabs">
-        <div class="slide-tabs-cursor" id="authSlideTabsCursor"></div>
-        <button type="button" class="auth-tab-btn active" id="tabBtnLogin" data-tab="auth-login-pane">
-          <span>Iniciar Sesión</span>
-        </button>
-        <button type="button" class="auth-tab-btn" id="tabBtnRegister" data-tab="auth-register-pane">
-          <span>Crear Cuenta</span>
-        </button>
-      </div>
+      <!-- Sci-Fi Chamfered Glass Card Frame -->
+      <div class="glassy-v3-frame" id="glassyV3Frame">
+        <div class="glassy-v3-card" id="glassyV3Card">
+          <!-- Botón de cierre elegante -->
+          <button type="button" class="glassy-v3-close" id="btnCloseAuthModal" aria-label="Cerrar modal" title="Cerrar ventana" onclick="if(window.closeAuthModal){closeAuthModal();}">&times;</button>
 
-      <div class="auth-modal-body">
-        <!-- Panel 1: Iniciar Sesión (Solo Credenciales) -->
-        <div class="auth-tab-pane active" id="auth-login-pane">
-          <p class="auth-modal-sub">Ingresa con tus credenciales registradas para acceder al sistema deportivo:</p>
-
-          <form id="authLoginForm" class="auth-form">
-            <div class="form-group">
-              <label for="authUserName">Correo Electrónico o Usuario</label>
-              <div class="auth-input-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <input type="text" id="authUserName" placeholder="ej: boadasaidert466@gmail.com, usuario@correo.com" required>
-              </div>
+          <!-- Fase 2: Badge Central de Cristal con Giro y Destello Shimmer -->
+          <div class="glassy-morph-badge" id="glassyMorphBadge" aria-hidden="true">
+            <div class="badge-cube">
+              <div class="badge-shimmer"></div>
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#A5F3FC" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="12 6 15 10 13 15 11 15 9 10 12 6"></polygon>
+              </svg>
             </div>
+          </div>
 
-            <div class="form-group">
-              <label for="authUserPassword">Contraseña</label>
-              <div class="auth-input-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                <input type="password" id="authUserPassword" placeholder="••••••••" required>
-              </div>
-            </div>
+          <!-- ==========================================
+               MODO A: "Bienvenido de Nuevo" (Login - Limpio, SIN selector de roles)
+               ========================================== -->
+          <div class="glassy-form-pane" id="auth-login-pane">
+            <h2 class="glassy-v3-title stagger-item">Bienvenido de <span class="highlight-cyan">Nuevo</span></h2>
+            <p class="glassy-v3-sub stagger-item">Ingresa tus credenciales para acceder a Fútbol Master Pro</p>
 
-            <button type="submit" class="btn-primary-neon btn-auth-submit">
-              <span>Ingresar al Sistema</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-            <div class="auth-switch-prompt">
-              <span>¿No tienes cuenta oficial?</span>
-              <button type="button" class="btn-link-switch-tab" onclick="document.getElementById('tabBtnRegister').click()">Crear Cuenta aquí</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Panel 2: Crear Cuenta con Ley 1581 Habeas Data -->
-        <div class="auth-tab-pane" id="auth-register-pane">
-          <p class="auth-modal-sub">Crea tu cuenta oficial en Fútbol Master Pro Colombia para gestionar competiciones o postular a tu club.</p>
-
-          
-
-          <form id="authRegisterForm" class="auth-form">
-            <div class="form-group">
-              <label for="regFullName">Nombre Completo *</label>
-              <div class="auth-input-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <input type="text" id="regFullName" placeholder="Ej: Camilo Andrés Rodríguez" required>
-              </div>
-            </div>
-
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label for="regEmail">Correo Electrónico *</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                  <input type="email" id="regEmail" placeholder="correo@ejemplo.com" required>
+            <form id="authLoginForm" class="auth-form" autocomplete="on">
+              <div class="glassy-input-group stagger-item">
+                <label class="glassy-label" for="authUserName">Correo Electrónico</label>
+                <div class="glassy-input-wrap">
+                  <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <input type="text" id="authUserName" class="glassy-input no-toggle" placeholder="ej: boadasaidert466@gmail.com, usuario@correo.com" required autocomplete="username">
                 </div>
               </div>
 
-              <div class="form-group">
-                <label for="regPhone">Teléfono Móvil (Colombia) *</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                  <input type="tel" id="regPhone" placeholder="+57 310 123 4567" pattern="[0-9+ ]{10,15}" title="Número de celular en Colombia" required>
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label for="regRole">Rol Principal *</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
-                  <select id="regRole" class="auth-select" required>
-                    <option value="" disabled selected hidden>Selecciona tu rol...</option>
-                    <option value="organizer">Organizador</option>
-                    <option value="coach">Director Técnico</option>
-                    <option value="fan">Aficionado</option>
-                  </select>
+              <div class="glassy-input-group stagger-item">
+                <label class="glassy-label" for="authUserPassword">Contraseña</label>
+                <div class="glassy-input-wrap">
+                  <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <input type="password" id="authUserPassword" class="glassy-input" placeholder="••••••••" required autocomplete="current-password">
+                  <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('authUserPassword', this)" title="Mostrar/ocultar contraseña" tabindex="-1">
+                    <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
                 </div>
               </div>
 
-              <div class="form-group" id="groupClubName">
-                <label for="regClubName">Nombre de Club / Entidad</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                  <input type="text" id="regClubName" placeholder="Ej: Real Bogotá FC">
-                </div>
-              </div>
-            </div>
-
-            <div class="form-row-2col">
-              <div class="form-group">
-                <label for="regPassword">Contraseña *</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  <input type="password" id="regPassword" placeholder="Mínimo 6 caracteres" minlength="6" required>
-                </div>
+              <div class="glassy-aux-row stagger-item">
+                <label class="glassy-checkbox-label">
+                  <input type="checkbox" id="authRememberMe" checked>
+                  <span>Recordarme</span>
+                </label>
+                <a href="#" class="auth-link-forgot" onclick="event.preventDefault(); showToast('Para soporte o recuperación: utiliza boadasaidert466@gmail.com o escribe a soporte técnico FMP', 'info', 4500);">¿Olvidaste tu contraseña?</a>
               </div>
 
-              <div class="form-group">
-                <label for="regPasswordConfirm">Confirmar Contraseña *</label>
-                <div class="auth-input-wrapper">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  <input type="password" id="regPasswordConfirm" placeholder="Repite contraseña" minlength="6" required>
+              <button type="submit" class="glassy-btn-submit stagger-item" id="btnSubmitLogin">
+                <span>Iniciar Sesión &rarr;</span>
+              </button>
+
+              <div class="glassy-footer-switch stagger-item">
+                <div class="glassy-divider"></div>
+                <p class="switch-text">¿No tienes una cuenta? <button type="button" class="btn-auth-switch" onclick="switchAuthMode('register')">Regístrate</button></p>
+              </div>
+            </form>
+          </div>
+
+          <!-- ==========================================
+               MODO B: "Crear Cuenta" (Registro)
+               ========================================== -->
+          <div class="glassy-form-pane is-hidden" id="auth-register-pane">
+            <h2 class="glassy-v3-title stagger-item">Crear <span class="highlight-cyan">Cuenta</span></h2>
+            <p class="glassy-v3-sub stagger-item">Regístrate para gestionar tus torneos o tu club</p>
+
+            <form id="authRegisterForm" class="auth-form" autocomplete="on">
+              <input type="hidden" id="regPhone" value="+57 310 123 4567">
+              <input type="hidden" id="regClubName" value="">
+
+              <div class="glassy-input-group stagger-item">
+                <label class="glassy-label" for="regFullName">Nombre Completo</label>
+                <div class="glassy-input-wrap">
+                  <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  <input type="text" id="regFullName" class="glassy-input no-toggle" placeholder="Tu nombre y apellido" required autocomplete="name">
                 </div>
               </div>
-            </div>
 
-            <!-- Checkbox obligatorio Ley 1581 de 2012 (Habeas Data Colombia) -->
-            <div class="habeas-data-card">
-              <label class="habeas-checkbox-label">
-                <input type="checkbox" id="regHabeasData" required>
-                <span class="habeas-text">
-                  <strong>Autorización Ley 1581 de 2012 (Habeas Data Colombia):</strong> Autorizo de manera previa, voluntaria y expresa a Fútbol Master Pro el tratamiento de mis datos personales y de los menores de edad representados conforme al régimen de protección de datos de Colombia para fines deportivos, planillas de juego y auditoría de competición.
-                </span>
-              </label>
-            </div>
-
-            <button type="submit" class="btn-primary-neon btn-auth-submit" style="margin-top: 1.1rem;">
-              <span>Crear Cuenta y Comenzar</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </button>
-            <div class="auth-switch-prompt" style="margin-top: 0.85rem;"><span>¿Ya tienes cuenta registrada?</span> <button type="button" class="btn-link-switch-tab" onclick="document.getElementById('tabBtnLogin').click()">Inicia Sesión</button></div>
-          
-            <!-- Paso Interactivo de Verificación de Correo (Ley 1581) -->
-            <div id="authVerificationStep" class="auth-verification-box" style="display: none; margin-top: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 1rem;">
-              <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                <span style="font-size: 1.25rem;">📬</span>
-                <div>
-                  <h4 style="margin: 0; color: #fff; font-size: 0.92rem;">Verificación de Correo Electrónico</h4>
-                  <p style="margin: 0; color: #94a3b8; font-size: 0.8rem;">Hemos generado un código de seguridad para verificar tu cuenta</p>
+              <div class="glassy-input-group stagger-item">
+                <label class="glassy-label" for="regEmail">Correo Electrónico</label>
+                <div class="glassy-input-wrap">
+                  <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <input type="email" id="regEmail" class="glassy-input no-toggle" placeholder="correo@ejemplo.com" required autocomplete="email">
                 </div>
               </div>
-              <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 0.75rem;" id="verificationHintText">
-                Ingresa el código de 6 dígitos que enviamos a tu correo:
-              </p>
-              <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="text" id="regVerifyCodeInput" placeholder="Código de 6 dígitos" maxlength="6" style="flex: 1; padding: 0.5rem 0.75rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; font-size: 1.1rem; text-align: center; letter-spacing: 3px;">
-                <button type="button" class="btn-primary-neon" id="btnConfirmEmailCode" style="padding: 0.55rem 1rem; font-size: 0.85rem;">
-                  <span>Confirmar y Activar</span>
-                </button>
+
+              <div class="glassy-two-col-row stagger-item">
+                <div class="glassy-input-group">
+                  <label class="glassy-label" for="regPassword">Contraseña</label>
+                  <div class="glassy-input-wrap">
+                    <svg class="icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="regPassword" class="glassy-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                    <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('regPassword', this)" title="Mostrar/ocultar contraseña" tabindex="-1">
+                      <svg class="eye-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="glassy-input-group">
+                  <label class="glassy-label" for="regPasswordConfirm">Confirmar</label>
+                  <div class="glassy-input-wrap">
+                    <svg class="icon-left" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="regPasswordConfirm" class="glassy-input no-toggle" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                  </div>
+                </div>
               </div>
-            </div>
-</form>
+
+              <!-- Selector Compacto de Rol en Píldoras (exclusivo de Crear Cuenta) -->
+              <div class="glassy-role-selector stagger-item">
+                <label class="glassy-label">Tipo de Cuenta</label>
+                <input type="hidden" id="regRole" value="organizer" required>
+                <div class="role-pills-row">
+                  <button type="button" class="role-pill-btn active" data-role="organizer" onclick="selectRegisterRole('organizer')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+                    <span>Organizador</span>
+                  </button>
+                  <button type="button" class="role-pill-btn" data-role="coach" onclick="selectRegisterRole('coach')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                    <span>D. Técnico</span>
+                  </button>
+                  <button type="button" class="role-pill-btn" data-role="fan" onclick="selectRegisterRole('fan')">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <span>Aficionado</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Checkbox Términos y Reglamento -->
+              <div class="glassy-aux-row stagger-item" style="margin-bottom: 0.9rem;">
+                <label class="glassy-checkbox-label">
+                  <input type="checkbox" id="regHabeasData" required checked>
+                  <span style="font-size: 0.78rem;">Acepto los Términos y Reglamento Oficial (Ley 1581)</span>
+                </label>
+              </div>
+
+              <button type="submit" class="glassy-btn-submit stagger-item" id="btnSubmitRegister">
+                <span>Crear Cuenta &rarr;</span>
+              </button>
+
+              <div class="glassy-footer-switch stagger-item">
+                <div class="glassy-divider"></div>
+                <p class="switch-text">¿Ya tienes una cuenta? <button type="button" class="btn-auth-switch" onclick="switchAuthMode('login')">Inicia Sesión</button></p>
+              </div>
+
+              <!-- Paso Interactivo de Verificación de Correo (Ley 1581) -->
+              <div id="authVerificationStep" class="auth-verification-box" style="display: none; margin-top: 1rem; background: rgba(16, 185, 129, 0.12); border: 1px solid #10b981; border-radius: 10px; padding: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                  <span style="font-size: 1.25rem;">📬</span>
+                  <div>
+                    <h4 style="margin: 0; color: #fff; font-size: 0.92rem;">Verificación de Correo Electrónico</h4>
+                    <p style="margin: 0; color: #94a3b8; font-size: 0.8rem;">Hemos generado un código de seguridad para verificar tu cuenta</p>
+                  </div>
+                </div>
+                <p style="font-size: 0.82rem; color: #cbd5e1; margin-bottom: 0.75rem;" id="verificationHintText">
+                  Ingresa el código de 6 dígitos que enviamos a tu correo:
+                </p>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <input type="text" id="regVerifyCodeInput" placeholder="Código de 6 dígitos" maxlength="6" style="flex: 1; padding: 0.5rem 0.75rem; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; font-size: 1.1rem; text-align: center; letter-spacing: 3px;">
+                  <button type="button" class="glassy-btn-submit" id="btnConfirmEmailCode" style="width: auto; padding: 0.55rem 1rem; font-size: 0.85rem; margin: 0;">
+                    <span>Confirmar y Activar</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -6301,7 +6313,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_v22_dock_final"></script>
+  <script src="app.js?v=20261116_glassy_v3"></script>
 </body>
 </html>
 

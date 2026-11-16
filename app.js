@@ -2618,6 +2618,92 @@ function applyRoleGuards(role) {
   });
 }
 
+let isAuthModeSwitching = false;
+
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (btn) {
+      btn.innerHTML = '<svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+    }
+  } else {
+    input.type = 'password';
+    if (btn) {
+      btn.innerHTML = '<svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+    }
+  }
+}
+window.togglePasswordVisibility = togglePasswordVisibility;
+
+function selectRegisterRole(role) {
+  const input = document.getElementById('regRole');
+  if (input) input.value = role;
+  document.querySelectorAll('.role-pill-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('data-role') === role);
+  });
+}
+window.selectRegisterRole = selectRegisterRole;
+
+function switchAuthMode(targetMode) {
+  if (isAuthModeSwitching) return;
+  isAuthModeSwitching = true;
+
+  const paneLogin = document.getElementById('auth-login-pane');
+  const paneRegister = document.getElementById('auth-register-pane');
+  const badge = document.getElementById('glassyMorphBadge');
+
+  if (!paneLogin || !paneRegister) {
+    isAuthModeSwitching = false;
+    return;
+  }
+
+  const isToRegister = (targetMode === 'register' || targetMode === 'auth-register-pane');
+  const currentPane = isToRegister ? paneLogin : paneRegister;
+  const nextPane = isToRegister ? paneRegister : paneLogin;
+
+  // Fase 1: Desvanecimiento del formulario actual (0ms - 180ms)
+  currentPane.classList.add('is-exiting');
+
+  setTimeout(() => {
+    currentPane.classList.add('is-hidden');
+    currentPane.classList.remove('is-exiting');
+
+    // Fase 2: Badge central de cristal con giro y destello (180ms - 480ms)
+    if (badge) {
+      badge.classList.remove('is-exiting');
+      badge.classList.add('active');
+    }
+
+    setTimeout(() => {
+      if (badge) {
+        badge.classList.add('is-exiting');
+      }
+
+      setTimeout(() => {
+        if (badge) {
+          badge.classList.remove('active', 'is-exiting');
+        }
+
+        // Fase 3: Entrada en cascada del nuevo formulario (480ms - 750ms)
+        nextPane.classList.remove('is-hidden');
+        const staggers = nextPane.querySelectorAll('.stagger-item');
+        staggers.forEach(s => {
+          s.style.animation = 'none';
+          void s.offsetHeight; // trigger reflow
+          s.style.animation = '';
+        });
+
+        setTimeout(() => {
+          isAuthModeSwitching = false;
+        }, 300);
+      }, 180);
+    }, 300);
+  }, 180);
+}
+window.switchAuthMode = switchAuthMode;
+
 function openAuthModal(defaultTab = 'auth-login-pane') {
   const modal = document.getElementById('authModalOverlay');
   if (!modal) return;
@@ -2625,30 +2711,33 @@ function openAuthModal(defaultTab = 'auth-login-pane') {
   modal.style.setProperty('display', 'flex', 'important');
   document.body.classList.add('auth-modal-open');
 
-  const tabBtnLogin = document.getElementById('tabBtnLogin');
-  const tabBtnRegister = document.getElementById('tabBtnRegister');
   const paneLogin = document.getElementById('auth-login-pane');
   const paneRegister = document.getElementById('auth-register-pane');
+  const badge = document.getElementById('glassyMorphBadge');
+  if (badge) badge.classList.remove('active', 'is-exiting');
+  isAuthModeSwitching = false;
 
-  if (defaultTab === 'auth-register-pane') {
-    tabBtnRegister?.classList.add('active');
-    tabBtnLogin?.classList.remove('active');
-    paneRegister?.classList.add('active');
-    paneLogin?.classList.remove('active');
+  const isToRegister = (defaultTab === 'auth-register-pane' || defaultTab === 'register');
+  if (isToRegister) {
+    if (paneRegister) {
+      paneRegister.classList.remove('is-hidden', 'is-exiting');
+      paneRegister.querySelectorAll('.stagger-item').forEach(s => {
+        s.style.animation = 'none';
+        void s.offsetHeight;
+        s.style.animation = '';
+      });
+    }
+    if (paneLogin) paneLogin.classList.add('is-hidden');
   } else {
-    tabBtnLogin?.classList.add('active');
-    tabBtnRegister?.classList.remove('active');
-    paneLogin?.classList.add('active');
-    paneRegister?.classList.remove('active');
-  }
-
-  const authTabs = document.getElementById('authModalTabs') || document.querySelector('.auth-modal-tabs');
-  if (authTabs && typeof authTabs._updateSlideCursor === 'function') {
-    requestAnimationFrame(() => {
-      authTabs._updateSlideCursor();
-      setTimeout(authTabs._updateSlideCursor, 30);
-      setTimeout(authTabs._updateSlideCursor, 120);
-    });
+    if (paneLogin) {
+      paneLogin.classList.remove('is-hidden', 'is-exiting');
+      paneLogin.querySelectorAll('.stagger-item').forEach(s => {
+        s.style.animation = 'none';
+        void s.offsetHeight;
+        s.style.animation = '';
+      });
+    }
+    if (paneRegister) paneRegister.classList.add('is-hidden');
   }
 }
 
@@ -2659,6 +2748,9 @@ function closeAuthModal() {
     modal.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('auth-modal-open');
   }
+  const badge = document.getElementById('glassyMorphBadge');
+  if (badge) badge.classList.remove('active', 'is-exiting');
+  isAuthModeSwitching = false;
 }
 
 // Exposición Global Inmediata para Garantizar Clics desde Cualquier Contexto
@@ -5520,7 +5612,7 @@ function runDashboardEntranceSequence() {
   }
 
   // Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.2s)
-  overlay.style.display = 'flex';
+  overlay.style.setProperty('display', 'flex', 'important');
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
   if (splashIcon) {
@@ -5560,7 +5652,7 @@ function runDashboardEntranceSequence() {
   // A los 2.2s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
   setTimeout(() => {
     overlay.classList.add('is-hidden');
-    setTimeout(() => { overlay.style.display = 'none'; }, 450);
+    setTimeout(() => { overlay.style.setProperty('display', 'none', 'important'); }, 450);
 
     // Fase 2: Shimmer Skeleton en tarjetas (0.9s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
