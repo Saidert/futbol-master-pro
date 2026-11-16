@@ -2809,13 +2809,28 @@ function initAuthControls() {
       btn.classList.add('selected');
       const roleKey = btn.getAttribute('data-register-role') || btn.getAttribute('data-demo-role') || 'organizer';
       const regRole = document.getElementById('regRole');
-      if (regRole) regRole.value = roleKey;
-      const roleLabels = { organizer: 'Organizador de Torneo', coach: 'Director Técnico / Delegado', fan: 'Aficionado / Seguidor' };
+      if (regRole) {
+        regRole.value = roleKey;
+        regRole.classList.add('has-value');
+      }
+      const roleLabels = { organizer: 'Organizador', coach: 'Director Técnico', fan: 'Aficionado' };
       if (typeof showToast === 'function') {
         showToast(`Rol de registro seleccionado: ${roleLabels[roleKey] || roleKey}`, 'info', 2000);
       }
     });
   });
+
+  // Sincronizar estilo visual has-value del selector de rol principal
+  const regRoleSelect = document.getElementById('regRole');
+  if (regRoleSelect) {
+    regRoleSelect.addEventListener('change', () => {
+      if (regRoleSelect.value) {
+        regRoleSelect.classList.add('has-value');
+      } else {
+        regRoleSelect.classList.remove('has-value');
+      }
+    });
+  }
 
   // Switcher rápido de Roles dentro del User Dropdown
   document.querySelectorAll('.btn-role-switch').forEach(btn => {
@@ -2935,7 +2950,13 @@ function initAuthControls() {
       const fullName = (document.getElementById('regFullName')?.value || '').trim();
       const email = (document.getElementById('regEmail')?.value || '').trim().toLowerCase();
       const phone = (document.getElementById('regPhone')?.value || '').trim();
-      const role = document.getElementById('regRole')?.value || 'coach';
+      const roleVal = document.getElementById('regRole')?.value;
+      if (!roleVal) {
+        showToast('Por favor selecciona tu rol principal para el registro', 'warning', 3500);
+        document.getElementById('regRole')?.focus();
+        return;
+      }
+      const role = roleVal;
       const clubName = (document.getElementById('regClubName')?.value || '').trim();
       const pass = document.getElementById('regPassword')?.value || '';
       const passConfirm = document.getElementById('regPasswordConfirm')?.value || '';

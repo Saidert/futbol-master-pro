@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_fields_glass">
+  <link rel="stylesheet" href="styles.css?v=20261116_select_perfect">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -4782,9 +4782,10 @@
                 <div class="auth-input-wrapper">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1 .45-1 1v1c0 .55.45 1 1 1h10c.55 0 1-.45 1-1v-1c0-.55-.45-1-1-1h-2c-.55 0-1-.45-1-1v-2.34"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
                   <select id="regRole" class="auth-select" required>
-                    <option value="organizer" selected>Organizador de Torneo</option>
-                    <option value="coach">Director Técnico / Delegado</option>
-                    <option value="fan">Aficionado / Visitante</option>
+                    <option value="" disabled selected hidden>Selecciona tu rol...</option>
+                    <option value="organizer">Organizador</option>
+                    <option value="coach">Director Técnico</option>
+                    <option value="fan">Aficionado</option>
                   </select>
                 </div>
               </div>
@@ -5598,7 +5599,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_fields_glass"></script>
+  <script src="app.js?v=20261116_select_perfect"></script>
 </body>
 </html>
 

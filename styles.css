@@ -15041,11 +15041,37 @@ body.role-organizer .btn-create-header {
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
   background-repeat: no-repeat !important;
-  background-position: right 0.85rem center !important;
-  padding-right: 2.2rem !important;
+  background-position: right 0.75rem center !important;
+  background-size: 10px 10px !important;
+  padding: 0 1.85rem 0 2.35rem !important;
+  font-size: 0.84rem !important;
+  color: #64748b !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
   cursor: pointer !important;
+}
+
+.auth-input-wrapper select.auth-select:valid,
+.auth-input-wrapper select.auth-select.has-value {
+  color: #ffffff !important;
+}
+
+.auth-input-wrapper select.auth-select option {
+  background-color: #0b1c16 !important;
+  color: #ffffff !important;
+  padding: 8px 12px !important;
+}
+
+.auth-input-wrapper select.auth-select option[disabled] {
+  color: #64748b !important;
+}
+
+.auth-input-wrapper input::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
 }
 
 .auth-input-wrapper input:focus,
