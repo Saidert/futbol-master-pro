@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_crisp_legibility">
+  <link rel="stylesheet" href="styles.css?v=20261116_cyan_liquid_glass">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -46,8 +46,14 @@
   </script>
 </head>
 <body class="role-guest not-logged-in" data-route="home">
-    <!-- Fondo de estadio con iluminación de focos -->
-  <div class="stadium-glow-bg"></div>
+  <!-- Fondo Global Cyan Liquid Glass con Esferas 3D Flotantes (visionOS / iOS 18) -->
+  <div class="ios-liquid-bg" aria-hidden="true">
+    <div class="liquid-orb orb-1"></div>
+    <div class="liquid-orb orb-2"></div>
+    <div class="liquid-orb orb-3"></div>
+    <div class="liquid-orb orb-4"></div>
+    <div class="liquid-orb orb-5"></div>
+  </div>
 
   <!-- Banner Modo Espectador (Solo Lectura) -->
   <aside id="publicModeBanner" class="public-mode-banner" style="display: none;">
@@ -5599,7 +5605,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_crisp_legibility"></script>
+  <script src="app.js?v=20261116_cyan_liquid_glass"></script>
 </body>
 </html>
 
