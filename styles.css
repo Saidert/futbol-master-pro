@@ -16526,27 +16526,28 @@ body.role-admin #mobileBtnCreateNew {
 .venue-card-item,
 .club-hero-card,
 .group-card-panel,
-.penalties-section {
+.penalties-section,
+.bento-card-glass,
+.bento-hero-card,
+.bento-stats-grid,
+.bento-table-card,
+.bento-featured-clubs-card,
+.bento-side-card,
+.admin-bento-hero,
+.admin-bento-table-card,
+.admin-bento-sidebar {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.15) 0%,
-    rgba(30, 193, 203, 0.18) 50%,
-    rgba(8, 30, 36, 0.3) 100%
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(30, 193, 203, 0.15) 50%,
+    rgba(10, 35, 42, 0.4) 100%
   ) !important;
-  backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(210%) brightness(1.12) !important;
+  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
   border-radius: 28px !important;
-  /* Borde de vidrio iluminado con Cyan hielo arriba y a la izquierda */
-  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+  border: 1px solid rgba(165, 243, 252, 0.3) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
-  border-left: 1.5px solid rgba(165, 243, 252, 0.55) !important;
-  border-right: 1px solid rgba(165, 243, 252, 0.18) !important;
-  border-bottom: 1px solid rgba(8, 30, 36, 0.35) !important;
-  box-shadow:
-    0 24px 48px rgba(0, 8, 12, 0.55),
-    0 0 30px rgba(30, 193, 203, 0.15),
-    inset 0 1px 2px rgba(255, 255, 255, 0.65),
-    inset 0 -10px 25px rgba(30, 193, 203, 0.18) !important;
+  box-shadow: 0 24px 48px rgba(0, 10, 15, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease !important;
 }
 
@@ -16762,6 +16763,31 @@ header.global-spa-header .header-brand,
 #btnMobileAuth {
   position: relative !important;
   z-index: 99999 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* Elementos Interactivos Globales y del Panel de Administración */
+.admin-subtab-btn,
+.pill-nav-item,
+.pill-nav-btn,
+.pill-sidebar button,
+.admin-bento-layout button,
+.config-form button,
+.config-form input,
+.config-form select,
+.action-btn,
+.btn-primary-neon,
+.btn-hero-create,
+.btn-hero-explore,
+#btnHeroLoadDemo,
+.primary-btn,
+.secondary-btn,
+.btn-ghost-sm,
+.btn-primary-sm,
+.btn-chip {
+  position: relative !important;
+  z-index: 100 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
 }
