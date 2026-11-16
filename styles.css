@@ -14907,13 +14907,18 @@ body.role-organizer .btn-create-header {
   font-size: 0.88rem !important;
   font-weight: 700 !important;
   height: 36px !important;
+  color: #718394 !important;
+}
+
+.auth-modal-tabs .auth-tab-btn.active {
+  color: #ffffff !important;
 }
 
 .auth-modal-sub {
   font-size: 0.82rem !important;
   margin-bottom: 1.15rem !important;
   line-height: 1.45 !important;
-  color: #94a3b8 !important;
+  color: #6b7d8e !important;
 }
 
 /* Espaciado armonioso y proporciones idénticas en Iniciar Sesión y Crear Cuenta */
@@ -14922,34 +14927,12 @@ body.role-organizer .btn-create-header {
 }
 
 .auth-form label {
-  font-size: 0.75rem !important;
+  font-size: 0.74rem !important;
   margin-bottom: 0.35rem !important;
-  color: #cbd5e1 !important;
+  color: #718496 !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
-  letter-spacing: 0.03em !important;
-}
-
-.auth-input-wrapper input,
-.auth-plain-input,
-.auth-select {
-  height: 46px !important;
-  background: rgba(255, 255, 255, 0.07) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.32) !important;
-  border-radius: 14px !important;
-  color: #ffffff !important;
-  font-size: 0.88rem !important;
-  transition: all 0.2s ease !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
-}
-
-.auth-input-wrapper input:focus,
-.auth-plain-input:focus,
-.auth-select:focus {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: #34d399 !important;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  letter-spacing: 0.04em !important;
 }
 
 .btn-auth-submit {
@@ -14965,7 +14948,11 @@ body.role-organizer .btn-create-header {
   margin-top: 1.15rem !important;
   text-align: center !important;
   font-size: 0.82rem !important;
-  color: #94a3b8 !important;
+  color: #6b7d8e !important;
+}
+
+.auth-switch-prompt span {
+  color: #6b7d8e !important;
 }
 
 .btn-link-switch-tab {
@@ -15003,7 +14990,7 @@ body.role-organizer .btn-create-header {
   transform: translateY(-50%) !important;
   width: 16px !important;
   height: 16px !important;
-  color: #94a3b8 !important;
+  color: #556677 !important;
   pointer-events: none !important;
   z-index: 2 !important;
   transition: color 0.2s ease !important;
@@ -15020,34 +15007,38 @@ body.role-organizer .btn-create-header {
   width: 100% !important;
   height: 44px !important;
   padding: 0 0.85rem 0 2.5rem !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.48) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
   border-radius: 14px !important;
   color: #ffffff !important;
   font-size: 0.88rem !important;
   font-family: inherit !important;
   box-sizing: border-box !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.28), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.32), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
+/* Selector con fondo permanente de Liquid Glass + Chevron */
 .auth-input-wrapper select.auth-select {
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 0.75rem center !important;
-  background-size: 10px 10px !important;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-position: right 0.75rem center, 0 0 !important;
+  background-size: 10px 10px, 100% 100% !important;
+  background-color: transparent !important;
   padding: 0 1.85rem 0 2.35rem !important;
   font-size: 0.84rem !important;
-  color: #64748b !important;
+  color: #4a5c6e !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   overflow: hidden !important;
@@ -15066,19 +15057,29 @@ body.role-organizer .btn-create-header {
 }
 
 .auth-input-wrapper select.auth-select option[disabled] {
-  color: #64748b !important;
+  color: #4a5c6e !important;
 }
 
 .auth-input-wrapper input::placeholder {
-  color: #64748b !important;
+  color: #4a5c6e !important;
   opacity: 1 !important;
 }
 
 .auth-input-wrapper input:focus,
-.auth-input-wrapper select:focus,
-.auth-select:focus,
 .auth-plain-input:focus {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+  border-color: #34d399 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
+  outline: none !important;
+}
+
+.auth-input-wrapper select.auth-select:focus {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2334d399' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.28) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-position: right 0.75rem center, 0 0 !important;
+  background-size: 10px 10px, 100% 100% !important;
   border-color: #34d399 !important;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.4) !important;
   outline: none !important;
@@ -15151,7 +15152,7 @@ body.role-organizer .btn-create-header {
 .habeas-text {
   font-size: 0.72rem !important;
   line-height: 1.4 !important;
-  color: #cbd5e1 !important;
+  color: #6b7d8e !important;
 }
 
 .habeas-text strong {
