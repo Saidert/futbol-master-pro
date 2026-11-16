@@ -46,6 +46,18 @@
   --radius-full: 9999px;
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Sistema Apple Liquid Glass (visionOS / iOS) */
+  --ios-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(16, 185, 129, 0.06) 100%);
+  --ios-glass-bg-heavy: linear-gradient(145deg, rgba(18, 32, 27, 0.72) 0%, rgba(8, 16, 14, 0.85) 100%);
+  --ios-glass-border-top: rgba(255, 255, 255, 0.35);
+  --ios-glass-border-side: rgba(255, 255, 255, 0.12);
+  --ios-glass-shadow: 
+    0 20px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35);
+  --ios-blur: blur(28px) saturate(190%);
+  --ios-spring: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Reset y caja */
@@ -15868,4 +15880,256 @@ body.role-admin #mobileBtnCreateNew {
   color: #ffffff !important;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+}
+
+/* ==========================================================================
+   SISTEMA DE DISEÑO APPLE LIQUID GLASS (visionOS / iOS)
+   Translúcido Óptico, Refracción Especular, Bordes Biselados y Curvas Suaves
+   ========================================================================== */
+
+/* 1. Clases Maestras de Cristal Líquido */
+.ios-liquid-glass,
+.glass {
+  background: var(--ios-glass-bg) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+}
+
+.ios-liquid-glass-heavy {
+  background: var(--ios-glass-bg-heavy) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.45) !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+}
+
+/* 2. Cápsula Flotante Central (Dynamic Island / visionOS Pill Nav) */
+.header-nav-center.nav.glass,
+.nav.glass {
+  background: var(--ios-glass-bg) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+  padding: 4px 6px !important;
+  transition: all 0.3s var(--ios-spring) !important;
+}
+
+/* Cursor Deslizante con Fisiología de Resorte visionOS */
+.slide-tabs-cursor,
+#headerSlideTabsCursor {
+  position: absolute !important;
+  top: 3px !important;
+  bottom: 3px !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.38) 0%, rgba(59, 130, 246, 0.28) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-radius: 9999px !important;
+  box-shadow: 
+    0 4px 18px rgba(16, 185, 129, 0.32),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  transition: left 0.35s var(--ios-spring), width 0.35s var(--ios-spring), transform 0.35s var(--ios-spring) !important;
+}
+
+.header-nav-center .nav-link {
+  position: relative !important;
+  z-index: 2 !important;
+  border-radius: 9999px !important;
+  color: #94a3b8 !important;
+  font-weight: 600 !important;
+  transition: color 0.2s var(--ios-spring), transform 0.2s var(--ios-spring) !important;
+}
+
+.header-nav-center .nav-link:hover {
+  color: #ffffff !important;
+  transform: translateY(-0.5px);
+}
+
+.header-nav-center .nav-link.active {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 3. Controles Interactivos del Header (Pastillas Liquid Glass) */
+.btn-auth-header.glass,
+.btn-notifications-bell.glass,
+.active-tournament-pill,
+.subnav-active-pill {
+  background: var(--ios-glass-bg) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 9999px !important;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.25s var(--ios-spring) !important;
+}
+
+.btn-auth-header.glass:hover,
+.btn-notifications-bell.glass:hover,
+.active-tournament-pill:hover,
+.subnav-active-pill:hover {
+  transform: translateY(-1px) scale(1.02) !important;
+  box-shadow: 
+    0 14px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.5) !important;
+  border-top-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.header-admin-badge-center {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.24) 0%, rgba(16, 185, 129, 0.08) 100%) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid rgba(52, 211, 153, 0.65) !important;
+  border-left: 1px solid rgba(52, 211, 153, 0.3) !important;
+  border-right: 1px solid rgba(52, 211, 153, 0.3) !important;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.15) !important;
+  border-radius: 9999px !important;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(16, 185, 129, 0.2),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.45) !important;
+}
+
+/* 4. Menús Desplegables Flotantes estilo visionOS */
+.user-dropdown-menu,
+.notifications-dropdown-menu,
+.active-tournament-dropdown {
+  background: var(--ios-glass-bg-heavy) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.45) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+  overflow: hidden;
+}
+
+/* 5. Tarjetas y Paneles Liquid Glass en Toda la Plataforma */
+.hero-stat-card,
+.home-preview-kpi-card,
+.feature-card,
+.step-card,
+.faq-item,
+.dashboard-card,
+.kpi-metric-card,
+.admin-live-kpi-card,
+.coach-summary-card,
+.dashboard-window,
+.venue-card,
+.torneo-card,
+.tournament-card {
+  background: var(--ios-glass-bg-heavy) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35) !important;
+  border-radius: 22px !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+  transition: transform 0.3s var(--ios-spring), box-shadow 0.3s var(--ios-spring), border-color 0.3s ease !important;
+}
+
+.hero-stat-card:hover,
+.home-preview-kpi-card:hover,
+.feature-card:hover,
+.step-card:hover,
+.faq-item:hover,
+.dashboard-card:hover,
+.kpi-metric-card:hover,
+.admin-live-kpi-card:hover,
+.venue-card:hover,
+.tournament-card:hover {
+  transform: translateY(-3px) !important;
+  border-top-color: rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 
+    0 26px 65px rgba(0, 0, 0, 0.6),
+    0 0 25px rgba(16, 185, 129, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.45) !important;
+}
+
+/* 6. Subtabs de Navegación Administrador y DT (Pills Suaves) */
+.admin-subtabs-nav,
+.coach-subtabs-nav {
+  background: var(--ios-glass-bg) !important;
+  backdrop-filter: var(--ios-blur) !important;
+  -webkit-backdrop-filter: var(--ios-blur) !important;
+  border-top: 1px solid var(--ios-glass-border-top) !important;
+  border-left: 1px solid var(--ios-glass-border-side) !important;
+  border-right: 1px solid var(--ios-glass-border-side) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 9999px !important;
+  box-shadow: var(--ios-glass-shadow) !important;
+  padding: 4px 6px !important;
+}
+
+.admin-subtab-btn,
+.coach-subtab-btn {
+  border-radius: 9999px !important;
+  transition: all 0.25s var(--ios-spring) !important;
+}
+
+.admin-subtab-btn.active,
+.coach-subtab-btn.active {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(59, 130, 246, 0.25) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: #ffffff !important;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 7. Botones de Acción Primaria con Especularidad Líquida */
+.btn-primary-neon,
+.btn-hero-create {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+  border-radius: 9999px !important;
+  box-shadow: 
+    0 10px 28px rgba(16, 185, 129, 0.42),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.55) !important;
+  transition: all 0.25s var(--ios-spring) !important;
+}
+
+.btn-primary-neon:hover,
+.btn-hero-create:hover {
+  transform: translateY(-1.5px) scale(1.02) !important;
+  box-shadow: 
+    0 16px 36px rgba(16, 185, 129, 0.55),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.7) !important;
+}
+
+.btn-primary-neon:active,
+.btn-hero-create:active {
+  transform: translateY(0.5px) scale(0.98) !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
 }
