@@ -8355,7 +8355,7 @@ body:not(.managing-tournament) #activeTournamentSelectorWrap {
   display: none !important;
 }
 
-body:not(.managing-tournament) .header-nav-center .global-nav-link:not(#navAdminLink):not(#navCoachLink):not(#navCanchasLink) {
+body:not(.managing-tournament) .header-nav-center .global-nav-link:not(#navAdminLink):not(#navCoachLink) {
   display: inline-flex !important;
 }
 
@@ -8387,7 +8387,7 @@ body:not(.managing-tournament) .mobile-nav-list #btnMobileExitTournament {
   display: none !important;
 }
 
-body:not(.managing-tournament) .mobile-nav-list .global-nav-link:not(#mobileNavAdminLink):not(#mobileNavCoachLink):not(#mobileNavCanchasLink) {
+body:not(.managing-tournament) .mobile-nav-list .global-nav-link:not(#mobileNavAdminLink):not(#mobileNavCoachLink):not(#mobileNavCreateLink) {
   display: flex !important;
 }
 
@@ -11800,9 +11800,7 @@ body.role-coach #navAuditLink {
 
 /* 1. Protección estricta del Header para Visitantes / Aficionados / Técnicos */
 .btn-create-header,
-#btnHeaderCrear,
-#navCanchasLink,
-#mobileNavCanchasLink {
+#btnHeaderCrear {
   display: none !important;
 }
 
@@ -11811,16 +11809,6 @@ body.role-organizer:not(.managing-tournament) .header-nav-right .btn-create-head
 body.role-admin:not(.managing-tournament) #btnHeaderCrear,
 body.role-organizer:not(.managing-tournament) #btnHeaderCrear {
   display: inline-flex !important;
-}
-
-body.role-admin:not(.managing-tournament) #navCanchasLink,
-body.role-organizer:not(.managing-tournament) #navCanchasLink {
-  display: inline-flex !important;
-}
-
-body.role-admin:not(.managing-tournament) #mobileNavCanchasLink,
-body.role-organizer:not(.managing-tournament) #mobileNavCanchasLink {
-  display: flex !important;
 }
 
 /* 2. Corrección de Inputs Oscuros en Configurador (#tournamentDescription, etc.) */
@@ -13897,7 +13885,7 @@ button:active,
 .header-nav-center .nav-link {
   position: relative !important;
   z-index: 2 !important;
-  display: inline-flex !important;
+  display: inline-flex;
   align-items: center !important;
   gap: 0.45rem !important;
   padding: 0 0.85rem !important;
@@ -13923,9 +13911,12 @@ body:not(.role-admin):not(.role-organizer) .btn-create-header {
   display: none !important;
 }
 
-body.role-admin #navCanchasLink,
-body.role-organizer #navCanchasLink {
+/* Canchas Colombia habilitado por defecto para todos los visitantes y usuarios */
+#navCanchasLink {
   display: inline-flex !important;
+}
+#mobileNavCanchasLink {
+  display: flex !important;
 }
 
 body.role-admin .btn-create-header,
@@ -15761,4 +15752,107 @@ body.role-admin .header-nav-center {
 .hero-football-wrap *,
 .dashboard-inner-body * {
   min-width: 0;
+}
+
+
+/* ==========================================================================
+   MATRIZ ESTRICTA DE VISIBILIDAD DE ROLES (TABLA DE 5 ESTADOS)
+   ========================================================================== */
+
+/* Canchas siempre visible en navegacion global para visitantes y usuarios */
+#navCanchasLink {
+  display: inline-flex !important;
+}
+#mobileNavCanchasLink {
+  display: flex !important;
+}
+
+/* --------------------------------------------------------------------------
+   ESTADO 1: SIN SESIÓN (role-guest / not-logged-in) y AFICIONADO (role-fan)
+   -------------------------------------------------------------------------- */
+body.role-guest #navCoachLink,
+body.role-guest #mobileNavCoachLink,
+body.role-guest #navAdminLink,
+body.role-guest #mobileNavAdminLink,
+body.role-guest #btnHeaderCrear,
+body.role-guest #mobileNavCreateLink,
+body.role-guest #mobileBtnCreateNew,
+body.role-guest #headerAdminTitleBadge,
+body.role-guest #notificationsWrap,
+body.not-logged-in #navCoachLink,
+body.not-logged-in #mobileNavCoachLink,
+body.not-logged-in #navAdminLink,
+body.not-logged-in #mobileNavAdminLink,
+body.not-logged-in #btnHeaderCrear,
+body.not-logged-in #mobileNavCreateLink,
+body.not-logged-in #mobileBtnCreateNew,
+body.not-logged-in #headerAdminTitleBadge,
+body.not-logged-in #notificationsWrap,
+body.role-fan #navCoachLink,
+body.role-fan #mobileNavCoachLink,
+body.role-fan #navAdminLink,
+body.role-fan #mobileNavAdminLink,
+body.role-fan #btnHeaderCrear,
+body.role-fan #mobileNavCreateLink,
+body.role-fan #mobileBtnCreateNew,
+body.role-fan #headerAdminTitleBadge {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   ESTADO 2: DIRECTOR TÉCNICO / DELEGADO (role-coach)
+   -------------------------------------------------------------------------- */
+body.role-coach #navCoachLink {
+  display: inline-flex !important;
+}
+body.role-coach #mobileNavCoachLink {
+  display: flex !important;
+}
+body.role-coach #navAdminLink,
+body.role-coach #mobileNavAdminLink,
+body.role-coach #btnHeaderCrear,
+body.role-coach #mobileNavCreateLink,
+body.role-coach #mobileBtnCreateNew,
+body.role-coach #headerAdminTitleBadge {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   ESTADO 3: ORGANIZADOR DE TORNEO (role-organizer)
+   -------------------------------------------------------------------------- */
+body.role-organizer #navAdminLink {
+  display: inline-flex !important;
+}
+body.role-organizer #mobileNavAdminLink {
+  display: flex !important;
+}
+body.role-organizer #btnHeaderCrear {
+  display: inline-flex !important;
+}
+body.role-organizer #mobileNavCreateLink,
+body.role-organizer #mobileBtnCreateNew {
+  display: flex !important;
+}
+body.role-organizer #navCoachLink,
+body.role-organizer #mobileNavCoachLink,
+body.role-organizer #headerAdminTitleBadge {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   ESTADO 4: ADMINISTRADOR GENERAL (role-admin)
+   -------------------------------------------------------------------------- */
+body.role-admin #headerNavCenter,
+body.role-admin .header-nav-center {
+  display: none !important;
+}
+body.role-admin #headerAdminTitleBadge {
+  display: inline-flex !important;
+}
+body.role-admin #btnHeaderCrear {
+  display: inline-flex !important;
+}
+body.role-admin #mobileNavCreateLink,
+body.role-admin #mobileBtnCreateNew {
+  display: flex !important;
 }
