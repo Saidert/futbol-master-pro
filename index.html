@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_mercury_autonomous">
+  <link rel="stylesheet" href="styles.css?v=20261116_hightech_3d">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -208,7 +208,7 @@
 
         <!-- Botón Iniciar Sesión / Cuenta de Usuario -->
         <div class="user-auth-wrap" id="userAuthWrap">
-          <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Iniciar Sesión o ver perfil">
+          <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Iniciar Sesión o ver perfil" onclick="if(window.openAuthModal) openAuthModal('auth-login-pane');">
             <span class="user-avatar-badge" id="userAvatarBadge" style="display: none;">👤</span>
             <svg class="auth-icon-svg" id="authIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span class="auth-btn-label" id="authBtnLabel">Iniciar Sesión</span>
@@ -335,7 +335,7 @@
         </div>
       </nav>
       <div class="mobile-drawer-footer">
-        <button type="button" class="btn-auth-header glass" id="btnMobileAuth" style="width: 100%; justify-content: center; margin-bottom: 0.65rem;">
+        <button type="button" class="btn-auth-header glass" id="btnMobileAuth" onclick="if(window.openAuthModal) openAuthModal('auth-login-pane');" style="width: 100%; justify-content: center; margin-bottom: 0.65rem;">
           <svg class="auth-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span class="auth-btn-label" id="mobileAuthBtnLabel">Iniciar Sesión</span>
         </button>
@@ -5603,7 +5603,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_mercury_autonomous"></script>
+  <script src="app.js?v=20261116_hightech_3d"></script>
 </body>
 </html>
 

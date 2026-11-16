@@ -111,10 +111,20 @@ body {
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: -999 !important;
+  z-index: -1 !important;
   pointer-events: none !important;
   overflow: hidden !important;
   background-color: #040b09 !important;
+}
+
+.mercury-global-stage *,
+.stage *,
+.mercury-stage *,
+.blobs-gooey-layer,
+.blobs-gooey-layer *,
+.mercury-blob,
+.stage .blob {
+  pointer-events: none !important;
 }
 
 .blobs-gooey-layer {
@@ -130,11 +140,11 @@ body {
 .stage .blob {
   position: absolute !important;
   border-radius: 50% !important;
-  filter: blur(28px) !important;
-  opacity: 0.62 !important;
+  filter: blur(34px) !important;
+  opacity: 0.38 !important; /* Atenuado para dar profundidad sin competir con los textos */
   pointer-events: none !important;
   will-change: transform, opacity !important;
-  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 0 0 55px rgba(30, 193, 203, 0.4) !important;
+  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 0 0 45px rgba(30, 193, 203, 0.3) !important;
 }
 
 /* 6 Blobs con Trayectorias Autónomas Desfasadas y Gradientes Cyan Liquid Glass */
@@ -238,9 +248,9 @@ body {
 }
 
 @keyframes pulseBlob {
-  0%   { opacity: 0.55; filter: blur(28px); }
-  50%  { opacity: 0.72; filter: blur(34px); }
-  100% { opacity: 0.58; filter: blur(26px); }
+  0%   { opacity: 0.30; filter: blur(30px); }
+  50%  { opacity: 0.44; filter: blur(38px); }
+  100% { opacity: 0.34; filter: blur(32px); }
 }
 
 @keyframes floatMercuryLive {
@@ -16620,3 +16630,279 @@ body.role-admin #mobileBtnCreateNew {
   transform: translateY(0.5px) scale(0.98) !important;
   box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
 }
+
+/* =============================================================================
+   FASE FINAL: FIX DE CLICS (NAVBAR & LOGIN) + REDISEÑO 3D FUTURISTA / ESPORT HUD
+   ============================================================================= */
+
+/* 1. REPARACIÓN ABSOLUTA DE CLICS: HEADER, BOTONES Y MODAL DE LOGIN */
+.mercury-global-stage,
+.stage,
+.mercury-stage,
+.ios-liquid-bg,
+.stadium-glow-bg {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -1 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+}
+
+.mercury-global-stage *,
+.stage *,
+.mercury-stage *,
+.blobs-gooey-layer,
+.blobs-gooey-layer *,
+.mercury-blob,
+.blob {
+  pointer-events: none !important;
+}
+
+header,
+header.global-spa-header,
+.global-spa-header,
+.app-header,
+#mainHeader {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  pointer-events: auto !important;
+}
+
+header.global-spa-header nav,
+header.global-spa-header nav a,
+header.global-spa-header .nav-link,
+header.global-spa-header button,
+header.global-spa-header .btn,
+header.global-spa-header .btn-auth-header,
+header.global-spa-header .btn-create-header,
+header.global-spa-header .btn-notifications-bell,
+header.global-spa-header .active-tournament-pill,
+header.global-spa-header .header-brand,
+.global-spa-header nav a,
+.global-spa-header button,
+.global-spa-header .btn,
+.global-spa-header .nav-link,
+.global-spa-header .btn-auth-header,
+.user-auth-wrap,
+#btnAuthHeader,
+#btnMobileAuth {
+  position: relative !important;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* El cursor flotante de fondo no debe interceptar eventos de puntero jamás */
+.slide-tabs-cursor {
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Modal de Autenticación y Cierre */
+#authModalOverlay,
+.auth-modal-overlay {
+  z-index: 9999 !important;
+}
+
+#authModalOverlay.active,
+.auth-modal-overlay.active {
+  display: flex !important;
+  pointer-events: auto !important;
+}
+
+.auth-modal-card,
+.auth-modal-content,
+.auth-modal-close,
+#btnCloseAuthModal {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* 2. ATENUACIÓN Y PROFUNDIDAD DEL FONDO ANIMADO PARA NITIDEZ TOTAL DEL TEXTO */
+.hero-left {
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.hero-left h1,
+.hero-left .headline-primary,
+.hero-left .hero-title-giant,
+.hero-left .bebas-headline {
+  text-shadow: 0 4px 24px rgba(0, 4, 8, 0.95), 0 0 35px rgba(30, 193, 203, 0.15) !important;
+}
+
+.hero-left p,
+.hero-left .hero-description {
+  text-shadow: 0 2px 14px rgba(0, 4, 8, 0.95) !important;
+  color: #e2e8f0 !important;
+}
+
+/* 3. EFECTO HOLOGRÁFICO 3D EN TARJETAS (TILT / PERSPECTIVE EFFECT) */
+.product-carousel,
+.carousel-cards,
+.recent-tournaments-grid,
+#homeRecentGrid,
+.hero-right,
+.hero-center,
+.features-grid,
+.tournaments-grid,
+.kpi-cards-grid {
+  perspective: 1000px !important;
+}
+
+.carousel-cards .card,
+.tournament-card,
+.recent-tournament-card,
+.feature-card,
+.step-card,
+.home-live-dashboard-card,
+.real-trophy-composition {
+  transform-style: preserve-3d !important;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease !important;
+  will-change: transform;
+}
+
+.carousel-cards .card:hover,
+.tournament-card:hover,
+.recent-tournament-card:hover,
+.feature-card:hover,
+.home-live-dashboard-card:hover {
+  transform: translateY(-6px) rotateX(2deg) rotateY(-2deg) scale(1.015) !important;
+  box-shadow: 
+    0 24px 48px rgba(0, 8, 12, 0.65),
+    0 0 35px rgba(30, 193, 203, 0.28),
+    inset 0 1px 2px rgba(255, 255, 255, 0.65) !important;
+  border-top-color: rgba(255, 255, 255, 0.9) !important;
+  border-left-color: #1ec1cb !important;
+}
+
+/* 4. BORDE DE LUZ LÁSER CIAN/ESMERALDA ANIMADO EN BOTONES PRINCIPALES */
+@keyframes borderGlow {
+  0% {
+    border-color: rgba(30, 193, 203, 0.6) !important;
+    box-shadow: 
+      0 0 0 1px rgba(30, 193, 203, 0.5),
+      0 0 16px rgba(30, 193, 203, 0.45),
+      0 8px 24px rgba(16, 185, 129, 0.4),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.8) !important;
+  }
+  50% {
+    border-color: #a5f3fc !important;
+    box-shadow: 
+      0 0 0 2px rgba(165, 243, 252, 0.85),
+      0 0 28px rgba(30, 193, 203, 0.75),
+      0 12px 32px rgba(16, 185, 129, 0.65),
+      inset 0 2px 3px rgba(255, 255, 255, 0.95) !important;
+  }
+  100% {
+    border-color: rgba(16, 185, 129, 0.8) !important;
+    box-shadow: 
+      0 0 0 1px rgba(16, 185, 129, 0.6),
+      0 0 18px rgba(16, 185, 129, 0.45),
+      0 8px 24px rgba(30, 193, 203, 0.4),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.8) !important;
+  }
+}
+
+@keyframes laserSweep {
+  0% { transform: translateX(-160%) skewX(-20deg); }
+  45%, 100% { transform: translateX(260%) skewX(-20deg); }
+}
+
+.btn-hero-create,
+.btn-primary-neon,
+.btn-create-header {
+  position: relative !important;
+  overflow: hidden !important;
+  animation: borderGlow 3.2s infinite alternate ease-in-out !important;
+}
+
+.btn-hero-create::before,
+.btn-primary-neon::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 45% !important;
+  height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(165, 243, 252, 0.7) 75%,
+    transparent 100%
+  ) !important;
+  animation: laserSweep 3.8s infinite ease-in-out !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+.btn-hero-create > *,
+.btn-primary-neon > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* 5. TIPOGRAFÍA Y DETALLES DE TELEMETRÍA (ESTILO HUD DEPORTIVO) */
+.orbit-badge,
+.badge-match-live,
+.badge-accuracy,
+.badge-champion {
+  background: linear-gradient(135deg, rgba(8, 28, 36, 0.88) 0%, rgba(4, 16, 20, 0.94) 100%) !important;
+  backdrop-filter: blur(16px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(200%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+  border-left: 2px solid #1EC1CB !important;
+  padding-left: 8px !important;
+  border-radius: 8px !important;
+  box-shadow: 
+    0 12px 28px rgba(0, 8, 12, 0.6),
+    0 0 16px rgba(30, 193, 203, 0.22),
+    inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  letter-spacing: 0.5px !important;
+  font-family: var(--font-primary), monospace, sans-serif !important;
+}
+
+.badge-match-live .live-dot-pulse {
+  background: #1ec1cb !important;
+  box-shadow: 0 0 8px #1ec1cb, 0 0 14px rgba(30, 193, 203, 0.8) !important;
+}
+
+.badge-match-live .orbit-score {
+  background: rgba(30, 193, 203, 0.15) !important;
+  color: #a5f3fc !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+  font-weight: 800 !important;
+  font-family: monospace, monospace !important;
+}
+
+.badge-accuracy {
+  border-left: 2px solid #10b981 !important;
+  padding-left: 8px !important;
+}
+
+.badge-accuracy .badge-title {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.4px !important;
+}
+
+.badge-accuracy .badge-sub {
+  color: #a5f3fc !important;
+  font-size: 0.68rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.6px !important;
+}
+
+.award-badge {
+  border-left: 2px solid #1EC1CB !important;
+  padding-left: 8px !important;
+  letter-spacing: 0.6px !important;
+}
+

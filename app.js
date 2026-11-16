@@ -2661,6 +2661,10 @@ function closeAuthModal() {
   }
 }
 
+// Exposición Global Inmediata para Garantizar Clics desde Cualquier Contexto
+window.openAuthModal = openAuthModal;
+window.closeAuthModal = closeAuthModal;
+
 function initAuthControls() {
   const btnAuthHeader = document.getElementById('btnAuthHeader');
   const btnMobileAuth = document.getElementById('btnMobileAuth');
