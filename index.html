@@ -97,7 +97,7 @@
       <!-- Centro: Enlaces de Navegación SPA Glass -->
       <nav class="header-nav-center nav glass" id="headerNavCenter" aria-label="Navegación principal">
         <div class="slide-tabs-cursor" id="headerSlideTabsCursor"></div>
-        <!-- Enlaces Principales Siempre Visibles en Inicio y Mis Torneos -->
+        <!-- Enlaces Principales según Rol Activo (Nivel 1: Barra Principal Global) -->
         <a href="#/" class="nav-link global-nav-link active" data-route="home">
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
           <span>Inicio</span>
@@ -118,40 +118,6 @@
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
           <span id="navAdminLinkText">Dashboard Organizador</span>
         </a>
-
-        <!-- Enlaces de Gestión del Torneo Activo (Ocultos por defecto en Inicio / Visibles al Editar) -->
-        <!-- Botón Salir del Torneo (Dashboard) -->
-        <button type="button" class="btn-exit-tournament" id="btnExitTournament" title="Volver a Mis Torneos">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          <span>← Salir</span>
-        </button>
-        <a href="#/equipos" class="nav-link tournament-nav-link" data-route="equipos">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <span>Equipos</span>
-        </a>
-        <a href="#/calendario" class="nav-link tournament-nav-link" data-route="calendario">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <span>Calendario</span>
-        </a>
-        <a href="#/clasificacion" class="nav-link tournament-nav-link" data-route="clasificacion">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Clasificación</span>
-        </a>
-        <a href="#/cuadro" class="nav-link tournament-nav-link" data-route="cuadro">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          <span>Cuadro</span>
-        </a>
-        <a href="#/herramientas" class="nav-link tournament-nav-link" data-route="herramientas">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Herramientas</span>
-        </a>
-        <a href="#/solicitudes" class="nav-link tournament-nav-link" id="navSolicitudesLink" data-route="solicitudes">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>Solicitudes &amp; Docs</span>
-        </a>
-
-        <!-- Botón para Salir del Modo Edición / Volver a Inicio o Mis Torneos -->
-        
       </nav>
 
       <!-- Derecha: Selector de Torneo Activo, Botón Crear y Hamburguesa -->
@@ -213,18 +179,19 @@
         <!-- Botón Iniciar Sesión / Cuenta de Usuario -->
         <div class="user-auth-wrap" id="userAuthWrap">
           <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Iniciar Sesión o ver perfil">
-            <svg class="auth-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span class="auth-btn-label" id="authBtnLabel">Iniciar Sesión</span>
+            <span class="user-avatar-badge" id="userAvatarBadge" style="display: none;">👤</span>
+            <svg class="auth-icon-svg" id="authIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="auth-btn-label" id="authBtnLabel">Iniciar Sesión / Registrarse</span>
           </button>
 
-          <!-- Menú Dropdown de Usuario Logueado con Selector Rápido de Rol -->
+          <!-- Menú Dropdown de Usuario Logueado con Selector de Rol Oficial -->
           <div class="user-dropdown-menu" id="userDropdownMenu" style="display: none;">
             <div class="user-dropdown-header">
-              <div class="user-avatar-badge" id="userAvatarBadge">AD</div>
+              <div class="user-avatar-badge" id="dropdownUserAvatarBadge">👤</div>
               <div class="user-info-text">
-                <span class="user-name-label" id="userNameLabel">Carlos Mendoza</span>
-                <span class="user-role-label" id="userRoleLabel">admin@futbolmaster.co</span>
-                <span class="user-role-pill role-admin" id="userRolePill">👑 Administrador General</span>
+                <span class="user-name-label" id="userNameLabel"></span>
+                <span class="user-role-label" id="userRoleLabel"></span>
+                <span class="user-role-pill" id="userRolePill"></span>
               </div>
             </div>
             <div class="user-dropdown-divider"></div>
@@ -245,17 +212,6 @@
             </div>
 
             <div class="user-dropdown-divider"></div>
-            <div id="userDropdownDemoSection" class="user-dropdown-demo-section" style="display: none;">
-              <div class="user-dropdown-section-title">Cambio rápido de rol (Pruebas Demo)</div>
-              <div class="quick-role-switch-grid">
-                <button type="button" class="btn-role-switch" data-switch-role="admin" title="Probar como Administrador General">👑 Admin</button>
-                <button type="button" class="btn-role-switch" data-switch-role="organizer" title="Probar como Organizador de Torneo">🏆 Org</button>
-                <button type="button" class="btn-role-switch" data-switch-role="coach" title="Probar como Director Técnico">📋 DT</button>
-                <button type="button" class="btn-role-switch" data-switch-role="fan" title="Probar como Aficionado">👀 Fan</button>
-              </div>
-            </div>
-
-            <div class="user-dropdown-divider"></div>
             <button type="button" class="user-menu-item logout" id="btnLogoutUser">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
               <span>Cerrar Sesión</span>
@@ -269,6 +225,41 @@
           <span class="hamburger-bar"></span>
           <span class="hamburger-bar"></span>
         </button>
+      </div>
+    </div>
+
+    <!-- Nivel 2: Sub-barra Contextual del Torneo Activo -->
+    <div class="tournament-subnav-bar" id="tournamentSubnavBar" style="display: none;">
+      <div class="tournament-subnav-container">
+        <div class="subnav-left">
+          <button type="button" class="btn-subnav-exit" id="btnSubnavExitTournament" title="Volver al catálogo de torneos">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>← Salir del Torneo</span>
+          </button>
+          <div class="subnav-active-pill">
+            <span class="active-dot" id="subnavActiveDot"></span>
+            <span class="subnav-tourney-name" id="subnavActiveTournamentName">Torneo Activo</span>
+            <span class="subnav-meta-badge" id="subnavTournamentMeta" style="background: rgba(16,185,129,0.2); color: #34d399; font-size: 0.72rem; padding: 2px 6px; border-radius: 4px; font-weight: 800; margin-left: 0.4rem;">🇨🇴 F11</span>
+          </div>
+        </div>
+        <nav class="subnav-links" id="subnavLinks">
+          <a href="#/equipos" class="subnav-link" data-route="equipos">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Equipos</span>
+          </a>
+          <a href="#/calendario" class="subnav-link" data-route="calendario">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Calendario</span>
+          </a>
+          <a href="#/clasificacion" class="subnav-link" data-route="clasificacion">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Clasificación</span>
+          </a>
+          <a href="#/cuadro" class="subnav-link" data-route="cuadro">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Cuadro</span>
+          </a>
+        </nav>
       </div>
     </div>
 
@@ -306,34 +297,29 @@
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
           <span id="mobileNavAdminLinkText">Dashboard Organizador</span>
         </a>
-        <a href="#/equipos" class="mobile-nav-item tournament-nav-link" data-route="equipos">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <span>Equipos</span>
-        </a>
-        <a href="#/calendario" class="mobile-nav-item tournament-nav-link" data-route="calendario">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-          <span>Calendario</span>
-        </a>
-        <a href="#/clasificacion" class="mobile-nav-item tournament-nav-link" data-route="clasificacion">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-          <span>Clasificación</span>
-        </a>
-        <a href="#/cuadro" class="mobile-nav-item tournament-nav-link" data-route="cuadro">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-          <span>Cuadro</span>
-        </a>
-        <a href="#/herramientas" class="mobile-nav-item tournament-nav-link" data-route="herramientas">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span>Herramientas</span>
-        </a>
-        <a href="#/solicitudes" class="nav-link tournament-nav-link" id="navSolicitudesLink" data-route="solicitudes">
-          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>Solicitudes &amp; Docs</span>
-        </a>
-        <button type="button" class="btn-exit-tournament" id="btnMobileExitTournament" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
-          <span>← Salir del Torneo</span>
-        </button>
+        <!-- Enlaces Contextuales del Torneo Activo en Móvil -->
+        <div id="mobileTournamentLinksWrap" style="display: none; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem; margin-top: 0.5rem;">
+          <a href="#/equipos" class="mobile-nav-item tournament-nav-link" data-route="equipos">
+            <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span>Equipos</span>
+          </a>
+          <a href="#/calendario" class="mobile-nav-item tournament-nav-link" data-route="calendario">
+            <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            <span>Calendario</span>
+          </a>
+          <a href="#/clasificacion" class="mobile-nav-item tournament-nav-link" data-route="clasificacion">
+            <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            <span>Clasificación</span>
+          </a>
+          <a href="#/cuadro" class="mobile-nav-item tournament-nav-link" data-route="cuadro">
+            <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Cuadro</span>
+          </a>
+          <button type="button" class="btn-exit-tournament" id="btnMobileExitTournament" style="width: 100%; justify-content: center; margin-top: 0.5rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            <span>← Salir del Torneo</span>
+          </button>
+        </div>
       </nav>
       <div class="mobile-drawer-footer">
         <button type="button" class="btn-auth-header glass" id="btnMobileAuth" style="width: 100%; justify-content: center; margin-bottom: 0.65rem;">
@@ -424,12 +410,24 @@
               </button>
             </div>
 
-            <!-- Contenedor invisible para persistencia de selectores DOM -->
-            <div style="display: none;" aria-hidden="true">
-              <span id="statHomeTournaments">0</span>
-              <span id="statHomeTeams">0</span>
-              <span id="statHomeMatches">0</span>
-              <span id="statHomeGoals">0</span>
+            <!-- Indicadores Clave de Competición en Plataforma -->
+            <div class="hero-stats-strip">
+              <div class="hero-stat-card">
+                <span class="hero-stat-num" id="statHomeTournaments" style="color: #34d399;">6</span>
+                <span class="hero-stat-label">Torneos</span>
+              </div>
+              <div class="hero-stat-card">
+                <span class="hero-stat-num" id="statHomeTeams" style="color: #60a5fa;">16</span>
+                <span class="hero-stat-label">Clubes</span>
+              </div>
+              <div class="hero-stat-card">
+                <span class="hero-stat-num" id="statHomeMatches" style="color: #fbbf24;">24</span>
+                <span class="hero-stat-label">Partidos</span>
+              </div>
+              <div class="hero-stat-card">
+                <span class="hero-stat-num" id="statHomeGoals" style="color: #f472b6;">13</span>
+                <span class="hero-stat-label">Goles</span>
+              </div>
             </div>
           </div>
 
@@ -1161,26 +1159,35 @@
           </div>
 
           <div class="filter-group-pill">
-            <label for="torneosFilterStatus">Estado:</label>
-            <select id="torneosFilterStatus" class="select-filter-pill">
-              <option value="all">Todos los Estados</option>
-              <option value="open_registration">Inscripciones Abiertas</option>
-              <option value="closed_registration">Inscripciones Cerradas</option>
-              <option value="upcoming">Próximo a Iniciar</option>
-              <option value="in_progress">En Curso</option>
-              <option value="finished">Finalizado</option>
-              <option value="suspended">Suspendido</option>
+            <label for="torneosFilterCity">Ciudad:</label>
+            <select id="torneosFilterCity" class="select-filter-pill">
+              <option value="all">Todas las Ciudades</option>
+              <option value="Barranquilla">Barranquilla</option>
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Medellín">Medellín</option>
+              <option value="Cali">Cali</option>
+              <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Pereira">Pereira</option>
             </select>
           </div>
 
           <div class="filter-group-pill">
-            <label for="torneosFilterCategory">Categoría:</label>
-            <select id="torneosFilterCategory" class="select-filter-pill">
-              <option value="all">Todas las Categorías</option>
-              <option value="Libre Masculino">Libre Masculino</option>
-              <option value="Femenino Abierto">Femenino Abierto</option>
-              <option value="Senior Master 35+">Senior Master 35+</option>
-              <option value="Sub-20 Juvenil">Sub-20 Juvenil</option>
+            <label for="torneosFilterFormat">Formato:</label>
+            <select id="torneosFilterFormat" class="select-filter-pill">
+              <option value="all">Todos los Formatos</option>
+              <option value="f11">Fútbol 11</option>
+              <option value="f7">Fútbol 7 (Sintética)</option>
+              <option value="sala">Fútbol Sala</option>
+            </select>
+          </div>
+
+          <div class="filter-group-pill">
+            <label for="torneosFilterStatus">Estado:</label>
+            <select id="torneosFilterStatus" class="select-filter-pill">
+              <option value="all">Todos los Estados</option>
+              <option value="open_registration">Inscripciones Abiertas</option>
+              <option value="in_progress">En Curso</option>
+              <option value="finished">Finalizado</option>
             </select>
           </div>
         </div>
@@ -2351,6 +2358,23 @@
       </div>
 
       <div class="tournament-active-content" id="contentEquipos">
+        <!-- ENCABEZADO DE CONTEXTO DEL TORNEO ACTIVO (NIVEL 2) -->
+        <div class="tournament-context-strip" data-context-strip="true">
+          <div class="context-strip-info">
+            <span class="context-strip-badge">🇨🇴 TORNEO ACTIVO</span>
+            <h2 class="context-strip-title" data-context-title="true">Copa Colombia Master 2026</h2>
+            <div class="context-strip-meta" data-context-meta="true">
+              <span>📍 Bogotá D.C.</span> • <span>⚽ Fútbol 11</span> • <span>🏆 Categoría Libre</span>
+            </div>
+          </div>
+          <div class="context-strip-actions">
+            <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Torneo:</label>
+            <select class="select-context-tournament" data-context-select="true">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
         <div class="view-header-bar">
           <div class="view-title-block">
             <span class="view-header-icon">🛡️</span>
@@ -2531,6 +2555,23 @@
 
         <!-- Vista Activa del Calendario (cuando está generado) -->
         <div id="fixturesActiveView" class="fixtures-dashboard" style="display: none;">
+        <!-- ENCABEZADO DE CONTEXTO DEL TORNEO ACTIVO (NIVEL 2) -->
+        <div class="tournament-context-strip" data-context-strip="true">
+          <div class="context-strip-info">
+            <span class="context-strip-badge">🇨🇴 TORNEO ACTIVO</span>
+            <h2 class="context-strip-title" data-context-title="true">Copa Colombia Master 2026</h2>
+            <div class="context-strip-meta" data-context-meta="true">
+              <span>📍 Bogotá D.C.</span> • <span>⚽ Fútbol 11</span> • <span>🏆 Categoría Libre</span>
+            </div>
+          </div>
+          <div class="context-strip-actions">
+            <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Torneo:</label>
+            <select class="select-context-tournament" data-context-select="true">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
         
         <!-- Barra de Control y Filtros del Calendario -->
         <div class="fixtures-toolbar-card">
@@ -2664,6 +2705,23 @@
 
         <!-- Vista Activa de Clasificación -->
         <div id="standingsActiveView" class="standings-dashboard" style="display: none;">
+        <!-- ENCABEZADO DE CONTEXTO DEL TORNEO ACTIVO (NIVEL 2) -->
+        <div class="tournament-context-strip" data-context-strip="true">
+          <div class="context-strip-info">
+            <span class="context-strip-badge">🇨🇴 TORNEO ACTIVO</span>
+            <h2 class="context-strip-title" data-context-title="true">Copa Colombia Master 2026</h2>
+            <div class="context-strip-meta" data-context-meta="true">
+              <span>📍 Bogotá D.C.</span> • <span>⚽ Fútbol 11</span> • <span>🏆 Categoría Libre</span>
+            </div>
+          </div>
+          <div class="context-strip-actions">
+            <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Torneo:</label>
+            <select class="select-context-tournament" data-context-select="true">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
         
         <!-- Banner Especial de Campeón Oficial (Se activa al finalizar el torneo) -->
         <div id="championCelebrationBanner" class="champion-banner-wrapper" style="display: none;">
@@ -2793,7 +2851,25 @@
         <div id="view-table" class="sub-tab-content active">
           
           <!-- Contenedor dinámico de Tablas de Grupos o Liga Única -->
-          <div id="standingsContentArea">
+                  <!-- SUB-PESTAÑAS DE PREMIACIÓN (REGLAMENTO FCF / COLOMBIA) -->
+        <div class="standings-subtabs-nav" id="standingsAwardsNav">
+          <button type="button" class="standings-subtab-btn active" data-award-pane="paneStandingsFifa">
+            <span>🏆 Tabla General (FIFA)</span>
+          </button>
+          <button type="button" class="standings-subtab-btn" data-award-pane="paneScorersGoldenBoot">
+            <span>👟 Goleadores (Botín de Oro)</span>
+          </button>
+          <button type="button" class="standings-subtab-btn" data-award-pane="paneLeastConceded">
+            <span>🧤 Valla Menos Vencida</span>
+          </button>
+          <button type="button" class="standings-subtab-btn" data-award-pane="paneFairPlayFcf">
+            <span>🕊️ Juego Limpio (Fair Play FCF)</span>
+          </button>
+        </div>
+
+          <!-- PANE 1: TABLA FIFA GENERAL -->
+          <div id="paneStandingsFifa" class="award-pane active">
+            <div id="standingsContentArea">
             <!-- Si es Liga: Tabla Única -->
             <div id="singleLeagueTableWrapper" class="table-responsive-wrapper">
               <table class="standings-table" id="standingsTable">
@@ -2838,8 +2914,11 @@
               <span>* Criterio: 1.º Puntos | 2.º Diferencia de Gol (DG) | 3.º Goles a Favor (GF)</span>
             </div>
           </div>
+          </div><!-- Fin paneStandingsFifa -->
 
-          <!-- SECCIÓN: TABLA DE MÁXIMOS GOLEADORES (PICHICHI) -->
+          <!-- PANE 2: GOLEADORES BOTÍN DE ORO -->
+          <div id="paneScorersGoldenBoot" class="award-pane" style="display: none;">
+            <!-- SECCIÓN: TABLA DE MÁXIMOS GOLEADORES (PICHICHI) -->
           <div class="top-scorers-card" id="topScorersSection">
             <div class="scorers-header">
               <div class="scorers-title-wrap">
@@ -2872,6 +2951,80 @@
               </table>
             </div>
           </div>
+          </div><!-- Fin paneScorersGoldenBoot -->
+
+          <!-- PANE 3: VALLA MENOS VENCIDA (GUANTE DE ORO) -->
+          <div id="paneLeastConceded" class="award-pane" style="display: none;">
+            <div class="top-scorers-card" style="border-color: rgba(59, 130, 246, 0.4);">
+              <div class="scorers-header">
+                <div class="scorers-title-wrap">
+                  <span class="golden-boot-icon" style="background: rgba(59, 130, 246, 0.2);">🧤🛡️</span>
+                  <div>
+                    <h3>Valla Menos Vencida (Guante de Oro)</h3>
+                    <p>Clasificación oficial por menor cantidad de goles recibidos (GC) y promedio por partido disputado</p>
+                  </div>
+                </div>
+                <div class="scorers-stats-pill" style="border-color: rgba(59, 130, 246, 0.4); background: rgba(59, 130, 246, 0.1);">
+                  <span id="leastConcededLeaderClub">Por definir</span>
+                  <span>Líder Menor GC</span>
+                </div>
+              </div>
+              <div class="table-responsive-wrapper">
+                <table class="scorers-table" id="leastConcededTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">Pos</th>
+                      <th>Club / Equipo</th>
+                      <th style="text-align: center; width: 80px;">PJ</th>
+                      <th style="text-align: center; width: 100px; color: #38bdf8;">GC (Recibidos)</th>
+                      <th style="text-align: center; width: 120px;">Promedio GC/PJ</th>
+                      <th style="text-align: center; width: 140px;">Distinción</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leastConcededTableBody">
+                    <!-- Filas renderizadas dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div><!-- Fin paneLeastConceded -->
+
+          <!-- PANE 4: JUEGO LIMPIO (FAIR PLAY FCF) -->
+          <div id="paneFairPlayFcf" class="award-pane" style="display: none;">
+            <div class="top-scorers-card" style="border-color: rgba(16, 185, 129, 0.4);">
+              <div class="scorers-header">
+                <div class="scorers-title-wrap">
+                  <span class="golden-boot-icon" style="background: rgba(16, 185, 129, 0.2);">🕊️⚖️</span>
+                  <div>
+                    <h3>Trofeo Juego Limpio (Fair Play FCF)</h3>
+                    <p>Baremo oficial FCF: Tarjeta Amarilla = 1 pt • Doble Amarilla = 3 pts • Roja Directa = 5 pts. Menor puntaje lidera.</p>
+                  </div>
+                </div>
+                <div class="scorers-stats-pill" style="border-color: rgba(16, 185, 129, 0.4); background: rgba(16, 185, 129, 0.1);">
+                  <span id="fairPlayLeaderClub">Por definir</span>
+                  <span>Líder Fair Play</span>
+                </div>
+              </div>
+              <div class="table-responsive-wrapper">
+                <table class="scorers-table" id="fairPlayTable">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px; text-align: center;">Pos</th>
+                      <th>Club / Equipo</th>
+                      <th style="text-align: center; width: 80px;">PJ</th>
+                      <th style="text-align: center; width: 90px; color: #fbbf24;">🟨 Amarillas (1pt)</th>
+                      <th style="text-align: center; width: 90px; color: #f87171;">🟥 Rojas (5pts)</th>
+                      <th style="text-align: center; width: 110px; color: #34d399; font-weight: 800;">Puntos Totales</th>
+                      <th style="text-align: center; width: 130px;">Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody id="fairPlayTableBody">
+                    <!-- Filas renderizadas dinámicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div><!-- Fin paneFairPlayFcf -->
         </div>
       </div>
     </div>
@@ -2894,6 +3047,23 @@
       </div>
 
       <div class="tournament-active-content" id="contentCuadro">
+        <!-- ENCABEZADO DE CONTEXTO DEL TORNEO ACTIVO (NIVEL 2) -->
+        <div class="tournament-context-strip" data-context-strip="true">
+          <div class="context-strip-info">
+            <span class="context-strip-badge">🇨🇴 TORNEO ACTIVO</span>
+            <h2 class="context-strip-title" data-context-title="true">Copa Colombia Master 2026</h2>
+            <div class="context-strip-meta" data-context-meta="true">
+              <span>📍 Bogotá D.C.</span> • <span>⚽ Fútbol 11</span> • <span>🏆 Categoría Libre</span>
+            </div>
+          </div>
+          <div class="context-strip-actions">
+            <label style="font-size: 0.78rem; color: #94a3b8; font-weight: 600;">Torneo:</label>
+            <select class="select-context-tournament" data-context-select="true">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
         <div class="view-header-bar">
           <div class="view-title-block">
             <span class="view-header-icon">🌳</span>
@@ -3731,6 +3901,9 @@
           </div>
         </div>
         <div class="club-hero-right">
+          <button type="button" class="btn-tool-outline" id="btnOpenEditCoachClub" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; margin-right: 0.5rem;">
+            <span>✏️ Editar Datos del Club</span>
+          </button>
           <button type="button" class="btn-generate-pdf" id="btnOpenPlanillaPdfModal">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
             <span>Generar Planilla Oficial PDF</span>
@@ -3838,6 +4011,12 @@
             <strong id="coachTotalFinesCop" style="font-size: 1.2rem; color: #34d399;">$0 COP</strong>
             <span id="coachFinesPaidStatus" style="font-size: 0.72rem; color: #94a3b8; display: block; margin-top: 0.2rem;">Al día sin deudas</span>
           </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-bottom: 1.25rem;">
+          <button type="button" class="btn-primary-neon" id="btnOpenReportPaymentModal" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <span>💳 Reportar Pago / Subir Comprobante (Nequi / Bancolombia / Efectivo)</span>
+          </button>
         </div>
 
         <!-- Tabla de Sanciones y Habilitaciones de Jugadores -->
@@ -5338,6 +5517,152 @@
   </div>
 
   <!-- Datalist global para autocompletar escenarios deportivos de Colombia en las tarjetas de partidos -->
+  
+  <!-- MODAL: ONBOARDING / EDICIÓN DEL CLUB (DIRECTOR TÉCNICO) -->
+  <div id="modalEditCoachClub" class="modal-overlay" style="display: none;">
+    <div class="modal-dialog" style="max-width: 600px; width: 95%;">
+      <div class="modal-header">
+        <div class="modal-match-summary">
+          <span class="modal-icon">⚽🛡️</span>
+          <div>
+            <h3 style="margin: 0; color: #fff;">Identidad Oficial de mi Club</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Actualiza el nombre, siglas, colores y sede oficial de tu equipo</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close" id="btnCloseEditCoachClubModal">&times;</button>
+      </div>
+      <form id="formEditCoachClub" style="padding: 1.25rem 0;">
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="editClubName">Nombre del Club *</label>
+            <input type="text" id="editClubName" class="auth-plain-input" placeholder="Ej: Atlético Bogotá FC" required>
+          </div>
+          <div class="form-group">
+            <label for="editClubShort">Sigla (3 letras) *</label>
+            <input type="text" id="editClubShort" class="auth-plain-input" maxlength="4" placeholder="Ej: BOG" required>
+          </div>
+        </div>
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="editClubCity">Ciudad Sede Base *</label>
+            <select id="editClubCity" class="auth-select" required>
+              <option value="Bogotá D.C.">Bogotá D.C.</option>
+              <option value="Medellín">Medellín</option>
+              <option value="Cali">Cali</option>
+              <option value="Barranquilla">Barranquilla</option>
+              <option value="Bucaramanga">Bucaramanga</option>
+              <option value="Cartagena">Cartagena</option>
+              <option value="Pereira">Pereira</option>
+              <option value="Manizales">Manizales</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editClubCategory">Categoría Deportiva *</label>
+            <select id="editClubCategory" class="auth-select" required>
+              <option value="Libre / Mayores">Libre / Mayores (Sin límite de edad)</option>
+              <option value="Veteranos +35">Veteranos +35</option>
+              <option value="Veteranos +45">Veteranos +45</option>
+              <option value="Juvenil Sub-20">Juvenil Sub-20</option>
+              <option value="Femenino Libre">Femenino Libre</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="editClubColor">Color Principal del Uniforme</label>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="color" id="editClubColor" value="#10b981" style="width: 44px; height: 38px; border: none; border-radius: 6px; cursor: pointer; background: transparent;">
+              <span id="editClubColorHex" style="font-family: monospace; font-size: 0.85rem; color: #94a3b8;">#10b981</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="editClubShield">Escudo / Insignia</label>
+            <select id="editClubShield" class="auth-select">
+              <option value="⚽">⚽ Balón Oficial</option>
+              <option value="🦁">🦁 León Dorado</option>
+              <option value="🦅">🦅 Águila Real</option>
+              <option value="⚡">⚡ Rayo Centella</option>
+              <option value="🛡️">🛡️ Escudo Fortaleza</option>
+              <option value="🐯">🐯 Tigre Indomable</option>
+              <option value="🦈">🦈 Tiburón Costero</option>
+              <option value="🏆">🏆 Copa y Corona</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+          <button type="button" class="btn-ghost" id="btnCancelEditCoachClub">Cancelar</button>
+          <button type="submit" class="btn-primary-neon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <span>💾 Guardar Cambios del Club</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: REPORTAR PAGO / SUBIR COMPROBANTE (DIRECTOR TÉCNICO) -->
+  <div id="modalReportCoachPayment" class="modal-overlay" style="display: none;">
+    <div class="modal-dialog" style="max-width: 580px; width: 95%;">
+      <div class="modal-header">
+        <div class="modal-match-summary">
+          <span class="modal-icon">💳🇨🇴</span>
+          <div>
+            <h3 style="margin: 0; color: #fff;">Reporte de Pago y Paz y Salvo</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 0.85rem;">Informa a la mesa directiva la transferencia de inscripción o multas de tarjetas</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close" id="btnCloseReportPaymentModal">&times;</button>
+      </div>
+      <form id="formReportCoachPayment" style="padding: 1.25rem 0;">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label>Canal de Pago Oficial Seleccionado *</label>
+          <select id="paymentMethodSelect" class="auth-select" required>
+            <option value="nequi">📲 Nequi: 310 445 8899 (Fútbol Master Pro SAS)</option>
+            <option value="bancolombia">🏦 Bancolombia: Cta Ahorros 245-098231-11</option>
+            <option value="daviplata">📱 Daviplata: 310 445 8899</option>
+            <option value="efectivo">💵 Pago en Efectivo en Mesa Técnica del Estadio</option>
+          </select>
+        </div>
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="paymentConcept">Concepto a Pagar *</label>
+            <select id="paymentConcept" class="auth-select" required>
+              <option value="multas">⚖️ Multas por Tarjetas Disciplinarias</option>
+              <option value="inscripcion">🏆 Cuota de Inscripción al Torneo</option>
+              <option value="ambos">📦 Inscripción + Multas Acumuladas</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="paymentAmountCop">Valor Transferido (COP) *</label>
+            <input type="number" id="paymentAmountCop" class="auth-plain-input" min="10000" step="5000" placeholder="Ej: 50000" required>
+          </div>
+        </div>
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="paymentRefNumber">Número de Comprobante / Aprobación *</label>
+            <input type="text" id="paymentRefNumber" class="auth-plain-input" placeholder="Ej: M19283746 o Cód. Nequi" required>
+          </div>
+          <div class="form-group">
+            <label for="paymentDate">Fecha de la Transacción *</label>
+            <input type="date" id="paymentDate" class="auth-plain-input" required>
+          </div>
+        </div>
+        <div class="form-group" style="margin-bottom: 1.25rem;">
+          <label for="paymentNotes">Observaciones o Nombre del Titular de la Cuenta</label>
+          <input type="text" id="paymentNotes" class="auth-plain-input" placeholder="Ej: Pagado desde cuenta de Mario Yepes">
+        </div>
+        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 0.8rem; color: #cbd5e1;">
+          <span style="color: #34d399; font-weight: 700;">ℹ️ Proceso de Paz y Salvo:</span> Una vez enviado el comprobante, el Administrador del torneo verificará el abono y expedirá el Paz y Salvo oficial para la próxima fecha.
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button type="button" class="btn-ghost" id="btnCancelReportPayment">Cancelar</button>
+          <button type="submit" class="btn-primary-neon" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <span>🚀 Enviar Comprobante a Mesa Directiva</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <datalist id="colombianVenuesDatalist"></datalist>
 
   <script src="app.js?v=20261115d"></script>

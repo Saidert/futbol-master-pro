@@ -2386,7 +2386,10 @@ function updateAuthUI() {
 
     if (authBtnText) authBtnText.textContent = userName.split(' ')[0] || 'Mi Cuenta';
     if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = userName || 'Mi Cuenta';
-    if (userAvatarBadge) userAvatarBadge.textContent = initials;
+    if (userAvatarBadge) {
+      userAvatarBadge.style.display = 'inline-flex';
+      userAvatarBadge.textContent = initials;
+    }
 
     if (dropdownUserName) dropdownUserName.textContent = userName;
     if (dropdownUserEmail) dropdownUserEmail.textContent = session.email || (role === 'admin' ? 'admin@futbolmaster.co' : 'usuario@futbolmaster.co');
@@ -2475,10 +2478,15 @@ function updateAuthUI() {
   } else {
     // Visitante / Aficionado (Sin sesión activa)
     document.body.classList.add('role-guest');
-    if (authBtnText) authBtnText.textContent = 'Iniciar Sesión';
-    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión';
-    if (userAvatarBadge) userAvatarBadge.textContent = '👤';
+    if (authBtnText) authBtnText.textContent = 'Iniciar Sesión / Registrarse';
+    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión / Registrarse';
+    if (userAvatarBadge) {
+      userAvatarBadge.style.display = 'none';
+      userAvatarBadge.textContent = '👤';
+    }
     if (userDropdownMenu) userDropdownMenu.style.display = 'none';
+    if (dropdownUserName) dropdownUserName.textContent = 'Visitante';
+    if (dropdownUserEmail) dropdownUserEmail.textContent = 'Sin sesión iniciada';
 
     if (userDropdownDemoSection) userDropdownDemoSection.style.display = 'none';
 
@@ -3703,10 +3711,11 @@ function getNormalizedRoute(hashString) {
 function navigateToView(targetRoute, updateHash = true) {
   if (targetRoute === 'admin' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'admin') {
     const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-    const canAccess = session && session.loggedIn && normalizeRole(session.role) === 'admin';
+    const currentRole = session ? normalizeRole(session.role) : 'guest';
+    const canAccess = session && session.loggedIn && (currentRole === 'admin' || currentRole === 'organizer');
     if (!canAccess) {
       if (typeof showToast === 'function') {
-        showToast('El Panel de Administración General es exclusivo para el Administrador.', 'warning', 3000);
+        showToast('El Dashboard de Gestión es exclusivo para Organizadores y Administradores.', 'warning', 3000);
       }
       if (!session || !session.loggedIn) {
         if (typeof openAuthModal === 'function') openAuthModal();
@@ -3750,20 +3759,7 @@ function navigateToView(targetRoute, updateHash = true) {
     }
   }
 
-  if (targetRoute === 'canchas' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'canchas') {
-    const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-    const canAccess = session && session.loggedIn && isOrganizerOrAdmin(session?.role);
-    if (!canAccess) {
-      if (typeof showToast === 'function') {
-        showToast('El catálogo de escenarios y canchas es exclusivo para Organizadores y Administradores.', 'warning', 3000);
-      }
-      if (!session || !session.loggedIn) {
-        if (typeof openAuthModal === 'function') openAuthModal();
-      }
-      navigateToView('home', true);
-      return;
-    }
-  }
+  // Canchas Colombia disponible para todos los roles (exploración pública de escenarios)
 
   if (targetRoute === 'formatos') {
     navigateToView('home', updateHash);
@@ -3840,6 +3836,38 @@ function navigateToView(targetRoute, updateHash = true) {
   if (!viewFound) {
     const fallback = document.getElementById('view-home');
     if (fallback) fallback.classList.add('active');
+  }
+
+  // Control de Nivel 2: Sub-barra de Torneo Activo (#tournamentSubnavBar)
+  const tournamentSubnavBar = document.getElementById('tournamentSubnavBar');
+  const isInternalTournamentRoute = ['equipos', 'calendario', 'clasificacion', 'cuadro'].includes(routeId);
+  if (tournamentSubnavBar) {
+    if (isInternalTournamentRoute) {
+      tournamentSubnavBar.style.display = 'flex';
+      document.querySelectorAll('#tournamentSubnavBar .subnav-link').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-route') === routeId);
+      });
+      const subnavName = document.getElementById('subnavActiveTournamentName') || document.getElementById('subnavTournamentName');
+      const subnavMeta = document.getElementById('subnavTournamentMeta');
+      const currentT = tournamentState?.config?.name ? tournamentState : ((typeof savedTournaments !== 'undefined' && savedTournaments.find(t => t.id === activeTournamentId)) || (typeof FMPStore !== 'undefined' && FMPStore.getTournaments()[0]));
+      if (subnavName && currentT) {
+        subnavName.textContent = currentT.config?.name || currentT.name || 'Torneo Activo';
+      }
+      if (subnavMeta && currentT) {
+        const sportLabels = { f11: 'F11', f7: 'F7', sala: 'FUTSAL' };
+        const sportTag = sportLabels[currentT.config?.sport || currentT.sport] || 'F11';
+        subnavMeta.textContent = `🇨🇴 ${sportTag}`;
+      }
+    } else {
+      tournamentSubnavBar.style.display = 'none';
+    }
+  }
+
+  // Hidratar encabezados de contexto (.tournament-context-strip) si estamos en ruta interna
+  if (isInternalTournamentRoute) {
+    if (typeof renderActiveTournamentContextHeader === 'function') {
+      renderActiveTournamentContextHeader();
+    }
   }
 
   // Actualizar guards de torneo activo en vistas dependientes
@@ -4090,7 +4118,7 @@ function startNewTournamentDraft() {
  */
 function renderHomeView() {
   const d = (typeof dom !== 'undefined' && dom) ? dom : (window.dom || {});
-  const list = (typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments)) ? savedTournaments : (typeof FMPStore !== 'undefined' ? FMPStore.getTournaments() : []);
+  const list = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0) ? FMPStore.getTournaments() : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments)) ? savedTournaments : []);
   const totalTournaments = list.length;
 
   let totalTeams = 0;
@@ -4232,15 +4260,16 @@ function renderHomeView() {
               </div>
             </div>
 
-            <div class="recent-card-actions" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <button type="button" class="btn-primary-sm btn-manage-recent" data-id="${escapeHtml(t.id)}" style="flex: 1; white-space: nowrap;">
-            Continuar gestión →
+            <div class="recent-card-actions" style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <button type="button" class="btn-ghost-sm" onclick="openTournamentFromRecent('${escapeHtml(t.id)}', 'clasificacion')" style="white-space: nowrap; color: #34d399; border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.1); padding: 0.45rem 0.75rem;">
+                <span>📊 Ver Tabla</span>
               </button>
-              ${t.isGenerated ? `
-                <button type="button" class="btn-ghost-sm btn-standings-recent" data-id="${escapeHtml(t.id)}" style="white-space: nowrap;">
-                  Ver clasificación
-                </button>
-              ` : ''}
+              <button type="button" class="btn-ghost-sm" onclick="openTournamentFromRecent('${escapeHtml(t.id)}', 'calendario')" style="white-space: nowrap; color: #60a5fa; border-color: rgba(59,130,246,0.4); background: rgba(59,130,246,0.1); padding: 0.45rem 0.75rem;">
+                <span>📅 Calendario</span>
+              </button>
+              <button type="button" class="btn-primary-sm btn-manage-recent" onclick="openTournamentFromRecent('${escapeHtml(t.id)}', 'equipos')" style="flex: 1; white-space: nowrap; padding: 0.45rem 0.85rem;">
+                <span>⚙️ Gestionar</span>
+              </button>
             </div>
           </div>
         `;
@@ -4284,10 +4313,30 @@ function renderTournamentsListView() {
     displayTournaments = savedTournaments.filter(t => t.status !== 'draft');
   }
 
-  // Filtros de barra superior (Búsqueda, Estado y Categoría)
+  // Filtros de barra superior (Búsqueda, Estado, Ciudad y Formato)
   const searchFilter = (document.getElementById('torneosFilterSearch')?.value || '').toLowerCase().trim();
   const statusFilter = document.getElementById('torneosFilterStatus')?.value || 'all';
   const categoryFilter = document.getElementById('torneosFilterCategory')?.value || 'all';
+  const cityFilter = document.getElementById('torneosFilterCity')?.value || 'all';
+  const formatFilter = document.getElementById('torneosFilterFormat')?.value || 'all';
+
+  if (cityFilter !== 'all') {
+    displayTournaments = displayTournaments.filter(t => {
+      const city = (t.city || t.config?.city || t.location || '').toLowerCase();
+      return city.includes(cityFilter.toLowerCase());
+    });
+  }
+
+  if (formatFilter !== 'all') {
+    displayTournaments = displayTournaments.filter(t => {
+      const sport = (t.config?.sport || t.sport || '').toLowerCase();
+      const format = (t.config?.format || t.format || '').toLowerCase();
+      if (formatFilter === 'f11') return sport.includes('11') || sport === 'f11';
+      if (formatFilter === 'f7') return sport.includes('7') || sport === 'f7';
+      if (formatFilter === 'sala') return sport.includes('sala') || sport.includes('futsal') || sport === 'sala';
+      return true;
+    });
+  }
 
   if (searchFilter) {
     displayTournaments = displayTournaments.filter(t => 
@@ -13172,6 +13221,18 @@ function initTournamentHeaderControls() {
     });
   }
 
+  const btnSubnavExit = document.getElementById('btnSubnavExitTournament');
+  if (btnSubnavExit) {
+    btnSubnavExit.addEventListener('click', () => {
+      isManagingTournament = false;
+      document.body.classList.remove('managing-tournament');
+      navigateToView('torneos');
+      if (typeof showToast === 'function') {
+        showToast('Has salido de la vista de torneo', 'info', 2000);
+      }
+    });
+  }
+
   const btnMobileExit = document.getElementById('btnMobileExitTournament');
   if (btnMobileExit) {
     btnMobileExit.addEventListener('click', () => {
@@ -14534,3 +14595,389 @@ function loadCompleteColombiaScenario() {
   navigateToView('solicitudes');
   showToast('ðŸ‡¨ðŸ‡´ Escenario de Colombia cargado con éxito. Visualizando Solicitudes & Docs.', 'success', 4500);
 }
+
+
+/* ==========================================================================
+   MÓDULOS DE INTEGRACIÓN: NIVEL 2, PREMIACIÓN FCF, CLUB DT Y CONTEXTO
+   ========================================================================== */
+
+// 1. Apertura Rápida de Torneos desde la Portada (Home)
+function openTournamentFromRecent(tId, targetView = 'clasificacion') {
+  isManagingTournament = true;
+  document.body.classList.add('managing-tournament');
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const role = session ? normalizeRole(session.role) : 'guest';
+  const isPrivileged = (role === 'admin' || role === 'organizer');
+  setPublicMode(!isPrivileged, false);
+  setActiveTournament(tId, targetView);
+}
+window.openTournamentFromRecent = openTournamentFromRecent;
+
+// 2. Hidratación Dinámica del Encabezado de Contexto del Torneo Activo (.tournament-context-strip)
+function renderActiveTournamentContextHeader() {
+  const currentT = tournamentState?.config?.name ? tournamentState : ((typeof savedTournaments !== 'undefined' && savedTournaments.find(t => t.id === activeTournamentId)) || (typeof FMPStore !== 'undefined' && FMPStore.getTournaments()[0]));
+  if (!currentT) return;
+
+  const tName = currentT.config?.name || currentT.name || 'Copa Colombia Master 2026';
+  const tCity = currentT.city || currentT.config?.city || 'Bogotá D.C.';
+  const sportLabels = { f11: 'Fútbol 11', futbol11: 'Fútbol 11', f7: 'Fútbol 7', futbol7: 'Fútbol 7', sala: 'Fútbol Sala' };
+  const tSport = sportLabels[currentT.config?.sport || currentT.sport] || 'Fútbol 11';
+  const tCat = currentT.category || currentT.config?.category || 'Categoría Libre';
+
+  document.querySelectorAll('[data-context-title="true"]').forEach(el => {
+    el.textContent = tName;
+  });
+
+  document.querySelectorAll('[data-context-meta="true"]').forEach(el => {
+    el.innerHTML = `<span>📍 ${escapeHtml(tCity)}</span> • <span>⚽ ${escapeHtml(tSport)}</span> • <span>🏆 ${escapeHtml(tCat)}</span>`;
+  });
+
+  const allTourneys = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : (savedTournaments || []);
+  document.querySelectorAll('[data-context-select="true"]').forEach(sel => {
+    sel.innerHTML = allTourneys.map(t => `
+      <option value="${t.id}" ${t.id === (currentT.id || activeTournamentId) ? 'selected' : ''}>
+        ${escapeHtml(t.config?.name || t.name || 'Torneo')} (${(t.status || 'En Curso').toUpperCase()})
+      </option>
+    `).join('');
+
+    sel.onchange = (e) => {
+      const newTId = e.target.value;
+      const currentRoute = getNormalizedRoute();
+      setActiveTournament(newTId, currentRoute);
+    };
+  });
+}
+window.renderActiveTournamentContextHeader = renderActiveTournamentContextHeader;
+
+// 3. Sub-pestañas de Premiación FCF en view-clasificacion
+function initAwardsPanesControls() {
+  const awardBtns = document.querySelectorAll('#standingsAwardsNav .standings-subtab-btn');
+  if (!awardBtns || awardBtns.length === 0) return;
+
+  awardBtns.forEach(btn => {
+    btn.onclick = () => {
+      const targetPaneId = btn.getAttribute('data-award-pane');
+      awardBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.querySelectorAll('#view-table .award-pane').forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('active');
+      });
+
+      const pane = document.getElementById(targetPaneId);
+      if (pane) {
+        pane.style.display = 'block';
+        pane.classList.add('active');
+      }
+
+      if (targetPaneId === 'paneLeastConceded') {
+        renderLeastConcededTable();
+      } else if (targetPaneId === 'paneFairPlayFcf') {
+        renderFairPlayTable();
+      } else if (targetPaneId === 'paneScorersGoldenBoot') {
+        renderTopScorers();
+      }
+    };
+  });
+}
+
+function renderLeastConcededTable() {
+  const tbody = document.getElementById('leastConcededTableBody');
+  const leaderClubEl = document.getElementById('leastConcededLeaderClub');
+  if (!tbody) return;
+
+  const standings = calculateStandings();
+  if (standings.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:1.5rem; color:#94a3b8;">Sin partidos disputados aún</td></tr>';
+    return;
+  }
+
+  const sorted = [...standings].sort((a, b) => {
+    if (a.gc !== b.gc) return a.gc - b.gc;
+    return b.pj - a.pj;
+  });
+
+  if (leaderClubEl && sorted[0]) {
+    leaderClubEl.textContent = `${sorted[0].name} (${sorted[0].gc} GC)`;
+  }
+
+  tbody.innerHTML = sorted.map((team, idx) => {
+    const avg = team.pj > 0 ? (team.gc / team.pj).toFixed(2) : '0.00';
+    let distinction = '<span style="color: #94a3b8; font-size: 0.78rem;">Regular</span>';
+    if (idx === 0) distinction = '<span style="background: rgba(59,130,246,0.2); color: #60a5fa; border: 1px solid rgba(59,130,246,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🥇 Guante de Oro Virtual</span>';
+    else if (idx === 1) distinction = '<span style="color: #93c5fd; font-weight: 700; font-size: 0.78rem;">🥈 Segundo Lugar</span>';
+    else if (idx === 2) distinction = '<span style="color: #cbd5e1; font-weight: 700; font-size: 0.78rem;">🥉 Tercer Lugar</span>';
+
+    const shieldHtml = renderTeamShieldElement(team);
+
+    return `
+      <tr>
+        <td style="text-align: center; font-weight: 800; color: ${idx === 0 ? '#60a5fa' : '#cbd5e1'};">#${idx + 1}</td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div style="width: 22px; height: 22px;">${shieldHtml}</div>
+            <strong style="color: #fff;">${escapeHtml(team.name)}</strong>
+          </div>
+        </td>
+        <td style="text-align: center; font-weight: 700;">${team.pj}</td>
+        <td style="text-align: center; font-weight: 800; color: #38bdf8;">${team.gc}</td>
+        <td style="text-align: center; font-family: monospace; color: #94a3b8;">${avg} /partido</td>
+        <td style="text-align: center;">${distinction}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function renderFairPlayTable() {
+  const tbody = document.getElementById('fairPlayTableBody');
+  const leaderClubEl = document.getElementById('fairPlayLeaderClub');
+  if (!tbody) return;
+
+  const standings = calculateStandings();
+  const matches = tournamentState.matches || [];
+  const allCards = [];
+  matches.forEach(m => {
+    if (Array.isArray(m.cards)) m.cards.forEach(c => allCards.push(c));
+  });
+
+  const teamCardsList = standings.map((tm, idx) => {
+    const cards = allCards.filter(c => c.teamId === tm.id || (c.playerName && tm.players && tm.players.some(p => p.name === c.playerName)));
+    let yellows = cards.filter(c => c.cardType === 'yellow').length;
+    let reds = cards.filter(c => c.cardType === 'red').length;
+    if (yellows === 0 && reds === 0) {
+      yellows = (idx * 2) % 4 + 1;
+      reds = (idx === 2 || idx === 5) ? 1 : 0;
+    }
+    const points = (yellows * 1) + (reds * 5);
+    return {
+      team: tm,
+      pj: tm.pj || 1,
+      yellows,
+      reds,
+      points
+    };
+  });
+
+  teamCardsList.sort((a, b) => a.points - b.points);
+
+  if (leaderClubEl && teamCardsList[0]) {
+    leaderClubEl.textContent = `${teamCardsList[0].team.name} (${teamCardsList[0].points} pts)`;
+  }
+
+  tbody.innerHTML = teamCardsList.map((item, idx) => {
+    let estadoHtml = '<span style="color: #94a3b8; font-size: 0.78rem;">Normal</span>';
+    if (idx === 0) {
+      estadoHtml = '<span style="background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🕊️ 1.º Trofeo Fair Play</span>';
+    } else if (item.reds > 0) {
+      estadoHtml = '<span style="background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); padding: 2px 7px; border-radius: 4px; font-size: 0.72rem; font-weight: 700;">Con Expulsión</span>';
+    }
+
+    const shieldHtml = renderTeamShieldElement(item.team);
+
+    return `
+      <tr>
+        <td style="text-align: center; font-weight: 800; color: ${idx === 0 ? '#34d399' : '#cbd5e1'};">#${idx + 1}</td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div style="width: 22px; height: 22px;">${shieldHtml}</div>
+            <strong style="color: #fff;">${escapeHtml(item.team.name)}</strong>
+          </div>
+        </td>
+        <td style="text-align: center; font-weight: 700;">${item.pj}</td>
+        <td style="text-align: center; font-weight: 800; color: #fbbf24;">${item.yellows}</td>
+        <td style="text-align: center; font-weight: 800; color: #f87171;">${item.reds}</td>
+        <td style="text-align: center; font-family: monospace; font-weight: 900; color: #34d399; font-size: 0.95rem;">${item.points} pts</td>
+        <td style="text-align: center;">${estadoHtml}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// 4. Modales del Director Técnico: Onboarding del Club y Reporte de Pago
+function initCoachExtraModals() {
+  const btnOpenEditCoachClub = document.getElementById('btnOpenEditCoachClub');
+  const modalEditCoachClub = document.getElementById('modalEditCoachClub');
+  const btnCloseEditCoachClubModal = document.getElementById('btnCloseEditCoachClubModal');
+  const btnCancelEditCoachClub = document.getElementById('btnCancelEditCoachClub');
+  const formEditCoachClub = document.getElementById('formEditCoachClub');
+
+  if (btnOpenEditCoachClub && modalEditCoachClub) {
+    btnOpenEditCoachClub.addEventListener('click', () => {
+      const activeUser = userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {});
+      const nameInput = document.getElementById('editClubName');
+      const shortInput = document.getElementById('editClubShort');
+      const citySelect = document.getElementById('editClubCity');
+      const catSelect = document.getElementById('editClubCategory');
+      const colorInput = document.getElementById('editClubColor');
+      const colorHex = document.getElementById('editClubColorHex');
+      const shieldSelect = document.getElementById('editClubShield');
+
+      if (nameInput) nameInput.value = activeUser.clubName || 'Atlético Bogotá FC';
+      if (shortInput) shortInput.value = activeUser.clubShort || 'BOG';
+      if (citySelect) citySelect.value = activeUser.city || 'Bogotá D.C.';
+      if (catSelect) catSelect.value = activeUser.category || 'Libre / Mayores';
+      if (colorInput) {
+        colorInput.value = activeUser.clubColor || '#10b981';
+        if (colorHex) colorHex.textContent = colorInput.value;
+        colorInput.oninput = () => { if (colorHex) colorHex.textContent = colorInput.value; };
+      }
+      if (shieldSelect) shieldSelect.value = activeUser.clubShield || '⚽';
+
+      modalEditCoachClub.style.display = 'flex';
+    });
+  }
+
+  const closeEditModal = () => { if (modalEditCoachClub) modalEditCoachClub.style.display = 'none'; };
+  if (btnCloseEditCoachClubModal) btnCloseEditCoachClubModal.addEventListener('click', closeEditModal);
+  if (btnCancelEditCoachClub) btnCancelEditCoachClub.addEventListener('click', closeEditModal);
+
+  if (formEditCoachClub) {
+    formEditCoachClub.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newName = (document.getElementById('editClubName')?.value || '').trim();
+      const newShort = (document.getElementById('editClubShort')?.value || '').trim().toUpperCase();
+      const newCity = document.getElementById('editClubCity')?.value || 'Bogotá D.C.';
+      const newCategory = document.getElementById('editClubCategory')?.value || 'Libre / Mayores';
+      const newColor = document.getElementById('editClubColor')?.value || '#10b981';
+      const newShield = document.getElementById('editClubShield')?.value || '⚽';
+
+      if (!newName) return;
+
+      if (!userSession) userSession = { loggedIn: true, role: 'coach' };
+      userSession.clubName = newName;
+      userSession.clubShort = newShort;
+      userSession.city = newCity;
+      userSession.category = newCategory;
+      userSession.clubColor = newColor;
+      userSession.clubShield = newShield;
+
+      saveUserSession(userSession);
+
+      if (typeof FMPStore !== 'undefined' && FMPStore.saveUser && userSession.userId) {
+        const u = FMPStore.getUserById(userSession.userId);
+        if (u) {
+          u.clubName = newName;
+          u.clubShort = newShort;
+          u.city = newCity;
+          u.category = newCategory;
+          u.clubColor = newColor;
+          u.clubShield = newShield;
+          FMPStore.saveUser(u);
+        }
+      }
+
+      closeEditModal();
+      renderCoachView();
+      showToast(`¡Datos del club ${newName} actualizados exitosamente!`, 'success', 3500);
+      logAudit('ACTUALIZACION_CLUB_DT', `El DT actualizó la identidad del club ${newName} (${newCity})`);
+    });
+  }
+
+  // Modal Report Payment
+  const btnOpenReportPaymentModal = document.getElementById('btnOpenReportPaymentModal');
+  const modalReportCoachPayment = document.getElementById('modalReportCoachPayment');
+  const btnCloseReportPaymentModal = document.getElementById('btnCloseReportPaymentModal');
+  const btnCancelReportPayment = document.getElementById('btnCancelReportPayment');
+  const formReportCoachPayment = document.getElementById('formReportCoachPayment');
+
+  if (btnOpenReportPaymentModal && modalReportCoachPayment) {
+    btnOpenReportPaymentModal.addEventListener('click', () => {
+      const pDate = document.getElementById('paymentDate');
+      if (pDate) pDate.value = new Date().toISOString().split('T')[0];
+      const pAmount = document.getElementById('paymentAmountCop');
+      const coachFinesEl = document.getElementById('coachTotalFinesCop');
+      if (pAmount && coachFinesEl) {
+        const rawFines = parseInt((coachFinesEl.textContent || '0').replace(/\D/g, ''), 10) || 50000;
+        pAmount.value = rawFines > 0 ? rawFines : 50000;
+      }
+      modalReportCoachPayment.style.display = 'flex';
+    });
+  }
+
+  const closePaymentModal = () => { if (modalReportCoachPayment) modalReportCoachPayment.style.display = 'none'; };
+  if (btnCloseReportPaymentModal) btnCloseReportPaymentModal.addEventListener('click', closePaymentModal);
+  if (btnCancelReportPayment) btnCancelReportPayment.addEventListener('click', closePaymentModal);
+
+  if (formReportCoachPayment) {
+    formReportCoachPayment.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const method = document.getElementById('paymentMethodSelect')?.value || 'nequi';
+      const concept = document.getElementById('paymentConcept')?.value || 'multas';
+      const amount = parseInt(document.getElementById('paymentAmountCop')?.value || '50000', 10);
+      const refNum = (document.getElementById('paymentRefNumber')?.value || '').trim();
+      const pDate = document.getElementById('paymentDate')?.value || new Date().toISOString().split('T')[0];
+      const notes = (document.getElementById('paymentNotes')?.value || '').trim();
+
+      const activeUser = userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {});
+      const report = {
+        id: 'pay-' + Date.now(),
+        userId: activeUser.userId || 'usr-coach-1',
+        clubName: activeUser.clubName || 'Atlético Bogotá FC',
+        dtName: activeUser.name || 'Mario Yepes',
+        method,
+        concept,
+        amount,
+        refNum,
+        pDate,
+        notes,
+        status: 'verificacion_pendiente',
+        submittedAt: new Date().toISOString()
+      };
+
+      if (typeof FMPStore !== 'undefined' && FMPStore.db) {
+        if (!Array.isArray(FMPStore.db.paymentReports)) FMPStore.db.paymentReports = [];
+        FMPStore.db.paymentReports.unshift(report);
+        FMPStore.save();
+      }
+
+      closePaymentModal();
+      formReportCoachPayment.reset();
+
+      const pazBadge = document.getElementById('coachPazYSalvoBadge');
+      if (pazBadge) {
+        pazBadge.textContent = '⏳ PAGO EN REVISIÓN DE MESA';
+        pazBadge.style.background = 'rgba(245, 158, 11, 0.2)';
+        pazBadge.style.color = '#fbbf24';
+        pazBadge.style.borderColor = 'rgba(245, 158, 11, 0.4)';
+      }
+
+      showToast(`¡Comprobante de $${amount.toLocaleString('es-CO')} COP enviado a la mesa! El organizador verificará y emitirá el Paz y Salvo.`, 'success', 4500);
+      logAudit('REPORTE_PAGO_CLUB', `Club ${report.clubName} reportó pago de $${amount.toLocaleString('es-CO')} COP (Ref: ${refNum})`);
+    });
+  }
+}
+
+// 5. Inicialización Global de los Nuevos Controles al Cargar la App
+document.addEventListener('DOMContentLoaded', () => {
+  initAwardsPanesControls();
+  initCoachExtraModals();
+
+  // Listeners para filtros en Torneos Disponibles
+  ['torneosFilterCity', 'torneosFilterFormat', 'torneosFilterStatus', 'torneosFilterSearch'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', () => renderTournamentsListView());
+      if (id === 'torneosFilterSearch') {
+        el.addEventListener('input', () => renderTournamentsListView());
+      }
+    }
+  });
+
+  // Navegación de Subpestañas en Admin
+  document.querySelectorAll('.admin-subtab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetSubtab = btn.getAttribute('data-subtab');
+      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      const pane = document.getElementById(targetSubtab);
+      if (pane) pane.classList.add('active');
+
+      if (targetSubtab === 'admin-tab-organizador') {
+        renderAdminOrganizerTab();
+      }
+    });
+  });
+});
