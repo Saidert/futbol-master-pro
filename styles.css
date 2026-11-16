@@ -15212,7 +15212,7 @@ body.role-organizer .btn-create-header {
   background-position: right 0.75rem center, 0 0 !important;
   background-size: 10px 10px, 100% 100% !important;
   background-color: transparent !important;
-  padding: 0 1.85rem 0 2.35rem !important;
+  padding: 0 2.2rem 0 2.35rem !important;
   font-size: 0.86rem !important;
   font-weight: 600 !important;
   color: #ffffff !important;
@@ -15220,6 +15220,11 @@ body.role-organizer .btn-create-header {
   white-space: nowrap !important;
   overflow: hidden !important;
   cursor: pointer !important;
+}
+
+.auth-input-wrapper select.auth-select:invalid,
+.auth-input-wrapper select.auth-select:has(option[value=""]:checked) {
+  color: rgba(255, 255, 255, 0.75) !important;
 }
 
 .auth-input-wrapper select.auth-select:valid,
@@ -16644,6 +16649,7 @@ body.role-admin #mobileBtnCreateNew {
    ============================================================================= */
 
 /* 1. REPARACIÓN ABSOLUTA DE CLICS: HEADER, BOTONES Y MODAL DE LOGIN */
+#mercuryStage,
 .mercury-global-stage,
 .stage,
 .mercury-stage,
@@ -16658,13 +16664,16 @@ body.role-admin #mobileBtnCreateNew {
   overflow: hidden !important;
 }
 
+#mercuryStage *,
 .mercury-global-stage *,
 .stage *,
 .mercury-stage *,
 .blobs-gooey-layer,
 .blobs-gooey-layer *,
 .mercury-blob,
-.blob {
+.blob,
+.ios-liquid-bg,
+.ios-liquid-bg * {
   pointer-events: none !important;
 }
 
@@ -16675,30 +16684,39 @@ header.global-spa-header,
 #mainHeader {
   position: sticky !important;
   top: 0 !important;
-  z-index: 1000 !important;
+  z-index: 99999 !important;
   pointer-events: auto !important;
 }
 
+header *,
+.global-spa-header *,
 header.global-spa-header nav,
 header.global-spa-header nav a,
+header.global-spa-header .nav,
 header.global-spa-header .nav-link,
 header.global-spa-header button,
 header.global-spa-header .btn,
 header.global-spa-header .btn-auth-header,
 header.global-spa-header .btn-create-header,
+header.global-spa-header #btnHeaderCrear,
 header.global-spa-header .btn-notifications-bell,
 header.global-spa-header .active-tournament-pill,
 header.global-spa-header .header-brand,
+.global-spa-header nav,
 .global-spa-header nav a,
 .global-spa-header button,
 .global-spa-header .btn,
 .global-spa-header .nav-link,
 .global-spa-header .btn-auth-header,
+.global-spa-header .btn-create-header,
+.header-main-bar,
+.header-nav-center,
+.header-nav-right,
 .user-auth-wrap,
 #btnAuthHeader,
 #btnMobileAuth {
   position: relative !important;
-  z-index: 1000 !important;
+  z-index: 99999 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
 }
@@ -16709,25 +16727,39 @@ header.global-spa-header .header-brand,
   z-index: 1 !important;
 }
 
-/* Modal de Autenticación y Cierre */
+/* Modal de Autenticación y Cierre (NEURAL ACCESS) */
 #authModalOverlay,
 .auth-modal-overlay {
-  z-index: 9999 !important;
+  z-index: 999999 !important;
 }
 
 #authModalOverlay.active,
 .auth-modal-overlay.active {
   display: flex !important;
   pointer-events: auto !important;
+  z-index: 999999 !important;
 }
 
 .auth-modal-card,
 .auth-modal-content,
 .auth-modal-close,
-#btnCloseAuthModal {
-  z-index: 9999 !important;
+#btnCloseAuthModal,
+.auth-modal-tabs,
+.auth-tab-btn,
+.auth-input-wrapper,
+.auth-input-wrapper input,
+.auth-input-wrapper select,
+.btn-auth-submit,
+.btn-primary-neon {
+  z-index: 999999 !important;
   pointer-events: auto !important;
   cursor: pointer !important;
+}
+
+.modal-overlay:not(.active):not([style*="display: flex"]),
+.auth-modal-overlay:not(.active):not([style*="display: flex"]) {
+  display: none !important;
+  pointer-events: none !important;
 }
 
 /* 2. ATENUACIÓN Y PROFUNDIDAD DEL FONDO ANIMADO PARA NITIDEZ TOTAL DEL TEXTO */

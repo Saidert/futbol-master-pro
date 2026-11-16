@@ -12,22 +12,82 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_bento_v22">
+  <link rel="stylesheet" href="styles.css?v=20261116_click_emergency_fix">
   <style>
-    /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
+    /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
+    #mercuryStage,
+    .mercury-global-stage,
+    .stage,
+    .mercury-stage,
+    .ios-liquid-bg,
+    .stadium-glow-bg,
+    .blobs-gooey-layer,
+    .mercury-blob {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: -999 !important;
+      pointer-events: none !important;
+    }
+
+    /* Header y todos los botones en el frente absoluto */
+    header,
+    header.global-spa-header,
+    .global-spa-header,
+    #mainHeader,
+    header nav,
+    header nav a,
+    header .nav,
+    header .nav-link,
+    header button,
+    header .btn,
+    header .btn-auth-header,
+    header .btn-create-header,
+    header #btnHeaderCrear,
+    .user-auth-wrap,
+    #btnAuthHeader,
+    #btnMobileAuth {
+      position: relative !important;
+      z-index: 99999 !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+    header,
+    header.global-spa-header,
+    .global-spa-header,
+    #mainHeader {
+      position: sticky !important;
+      top: 0 !important;
+    }
+
+    .slide-tabs-cursor {
+      pointer-events: none !important;
+      z-index: 1 !important;
+    }
+
+    /* Modal de Autenticación en z-index 999999 */
     #authModalOverlay,
     .auth-modal-overlay {
+      z-index: 999999 !important;
       display: none !important;
     }
     #authModalOverlay.active,
     .auth-modal-overlay.active {
       display: flex !important;
-    }
-    .auth-modal-close {
-      cursor: pointer !important;
       pointer-events: auto !important;
-      position: relative !important;
-      z-index: 99999 !important;
+      z-index: 999999 !important;
+    }
+    .auth-modal-card,
+    .auth-modal-content,
+    .auth-modal-close,
+    #btnCloseAuthModal,
+    .auth-tab-btn,
+    .auth-input-wrapper input,
+    .auth-input-wrapper select,
+    .btn-auth-submit,
+    .btn-primary-neon {
+      z-index: 999999 !important;
+      pointer-events: auto !important;
+      cursor: pointer !important;
     }
   </style>
   <script>
@@ -5801,7 +5861,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_bento_v22"></script>
+  <script src="app.js?v=20261116_click_emergency_fix"></script>
 </body>
 </html>
 
