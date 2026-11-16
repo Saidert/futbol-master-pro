@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_mercury_global">
+  <link rel="stylesheet" href="styles.css?v=20261116_mercury_persistent">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -63,13 +63,15 @@
   </svg>
 
   <!-- Escenario Global Fijo de Física Líquida (Mercury / Blobs Parallax) en toda la aplicación -->
-  <div class="mercury-stage stage ios-liquid-bg" id="mercuryStage" aria-hidden="true">
-    <div class="mercury-blob blob blob-1" style="width: 32vw; height: 32vw; min-width: 280px; min-height: 280px; left: 8%; top: 10%; animation-delay: -2s; animation-duration: 22s;"></div>
-    <div class="mercury-blob blob blob-2" style="width: 28vw; height: 28vw; min-width: 240px; min-height: 240px; left: 66%; top: 8%; animation-delay: -5s; animation-duration: 18s;"></div>
-    <div class="mercury-blob blob blob-3" style="width: 38vw; height: 38vw; min-width: 340px; min-height: 340px; left: 16%; top: 54%; animation-delay: -9s; animation-duration: 26s;"></div>
-    <div class="mercury-blob blob blob-4" style="width: 26vw; height: 26vw; min-width: 220px; min-height: 220px; left: 68%; top: 58%; animation-delay: -14s; animation-duration: 20s;"></div>
-    <div class="mercury-blob blob blob-5" style="width: 30vw; height: 30vw; min-width: 260px; min-height: 260px; left: 42%; top: 32%; animation-delay: -7s; animation-duration: 24s;"></div>
-    <div class="mercury-blob blob blob-6" style="width: 24vw; height: 24vw; min-width: 210px; min-height: 210px; left: 80%; top: 36%; animation-delay: -11s; animation-duration: 19s;"></div>
+  <div class="mercury-global-stage stage mercury-stage ios-liquid-bg" id="mercuryStage" aria-hidden="true">
+    <div class="blobs-gooey-layer">
+      <div class="mercury-blob blob blob-1" style="width: 36vw; height: 36vw; min-width: 320px; min-height: 320px; left: 5%; top: 6%; animation-delay: -2s; animation-duration: 22s;"></div>
+      <div class="mercury-blob blob blob-2" style="width: 32vw; height: 32vw; min-width: 280px; min-height: 280px; left: 62%; top: 4%; animation-delay: -5s; animation-duration: 18s;"></div>
+      <div class="mercury-blob blob blob-3" style="width: 40vw; height: 40vw; min-width: 360px; min-height: 360px; left: 12%; top: 48%; animation-delay: -9s; animation-duration: 26s;"></div>
+      <div class="mercury-blob blob blob-4" style="width: 34vw; height: 34vw; min-width: 290px; min-height: 290px; left: 60%; top: 52%; animation-delay: -14s; animation-duration: 20s;"></div>
+      <div class="mercury-blob blob blob-5" style="width: 35vw; height: 35vw; min-width: 300px; min-height: 300px; left: 36%; top: 26%; animation-delay: -7s; animation-duration: 24s;"></div>
+      <div class="mercury-blob blob blob-6" style="width: 30vw; height: 30vw; min-width: 250px; min-height: 250px; left: 72%; top: 30%; animation-delay: -11s; animation-duration: 19s;"></div>
+    </div>
   </div>
 
   <!-- Banner Modo Espectador (Solo Lectura) -->
@@ -5601,7 +5603,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_mercury_global"></script>
+  <script src="app.js?v=20261116_mercury_persistent"></script>
 </body>
 </html>
 

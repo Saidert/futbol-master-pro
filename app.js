@@ -2784,7 +2784,7 @@ function initAuthControls() {
     });
 
     // Parallax Reactivo al Mouse para el Motor Global de Física Líquida (Mercury / Blobs Parallax)
-    const mercuryBlobs = document.querySelectorAll('.mercury-blob, .stage .blob');
+    const mercuryBlobs = document.querySelectorAll('.mercury-blob, .stage .blob, .blobs-gooey-layer .blob');
     if (mercuryBlobs.length > 0) {
       let isRafRunning = false;
       let lastX = 0;
@@ -2800,7 +2800,7 @@ function initAuthControls() {
           requestAnimationFrame(() => {
             mercuryBlobs.forEach((blob, idx) => {
               // Factor de profundidad diferenciado por blob para sensación tridimensional
-              const depthFactor = (idx + 1) * 22;
+              const depthFactor = (idx + 1) * 24;
               blob.style.marginLeft = `${lastX * depthFactor}px`;
               blob.style.marginTop = `${lastY * depthFactor}px`;
             });
