@@ -110,6 +110,14 @@
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"></path><path d="M5 21V7l8-4v18"></path><path d="M19 21V11l-6-3"></path></svg>
           <span>Canchas Colombia</span>
         </a>
+        <a href="#/club" class="nav-link global-nav-link" id="navCoachLink" data-route="club" style="display: none;">
+          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          <span id="navCoachLinkText">Mi Club / Mi Equipo</span>
+        </a>
+        <a href="#/admin" class="nav-link global-nav-link" id="navAdminLink" data-route="admin" style="display: none;">
+          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span id="navAdminLinkText">Dashboard Organizador</span>
+        </a>
 
         <!-- Enlaces de Gestión del Torneo Activo (Ocultos por defecto en Inicio / Visibles al Editar) -->
         <!-- Botón Salir del Torneo (Dashboard) -->
@@ -226,13 +234,25 @@
               <!-- Renderizado dinámicamente según rol -->
             </div>
 
+            <!-- Selector de Rol para la cuenta activa -->
+            <div class="user-active-role-box" id="userActiveRoleBox" style="padding: 0.6rem 0.85rem; background: rgba(255,255,255,0.02); border-radius: 8px; margin: 0.25rem 0.5rem;">
+              <span style="display:block; font-size:0.7rem; color:rgba(255,255,255,0.6); margin-bottom:0.4rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">Cambiar Rol de mi Cuenta:</span>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+                <button type="button" class="btn-self-role-switch" data-switch-my-role="organizer" style="font-size:0.72rem; padding:5px 4px; border-radius:6px; background:rgba(16,185,129,0.15); border:1px solid rgba(16,185,129,0.3); color:#34d399; cursor:pointer; font-weight:600; text-align:center;">🏆 Org</button>
+                <button type="button" class="btn-self-role-switch" data-switch-my-role="coach" style="font-size:0.72rem; padding:5px 4px; border-radius:6px; background:rgba(59,130,246,0.15); border:1px solid rgba(59,130,246,0.3); color:#60a5fa; cursor:pointer; font-weight:600; text-align:center;">📋 DT</button>
+                <button type="button" class="btn-self-role-switch" data-switch-my-role="fan" style="font-size:0.72rem; padding:5px 4px; border-radius:6px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#cbd5e1; cursor:pointer; font-weight:600; text-align:center;">👀 Fan</button>
+              </div>
+            </div>
+
             <div class="user-dropdown-divider"></div>
-            <div class="user-dropdown-section-title">Cambio rápido de rol (Pruebas Demo)</div>
-            <div class="quick-role-switch-grid">
-              <button type="button" class="btn-role-switch" data-switch-role="admin" title="Probar como Administrador General">👑 Admin</button>
-              <button type="button" class="btn-role-switch" data-switch-role="organizer" title="Probar como Organizador de Torneo">🏆 Org</button>
-              <button type="button" class="btn-role-switch" data-switch-role="coach" title="Probar como Director Técnico">📋 DT</button>
-              <button type="button" class="btn-role-switch" data-switch-role="fan" title="Probar como Aficionado">👀 Fan</button>
+            <div id="userDropdownDemoSection" class="user-dropdown-demo-section" style="display: none;">
+              <div class="user-dropdown-section-title">Cambio rápido de rol (Pruebas Demo)</div>
+              <div class="quick-role-switch-grid">
+                <button type="button" class="btn-role-switch" data-switch-role="admin" title="Probar como Administrador General">👑 Admin</button>
+                <button type="button" class="btn-role-switch" data-switch-role="organizer" title="Probar como Organizador de Torneo">🏆 Org</button>
+                <button type="button" class="btn-role-switch" data-switch-role="coach" title="Probar como Director Técnico">📋 DT</button>
+                <button type="button" class="btn-role-switch" data-switch-role="fan" title="Probar como Aficionado">👀 Fan</button>
+              </div>
             </div>
 
             <div class="user-dropdown-divider"></div>
@@ -280,7 +300,11 @@
         </a>
         <a href="#/club" class="mobile-nav-item global-nav-link" id="mobileNavCoachLink" data-route="club" style="display: none;">
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-          <span>Mi Club / Inscripciones</span>
+          <span id="mobileNavCoachLinkText">Mi Club / Mi Equipo</span>
+        </a>
+        <a href="#/admin" class="mobile-nav-item global-nav-link" id="mobileNavAdminLink" data-route="admin" style="display: none;">
+          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span id="mobileNavAdminLinkText">Dashboard Organizador</span>
         </a>
         <a href="#/equipos" class="mobile-nav-item tournament-nav-link" data-route="equipos">
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -332,7 +356,7 @@
       </div>
       <div class="print-meta-box">
         <div class="print-official-badge">DOCUMENTO OFICIAL</div>
-        <div id="printReportDate" class="print-date">Fecha de emisión: --/--/----</div>
+        <div id="printReportDate" class="print-date">Fecha de emisión: 16/11/2026</div>
       </div>
     </div>
   </div>
@@ -3357,6 +3381,9 @@
 
       <!-- Navegación de Pestañas del Panel Admin -->
       <div class="admin-subtabs-nav">
+        <button type="button" class="admin-subtab-btn" data-subtab="admin-tab-organizador" id="btnAdminSubtabOrg">
+          <span>💼 Dashboard Organizador & Caja</span>
+        </button>
         <button type="button" class="admin-subtab-btn active" data-subtab="admin-tab-audit">
           <span>🛡️ Historial de Auditoría (fmp_audit_log)</span>
         </button>
@@ -3372,6 +3399,131 @@
         <button type="button" class="admin-subtab-btn" data-subtab="admin-tab-corrections">
           <span>⚖️ Corrección Auditada de Resultados</span>
         </button>
+      </div>
+
+      <!-- Pestaña 0: Dashboard Organizador & Control Financiero (Caja del Torneo) -->
+      <div class="admin-subtab-pane" id="admin-tab-organizador">
+        <!-- 1. KPIs y Embudo de Cupos -->
+        <div class="admin-filters-bar" style="margin-bottom: 1.5rem;">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.25rem 0;">Embudo de Cupos y Solicitudes de Clubes</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Gestión gerencial y operativa de equipos admitidos, cupos disponibles y avance del torneo.</p>
+          </div>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <select id="orgDashboardTournamentSelect" class="select-filter-pill" style="max-width: 320px;">
+              <!-- Opciones dinámicas -->
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+          <!-- Card Cupos -->
+          <div class="admin-stat-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 700;">Capacidad &amp; Cupos de Equipos</span>
+              <span id="orgSpotsPercentBadge" style="font-size: 0.75rem; background: rgba(16,185,129,0.2); color: #34d399; padding: 2px 8px; border-radius: 4px; font-weight: 800;">0%</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <strong id="orgSpotsCountText" style="font-size: 1.6rem; color: #f8fafc;">0 / 16</strong>
+              <span style="color: #94a3b8; font-size: 0.85rem;">Clubes Inscritos</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 9999px; overflow: hidden;">
+              <div id="orgSpotsProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #10b981, #059669); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Card Solicitudes Pendientes -->
+          <div class="admin-stat-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 700;">Solicitudes de Clubes</span>
+              <span id="orgPendingRequestsBadge" style="font-size: 0.75rem; background: rgba(245,158,11,0.2); color: #fbbf24; padding: 2px 8px; border-radius: 4px; font-weight: 800;">0 Nuevas</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <strong id="orgPendingRequestsCount" style="font-size: 1.6rem; color: #fbbf24;">0</strong>
+              <span style="color: #94a3b8; font-size: 0.85rem;">Esperando Aprobación</span>
+            </div>
+            <span style="font-size: 0.75rem; color: #cbd5e1;">Revisa y aprueba directamente en el panel inferior</span>
+          </div>
+
+          <!-- Card Avance del Campeonato -->
+          <div class="admin-stat-card" style="padding: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <span style="font-size: 0.85rem; color: #94a3b8; font-weight: 700;">Avance del Campeonato</span>
+              <span id="orgProgressMatchesPercent" style="font-size: 0.75rem; background: rgba(59,130,246,0.2); color: #60a5fa; padding: 2px 8px; border-radius: 4px; font-weight: 800;">0%</span>
+            </div>
+            <div style="display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.5rem;">
+              <strong id="orgProgressMatchesCount" style="font-size: 1.6rem; color: #60a5fa;">0 / 0</strong>
+              <span style="color: #94a3b8; font-size: 0.85rem;">Partidos Jugados</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 9999px; overflow: hidden;">
+              <div id="orgMatchesProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #3b82f6, #2563eb); transition: width 0.3s ease;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solicitudes Pendientes para Aprobación Rápida -->
+        <div id="orgQuickRequestsContainer" style="margin-bottom: 2rem;">
+          <h4 style="color: #fbbf24; font-size: 1rem; font-weight: 800; margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.4rem;">
+            <span>⚡</span> Solicitudes Pendientes de Aprobación Inmediata
+          </h4>
+          <div class="admin-table-container">
+            <table class="admin-data-table" id="tableOrgQuickRequests">
+              <thead>
+                <tr>
+                  <th>Club / Solicitante</th>
+                  <th>Director Técnico</th>
+                  <th>Ciudad</th>
+                  <th>Fecha</th>
+                  <th style="text-align: center; width: 180px;">Acción Rápida</th>
+                </tr>
+              </thead>
+              <tbody id="orgQuickRequestsTbody">
+                <!-- Renderizado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Control Financiero y Caja del Torneo (Paz y Salvo de Clubes) -->
+        <div class="admin-filters-bar" style="margin-top: 2rem; margin-bottom: 1rem;">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: #34d399; margin: 0 0 0.25rem 0; display: flex; align-items: center; gap: 0.5rem;">
+              <span>💰</span> Caja del Torneo &amp; Control de Paz y Salvo Oficial
+            </h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Supervisión de pagos de inscripción, multas acumuladas por tarjetas y expedición de paz y salvo en cancha.</p>
+          </div>
+        </div>
+
+        <!-- Tabla Financiera de Clubes -->
+        <div class="admin-table-container" style="margin-bottom: 2.5rem;">
+          <table class="admin-data-table" id="tableOrgFinancialTeams">
+            <thead>
+              <tr>
+                <th>Club / Equipo</th>
+                <th style="text-align: center;">Inscripción</th>
+                <th style="text-align: center;">🟨 Amarillas</th>
+                <th style="text-align: center;">🟥 Rojas</th>
+                <th>Multas Tarjetas</th>
+                <th>Deuda Total COP</th>
+                <th style="text-align: center;">Estado Paz y Salvo</th>
+                <th style="text-align: center; width: 170px;">Acción de Cobro</th>
+              </tr>
+            </thead>
+            <tbody id="orgFinancialTeamsTbody">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3. Alertas Operativas de la Jornada -->
+        <div style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(245, 158, 11, 0.35); border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;">
+          <h4 style="color: #fbbf24; font-size: 1rem; font-weight: 800; margin: 0 0 0.75rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🚨</span> Alertas Operativas de la Próxima Jornada
+          </h4>
+          <div id="orgOperationalAlertsList" style="display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.85rem;">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
       </div>
 
       <!-- Pestaña 1: Historial de Auditoría -->
@@ -3558,7 +3710,7 @@
   </section>
 
   <!-- VISTA 11: PANEL MI CLUB / DIRECTOR TÉCNICO Y PLANTILLAS -->
-  <section id="view-coach" class="spa-view">
+  <section id="view-club" class="spa-view" data-alias="view-coach">
     <div class="coach-panel-container">
       <!-- Hero del Club -->
       <div class="club-hero-card">
@@ -3586,15 +3738,142 @@
         </div>
       </div>
 
+      <!-- RESUMEN EN VIVO: ¿CÓMO VA MI EQUIPO? (DASHBOARD DT) -->
+      <div class="coach-dashboard-summary-grid" style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+        <!-- Tarjeta Próximo Partido -->
+        <div class="coach-next-match-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(16, 185, 129, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+              <span>⚽</span> Próximo Partido Programado
+            </span>
+            <span id="coachNextMatchBadge" class="live-round-badge" style="background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Jornada Activa</span>
+          </div>
+          <div id="coachNextMatchContent" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px;">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span id="coachMyTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                <strong id="coachMyTeamName" style="color: #fff; font-size: 0.95rem;">Mi Equipo</strong>
+              </div>
+              <span style="font-weight: 800; color: #94a3b8; font-size: 0.85rem;">VS</span>
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <strong id="coachRivalTeamName" style="color: #60a5fa; font-size: 0.95rem;">Rival Pendiente</strong>
+                <span id="coachRivalTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.82rem; color: #cbd5e1;">
+              <div>📅 <strong id="coachNextMatchDate">Por programar</strong></div>
+              <div>⏰ <strong id="coachNextMatchTime">--:--</strong></div>
+              <div style="grid-column: span 2;">🏟️ Sede: <strong id="coachNextMatchVenue">Cancha Asignada Colombia</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta Estadísticas Actuales en Torneo -->
+        <div class="coach-stats-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+            <span style="font-size: 0.8rem; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+              <span>📊</span> Estado en la Competición
+            </span>
+            <span id="coachPositionBadge" style="font-size: 0.85rem; font-weight: 800; color: #34d399; background: rgba(16,185,129,0.15); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Posición #--</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 0.75rem;">
+            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">PTS</span>
+              <strong id="coachStatPts" style="font-size: 1.15rem; color: #34d399;">0</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">PJ</span>
+              <strong id="coachStatPj" style="font-size: 1.15rem; color: #f8fafc;">0</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">DG</span>
+              <strong id="coachStatDg" style="font-size: 1.15rem; color: #38bdf8;">0</strong>
+            </div>
+            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">V-E-D</span>
+              <strong id="coachStatRecord" style="font-size: 0.95rem; color: #f8fafc;">0-0-0</strong>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem;">
+            <span>Racha reciente:</span>
+            <div id="coachRecentStreak" style="display: flex; gap: 0.25rem;">
+              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #10b981; color: #fff;">V</span>
+              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #f59e0b; color: #fff;">E</span>
+              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #10b981; color: #fff;">V</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN: ESTADO DISCIPLINARIO Y PAZ Y SALVO (MULTAS EN COP) -->
+      <div class="coach-disciplinary-section" style="margin-top: 1.5rem; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+          <div>
+            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #f87171; display: flex; align-items: center; gap: 0.5rem;">
+              <span>⚖️</span> Estado Disciplinario y Paz y Salvo Oficial (COP)
+            </h3>
+            <p style="margin: 0.2rem 0 0 0; font-size: 0.82rem; color: #94a3b8;">
+              Reglamento FCF / Torneos Colombia: Tarjeta Amarilla = $10.000 COP • Tarjeta Roja = $20.000 COP • 3 Amarillas o 1 Roja = Suspensión automática.
+            </p>
+          </div>
+          <div id="coachPazYSalvoBadge" style="padding: 0.4rem 0.9rem; border-radius: 9999px; font-size: 0.82rem; font-weight: 800; background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);">
+            ✓ PAZ Y SALVO EN MESA
+          </div>
+        </div>
+
+        <!-- 3 Tarjetas de Resumen Financiero Disciplinario -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
+          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #fbbf24;">
+            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Tarjetas Amarillas Acumuladas</span>
+            <strong id="coachTotalYellowCards" style="font-size: 1.2rem; color: #fbbf24;">0</strong>
+            <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($10.000 COP c/u)</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #f87171;">
+            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Tarjetas Rojas Registradas</span>
+            <strong id="coachTotalRedCards" style="font-size: 1.2rem; color: #f87171;">0</strong>
+            <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($20.000 COP c/u)</span>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #34d399;">
+            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Total Multas Disciplinarias</span>
+            <strong id="coachTotalFinesCop" style="font-size: 1.2rem; color: #34d399;">$0 COP</strong>
+            <span id="coachFinesPaidStatus" style="font-size: 0.72rem; color: #94a3b8; display: block; margin-top: 0.2rem;">Al día sin deudas</span>
+          </div>
+        </div>
+
+        <!-- Tabla de Sanciones y Habilitaciones de Jugadores -->
+        <div class="admin-table-container" style="margin-bottom: 0;">
+          <table class="admin-data-table" id="tableCoachSanctions">
+            <thead>
+              <tr>
+                <th style="width: 60px; text-align: center;">Dorsal</th>
+                <th>Jugador</th>
+                <th style="text-align: center; width: 90px;">🟨 Amarillas</th>
+                <th style="text-align: center; width: 90px;">🟥 Rojas</th>
+                <th>Multa Total COP</th>
+                <th style="text-align: center;">Estado para Próxima Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="coachSanctionsTableBody">
+              <!-- Renderizado dinámico -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- Layout 2 Columnas: Plantilla de Jugadores vs Postulaciones -->
       <div class="admin-filters-bar" style="margin-top: 1.5rem;">
         <div>
           <h3 style="font-size: 1.4rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.25rem 0;">Plantilla Oficial de Jugadores</h3>
           <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Registro legal con documento de identidad y afiliación a salud conforme a la Ley del Deporte y Habeas Data Colombia.</p>
         </div>
-        <button type="button" class="btn-primary-neon" id="btnOpenAddPlayerForm">
-          <span>+ Inscribir Jugador</span>
-        </button>
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+          <button type="button" class="btn-tool-outline" id="btnToggleCarnetsView" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa;">
+            <span>🪪 Ver Carnets Digitales</span>
+          </button>
+          <button type="button" class="btn-primary-neon" id="btnOpenAddPlayerForm">
+            <span>+ Inscribir Jugador</span>
+          </button>
+        </div>
       </div>
 
       <!-- Formulario Desplegable para Agregar Jugador -->
@@ -3676,7 +3955,7 @@
       </div>
 
       <!-- Tabla de Jugadores de la Plantilla -->
-      <div class="admin-table-container" style="margin-bottom: 3rem;">
+      <div class="admin-table-container" id="coachRosterTableContainer" style="margin-bottom: 2rem;">
         <table class="admin-data-table" id="tableCoachRoster">
           <thead>
             <tr>
@@ -3694,6 +3973,19 @@
             <!-- Renderizado dinámicamente -->
           </tbody>
         </table>
+      </div>
+
+      <!-- Contenedor de Carnets Digitales de la Plantilla -->
+      <div id="coachCarnetsContainer" style="display: none; margin-bottom: 2.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div>
+            <h4 style="font-size: 1.15rem; font-weight: 800; color: #f8fafc; margin: 0;">Carnets Digitales Homologados FCF 🇨🇴</h4>
+            <span style="font-size: 0.8rem; color: #94a3b8;">Fichas individuales reglamentarias con estado de habilitación para planillaje</span>
+          </div>
+        </div>
+        <div id="coachCarnetsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+          <!-- Renderizado dinámico de los carnets -->
+        </div>
       </div>
 
       <!-- Sección 2: Postulación a Torneos Abiertos -->
@@ -3992,6 +4284,50 @@
             </button>
           </div>
         </div>
+
+        <!-- Sección de Tarjetas Disciplinarias (Amarillas y Rojas) -->
+        <div class="cards-disciplinary-section" style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+            <div>
+              <strong style="color: #fbbf24; font-size: 0.95rem; display: flex; align-items: center; gap: 0.4rem;">
+                <span>🟨 🟥</span> Registro de Amonestaciones y Expulsiones (FCF)
+              </strong>
+              <span style="font-size: 0.78rem; color: #94a3b8;">
+                Amarilla = $10.000 COP • Roja = $20.000 COP y suspensión automática para la siguiente fecha.
+              </span>
+            </div>
+          </div>
+
+          <div class="scorers-dual-columns">
+            <!-- Tarjetas Equipo Local -->
+            <div class="scorers-team-col">
+              <div class="team-col-header" style="border-bottom: 1px solid rgba(251, 191, 36, 0.3);">
+                <span class="team-dot" id="cardsHomeTeamDot" style="background-color: #fbbf24;"></span>
+                <h4 id="cardsHomeTeamName">Tarjetas Local</h4>
+              </div>
+              <div class="cards-inputs-list" id="cardsHomeList" style="display: flex; flex-direction: column; gap: 0.5rem; margin: 0.75rem 0;">
+                <!-- Filas de tarjetas dinámicas -->
+              </div>
+              <button type="button" class="btn-chip" onclick="addCardRow('home')" style="font-size: 0.8rem;">
+                <span>+ Añadir Tarjeta (Local)</span>
+              </button>
+            </div>
+
+            <!-- Tarjetas Equipo Visitante -->
+            <div class="scorers-team-col">
+              <div class="team-col-header" style="border-bottom: 1px solid rgba(239, 68, 68, 0.3);">
+                <span class="team-dot" id="cardsAwayTeamDot" style="background-color: #ef4444;"></span>
+                <h4 id="cardsAwayTeamName">Tarjetas Visitante</h4>
+              </div>
+              <div class="cards-inputs-list" id="cardsAwayList" style="display: flex; flex-direction: column; gap: 0.5rem; margin: 0.75rem 0;">
+                <!-- Filas de tarjetas dinámicas -->
+              </div>
+              <button type="button" class="btn-chip" onclick="addCardRow('away')" style="font-size: 0.8rem;">
+                <span>+ Añadir Tarjeta (Visitante)</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Sección de Soporte Oficial y Carga de Acta (PDF / Imagen - Fase 6) -->
@@ -4030,7 +4366,7 @@
 
       <div class="modal-actions">
         <button type="button" class="btn-ghost" id="btnCancelScorers">Cerrar</button>
-        <button type="button" class="btn-accent" id="btnSaveScorers">Guardar Goleadores</button>
+        <button type="button" class="btn-accent" id="btnSaveScorers">Guardar Acta y Sanciones</button>
       </div>
     </div>
   </div>
@@ -4345,9 +4681,9 @@
               <div class="form-group">
                 <label for="regRole">Rol Principal *</label>
                 <select id="regRole" class="auth-select" required>
-                  <option value="organizer">Organizador de Torneo</option>
-                  <option value="coach" selected>Técnico / Delegado de Club</option>
-                  <option value="fan">Aficionado / Visitante</option>
+                  <option value="organizer" selected>Organizador de Torneo (Crear y administrar)</option>
+                  <option value="coach">Director Técnico / Delegado (Inscribir equipos)</option>
+                  <option value="fan">Aficionado / Visitante (Consultar resultados)</option>
                 </select>
               </div>
 
