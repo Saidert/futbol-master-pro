@@ -14763,6 +14763,10 @@ body.role-organizer .btn-create-header {
   box-sizing: border-box !important;
 }
 
+.auth-modal-overlay.active {
+  display: flex !important;
+}
+
 .auth-modal-close {
   font-size: 1.35rem !important;
   padding: 0 4px !important;

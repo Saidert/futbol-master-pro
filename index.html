@@ -30,6 +30,20 @@
       z-index: 99999 !important;
     }
   </style>
+  <script>
+    (function() {
+      // Garantía absoluta: El modal de autenticación permanece oculto al cargar o recargar
+      document.addEventListener('DOMContentLoaded', function() {
+        var m = document.getElementById('authModalOverlay');
+        if (m) {
+          m.classList.remove('active');
+          m.style.setProperty('display', 'none', 'important');
+          m.style.display = 'none';
+        }
+        document.body.classList.remove('auth-modal-open');
+      });
+    })();
+  </script>
 </head>
 <body class="role-guest">
     <!-- Fondo de estadio con iluminación de focos -->
