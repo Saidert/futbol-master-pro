@@ -2412,36 +2412,10 @@ function updateAuthUI() {
       userDropdownDemoSection.style.display = isDevAdmin ? 'block' : 'none';
     }
 
-    // FASE 1: Acciones contextuales del menú de usuario
+    // Menú de usuario limpio: solo datos fijos y cerrar sesión
     if (userRoleActionsList) {
-      if (role === 'coach') {
-        userRoleActionsList.innerHTML = `
-          <a href="#/club" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>📋 Mi Club / Mi Plantilla</span>
-          </a>
-          <a href="#/torneos" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>🏆 Inscribirme a Torneos</span>
-          </a>
-        `;
-      } else if (role === 'organizer' || role === 'admin') {
-        userRoleActionsList.innerHTML = `
-          <a href="#/admin" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>💼 Dashboard Organizador & Caja</span>
-          </a>
-          <a href="#/crear" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>➕ Crear Nuevo Torneo</span>
-          </a>
-          <a href="#/canchas" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>🏟️ Canchas Colombia</span>
-          </a>
-        `;
-      } else {
-        userRoleActionsList.innerHTML = `
-          <a href="#/torneos" class="user-menu-item" onclick="document.getElementById('userDropdownMenu').style.display='none';">
-            <span>🏆 Torneos Disponibles</span>
-          </a>
-        `;
-      }
+      userRoleActionsList.innerHTML = '';
+      userRoleActionsList.style.display = 'none';
     }
 
     // FASE 1: Navegación Inteligente según el Rol
@@ -2455,10 +2429,10 @@ function updateAuthUI() {
     if (mobileNavCoachLink) mobileNavCoachLink.style.display = canSeeCoach ? 'flex' : 'none';
     if (dropdownLinkCoach) dropdownLinkCoach.style.display = canSeeCoach ? 'flex' : 'none';
 
-    // 3. Dashboard Organizador / Admin exclusivo para Organizador y SuperAdmin
+    // 3. Dashboard Organizador / Admin
     const isOrgOrAdmin = (role === 'admin' || role === 'organizer');
-    if (navAdminLink) navAdminLink.style.display = isOrgOrAdmin ? 'inline-flex' : 'none';
-    if (mobileNavAdminLink) mobileNavAdminLink.style.display = isOrgOrAdmin ? 'flex' : 'none';
+    if (navAdminLink) navAdminLink.style.display = (role === 'organizer') ? 'inline-flex' : 'none';
+    if (mobileNavAdminLink) mobileNavAdminLink.style.display = (role === 'organizer') ? 'flex' : 'none';
     if (btnHeaderCrear) btnHeaderCrear.style.display = isOrgOrAdmin ? 'inline-flex' : 'none';
     if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = isOrgOrAdmin ? 'flex' : 'none';
 
@@ -2466,6 +2440,26 @@ function updateAuthUI() {
     const torneosLabel = (isOrgOrAdmin || role === 'coach') ? 'Mis Torneos' : 'Torneos';
     if (navLinkTorneosText) navLinkTorneosText.textContent = torneosLabel;
     if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = torneosLabel;
+
+    // Modo Exclusivo de Administrador General: ocultar cápsula y mostrar badge central
+    const adminBadge = document.getElementById('headerAdminTitleBadge');
+    const headerNavCenter = document.getElementById('headerNavCenter');
+    if (role === 'admin') {
+      if (adminBadge) adminBadge.style.display = 'inline-flex';
+      if (headerNavCenter) headerNavCenter.style.display = 'none';
+      if (btnHeaderCrear) {
+        btnHeaderCrear.style.display = 'inline-flex';
+        const btnHeaderCrearText = document.getElementById('btnHeaderCrearText');
+        if (btnHeaderCrearText) btnHeaderCrearText.textContent = '+ Nuevo Torneo';
+      }
+      // Redirigir siempre a #/admin si está en una vista exterior
+      const curR = getNormalizedRoute();
+      if (curR !== 'admin') {
+        setTimeout(() => navigateToView('admin', true), 40);
+      }
+    } else {
+      if (adminBadge) adminBadge.style.display = 'none';
+    }
 
     // 4. Filtrar pestañas internas de torneo según permisos
     filterTournamentTabsByRole(role);
@@ -2725,31 +2719,21 @@ function initAuthControls() {
     }
   }
 
-    // 3 Botones de Selección de Rol (Punto 2: NO login de 1 clic sin credenciales)
-  const demoRoleMap = {
-    btnQuickOrganizer: 'organizer',
-    btnQuickCoach: 'coach',
-    btnQuickFan: 'fan'
-  };
-  Object.entries(demoRoleMap).forEach(([id, roleKey]) => {
-    const btn = document.getElementById(id);
-    if (btn) {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.btn-quick-role').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-
-        const regRole = document.getElementById('regRole');
-        if (regRole) regRole.value = roleKey;
-
-        const tabBtnRegister = document.getElementById('tabBtnRegister');
-        if (tabBtnRegister) tabBtnRegister.click();
-        const inputName = document.getElementById('regFullName');
-        if (inputName) inputName.focus();
-
-        const roleLabels = { organizer: 'Organizador', coach: 'Técnico / Delegado', fan: 'Aficionado' };
-        showToast(`Rol seleccionado: ${roleLabels[roleKey] || roleKey}. Ingresa tus datos para completar tu registro oficial.`, 'info', 2500);
-      });
-    }
+  // Selección de Rol Exclusiva para Formulario de Registro (Crear Cuenta)
+  const regRoleButtons = document.querySelectorAll('.quick-roles-grid .btn-quick-role');
+  regRoleButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      regRoleButtons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      const roleKey = btn.getAttribute('data-register-role') || btn.getAttribute('data-demo-role') || 'organizer';
+      const regRole = document.getElementById('regRole');
+      if (regRole) regRole.value = roleKey;
+      const roleLabels = { organizer: 'Organizador de Torneo', coach: 'Director Técnico / Delegado', fan: 'Aficionado / Seguidor' };
+      if (typeof showToast === 'function') {
+        showToast(`Rol de registro seleccionado: ${roleLabels[roleKey] || roleKey}`, 'info', 2000);
+      }
+    });
   });
 
   // Switcher rápido de Roles dentro del User Dropdown
@@ -3775,7 +3759,15 @@ function navigateToView(targetRoute, updateHash = true) {
     }, 60);
     return;
   }
-  const routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
+  let routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
+
+  // Modo Exclusivo de Admin: No salir del Dashboard general #/admin
+  const sessionCheck = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (sessionCheck && sessionCheck.loggedIn && normalizeRole(sessionCheck.role) === 'admin') {
+    if (routeId !== 'admin' && routeId !== 'crear') {
+      routeId = 'admin';
+    }
+  }
 
   // Sincronizar data-route y clases en body para selectores CSS de ocultamiento
   document.body.setAttribute('data-route', routeId);
@@ -5219,13 +5211,19 @@ function initAdminPanelControls() {
       document.querySelectorAll('.admin-subtab-pane').forEach(pane => {
         pane.classList.toggle('active', pane.id === targetSubtab);
       });
-      if (targetSubtab === 'admin-tab-dashboard') renderAdminLiveDashboard();
-      else if (targetSubtab === 'admin-tab-organizador') renderAdminOrganizerTab();
-      else if (targetSubtab === 'admin-tab-audit') renderAdminAuditTable();
-      else if (targetSubtab === 'admin-tab-venues') renderAdminVenuesCatalog();
-      else if (targetSubtab === 'admin-tab-tournaments') renderAdminTournamentsTable();
-      else if (targetSubtab === 'admin-tab-users') renderAdminUsersTable();
-      else if (targetSubtab === 'admin-tab-corrections') renderAdminCorrectionsTab();
+      if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
+        renderAdminLiveDashboard();
+        renderAdminAuditTable();
+      } else if (targetSubtab === 'admin-tab-tournaments' || targetSubtab === 'admin-tab-corrections') {
+        renderAdminTournamentsTable();
+        renderAdminCorrectionsTab();
+      } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
+        renderAdminOrganizerTab();
+      } else if (targetSubtab === 'admin-tab-venues') {
+        renderAdminVenuesCatalog();
+      } else if (targetSubtab === 'admin-tab-users') {
+        renderAdminUsersTable();
+      }
     });
   });
 
@@ -5512,15 +5510,23 @@ function renderAdminView() {
   const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const role = normalizeRole(session?.role || 'fan');
 
-  // Si el usuario es Organizador, activar por defecto la pestaña de Dashboard Organizador
+  // Si el usuario es Organizador, activar la pestaña de Clubes & Finanzas
   if (role === 'organizer') {
-    const orgSubtabBtn = document.getElementById('btnAdminSubtabOrg');
+    const orgSubtabBtn = document.getElementById('btnAdminSubtabClubsFinances') || document.getElementById('btnAdminSubtabOrg');
     if (orgSubtabBtn) {
       document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.remove('active'));
       orgSubtabBtn.classList.add('active');
-      const orgPane = document.getElementById('admin-tab-organizador');
+      const orgPane = document.getElementById('admin-tab-clubs-finances') || document.getElementById('admin-tab-organizador');
       if (orgPane) orgPane.classList.add('active');
+    }
+  } else {
+    // Si no hay pestaña activa, activar Vista General
+    const activeSubtab = document.querySelector('.admin-subtab-btn.active') || document.getElementById('btnAdminSubtabOverview');
+    if (activeSubtab) {
+      const paneId = activeSubtab.getAttribute('data-subtab');
+      document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b === activeSubtab));
+      document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
     }
   }
 
@@ -5767,9 +5773,11 @@ function renderAdminTournamentsTable() {
           </span>
         </td>
         <td>
-          <div style="display: flex; gap: 0.35rem;">
-            <button type="button" class="btn-action-view btn-admin-manage-t" data-id="${t.id}" title="Gestionar como Administrador">Gestionar</button>
-            <button type="button" class="btn-action-view btn-admin-delete-t" data-id="${t.id}" style="color: #f87171; border-color: rgba(248,113,113,0.3);" title="Eliminar torneo">Eliminar</button>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button type="button" class="btn-action-view btn-admin-manage-t" data-id="${t.id}" title="Ver y editar calendario">📅 Calendario</button>
+            <button type="button" class="btn-action-view btn-admin-table-t" data-id="${t.id}" title="Ver tabla de posiciones">📊 Tabla</button>
+            <button type="button" class="btn-action-view btn-admin-bracket-t" data-id="${t.id}" title="Ver cuadro de llaves">🔀 Cuadro</button>
+            <button type="button" class="btn-action-view btn-admin-delete-t" data-id="${t.id}" style="color: #f87171; border-color: rgba(248,113,113,0.3);" title="Eliminar torneo">🗑️</button>
           </div>
         </td>
       </tr>
@@ -5783,6 +5791,20 @@ function renderAdminTournamentsTable() {
       document.body.classList.add('managing-tournament');
       setPublicMode(false, false);
       setActiveTournament(id, 'calendario');
+    });
+  });
+
+  tbody.querySelectorAll('.btn-admin-table-t').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      setActiveTournament(id, 'clasificacion');
+    });
+  });
+
+  tbody.querySelectorAll('.btn-admin-bracket-t').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      setActiveTournament(id, 'cuadro');
     });
   });
 
@@ -14988,8 +15010,18 @@ document.addEventListener('DOMContentLoaded', () => {
       const pane = document.getElementById(targetSubtab);
       if (pane) pane.classList.add('active');
 
-      if (targetSubtab === 'admin-tab-organizador') {
+      if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
+        renderAdminLiveDashboard();
+        renderAdminAuditTable();
+      } else if (targetSubtab === 'admin-tab-tournaments') {
+        renderAdminTournamentsTable();
+        renderAdminCorrectionsTab();
+      } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
         renderAdminOrganizerTab();
+      } else if (targetSubtab === 'admin-tab-venues') {
+        renderAdminVenuesCatalog();
+      } else if (targetSubtab === 'admin-tab-users') {
+        renderAdminUsersTable();
       }
     });
   });
