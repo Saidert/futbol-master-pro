@@ -200,7 +200,7 @@
               </div>
             </div>
             <div class="user-dropdown-divider"></div>
-            <button type="button" class="user-menu-item logout" id="btnLogoutUser">
+            <button type="button" class="user-menu-item logout" id="btnLogoutUser" onclick="handleLogout(event)">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
               <span>Cerrar Sesión</span>
             </button>
@@ -313,6 +313,10 @@
         <button type="button" class="btn-auth-header glass" id="btnMobileAuth" style="width: 100%; justify-content: center; margin-bottom: 0.65rem;">
           <svg class="auth-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
           <span class="auth-btn-label" id="mobileAuthBtnLabel">Iniciar Sesión</span>
+        </button>
+        <button type="button" class="btn-auth-header glass btn-mobile-logout" id="btnMobileLogout" onclick="handleLogout(event)" style="display: none; width: 100%; justify-content: center; margin-bottom: 0.65rem; color: #f87171; border-color: rgba(239, 68, 68, 0.35); background: rgba(239, 68, 68, 0.1); font-weight: 700;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+          <span>Cerrar Sesión</span>
         </button>
         <a href="#/crear" class="btn-primary-neon mobile-create-btn" id="mobileBtnCreateNew" style="display: none;">
           + Crear Nuevo Torneo
@@ -3366,6 +3370,10 @@
           </button>
           <button type="button" class="btn-primary-neon" id="btnAdminQuickTournament" onclick="navigateTo('crear')">
             <span>+ Nuevo Torneo</span>
+          </button>
+          <button type="button" class="btn-chip btn-admin-logout" id="btnAdminDirectLogout" onclick="handleLogout(event)" style="background: rgba(239, 68, 68, 0.14); border-color: rgba(239, 68, 68, 0.4); color: #f87171; font-weight: 700; padding: 0.6rem 1.1rem; margin-left: 0.5rem; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;" title="Cerrar sesión de Administrador General">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            <span>Cerrar Sesión</span>
           </button>
         </div>
       </div>

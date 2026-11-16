@@ -15856,3 +15856,16 @@ body.role-admin #mobileNavCreateLink,
 body.role-admin #mobileBtnCreateNew {
   display: flex !important;
 }
+
+/* Botón Directo de Cerrar Sesión en Panel de Administración */
+.btn-admin-logout {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-admin-logout:hover {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: rgba(239, 68, 68, 0.65) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25) !important;
+}

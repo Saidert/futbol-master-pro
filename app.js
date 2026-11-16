@@ -2014,6 +2014,7 @@ const FMPStore = {
 
   // Operaciones de Auditoría
   getAuditLog() { return this.db.auditLog; },
+  getAuditLogs() { return this.db.auditLog; },
   logAudit(action, details, targetId = null) {
     const session = this.getSession() || {};
     const now = new Date();
@@ -2153,13 +2154,18 @@ function getAuditLogs() {
 }
 
 function logAudit(action, details, targetId = null) {
-  const entry = FMPStore.logAudit(action, details, targetId);
-  const adminView = document.getElementById('view-admin');
-  if (adminView && adminView.classList.contains('active')) {
-    if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
-    if (typeof renderAdminStats === 'function') renderAdminStats();
+  try {
+    const entry = (typeof FMPStore !== 'undefined' && FMPStore.logAudit) ? FMPStore.logAudit(action, details, targetId) : null;
+    const adminView = document.getElementById('view-admin');
+    if (adminView && adminView.classList.contains('active')) {
+      if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
+      if (typeof renderAdminStats === 'function') renderAdminStats();
+    }
+    return entry;
+  } catch(e) {
+    console.warn('Advertencia en logAudit:', e);
+    return null;
   }
-  return entry;
 }
 
 // -----------------------------------------------------------------------------
@@ -2366,6 +2372,7 @@ function updateAuthUI() {
   const mobileNavAdminLink = document.getElementById('mobileNavAdminLink');
   const mobileNavCreateLink = document.getElementById('mobileNavCreateLink');
   const mobileBtnCreateNew = document.getElementById('mobileBtnCreateNew');
+  const btnMobileLogout = document.getElementById('btnMobileLogout');
   const dropdownLinkCoach = document.getElementById('dropdownLinkCoach');
   const dropdownLinkAdmin = document.getElementById('dropdownLinkAdmin');
 
@@ -2417,6 +2424,7 @@ function updateAuthUI() {
     // 3. Zona derecha: Sin notificaciones y botón "Iniciar Sesión" limpio
     if (notificationsWrap) notificationsWrap.style.display = 'none';
     if (notificationsBadge) notificationsBadge.style.display = 'none';
+    if (btnMobileLogout) btnMobileLogout.style.display = 'none';
     if (authBtnText) authBtnText.textContent = 'Iniciar Sesión';
     if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión';
     if (userAvatarBadge) { userAvatarBadge.style.display = 'none'; userAvatarBadge.textContent = ''; }
@@ -2444,6 +2452,7 @@ function updateAuthUI() {
       userAvatarBadge.textContent = initials;
     }
     if (authIconSvg) authIconSvg.style.display = 'none';
+    if (btnMobileLogout) btnMobileLogout.style.display = 'inline-flex';
     if (dropdownUserName) dropdownUserName.textContent = userName;
     if (dropdownUserEmail) dropdownUserEmail.textContent = session.email || (role === 'admin' ? 'admin@futbolmaster.co' : 'usuario@futbolmaster.co');
 
@@ -3061,20 +3070,82 @@ function initAuthControls() {
     });
   }
 
-// Cerrar Sesión
+// Cerrar Sesión Universal y Definitivo
   const btnLogoutUser = document.getElementById('btnLogoutUser');
   if (btnLogoutUser) {
-    btnLogoutUser.addEventListener('click', () => {
-      if (userSession) {
-        logAudit('CIERRE_SESION', `Cerró sesión (${userSession.email})`);
-      }
-      saveUserSession(null);
-      if (userDropdownMenu) userDropdownMenu.style.display = 'none';
-      navigateToView('home');
-      showToast('Sesión cerrada correctamente', 'info', 2000);
-    });
+    btnLogoutUser.addEventListener('click', window.handleLogout);
+  }
+  const btnAdminDirectLogout = document.getElementById('btnAdminDirectLogout');
+  if (btnAdminDirectLogout) {
+    btnAdminDirectLogout.addEventListener('click', window.handleLogout);
+  }
+  const btnMobileLogout = document.getElementById('btnMobileLogout');
+  if (btnMobileLogout) {
+    btnMobileLogout.addEventListener('click', window.handleLogout);
   }
 }
+
+/**
+ * Cierre de sesión definitivo, seguro e incondicional
+ */
+window.handleLogout = function(e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+
+  // 1. Auditoría protegida sin bloquear el logout si algo falla
+  try {
+    const curEmail = userSession?.email || (typeof FMPStore !== 'undefined' && FMPStore.getSession && FMPStore.getSession()?.email) || 'Usuario';
+    if (typeof logAudit === 'function') {
+      logAudit('CIERRE_SESION', `Cerró sesión (${curEmail})`);
+    }
+  } catch(err) {
+    console.warn('Advertencia en auditoría logout:', err);
+  }
+
+  // 2. Limpieza total de sesión y almacenamiento
+  userSession = null;
+  window.userSession = null;
+  if (typeof FMPStore !== 'undefined' && FMPStore.clearSession) {
+    FMPStore.clearSession();
+  }
+  try {
+    localStorage.removeItem('fmp_user_explicit_login');
+    localStorage.removeItem('fmp_session');
+    localStorage.removeItem('futbol_master_session');
+    localStorage.removeItem('futbolmaster_session');
+    localStorage.removeItem('fmp_master_session');
+  } catch(err) {}
+
+  // 3. Reset de modo torneo y clases del body
+  isManagingTournament = false;
+  window.isManagingTournament = false;
+  document.body.classList.remove('managing-tournament', 'role-admin', 'role-organizer', 'role-coach', 'role-fan', 'logged-in');
+  document.body.classList.add('role-guest', 'not-logged-in');
+
+  // 4. Cerrar todos los menús flotantes
+  const userDropdownMenu = document.getElementById('userDropdownMenu');
+  if (userDropdownMenu) userDropdownMenu.style.display = 'none';
+  const notificationsDropdownMenu = document.getElementById('notificationsDropdownMenu');
+  if (notificationsDropdownMenu) notificationsDropdownMenu.style.display = 'none';
+  const mobileNavDrawer = document.getElementById('mobileNavDrawer');
+  if (mobileNavDrawer) mobileNavDrawer.style.display = 'none';
+
+  // 5. Actualizar interfaz visual al Estado 1 (Visitante)
+  updateAuthUI();
+  if (typeof renderNotificationsUI === 'function') {
+    renderNotificationsUI();
+  }
+
+  // 6. Redirigir a Home (#/)
+  navigateToView('home', true);
+
+  // 7. Notificación toast amigable
+  if (typeof showToast === 'function') {
+    showToast('Sesión cerrada correctamente. Modo visitante activado.', 'info', 2500);
+  }
+};
 
 window.navigateTo = function(route, updateHash) {
   navigateToView(route, updateHash !== false);
@@ -5722,7 +5793,7 @@ function renderAdminAuditTable() {
   const tbody = document.getElementById('auditTableBody');
   if (!tbody) return;
 
-  const logs = FMPStore.getAuditLogs();
+  const logs = (typeof FMPStore !== 'undefined' && FMPStore.getAuditLog) ? FMPStore.getAuditLog() : [];
   const search = (document.getElementById('auditSearchInput')?.value || '').toLowerCase().trim();
   const roleFilter = document.getElementById('auditRoleFilter')?.value || 'all';
 
@@ -5977,7 +6048,8 @@ function renderAdminCorrectionsTab() {
   };
 
   if (tbody) {
-    const logs = FMPStore.getAuditLogs().filter(l => l.action === 'CORRECCION_MARCADOR_AUDITADA' || (l.details && l.details.includes('corregido')));
+    const rawLogs = (typeof FMPStore !== 'undefined' && FMPStore.getAuditLog) ? FMPStore.getAuditLog() : [];
+    const logs = rawLogs.filter(l => l.action === 'CORRECCION_MARCADOR_AUDITADA' || (l.details && l.details.includes('corregido')));
     if (logs.length === 0) {
       tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 1.5rem;">No hay correcciones registradas aún</td></tr>';
     } else {
