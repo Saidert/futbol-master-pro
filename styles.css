@@ -6846,42 +6846,58 @@ body.public-mode-active .btn-ghost-sm#btnTogglePublicMode {
 }
 
 .advantage-item {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: 1.25rem 1.15rem;
-  display: flex;
-  gap: 0.85rem;
-  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 42%, rgba(52, 211, 153, 0.10) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 20px !important;
+  padding: 1.35rem 1.25rem !important;
+  display: flex !important;
+  gap: 1rem !important;
+  align-items: flex-start !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease !important;
+}
+
+.advantage-item:hover {
+  transform: translateY(-4px) !important;
+  border-top-color: rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.18), inset 0 1.5px 2px rgba(255, 255, 255, 0.6) !important;
 }
 
 .adv-check {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(16, 185, 129, 0.15);
-  color: var(--accent-green);
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 900;
-  flex-shrink: 0;
-  margin-top: 2px;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(59, 130, 246, 0.22) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  color: #34d399 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.85rem !important;
+  font-weight: 900 !important;
+  flex-shrink: 0 !important;
+  margin-top: 2px !important;
 }
 
 .advantage-item h4 {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-bottom: 0.25rem;
+  font-size: 0.98rem !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin-bottom: 0.3rem !important;
 }
 
 .advantage-item p {
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  line-height: 1.45;
+  font-size: 0.84rem !important;
+  color: #cbd5e1 !important;
+  line-height: 1.48 !important;
+  margin: 0 !important;
 }
 
 /* Acordeón FAQ */
@@ -7895,12 +7911,16 @@ body.blue-theme .card-tag {
 
 /* Live Preview Box */
 .live-preview-box {
-  background: rgba(13, 22, 38, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 2rem;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 42%, rgba(52, 211, 153, 0.12) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 26px !important;
+  padding: 2.2rem !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.5) !important;
 }
 
 .live-preview-topbar {
@@ -7946,10 +7966,16 @@ body.blue-theme .card-tag {
 }
 
 .live-matches-panel, .live-standings-panel {
-  background: rgba(10, 16, 28, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.4) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+  border-radius: 18px !important;
+  padding: 1.25rem !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1.5px rgba(255, 255, 255, 0.3) !important;
 }
 
 .panel-header-sm {
@@ -7963,11 +7989,15 @@ body.blue-theme .card-tag {
 }
 
 .preview-match-card {
-  background: rgba(15, 23, 42, 0.65);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 0.85rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 100%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2) !important;
+  border-radius: 14px !important;
+  padding: 1rem !important;
+  margin-bottom: 0.85rem !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2) !important;
 }
 
 .match-meta-row {
@@ -8069,14 +8099,20 @@ body.blue-theme .card-tag {
 
 /* About Platform Card */
 .about-platform-card {
-  background: rgba(13, 22, 38, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  padding: 2.5rem;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 2.5rem;
-  align-items: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 42%, rgba(52, 211, 153, 0.12) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 26px !important;
+  padding: 2.5rem !important;
+  display: grid !important;
+  grid-template-columns: 1.5fr 1fr !important;
+  gap: 2.5rem !important;
+  align-items: center !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.5) !important;
 }
 
 .about-desc-text {
@@ -8116,12 +8152,18 @@ body.blue-theme .card-tag {
 }
 
 .stat-highlight-box {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(52, 211, 153, 0.2);
-  border-radius: 16px;
-  padding: 1.5rem;
-  text-align: center;
-  margin-bottom: 1rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.06) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.5) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.24) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+  border-radius: 20px !important;
+  padding: 1.6rem !important;
+  text-align: center !important;
+  margin-bottom: 1rem !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3), inset 0 1.5px 2px rgba(255, 255, 255, 0.4) !important;
 }
 
 .stat-hl-num {
@@ -15024,30 +15066,53 @@ body.role-organizer .btn-create-header {
   font-size: 0.68rem !important;
 }
 
-/* Tarjeta Ley 1581 Habeas Data Compacta */
+/* Tarjeta Ley 1581 Habeas Data con el Mismo Liquid Glass */
 .habeas-data-card {
-  margin-top: 0.45rem !important;
-  padding: 0.4rem 0.6rem !important;
-  border-radius: 10px !important;
+  margin-top: 0.95rem !important;
+  padding: 0.85rem 1rem !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.42) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.22) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.25), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .habeas-checkbox-label input[type="checkbox"] {
-  margin-top: 0.12rem !important;
-  width: 13px !important;
-  height: 13px !important;
+  margin-top: 0.15rem !important;
+  width: 16px !important;
+  height: 16px !important;
+  accent-color: #10b981 !important;
+  cursor: pointer !important;
 }
 
 .habeas-text {
-  font-size: 0.67rem !important;
-  line-height: 1.28 !important;
+  font-size: 0.72rem !important;
+  line-height: 1.4 !important;
+  color: #cbd5e1 !important;
 }
 
-.btn-auth-submit {
-  margin-top: 0.65rem !important;
-  height: 36px !important;
-  padding: 0.35rem 0.85rem !important;
-  font-size: 0.82rem !important;
-  border-radius: 9999px !important;
+.habeas-text strong {
+  color: #34d399 !important;
+  font-weight: 700 !important;
+}
+
+.auth-select option {
+  background-color: #0b1c16 !important;
+  color: #ffffff !important;
+}
+
+.phone-prefix-tag {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(52, 211, 153, 0.35) !important;
+  border-radius: 8px !important;
+  padding: 2px 8px !important;
+  color: #34d399 !important;
+  font-weight: 800 !important;
 }
 
 /* =============================================================================
