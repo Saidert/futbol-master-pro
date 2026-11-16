@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_liquid">
+  <link rel="stylesheet" href="styles.css?v=20261116_clarity">
   <style>
     /* Bloqueo estricto contra caché: El modal SIEMPRE inicia 100% oculto */
     #authModalOverlay,
@@ -4736,6 +4736,10 @@
               <span>Ingresar al Sistema</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
+            <div class="auth-switch-prompt">
+              <span>¿No tienes cuenta oficial?</span>
+              <button type="button" class="btn-link-switch-tab" onclick="document.getElementById('tabBtnRegister').click()">Crear Cuenta aquí</button>
+            </div>
           </form>
         </div>
 
@@ -4743,33 +4747,7 @@
         <div class="auth-tab-pane" id="auth-register-pane">
           <p class="auth-modal-sub">Crea tu cuenta oficial en Fútbol Master Pro Colombia para gestionar competiciones o postular a tu club.</p>
 
-          <!-- Selector de Rol para Registro Oficial (Exclusivo para Crear Cuenta) -->
-          <div class="quick-demo-roles-container" style="margin-bottom: 1.25rem;">
-            <span class="quick-demo-roles-title">🏆 SELECCIONA TU ROL PARA REGISTRO OFICIAL:</span>
-            <div class="quick-roles-grid">
-              <button type="button" class="btn-quick-role btn-role-organizer selected" id="btnQuickOrganizer" data-register-role="organizer">
-                <span class="role-icon">🏆</span>
-                <div class="role-desc">
-                  <strong>Organizador de Torneo</strong>
-                  <small>Crear y administrar competiciones</small>
-                </div>
-              </button>
-              <button type="button" class="btn-quick-role btn-role-coach" id="btnQuickCoach" data-register-role="coach">
-                <span class="role-icon">📋</span>
-                <div class="role-desc">
-                  <strong>Director Técnico / Delegado</strong>
-                  <small>Postular clubes e inscribir plantillas</small>
-                </div>
-              </button>
-              <button type="button" class="btn-quick-role btn-role-fan" id="btnQuickFan" data-register-role="fan">
-                <span class="role-icon">👀</span>
-                <div class="role-desc">
-                  <strong>Aficionado / Seguidor</strong>
-                  <small>Consultar tablas, partidos y goleadores</small>
-                </div>
-              </button>
-            </div>
-          </div>
+          
 
           <form id="authRegisterForm" class="auth-form">
             <div class="form-group">
@@ -4840,6 +4818,7 @@
               <span>Crear Cuenta y Comenzar</span>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </button>
+            <div class="auth-switch-prompt" style="margin-top: 0.85rem;"><span>¿Ya tienes cuenta registrada?</span> <button type="button" class="btn-link-switch-tab" onclick="document.getElementById('tabBtnLogin').click()">Inicia Sesión</button></div>
           
             <!-- Paso Interactivo de Verificación de Correo (Ley 1581) -->
             <div id="authVerificationStep" class="auth-verification-box" style="display: none; margin-top: 1rem; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px; padding: 1rem;">
@@ -5607,7 +5586,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_liquid"></script>
+  <script src="app.js?v=20261116_clarity"></script>
 </body>
 </html>
 

@@ -47,16 +47,16 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Sistema Apple Liquid Glass (visionOS / iOS) */
-  --ios-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 50%, rgba(16, 185, 129, 0.06) 100%);
-  --ios-glass-bg-heavy: linear-gradient(145deg, rgba(18, 32, 27, 0.72) 0%, rgba(8, 16, 14, 0.85) 100%);
-  --ios-glass-border-top: rgba(255, 255, 255, 0.35);
-  --ios-glass-border-side: rgba(255, 255, 255, 0.12);
+  /* Sistema Apple Liquid Glass (visionOS / iOS 18) - Más Claro y Translúcido */
+  --ios-glass-bg: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(16, 185, 129, 0.12) 100%);
+  --ios-glass-bg-heavy: linear-gradient(145deg, rgba(32, 52, 44, 0.72) 0%, rgba(16, 32, 26, 0.82) 100%);
+  --ios-glass-border-top: rgba(255, 255, 255, 0.55);
+  --ios-glass-border-side: rgba(255, 255, 255, 0.24);
   --ios-glass-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.5),
-    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.35);
-  --ios-blur: blur(28px) saturate(190%);
+    0 20px 50px rgba(0, 0, 0, 0.45),
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.25);
+  --ios-blur: blur(28px) saturate(200%);
   --ios-spring: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -13627,9 +13627,9 @@ body::after {
 .tournament-view-card {
   background: linear-gradient(
     145deg,
-    rgba(255, 255, 255, 0.12) 0%,
-    rgba(16, 185, 129, 0.10) 42%,
-    rgba(8, 20, 28, 0.58) 100%
+    rgba(255, 255, 255, 0.22) 0%,
+    rgba(255, 255, 255, 0.08) 42%,
+    rgba(16, 185, 129, 0.12) 100%
   ) !important;
   backdrop-filter: blur(30px) saturate(195%) !important;
   -webkit-backdrop-filter: blur(30px) saturate(195%) !important;
@@ -14368,17 +14368,17 @@ body.role-organizer .btn-create-header {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.42) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
   border-radius: 18px !important;
   padding: 0.75rem 0.65rem !important;
   margin: 0.85rem 0 !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 0.32) !important;
 }
 
 /* Cada columna de métrica: NADA de círculos, fondos oscuros ni bordes circulares */
@@ -14443,17 +14443,17 @@ body.role-organizer .btn-create-header {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.28) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.42) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.20) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
   border-radius: 18px !important;
   padding: 0.75rem 0.65rem !important;
   margin: 0.85rem 0 !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1.5px rgba(255, 255, 255, 0.22) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28), inset 0 1.5px 2px rgba(255, 255, 255, 0.32) !important;
 }
 
 .t-card-stats-grid .t-mini-stat {
@@ -14794,11 +14794,22 @@ body.role-organizer .btn-create-header {
   position: relative !important;
   z-index: 10 !important;
   width: 100% !important;
-  max-width: 440px !important;
-  max-height: min(92vh, 640px) !important;
+  max-width: 480px !important;
+  max-height: min(92vh, 700px) !important;
   margin: auto !important;
-  padding: 1.15rem 1.35rem !important;
-  border-radius: 22px !important;
+  padding: 1.65rem 1.85rem !important;
+  border-radius: 26px !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(18, 38, 30, 0.90) 45%, rgba(10, 22, 18, 0.94) 100%) !important;
+  backdrop-filter: blur(32px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 
+    0 30px 80px rgba(0, 0, 0, 0.7),
+    0 0 35px rgba(16, 185, 129, 0.15),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   box-sizing: border-box !important;
@@ -14816,53 +14827,118 @@ body.role-organizer .btn-create-header {
 }
 
 .auth-modal-header {
-  margin-bottom: 0.65rem !important;
+  margin-bottom: 1.15rem !important;
 }
 
 .auth-brand-badge {
-  font-size: 0.82rem !important;
-  gap: 0.35rem !important;
+  font-size: 0.88rem !important;
+  font-weight: 800 !important;
+  color: #34d399 !important;
+  gap: 0.5rem !important;
 }
 
 .auth-modal-close {
-  font-size: 1.35rem !important;
-  padding: 0 4px !important;
+  font-size: 1.5rem !important;
+  padding: 0 6px !important;
   line-height: 1 !important;
+  color: #94a3b8 !important;
   cursor: pointer !important;
   pointer-events: auto !important;
   position: relative !important;
   z-index: 20 !important;
+  transition: color 0.15s ease, transform 0.15s ease !important;
+}
+
+.auth-modal-close:hover {
+  color: #ffffff !important;
+  transform: scale(1.1) !important;
 }
 
 .auth-modal-tabs {
-  margin-bottom: 0.65rem !important;
-  padding: 3px !important;
+  margin-bottom: 1.15rem !important;
+  padding: 4px !important;
   border-radius: 9999px !important;
 }
 
 .auth-modal-tabs .auth-tab-btn {
-  padding: 0.35rem 0.75rem !important;
-  font-size: 0.82rem !important;
-  height: 32px !important;
+  padding: 0.45rem 1rem !important;
+  font-size: 0.88rem !important;
+  font-weight: 700 !important;
+  height: 36px !important;
 }
 
 .auth-modal-sub {
-  font-size: 0.75rem !important;
-  margin-bottom: 0.55rem !important;
-  line-height: 1.32 !important;
+  font-size: 0.82rem !important;
+  margin-bottom: 1.15rem !important;
+  line-height: 1.45 !important;
   color: #94a3b8 !important;
 }
 
-/* Reducción de espaciado en Crear Cuenta e Iniciar Sesión */
+/* Espaciado armonioso y proporciones idénticas en Iniciar Sesión y Crear Cuenta */
 .auth-form .form-group {
-  margin-bottom: 0.45rem !important;
+  margin-bottom: 0.95rem !important;
 }
 
 .auth-form label {
-  font-size: 0.73rem !important;
-  margin-bottom: 0.18rem !important;
+  font-size: 0.75rem !important;
+  margin-bottom: 0.35rem !important;
   color: #cbd5e1 !important;
-  font-weight: 600 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+}
+
+.auth-input-wrapper input,
+.auth-plain-input,
+.auth-select {
+  height: 46px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.32) !important;
+  border-radius: 14px !important;
+  color: #ffffff !important;
+  font-size: 0.88rem !important;
+  transition: all 0.2s ease !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+}
+
+.auth-input-wrapper input:focus,
+.auth-plain-input:focus,
+.auth-select:focus {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #34d399 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.35), inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.btn-auth-submit {
+  height: 48px !important;
+  margin-top: 1.15rem !important;
+  border-radius: 14px !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.02em !important;
+}
+
+.auth-switch-prompt {
+  margin-top: 1.15rem !important;
+  text-align: center !important;
+  font-size: 0.82rem !important;
+  color: #94a3b8 !important;
+}
+
+.btn-link-switch-tab {
+  background: transparent !important;
+  border: none !important;
+  color: #34d399 !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  text-decoration: underline !important;
+  padding: 0 4px !important;
+  transition: color 0.15s ease !important;
+}
+
+.btn-link-switch-tab:hover {
+  color: #6ee7b7 !important;
 }
 
 .form-row-2col {
@@ -16095,17 +16171,17 @@ body.role-admin #mobileBtnCreateNew {
 .feature-card-item,
 .recent-tournament-card,
 .tournament-card-item {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 40%, rgba(16, 185, 129, 0.05) 100%) !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.38) !important;
-  border-left: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.07) 42%, rgba(52, 211, 153, 0.12) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.28) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 24px !important;
   box-shadow: 
-    0 20px 50px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.35) !important;
+    0 20px 50px rgba(0, 0, 0, 0.38),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.5) !important;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease !important;
 }
 
