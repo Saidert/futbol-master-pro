@@ -2783,20 +2783,31 @@ function initAuthControls() {
       }
     });
 
-    // Parallax Reactivo al Mouse para la Simulación Líquida de Mercurio (MercuryLogin / NEURAL ACCESS)
-    const mercuryBlobs = document.querySelectorAll('.mercury-blob');
+    // Parallax Reactivo al Mouse para el Motor Global de Física Líquida (Mercury / Blobs Parallax)
+    const mercuryBlobs = document.querySelectorAll('.mercury-blob, .stage .blob');
     if (mercuryBlobs.length > 0) {
-      document.addEventListener('mousemove', (e) => {
-        if (authModalOverlay.style.display !== 'none' && authModalOverlay.style.display !== '') {
-          const x = e.clientX / window.innerWidth;
-          const y = e.clientY / window.innerHeight;
-          mercuryBlobs.forEach((blob, idx) => {
-            const speed = (idx + 1) * 20;
-            blob.style.marginLeft = `${x * speed}px`;
-            blob.style.marginTop = `${y * speed}px`;
+      let isRafRunning = false;
+      let lastX = 0;
+      let lastY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        // Cálculo suave normalizado entre -0.5 y 0.5 respecto al centro de pantalla
+        lastX = (e.clientX / window.innerWidth) - 0.5;
+        lastY = (e.clientY / window.innerHeight) - 0.5;
+
+        if (!isRafRunning) {
+          isRafRunning = true;
+          requestAnimationFrame(() => {
+            mercuryBlobs.forEach((blob, idx) => {
+              // Factor de profundidad diferenciado por blob para sensación tridimensional
+              const depthFactor = (idx + 1) * 22;
+              blob.style.marginLeft = `${lastX * depthFactor}px`;
+              blob.style.marginTop = `${lastY * depthFactor}px`;
+            });
+            isRafRunning = false;
           });
         }
-      });
+      }, { passive: true });
     }
   }
 

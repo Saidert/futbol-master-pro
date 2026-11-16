@@ -97,114 +97,79 @@ body {
 }
 
 /* =============================================================================
-   FONDO GLOBAL CYAN LIQUID GLASS CON ESFERAS 3D FLOTANTES (visionOS / iOS 18)
+   MOTOR DE FÍSICA LÍQUIDA GLOBAL (MERCURY / BLOBS PARALLAX)
+   Fondo Global Fijo de toda la Plataforma (visionOS / iOS 18 Liquid Glass)
    ============================================================================= */
+.mercury-stage,
+.stage,
 .ios-liquid-bg,
 .stadium-glow-bg {
   position: fixed !important;
   inset: 0 !important;
-  z-index: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: -1 !important;
   overflow: hidden !important;
-  background: #041014 !important;
+  background-color: #040b09 !important;
+  filter: url('#gooey') url('#gooey-mercury-live') !important;
   pointer-events: none !important;
 }
 
-.liquid-orb {
+.mercury-blob,
+.stage .blob {
   position: absolute !important;
   border-radius: 50% !important;
+  filter: blur(28px) !important;
+  opacity: 0.52 !important; /* Opacidad equilibrada entre 0.45 y 0.6 */
   pointer-events: none !important;
-  will-change: transform !important;
+  will-change: margin, transform !important;
+  transition: margin 0.14s ease-out !important;
+  animation: floatMercuryLive 22s infinite alternate ease-in-out !important;
+  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 0 0 45px rgba(30, 193, 203, 0.3) !important;
 }
 
-/* Esfera 1 (Arriba Derecha - Luz Directa Cyan) */
-.orb-1 {
-  top: -12vw !important;
-  right: -10vw !important;
-  width: 55vw !important;
-  height: 55vw !important;
-  background: radial-gradient(circle at 30% 30%, #A5F3FC 0%, #1EC1CB 35%, rgba(14, 165, 233, 0.2) 65%, transparent 75%) !important;
-  filter: blur(45px) !important;
-  animation: floatOrb1 24s ease-in-out infinite alternate !important;
+/* 6 Blobs con Gradientes de Mercurio Líquido, Electric Cyan y Esmeralda */
+.mercury-blob.blob-1,
+.mercury-blob:nth-child(1) {
+  background: radial-gradient(circle at 35% 35%, rgba(226, 232, 240, 0.95) 0%, rgba(30, 193, 203, 0.65) 40%, rgba(4, 16, 20, 0.88) 100%) !important;
+  animation-duration: 22s !important;
 }
 
-/* Esfera 2 (Centro Izquierda - Esfera 3D con borde brillante) */
-.orb-2 {
-  top: 28vh !important;
-  left: -12vw !important;
-  width: 45vw !important;
-  height: 45vw !important;
-  border-radius: 50% !important;
-  background: radial-gradient(circle at 70% 25%, rgba(255, 255, 255, 0.45) 0%, rgba(30, 193, 203, 0.55) 30%, rgba(4, 16, 20, 0.9) 80%) !important;
-  box-shadow: inset 0 4px 30px rgba(165, 243, 252, 0.6) !important;
-  filter: blur(8px) !important;
-  opacity: 0.75 !important;
-  animation: floatOrb2 28s ease-in-out infinite alternate !important;
+.mercury-blob.blob-2,
+.mercury-blob:nth-child(2) {
+  background: radial-gradient(circle at 40% 30%, rgba(255, 255, 255, 0.9) 0%, rgba(16, 185, 129, 0.6) 45%, rgba(4, 16, 20, 0.9) 100%) !important;
+  animation-duration: 18s !important;
 }
 
-/* Esfera 3 (Abajo Derecha - Esfera 3D cristalina) */
-.orb-3 {
-  bottom: -15vh !important;
-  right: -8vw !important;
-  width: 48vw !important;
-  height: 48vw !important;
-  border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.45) 0%, rgba(30, 193, 203, 0.5) 35%, rgba(4, 16, 20, 0.92) 80%) !important;
-  box-shadow: inset 0 6px 36px rgba(165, 243, 252, 0.65), 0 0 50px rgba(30, 193, 203, 0.25) !important;
-  filter: blur(8px) !important;
-  opacity: 0.8 !important;
-  animation: floatOrb3 32s ease-in-out infinite alternate !important;
+.mercury-blob.blob-3,
+.mercury-blob:nth-child(3) {
+  background: radial-gradient(circle at 30% 35%, rgba(165, 243, 252, 0.95) 0%, rgba(30, 193, 203, 0.62) 50%, rgba(4, 11, 9, 0.92) 100%) !important;
+  animation-duration: 26s !important;
 }
 
-/* Esfera 4 (Centro/Abajo - Resplandor Cyan-Esmeralda) */
-.orb-4 {
-  bottom: 8vh !important;
-  left: 20vw !important;
-  width: 50vw !important;
-  height: 50vw !important;
-  background: radial-gradient(circle, rgba(30, 193, 203, 0.45) 0%, rgba(16, 185, 129, 0.25) 50%, transparent 75%) !important;
-  filter: blur(65px) !important;
-  animation: floatOrb4 22s ease-in-out infinite alternate !important;
+.mercury-blob.blob-4,
+.mercury-blob:nth-child(4) {
+  background: radial-gradient(circle at 45% 35%, rgba(226, 232, 240, 0.9) 0%, rgba(16, 185, 129, 0.55) 45%, rgba(4, 16, 20, 0.9) 100%) !important;
+  animation-duration: 20s !important;
 }
 
-/* Esfera 5 (Arriba Izquierda - Aurora Ice Glow) */
-.orb-5 {
-  top: -8vh !important;
-  left: 10vw !important;
-  width: 42vw !important;
-  height: 42vw !important;
-  background: radial-gradient(circle at 40% 40%, rgba(165, 243, 252, 0.35) 0%, rgba(30, 193, 203, 0.22) 42%, transparent 70%) !important;
-  filter: blur(52px) !important;
-  animation: floatOrb5 26s ease-in-out infinite alternate !important;
+.mercury-blob.blob-5,
+.mercury-blob:nth-child(5) {
+  background: radial-gradient(circle at 35% 40%, rgba(255, 255, 255, 0.95) 0%, rgba(30, 193, 203, 0.65) 40%, rgba(16, 185, 129, 0.35) 70%, rgba(4, 11, 9, 0.92) 100%) !important;
+  animation-duration: 24s !important;
 }
 
-@keyframes floatOrb1 {
+.mercury-blob.blob-6,
+.mercury-blob:nth-child(6) {
+  background: radial-gradient(circle at 30% 30%, rgba(165, 243, 252, 0.9) 0%, rgba(14, 165, 233, 0.55) 45%, rgba(4, 16, 20, 0.9) 100%) !important;
+  animation-duration: 19s !important;
+}
+
+@keyframes floatMercuryLive {
   0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-4vw, 5vh) scale(1.05); }
-  100% { transform: translate(3vw, -3vh) scale(0.96); }
-}
-
-@keyframes floatOrb2 {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate(5vw, -6vh) rotate(15deg) scale(1.08); }
-  100% { transform: translate(-2vw, 4vh) rotate(-10deg) scale(0.95); }
-}
-
-@keyframes floatOrb3 {
-  0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-  50% { transform: translate(-6vw, -4vh) rotate(-12deg) scale(1.06); }
-  100% { transform: translate(4vw, 3vh) rotate(8deg) scale(0.98); }
-}
-
-@keyframes floatOrb4 {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(6vw, -5vh) scale(1.1); }
-  100% { transform: translate(-5vw, 4vh) scale(0.92); }
-}
-
-@keyframes floatOrb5 {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-3vw, 6vh) scale(1.04); }
-  100% { transform: translate(5vw, -2vh) scale(0.97); }
+  33% { transform: translate(7vw, 12vh) scale(1.15); }
+  66% { transform: translate(-5vw, 6vh) scale(0.88); }
+  100% { transform: translate(5vw, -10vh) scale(1.1); }
 }
 
 /* ==========================================================================
@@ -7404,8 +7369,15 @@ body.public-mode-active .btn-ghost-sm#btnTogglePublicMode {
   --accent-blue-glow: rgba(59, 130, 246, 0.4);
 }
 
-html, body {
-  background-color: #041014 !important;
+html {
+  background-color: #040b09 !important;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+body {
+  background: transparent !important;
+  background-color: transparent !important;
   background-image: none !important;
   color: var(--text-main);
   overflow-x: hidden;
@@ -8847,34 +8819,7 @@ body {
   display: none !important;
 }
 
-/* Fondo de Física Líquida Dinámica (Efecto Mercurio con Filtro SVG Gooey) */
-.mercury-stage {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  filter: url('#gooey-mercury-live');
-  opacity: 0.65;
-  pointer-events: none;
-}
-
-.mercury-blob {
-  position: absolute;
-  background: linear-gradient(135deg, rgba(226, 232, 240, 0.88) 0%, rgba(16, 185, 129, 0.45) 50%, rgba(15, 23, 42, 0.8) 100%);
-  border-radius: 50%;
-  filter: blur(24px);
-  animation: floatMercuryLive 20s infinite alternate ease-in-out;
-  box-shadow: inset -10px -10px 24px rgba(0, 0, 0, 0.6), 12px 12px 36px rgba(16, 185, 129, 0.35);
-  transition: margin 0.12s ease-out;
-}
-
-@keyframes floatMercuryLive {
-  0% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(8vw, 15vh) scale(1.18); }
-  66% { transform: translate(-6vw, 8vh) scale(0.85); }
-  100% { transform: translate(6vw, -12vh) scale(1.12); }
-}
+/* Fondo de Física Líquida Dinámica - Unificado como fondo global en .stage / .mercury-stage */
 
 .auth-modal-card {
   position: relative !important;
@@ -9283,21 +9228,14 @@ body {
   max-width: 1440px;
   margin: 0 auto;
   z-index: 2;
-  background-image: 
-    radial-gradient(ellipse at 50% 35%, rgba(16, 185, 129, 0.22) 0%, rgba(11, 15, 25, 0.88) 60%, #0b0f19 100%),
-    linear-gradient(180deg, rgba(11, 15, 25, 0.4) 0%, #0b0f19 100%),
-    url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=1920&q=80') !important;
-  background-size: cover !important;
-  background-position: center center !important;
-  background-repeat: no-repeat !important;
+  background: transparent !important;
+  background-image: none !important;
   border-radius: 28px;
 }
 
 body.blue-theme .hero-football-wrap {
-  background-image: 
-    radial-gradient(ellipse at 50% 35%, rgba(59, 130, 246, 0.22) 0%, rgba(11, 15, 25, 0.88) 60%, #0b0f19 100%),
-    linear-gradient(180deg, rgba(11, 15, 25, 0.4) 0%, #0b0f19 100%),
-    url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1920&q=80') !important;
+  background: transparent !important;
+  background-image: none !important;
 }
 
 /* Escaparate Fotográfico Real del Trofeo y Balón */
@@ -14265,13 +14203,8 @@ body.role-organizer .btn-create-header {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background-image: 
-    radial-gradient(ellipse at 50% 35%, rgba(16, 185, 129, 0.25) 0%, rgba(11, 15, 25, 0.88) 60%, #040a10 100%),
-    linear-gradient(180deg, rgba(11, 15, 25, 0.45) 0%, #040a10 100%),
-    url('https://images.unsplash.com/photo-1522778119026-d647f0596c20?auto=format&fit=crop&w=2560&q=85') !important;
-  background-size: cover !important;
-  background-position: center top !important;
-  background-repeat: no-repeat !important;
+  background: transparent !important;
+  background-image: none !important;
   border-radius: 0 !important;
   border: none !important;
   border-bottom: none !important;
