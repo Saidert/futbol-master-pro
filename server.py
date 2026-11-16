@@ -24,6 +24,20 @@ def mask_doc(doc_type, doc_number):
         return f"{doc_type} ****"
     return f"{doc_type} *****{s[-3:]}"
 
+def normalize_role(role):
+    if not role:
+        return 'fan'
+    r = str(role).lower().strip()
+    if r in ['organizer', 'organizador']:
+        return 'organizer'
+    if r in ['coach', 'tecnico', 'técnico']:
+        return 'coach'
+    if r in ['fan', 'aficionado', 'visitante', 'guest']:
+        return 'fan'
+    if r in ['admin', 'administrador']:
+        return 'admin'
+    return r
+
 def recalculate_standings(conn, tournament_id):
     cur = conn.cursor()
     # 1. Obtener equipos participantes
@@ -146,7 +160,7 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
         path = parsed.path
         query = urllib.parse.parse_qs(parsed.query)
 
-        user_role = self.headers.get('X-User-Role', 'guest')
+        user_role = normalize_role(self.headers.get('X-User-Role', 'guest'))
         user_id = self.headers.get('X-User-Id', None)
 
         if not path.startswith('/api/'):
@@ -385,7 +399,7 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
         body = self.parse_body()
         conn = get_db_connection()
 
-        user_role = self.headers.get('X-User-Role', 'guest')
+        user_role = normalize_role(self.headers.get('X-User-Role', 'guest'))
         user_id = self.headers.get('X-User-Id', None)
 
         try:
@@ -405,7 +419,7 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
 
             # 2. Registro Público (SEGURIDAD: Bloqueo estricto del rol 'admin')
             if path == '/api/auth/register':
-                role = body.get('role', 'fan')
+                role = normalize_role(body.get('role', 'fan'))
                 if role == 'admin':
                     self.log_audit_db(conn, "anonymous", body.get('name', 'Desconocido'), "guest", "INTENTO_ESCALAMIENTO_ROL", f"Intento no autorizado de registrarse como admin con email {body.get('email')}")
                     return self.send_error_json("No está permitido registrarse como Administrador desde el formulario público.", 403)

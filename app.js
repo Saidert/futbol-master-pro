@@ -10,6 +10,21 @@ if (typeof document !== 'undefined' && document.body) {
 // fmp_users, fmp_session, fmp_tournaments, fmp_venues_co, fmp_registrations, fmp_notifications, fmp_audit_log
 // =============================================================================
 
+function normalizeRole(role) {
+  if (!role) return 'fan';
+  const r = String(role).toLowerCase().trim();
+  if (r === 'organizador' || r === 'organizer' || r.includes('organizad')) return 'organizer';
+  if (r === 'tecnico' || r === 'técnico' || r === 'coach' || r.includes('tecnic') || r.includes('técnic')) return 'coach';
+  if (r === 'aficionado' || r === 'fan' || r === 'visitante' || r === 'guest') return 'fan';
+  if (r === 'admin' || r === 'administrador') return 'admin';
+  return r;
+}
+
+function isOrganizerOrAdmin(role) {
+  const r = normalizeRole(role);
+  return r === 'admin' || r === 'organizer';
+}
+
 const FMP_KEYS = {
   USERS: 'fmp_users',
   SESSION: 'fmp_session',
@@ -2235,6 +2250,9 @@ function loadUserSession() {
   try {
     const session = FMPStore.getSession();
     if (session && session.userId && session.loggedIn === true) {
+      if (session.role) {
+        session.role = normalizeRole(session.role);
+      }
       userSession = session;
     } else {
       userSession = null;
@@ -2250,6 +2268,9 @@ function loadUserSession() {
 }
 
 function saveUserSession(session) {
+  if (session && session.role) {
+    session.role = normalizeRole(session.role);
+  }
   userSession = session;
   if (userSession && userSession.loggedIn) {
     try { localStorage.setItem('fmp_user_explicit_login', 'true'); } catch(e){}
@@ -2766,14 +2787,15 @@ function initAuthControls() {
         aficionado: 'Aficionado / Visitante'
       };
 
+      const canonicalRole = normalizeRole(role);
       const newUser = {
         id: 'usr-' + Date.now(),
         name: fullName,
         email: email,
         phone: phone,
         password: pass,
-        role: (role === 'organizer' ? 'organizador' : (role === 'coach' ? 'tecnico' : (role === 'fan' ? 'aficionado' : role))),
-        roleTitle: roleTitles[role] || 'Usuario',
+        role: canonicalRole,
+        roleTitle: roleTitles[canonicalRole] || 'Organizador de Torneo',
         clubName: clubName || 'Club Deportivo',
         habeasDataConsent: true,
         createdAt: new Date().toISOString()
@@ -2784,7 +2806,7 @@ function initAuthControls() {
         name: newUser.name,
         email: newUser.email,
         phone: newUser.phone,
-        role: newUser.role,
+        role: canonicalRole,
         roleTitle: newUser.roleTitle,
         activeTournamentId: activeTournamentId,
         loggedIn: true,
@@ -3560,13 +3582,13 @@ function getNormalizedRoute(hashString) {
 function navigateToView(targetRoute, updateHash = true) {
   if (targetRoute === 'admin' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'admin') {
     const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-    const canAccess = session && session.loggedIn && session.role === 'admin';
+    const canAccess = session && session.loggedIn && normalizeRole(session.role) === 'admin';
     if (!canAccess) {
       if (typeof showToast === 'function') {
         showToast('El Panel de Administración General es exclusivo para el Administrador.', 'warning', 3000);
       }
-      if (typeof openAuthModal === 'function') {
-        openAuthModal();
+      if (!session || !session.loggedIn) {
+        if (typeof openAuthModal === 'function') openAuthModal();
       }
       navigateToView('home', true);
       return;
@@ -3575,13 +3597,13 @@ function navigateToView(targetRoute, updateHash = true) {
 
   if (targetRoute === 'crear' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'crear') {
     const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-    const canAccess = session && session.loggedIn && (session.role === 'admin' || session.role === 'organizer');
+    const canAccess = session && session.loggedIn && isOrganizerOrAdmin(session.role);
     if (!canAccess) {
       if (typeof showToast === 'function') {
         showToast('La creación y configuración de torneos es exclusiva para Organizadores y Administradores.', 'warning', 3000);
       }
-      if (typeof openAuthModal === 'function') {
-        openAuthModal();
+      if (!session || !session.loggedIn) {
+        if (typeof openAuthModal === 'function') openAuthModal();
       }
       navigateToView('torneos', true);
       return;
@@ -3589,11 +3611,14 @@ function navigateToView(targetRoute, updateHash = true) {
   }
 
   if (targetRoute === 'canchas' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'canchas') {
-    const session = FMPStore.getSession();
-    const canAccess = session && session.loggedIn && (session.role === 'admin' || session.role === 'organizer');
+    const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+    const canAccess = session && session.loggedIn && isOrganizerOrAdmin(session?.role);
     if (!canAccess) {
       if (typeof showToast === 'function') {
         showToast('El catálogo de escenarios y canchas es exclusivo para Organizadores y Administradores.', 'warning', 3000);
+      }
+      if (!session || !session.loggedIn) {
+        if (typeof openAuthModal === 'function') openAuthModal();
       }
       navigateToView('home', true);
       return;
@@ -3869,9 +3894,12 @@ function setActiveTournament(tournamentId, navigateToRoute = null) {
  * Crea un borrador en blanco para un nuevo torneo y lleva a la pantalla de configuración
  */
 function startNewTournamentDraft() {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const newId = 'tournament_' + Date.now();
   const draftTournament = {
     id: newId,
+    organizerId: session?.userId || 'usr-org-1',
+    organizerName: session?.name || 'Organizador',
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     status: 'configuracion',
@@ -4593,7 +4621,7 @@ function initSpaRouterAndGlobalNav() {
   window.addEventListener('hashchange', handleHashChange);
 
   // Escuchar clics directos en enlaces de navegación SPA del Header y Menú Móvil
-  document.querySelectorAll('.nav-link, .mobile-nav-item, .btn-create-header, .header-brand').forEach(link => {
+  document.querySelectorAll('.nav-link, .mobile-nav-item, .btn-create-header, .btn-hero-create, .header-brand').forEach(link => {
     link.addEventListener('click', (e) => {
       const route = link.getAttribute('data-route');
       if (route === 'formatos') {
@@ -4611,9 +4639,14 @@ function initSpaRouterAndGlobalNav() {
       } else if (link.classList.contains('header-brand')) {
         e.preventDefault();
         navigateToView('home', true);
-      } else if (link.classList.contains('btn-create-header')) {
+      } else if (link.classList.contains('btn-create-header') || link.classList.contains('btn-hero-create')) {
         e.preventDefault();
-        navigateToView('crear', true);
+        const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+        if (session && session.loggedIn && isOrganizerOrAdmin(session.role)) {
+          startNewTournamentDraft();
+        } else {
+          navigateToView('crear', true);
+        }
       }
     });
   });
