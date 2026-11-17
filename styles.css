@@ -17186,64 +17186,77 @@ header.global-spa-header .header-brand,
    1. PILL SIDEBAR FLOTANTE VERTICAL HUD (EXACTA RÉPLICA PHOTO 2)
    ============================================================================= */
 /* -----------------------------------------------------------------------------
-   1. PILL SIDEBAR & LIQUID DOCK MORPHING (CERO HOVER - LIQUID MORPH SOLO EN .active)
+   1. PILL SIDEBAR & LIQUID DOCK MORPHING (TUBO DELGADO 64PX CON DEFORMACIÓN LOCAL EN .active)
    ----------------------------------------------------------------------------- */
-.pill-sidebar-wrapper,
-.pill-sidebar-container {
-  position: relative !important;
-  left: auto !important;
-  top: auto !important;
-  transform: none !important;
-  z-index: 9999 !important;
+/* El tubo vertical SIEMPRE se mantiene delgado (64px) de arriba a abajo */
+.pill-sidebar-container,
+.pill-sidebar-dock,
+.pill-sidebar-wrapper {
+  position: fixed !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+  padding: 12px 9px !important;
+  border-radius: 9999px !important;
+  background: rgba(8, 28, 34, 0.95) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  backdrop-filter: blur(28px) !important;
+  -webkit-backdrop-filter: blur(28px) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  align-self: center !important;
-  gap: 12px !important;
-  width: auto !important;
-  min-width: 62px !important;
-  max-width: 260px !important;
-  padding: 12px 7px !important;
-  border-radius: 36px !important;
-  background: linear-gradient(145deg, rgba(12, 38, 46, 0.90), rgba(6, 20, 26, 0.96)) !important;
-  backdrop-filter: blur(32px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
-  border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
-  box-sizing: border-box !important;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  gap: 10px !important;
   overflow: visible !important;
+  z-index: 9999 !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
   pointer-events: auto !important;
-  flex-shrink: 0 !important;
 }
 
-/* Botón Top Logo */
+/* Centrar el icono del botón superior del logo */
+.pill-sidebar-container > *:first-child,
+.sidebar-logo-btn,
 .pill-sidebar-top-logo {
-  width: 48px !important;
-  height: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  padding: 0 !important;
+  margin: 0 !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 35%, rgba(30, 193, 203, 0.45) 0%, rgba(8, 28, 34, 0.95) 100%) !important;
-  border: 1.5px solid rgba(165, 243, 252, 0.6) !important;
-  box-shadow: 0 0 22px rgba(30, 193, 203, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  text-indent: 0 !important;
+  background: radial-gradient(circle at 35% 35%, rgba(30, 193, 203, 0.45) 0%, rgba(8, 28, 34, 0.95) 100%) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.6) !important;
+  box-shadow: 0 0 22px rgba(30, 193, 203, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
   cursor: pointer !important;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
-  padding: 0 !important;
-  outline: none !important;
-  position: relative !important;
   overflow: hidden !important;
   flex-shrink: 0 !important;
+  outline: none !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
 }
 
+.sidebar-logo-btn:hover,
 .pill-sidebar-top-logo:hover {
   transform: scale(1.08) !important;
   box-shadow: 0 0 30px rgba(30, 193, 203, 0.8), inset 0 1px 3px #ffffff !important;
 }
 
+.pill-sidebar-container > *:first-child svg,
+.pill-sidebar-container > *:first-child span,
+.sidebar-logo-btn svg,
+.pill-sidebar-top-logo svg {
+  margin: 0 auto !important;
+  position: static !important;
+  transform: none !important;
+}
+
+.sidebar-logo-btn .top-logo-sphere,
 .pill-sidebar-top-logo .top-logo-sphere {
   width: 100% !important;
   height: 100% !important;
@@ -17251,6 +17264,7 @@ header.global-spa-header .header-brand,
   align-items: center !important;
   justify-content: center !important;
   border-radius: 50% !important;
+  margin: 0 auto !important;
 }
 
 /* Grupos y divisores */
@@ -17258,7 +17272,7 @@ header.global-spa-header .header-brand,
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 8px !important;
+  gap: 10px !important;
   width: 100% !important;
   position: relative !important;
   overflow: visible !important;
@@ -17277,32 +17291,32 @@ header.global-spa-header .header-brand,
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
-  gap: 8px !important;
+  gap: 10px !important;
   width: 100% !important;
   position: relative !important;
   overflow: visible !important;
 }
 
-/* Botón base dentro de la Pill Sidebar (48px x 48px inactivo) */
+/* Todos los botones inactivos miden 44x44px exactos dentro del tubo de 64px */
 .sidebar-nav-btn {
-  width: 48px !important;
-  height: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
-  border-radius: 24px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
   background: transparent !important;
   border: none !important;
   outline: none !important;
   cursor: pointer !important;
   color: #94a3b8 !important;
-  position: relative !important;
-  overflow: hidden !important;
-  padding: 0 0 0 14px !important;
   box-sizing: border-box !important;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   white-space: nowrap !important;
 }
 
@@ -17313,6 +17327,7 @@ header.global-spa-header .header-brand,
   stroke: currentColor !important;
   transition: stroke 0.25s ease !important;
   flex-shrink: 0 !important;
+  margin: 0 !important;
 }
 
 .sidebar-nav-btn:hover {
@@ -17320,76 +17335,66 @@ header.global-spa-header .header-brand,
   color: #ffffff !important;
 }
 
-/* Botón Activo: morphing elástico interno */
+/* SOLO el apartado seleccionado (.active por CLIC) se despliega y deforma ese renglón */
 .sidebar-nav-btn.active {
-  width: auto !important;
+  width: max-content !important;
   max-width: 240px !important;
-  background: linear-gradient(135deg, #1ec1cb 0%, #10b981 100%) !important;
+  justify-content: flex-start !important;
+  padding: 0 18px 0 12px !important;
+  overflow: visible !important;
+  background: linear-gradient(135deg, #1EC1CB 0%, #10B981 100%) !important;
   color: #ffffff !important;
-  box-shadow: 0 0 20px rgba(30, 193, 203, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
-  padding: 0 18px 0 14px !important;
+  /* Anillo exterior que acopla y deforma el borde oscuro de la barra solo en este botón */
+  box-shadow: 
+    0 0 0 6px rgba(8, 28, 34, 0.96),
+    0 0 0 7.5px rgba(165, 243, 252, 0.35),
+    0 12px 24px rgba(0, 0, 0, 0.55) !important;
+  z-index: 20 !important;
 }
 
 .sidebar-nav-btn.active svg {
   stroke: #ffffff !important;
 }
 
-/* Etiqueta interna dentro del botón: invisible por defecto (cero hover) */
 .sidebar-item-label {
-  display: none !important;
-  max-width: 0 !important;
-  opacity: 0 !important;
-  overflow: hidden !important;
-  white-space: nowrap !important;
-  pointer-events: none !important;
   position: static !important;
-  transform: none !important;
+  display: none !important;
+  white-space: nowrap !important;
+  margin-left: 10px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Visible ÚNICAMENTE en botón con clase .active */
-.sidebar-nav-btn.active .sidebar-item-label {
-  display: inline-block !important;
-  max-width: 200px !important;
-  opacity: 1 !important;
-  margin-left: 10px !important;
-  color: #ffffff !important;
-  font-weight: 700 !important;
-  font-size: 13px !important;
   letter-spacing: 0.2px !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
-  transition: opacity 0.25s ease 0.05s !important;
+}
+
+/* Mostrar el texto ÚNICAMENTE cuando está activo (.active), NUNCA en :hover */
+.sidebar-nav-btn.active .sidebar-item-label {
+  display: inline-block !important;
 }
 
 /* CERO tooltips o labels al pasar el mouse por encima (HOVER OFF) */
-.sidebar-nav-btn:hover .sidebar-item-label,
+.sidebar-nav-btn:not(.active):hover .sidebar-item-label,
 .pill-sidebar-top-logo:hover .sidebar-item-label,
-.pill-dock-btn:hover .sidebar-item-label,
-.pill-dock-action-btn:hover .sidebar-item-label,
-.admin-subtab-btn:hover .sidebar-item-label {
-  opacity: 0 !important;
+.sidebar-logo-btn:hover .sidebar-item-label,
+.pill-dock-action-btn:hover .sidebar-item-label {
   display: none !important;
+  opacity: 0 !important;
 }
 
-.sidebar-nav-btn.active:hover .sidebar-item-label,
-.admin-subtab-btn.active:hover .sidebar-item-label {
-  opacity: 1 !important;
-  display: inline-block !important;
-}
-
-/* Botones de acción inferior */
+/* Botones de acción inferior (+ y Logout) */
 .pill-dock-action-btn {
-  width: 48px !important;
-  height: 48px !important;
-  min-width: 48px !important;
-  max-width: 48px !important;
-  border-radius: 24px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -17410,7 +17415,7 @@ header.global-spa-header .header-brand,
 }
 
 .pill-dock-action-btn.btn-action-add .action-plus-glyph {
-  font-size: 1.5rem !important;
+  font-size: 1.4rem !important;
   font-weight: 800 !important;
   line-height: 1 !important;
 }
@@ -19590,17 +19595,27 @@ body:has(#view-club.active) #mainHeader {
   display: none !important;
 }
 
-/* Posicionamiento centrado en el layout de la Pill Sidebar en Escritorio */
+/* Posicionamiento fijo centrado de la Pill Sidebar (Tubo 64px) en Escritorio */
 @media (min-width: 769px) {
   body.route-admin .pill-sidebar-wrapper,
+  body.route-admin .pill-sidebar-container,
+  body.route-admin .pill-sidebar-dock,
   body.route-club .pill-sidebar-wrapper,
+  body.route-club .pill-sidebar-container,
+  body.route-club .pill-sidebar-dock,
   body:has(#view-admin.active) .pill-sidebar-wrapper,
-  body:has(#view-club.active) .pill-sidebar-wrapper {
-    position: relative !important;
-    left: auto !important;
-    top: auto !important;
-    transform: none !important;
-    align-self: center !important;
+  body:has(#view-admin.active) .pill-sidebar-container,
+  body:has(#view-admin.active) .pill-sidebar-dock,
+  body:has(#view-club.active) .pill-sidebar-wrapper,
+  body:has(#view-club.active) .pill-sidebar-container,
+  body:has(#view-club.active) .pill-sidebar-dock {
+    position: fixed !important;
+    left: 14px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
   }
 }
 
@@ -19634,7 +19649,7 @@ body.route-club {
   height: 100vh !important;
   max-width: 100vw !important;
   overflow: hidden !important;
-  padding: 20px 24px 20px 14px !important;
+  padding: 20px 24px 20px 98px !important;
   box-sizing: border-box !important;
   position: relative !important;
 }

@@ -5744,7 +5744,7 @@ function runDashboardEntranceSequence() {
       }
 
       // Fallback seguro: coordenadas exactas donde descansa el botón en la barra fija
-      if (!targetCenterX) targetCenterX = 38; // 14px left + 24px (mitad de 48px)
+      if (!targetCenterX) targetCenterX = 46; // 14px left + 32px (mitad de 64px)
       if (!targetCenterY) {
         const estSidebarHeight = 440;
         const estTop = Math.max(80, (window.innerHeight - estSidebarHeight) / 2);
