@@ -2646,8 +2646,15 @@ function selectRegisterRole(role) {
 }
 window.selectRegisterRole = selectRegisterRole;
 
+let authMode = 'login';
+window.authMode = authMode;
 let isSignUp = false;
 window.isSignUp = isSignUp;
+
+function setAuthMode(targetMode) {
+  switchAuthMode(targetMode);
+}
+window.setAuthMode = setAuthMode;
 
 function pulseHudCorners() {
   const corners = document.querySelectorAll('.hud-corner-tl, .hud-corner-br');
@@ -2684,26 +2691,30 @@ function switchAuthMode(targetMode) {
     return;
   }
 
-  const isToRegister = (targetMode === 'register' || targetMode === 'auth-register-pane');
+  const isToRegister = (targetMode === 'register' || targetMode === 'signup' || targetMode === 'auth-register-pane');
+  const nextMode = isToRegister ? 'signup' : 'login';
+  authMode = nextMode;
+  window.authMode = nextMode;
   isSignUp = isToRegister;
   window.isSignUp = isSignUp;
-
-  if (wrapper) {
-    wrapper.classList.toggle('mode-signup', isToRegister);
-    wrapper.classList.toggle('mode-signin', !isToRegister);
-  }
 
   const currentPane = isToRegister ? paneLogin : paneRegister;
   const nextPane = isToRegister ? paneRegister : paneLogin;
 
-  // Fase 1: Desvanecimiento del formulario actual (0ms - 180ms)
+  // Paso 1 (0ms - 180ms): Los campos actuales se desvanecen (opacity: 0; scale: 0.95) y la tarjeta ajusta altura
   currentPane.classList.add('is-exiting');
+  if (wrapper) {
+    wrapper.classList.toggle('mode-signup', isToRegister);
+    wrapper.classList.toggle('mode-login', !isToRegister);
+    wrapper.classList.toggle('mode-signin', !isToRegister);
+  }
 
   setTimeout(() => {
+    // Paso 2 (180ms - 480ms / duración 300ms):
+    // Se oculta el formulario previo y se muestra el badge de cristal Cyan con shimmer y giro diagonal
     currentPane.classList.add('is-hidden');
     currentPane.classList.remove('is-exiting');
 
-    // Fase 2: Badge central de cristal con giro y destello por 300ms (180ms - 480ms)
     pulseHudCorners();
     if (badge) {
       badge.style.animation = 'none';
@@ -2714,24 +2725,19 @@ function switchAuthMode(targetMode) {
     }
 
     setTimeout(() => {
+      // Paso 3 (480ms - 750ms):
+      // El badge central desaparece y los campos del nuevo formulario entran en cascada con retardos de 0.05s
       if (badge) {
-        badge.classList.add('is-exiting');
+        badge.classList.remove('active');
       }
 
+      nextPane.classList.remove('is-hidden');
+      restartStaggerAnimations(nextPane);
+      pulseHudCorners();
+
       setTimeout(() => {
-        if (badge) {
-          badge.classList.remove('active', 'is-exiting');
-        }
-
-        // Fase 3: Desplegar el nuevo formulario con animación en cascada (staggerFadeDown)
-        nextPane.classList.remove('is-hidden');
-        restartStaggerAnimations(nextPane);
-        pulseHudCorners();
-
-        setTimeout(() => {
-          isAuthModeSwitching = false;
-        }, 300);
-      }, 180);
+        isAuthModeSwitching = false;
+      }, 270);
     }, 300);
   }, 180);
 }
@@ -2747,10 +2753,23 @@ function openAuthModal(defaultTab = 'auth-login-pane') {
   const paneLogin = document.getElementById('auth-login-pane');
   const paneRegister = document.getElementById('auth-register-pane');
   const badge = document.getElementById('glassyMorphBadge');
+  const wrapper = document.getElementById('glassyV3Wrapper');
   if (badge) badge.classList.remove('active', 'is-exiting');
   isAuthModeSwitching = false;
 
-  const isToRegister = (defaultTab === 'auth-register-pane' || defaultTab === 'register');
+  const isToRegister = (defaultTab === 'auth-register-pane' || defaultTab === 'register' || defaultTab === 'signup');
+  const currentMode = isToRegister ? 'signup' : 'login';
+  authMode = currentMode;
+  window.authMode = currentMode;
+  isSignUp = isToRegister;
+  window.isSignUp = isSignUp;
+
+  if (wrapper) {
+    wrapper.classList.toggle('mode-signup', isToRegister);
+    wrapper.classList.toggle('mode-login', !isToRegister);
+    wrapper.classList.toggle('mode-signin', !isToRegister);
+  }
+
   pulseHudCorners();
   if (isToRegister) {
     if (paneRegister) {
