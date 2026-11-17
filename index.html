@@ -3542,15 +3542,11 @@
               <p class="admin-sub-title">Supervisión integral de competiciones, catálogo de canchas, usuarios y telemetría en tiempo real.</p>
             </div>
             <div class="admin-top-actions">
-              <button type="button" class="btn-chip" id="btnLoadCompleteColombiaScenario" onclick="loadCompleteColombiaScenario()" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 700; padding: 0.6rem 1.1rem; margin-right: 0.5rem;" title="Cargar torneo Copa Colombia Metropolitana 2026 con canchas y solicitudes">
+              <button type="button" class="btn-chip" id="btnLoadCompleteColombiaScenario" onclick="loadCompleteColombiaScenario()" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; font-weight: 700;" title="Cargar torneo Copa Colombia Metropolitana 2026 con canchas y solicitudes">
                 <span>🇨🇴 Cargar Escenario Colombia</span>
               </button>
               <button type="button" class="btn-primary-neon" id="btnAdminQuickTournament" onclick="navigateTo('crear')">
                 <span>+ Nuevo Torneo</span>
-              </button>
-              <button type="button" class="btn-chip btn-admin-logout" id="btnAdminDirectLogout" onclick="handleLogout(event)" style="background: rgba(239, 68, 68, 0.14); border-color: rgba(239, 68, 68, 0.4); color: #f87171; font-weight: 700; padding: 0.6rem 1.1rem; margin-left: 0.5rem; display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;" title="Cerrar sesión">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                <span>Cerrar Sesión</span>
               </button>
             </div>
           </div>
@@ -3558,8 +3554,8 @@
       <!-- VISTA 1: BENTO GRID + PANEL DERECHO DE 330px (#admin-tab-overview) -->
 
         <!-- APARTADO 1: OVERVIEW (BENTO GRID 2 COLS: CENTRAL + PANEL DERECHO 360px) -->
-        <section data-admin-section="overview" id="admin-tab-overview" class="admin-section-pane active" style="display: grid;">
-          <div class="bento-central-area" id="adminBentoCentral">
+        <section data-admin-section="overview" id="admin-tab-overview" class="admin-section-pane active bento-grid-main" style="display: grid;">
+          <div class="bento-central-area bento-left-column" id="adminBentoCentral">
             <div class="v22-dashboard-wrapper">
           <!-- Columna Principal Central -->
           <div class="v22-main-column">
@@ -3586,9 +3582,9 @@
             </div>
 
             <!-- 2. Center Mid: 2 Tarjetas Lado a Lado -->
-            <div class="v22-two-cards-row">
+            <div class="v22-two-cards-row bento-bottom-row">
               <!-- Izquierda: Clubes Inscritos 16 -->
-              <div class="v22-card liquid-glass-card">
+              <div class="v22-card liquid-glass-card v22-clubs-card">
                 <div class="v22-card-header">
                   <div>
                     <h4 class="v22-card-title">🛡️ Clubes Inscritos</h4>
@@ -3629,27 +3625,14 @@
                     </div>
                     <span class="v22-club-status-dot ok" title="Paz y Salvo al día"></span>
                   </div>
-                  <div class="v22-club-item">
-                    <div class="v22-club-crest-mini">🐆</div>
-                    <div class="v22-club-meta">
-                      <span class="v22-club-name">Bucaramanga FC</span>
-                      <span class="v22-club-dt">DT: R. Dudamel</span>
-                    </div>
-                    <span class="v22-club-status-dot ok" title="Paz y Salvo al día"></span>
-                  </div>
-                  <div class="v22-club-item">
-                    <div class="v22-club-crest-mini">🦅</div>
-                    <div class="v22-club-meta">
-                      <span class="v22-club-name">Águilas Doradas</span>
-                      <span class="v22-club-dt">DT: F. Farías</span>
-                    </div>
-                    <span class="v22-club-status-dot ok" title="Paz y Salvo al día"></span>
-                  </div>
                 </div>
+                <button type="button" class="v22-view-all-clubs-btn" onclick="setActiveAdminSection('clubes')">
+                  Ver los 16 clubes →
+                </button>
               </div>
 
               <!-- Derecha: Progreso de Partidos -->
-              <div class="v22-card liquid-glass-card">
+              <div class="v22-card liquid-glass-card v22-progress-card">
                 <div class="v22-card-header">
                   <div>
                     <h4 class="v22-card-title">⚡ Progreso de Partidos</h4>

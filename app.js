@@ -5588,7 +5588,15 @@ function setActiveAdminSection(sectionId) {
   if (!sectionId) sectionId = 'overview';
   const normSection = sectionId.replace('admin-tab-', '');
 
-  // 1. Desmarcar todos los botones y marcar exclusivamente el seleccionado
+  // 1. Detectar botón previo para cálculo de inercia deslizante (Liquid Glide)
+  const prevBtn = document.querySelector('.admin-subtab-btn.active');
+  const prevSec = prevBtn ? (prevBtn.getAttribute('data-section') || prevBtn.getAttribute('data-subtab')?.replace('admin-tab-', '')) : null;
+
+  // Si ya está activo ese apartado, no re-ejecutar ni reiniciar animación innecesariamente
+  if (prevBtn && prevSec === normSection && prevBtn.style.getPropertyValue('--glide-from')) {
+    return;
+  }
+
   const allBtns = document.querySelectorAll('.admin-subtab-btn');
   let activeBtn = null;
   allBtns.forEach(b => {
@@ -5598,21 +5606,35 @@ function setActiveAdminSection(sectionId) {
     if (isMatch) activeBtn = b;
   });
 
+  // Animación de deslizamiento líquido vertical con inercia elástica (igual al Nav de Inicio)
+  if (activeBtn && prevBtn && prevBtn !== activeBtn) {
+    const deltaY = prevBtn.offsetTop - activeBtn.offsetTop;
+    activeBtn.style.setProperty('--glide-from', `${deltaY}px`);
+    activeBtn.style.animation = 'none';
+    void activeBtn.offsetHeight;
+    activeBtn.style.animation = '';
+  } else if (activeBtn && !activeBtn.style.getPropertyValue('--glide-from')) {
+    activeBtn.style.setProperty('--glide-from', '0px');
+  }
+
   // 2. Ocultar absolutamente todas las secciones con display: none !important tanto por clase como inline
   const allSections = document.querySelectorAll('section[data-admin-section], .admin-section-pane');
   allSections.forEach(sec => {
-    sec.classList.remove('active');
+    sec.classList.remove('active', 'active-view');
     sec.style.setProperty('display', 'none', 'important');
   });
 
-  // 3. Activar y desplegar la sección solicitada
+  // 3. Activar y desplegar la sección solicitada con morphing elástico
   const targetSection = document.querySelector(`section[data-admin-section="${normSection}"]`) || 
                         document.getElementById(`admin-tab-${normSection}`) ||
                         document.getElementById(sectionId);
   const rightPanel = document.getElementById('adminBentoRightPanel');
 
   if (targetSection) {
-    targetSection.classList.add('active');
+    targetSection.classList.remove('active-view');
+    void targetSection.offsetHeight;
+    targetSection.classList.add('active', 'active-view');
+
     if (normSection === 'overview') {
       targetSection.style.setProperty('display', 'grid', 'important');
       if (rightPanel) rightPanel.style.setProperty('display', 'flex', 'important');
@@ -5658,7 +5680,7 @@ function setActiveAdminSection(sectionId) {
 window.setActiveAdminSection = setActiveAdminSection;
 
 function handleAdminSubtabSwitch(btn) {
-  if (!btn) return;
+  if (!btn || btn.classList.contains('active')) return;
   const targetSubtab = btn.getAttribute('data-subtab');
   const sectionKey = btn.getAttribute('data-section') || (targetSubtab ? targetSubtab.replace('admin-tab-', '') : 'overview');
   setActiveAdminSection(sectionKey);
