@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_liquid_glass_full_screen">
+  <link rel="stylesheet" href="styles.css?v=20261116_v22_isolated_shell">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -3474,8 +3474,8 @@
   <!-- VISTA 10: PANEL DE ADMINISTRACIÓN GENERAL Y AUDITORÍA -->
   <section id="view-admin" class="spa-view">
 
-    <div class="admin-panel-container">
-      <div class="admin-bento-layout">
+    <div class="admin-panel-container admin-dashboard-wrapper">
+      <div class="admin-bento-layout bento-dashboard-shell shell-three-cols" id="adminDashboardShell">
         <!-- 1. PILL SIDEBAR FLOTANTE VERTICAL (Capsule 52px + Top Logo 48px + Sliding Indicator) -->
         <div class="pill-sidebar-wrapper" id="adminPillSidebar">
           <button type="button" class="pill-sidebar-top-logo" id="pillSidebarTopLogo" title="Fútbol Master Pro • Ir al Inicio" onclick="navigateTo('home')">
@@ -3490,25 +3490,25 @@
           <aside class="pill-dock-capsule" aria-label="Navegación Rápida Bento">
             <div class="pill-dock-sliding-indicator" id="pillSlidingIndicator"></div>
             <div class="pill-dock-group">
-              <button type="button" class="pill-dock-btn admin-subtab-btn active" data-subtab="admin-tab-overview" data-index="0" title="Vista 1: Bento Overview &amp; Calendario">
+              <button type="button" class="pill-dock-btn admin-subtab-btn active" data-subtab="admin-tab-overview" data-section="overview" data-index="0" title="Apartado 1: Bento Overview &amp; Calendario">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-                <span class="dock-tooltip">Overview &amp; Calendario</span>
+                <span class="dock-tooltip">Overview &amp; Bento</span>
               </button>
-              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-profile" data-index="1" title="Vista 2: Perfil de Competición &amp; Telemetría">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
-                <span class="dock-tooltip">Perfil &amp; Telemetría</span>
-              </button>
-              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-tournaments" data-index="2" title="Vista 3: Competiciones &amp; Canchas 3D">
+              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-tournaments" data-section="torneos" data-index="1" title="Apartado 2: Gestión de Torneos 3D">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
-                <span class="dock-tooltip">Competiciones 3D</span>
+                <span class="dock-tooltip">Gestión de Torneos</span>
               </button>
-              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-clubs-finances" data-index="3" title="Vista 4: Solicitudes &amp; Finanzas">
+              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-clubs-finances" data-section="clubes" data-index="2" title="Apartado 3: Clubes, Solicitudes &amp; Finanzas">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
                 <span class="dock-tooltip">Clubes &amp; Finanzas</span>
               </button>
-              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-venues" data-index="4" title="Vista 5: Canchas Colombia">
+              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-venues" data-section="canchas" data-index="3" title="Apartado 4: Canchas Colombia">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
                 <span class="dock-tooltip">Canchas Colombia</span>
+              </button>
+              <button type="button" class="pill-dock-btn admin-subtab-btn" data-subtab="admin-tab-audit" data-section="auditoria" data-index="4" title="Apartado 5: Usuarios &amp; Bitácora de Auditoría">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                <span class="dock-tooltip">Usuarios &amp; Auditoría</span>
               </button>
             </div>
             
@@ -3759,290 +3759,10 @@
             </div>
           </div>
 
-          <!-- Panel Derecho de 330px -->
-          <div class="v22-right-panel">
-            <!-- Arriba: Mini Calendario Noviembre 2026 -->
-            <div class="v22-side-card liquid-glass-card">
-              <h4 class="v22-side-title">
-                <span>📅 Noviembre, 2026</span>
-                <span class="v22-badge-cyan" style="font-size: 0.65rem;">Jornada 5</span>
-              </h4>
-              <div class="v22-calendar-grid">
-                <span class="v22-cal-header-day">L</span>
-                <span class="v22-cal-header-day">M</span>
-                <span class="v22-cal-header-day">M</span>
-                <span class="v22-cal-header-day">J</span>
-                <span class="v22-cal-header-day">V</span>
-                <span class="v22-cal-header-day">S</span>
-                <span class="v22-cal-header-day">D</span>
-                <!-- Días del mes con resaltado de partidos -->
-                <span class="v22-cal-cell" style="opacity: 0.4;">27</span>
-                <span class="v22-cal-cell" style="opacity: 0.4;">28</span>
-                <span class="v22-cal-cell" style="opacity: 0.4;">29</span>
-                <span class="v22-cal-cell" style="opacity: 0.4;">30</span>
-                <span class="v22-cal-cell">1</span>
-                <span class="v22-cal-cell has-game">2</span>
-                <span class="v22-cal-cell">3</span>
-                <span class="v22-cal-cell">4</span>
-                <span class="v22-cal-cell">5</span>
-                <span class="v22-cal-cell">6</span>
-                <span class="v22-cal-cell">7</span>
-                <span class="v22-cal-cell has-game">8</span>
-                <span class="v22-cal-cell has-game">9</span>
-                <span class="v22-cal-cell">10</span>
-                <span class="v22-cal-cell">11</span>
-                <span class="v22-cal-cell">12</span>
-                <span class="v22-cal-cell">13</span>
-                <span class="v22-cal-cell">14</span>
-                <span class="v22-cal-cell has-game">15</span>
-                <span class="v22-cal-cell today has-game" title="Hoy: Clásico Andino">16</span>
-                <span class="v22-cal-cell">17</span>
-                <span class="v22-cal-cell">18</span>
-                <span class="v22-cal-cell">19</span>
-                <span class="v22-cal-cell">20</span>
-                <span class="v22-cal-cell">21</span>
-                <span class="v22-cal-cell has-game">22</span>
-                <span class="v22-cal-cell has-game">23</span>
-                <span class="v22-cal-cell">24</span>
-              </div>
-            </div>
-
-            <!-- Medio: Torneos Destacados 3D -->
-            <div class="v22-side-card liquid-glass-card">
-              <h4 class="v22-side-title">
-                <span>🏆 Torneos Destacados</span>
-                <span class="hero-live-badge" style="position: static; padding: 2px 7px;">3D</span>
-              </h4>
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
-                  <div class="v22-tourney-sphere-thumb">🏆</div>
-                  <div class="v22-tourney-side-meta">
-                    <span class="v22-tourney-side-title">Copa Colombia Master</span>
-                    <span class="v22-tourney-side-sub">16 Clubes • Bogotá D.C.</span>
-                  </div>
-                </div>
-                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
-                  <div class="v22-tourney-sphere-thumb" style="background: radial-gradient(circle at 35% 35%, #a5f3fc 0%, #10b981 60%, #041014 100%);">⚡</div>
-                  <div class="v22-tourney-side-meta">
-                    <span class="v22-tourney-side-title">Superliga Andina 2026</span>
-                    <span class="v22-tourney-side-sub">12 Clubes • En Juego</span>
-                  </div>
-                </div>
-                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
-                  <div class="v22-tourney-sphere-thumb" style="background: radial-gradient(circle at 35% 35%, #fde047 0%, #ca8a04 60%, #041014 100%);">🥇</div>
-                  <div class="v22-tourney-side-meta">
-                    <span class="v22-tourney-side-title">Torneo Relámpago Costeño</span>
-                    <span class="v22-tourney-side-sub">8 Clubes • Barranquilla</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Abajo: Notificaciones & Auditoría en Vivo -->
-            <div class="v22-side-card liquid-glass-card">
-              <h4 class="v22-side-title">
-                <span>🔔 Notificaciones &amp; Auditoría</span>
-                <span class="hero-live-dot"></span>
-              </h4>
-              <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div class="v22-alert-item">
-                  <span class="v22-alert-icon">⚽</span>
-                  <div class="v22-alert-text"><strong>Gol registrado:</strong> C. Rodríguez anotó en Salitre (Min 68).</div>
-                </div>
-                <div class="v22-alert-item">
-                  <span class="v22-alert-icon">🛡️</span>
-                  <div class="v22-alert-text"><strong>Acta firmada:</strong> Árbitro FCF cerró partido Real Bogotá 3 - 2 Atl. Medellín.</div>
-                </div>
-                <div class="v22-alert-item">
-                  <span class="v22-alert-icon">📋</span>
-                  <div class="v22-alert-text"><strong>Paz y Salvo:</strong> Solicitud aprobada para Deportivo Cali.</div>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
-
-        <!-- Tabla Oficial de Posiciones & Bitácora de Auditoría FCF -->
-        <div style="margin-top: 2rem;">
-          <h3 style="font-size: 1.25rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;">
-            <span>🛡️</span> Bitácora Oficial de Auditoría &amp; Actividad en Tiempo Real (fmp_audit_log)
-          </h3>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin: 0 0 1rem 0;">Registro inmutable de acciones, cambios de resultados y accesos en la plataforma bajo la Ley 1581 de 2012.</p>
-          <div class="admin-filters-bar">
-            <div class="admin-search-wrapper">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-              <input type="text" id="auditSearchInput" placeholder="Buscar por acción, usuario o detalle...">
-            </div>
-            <div class="admin-filter-actions">
-              <select id="auditRoleFilter" class="select-filter-pill">
-                <option value="all">Todos los roles</option>
-                <option value="admin">Administrador</option>
-                <option value="organizer">Organizador</option>
-                <option value="coach">Director Técnico</option>
-                <option value="fan">Aficionado</option>
-              </select>
-              <button type="button" class="btn-tool-outline" id="btnExportAuditCsv" title="Descargar log de auditoría">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-                <span>Exportar CSV</span>
-              </button>
-              <button type="button" class="btn-tool-outline" id="btnClearAuditLogs" title="Reiniciar auditoría a demostración">
-                <span>🔄 Restaurar Demo</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="admin-table-container">
-            <table class="admin-data-table" id="tableAuditLogs">
-              <thead>
-                <tr>
-                  <th style="width: 140px;">Fecha y Hora</th>
-                  <th style="width: 170px;">Usuario</th>
-                  <th style="width: 130px;">Rol</th>
-                  <th style="width: 170px;">Acción Realizada</th>
-                  <th>Detalles del Evento</th>
-                  <th style="width: 160px;">Ubicación / IP</th>
-                </tr>
-              </thead>
-              <tbody id="auditTableBody">
-                <!-- Renderizado dinámicamente -->
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
 
-
-      <!-- VISTA 2: PERFIL DE COMPETICIÓN / CLUB & TELEMETRÍA (3 KPIs + 7 Barras) -->
-      <div class="admin-subtab-pane" id="admin-tab-profile">
-        <div class="v22-profile-wrapper">
-          <!-- Cabecera Tipo Banner Ancho -->
-          <div class="v22-profile-banner liquid-glass-card">
-            <div class="profile-top-half-gradient"></div>
-            <div class="profile-lower-content">
-              <div class="profile-avatar-superposed">🏆</div>
-              <div class="profile-identity-info">
-                <span class="profile-badge-fcf">OFICIAL FCF • TEMPORADA 2026</span>
-                <h2 class="profile-main-title" id="v22ProfileTournamentTitle">Superliga Andina Nocturna 2026</h2>
-                <p class="profile-sub-meta">Fútbol 11 • Sede Salitre Alto Rendimiento • Categoría Libre • 16 Clubes</p>
-              </div>
-              <div class="profile-action-btns">
-                <button type="button" class="btn-tool-outline" onclick="navigateTo('crear')">
-                  <span>✏️ Configurar</span>
-                </button>
-                <button type="button" class="hero-cta-btn" onclick="navigateTo('tv')">
-                  <span>📺 Modo Estadio</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fila de 3 Tarjetas de Contadores Gigantes (Count-Up desde 000) -->
-          <div class="v22-kpi-3-row">
-            <div class="v22-kpi-3-card liquid-glass-card">
-              <span class="kpi-3-label">🏆 Torneos Activos</span>
-              <span class="kpi-3-num count-up" data-target="16">00</span>
-              <span class="kpi-3-sub">✓ 3 con inscripciones abiertas</span>
-            </div>
-            <div class="v22-kpi-3-card liquid-glass-card">
-              <span class="kpi-3-label">⚽ Partidos Jugados</span>
-              <span class="kpi-3-num count-up" data-target="24">00</span>
-              <span class="kpi-3-sub">+6 programados este fin de semana</span>
-            </div>
-            <div class="v22-kpi-3-card liquid-glass-card">
-              <span class="kpi-3-label">💰 Recaudo &amp; Paz y Salvo</span>
-              <span class="kpi-3-num count-up" data-target="1450000" data-prefix="$" data-currency="true">$0</span>
-              <span class="kpi-3-sub">90% de clubes al día</span>
-            </div>
-          </div>
-
-          <!-- Fila Inferior: Reglas FIFA & Actividad + Rendimiento por Jornada (7 Barras) -->
-          <div class="v22-profile-bottom-grid">
-            <!-- Izquierda: Reglas Oficiales & Actividad -->
-            <div class="v22-card liquid-glass-card">
-              <div class="v22-card-header">
-                <div>
-                  <h4 class="v22-card-title">📜 Reglamento Oficial FIFA / FCF</h4>
-                  <p class="v22-card-sub">Normativa aplicada a la competición activa</p>
-                </div>
-                <span class="v22-badge-green">Homologado</span>
-              </div>
-              <div class="rules-list">
-                <div class="rule-pill-item">⏱️ Duración: 2 tiempos de 45 minutos con 15 min de entretiempo.</div>
-                <div class="rule-pill-item">🔄 Sustituciones: Máximo 5 cambios en 3 ventanas reglamentarias.</div>
-                <div class="rule-pill-item">🟨 Tarjetas: 3 amarillas acumuladas generan suspensión automática de 1 fecha.</div>
-                <div class="rule-pill-item">⚖️ Desempate: Diferencia de gol general y mayor cantidad de goles a favor.</div>
-              </div>
-              <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.75rem;">
-                <h5 style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #ffffff;">Últimos Marcadores Oficiales:</h5>
-                <div class="recent-match-result">
-                  <span>Real Bogotá FC <strong>3 - 2</strong> Atl. Medellín</span>
-                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
-                </div>
-                <div class="recent-match-result">
-                  <span>Deportivo Cali <strong>1 - 1</strong> Bucaramanga FC</span>
-                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
-                </div>
-                <div class="recent-match-result">
-                  <span>Junior Barranquilla <strong>2 - 0</strong> Águilas</span>
-                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Derecha: Rendimiento por Jornada (7 Barras Verticales) -->
-            <div class="v22-card liquid-glass-card">
-              <div class="v22-card-header">
-                <div>
-                  <h4 class="v22-card-title">📈 Rendimiento Ofensivo por Jornada</h4>
-                  <p class="v22-card-sub">Promedio de anotaciones en las 7 jornadas</p>
-                </div>
-                <span class="v22-badge-cyan">Telemetría 60 FPS</span>
-              </div>
-              <div class="v22-chart-7-bars" id="v22Chart7Bars">
-                <div class="chart-7-col">
-                  <span class="chart-7-val">12</span>
-                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="52" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J1</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val">18</span>
-                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="72" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J2</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val">22</span>
-                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="85" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J3</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val">15</span>
-                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="60" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J4</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val" style="color: #1ec1cb;">26</span>
-                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="100" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl" style="color: #1ec1cb; font-weight: 800;">J5</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val">19</span>
-                  <div class="chart-7-track"><div class="chart-7-fill dimmed v22-bar-dynamic" data-height="76" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J6</span>
-                </div>
-                <div class="chart-7-col">
-                  <span class="chart-7-val">21</span>
-                  <div class="chart-7-track"><div class="chart-7-fill dimmed v22-bar-dynamic" data-height="82" style="height: 0%;"></div></div>
-                  <span class="chart-7-lbl">J7</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- VISTA 3: COMPETICIONES Y CANCHAS GUARDADAS (3x2 Grid 3D + Colecciones) -->
-      <div class="admin-subtab-pane" id="admin-tab-tournaments">
+<div class="admin-subtab-pane" id="admin-tab-tournaments">
         <div class="v22-v3-header">
           <div>
             <h2 class="v22-v3-title">Competiciones &amp; Canchas</h2>
@@ -4301,10 +4021,135 @@
               <!-- Renderizado dinámicamente -->
             </tbody>
           </table>
-      </div>
+        </div>
+      </div> <!-- /admin-tab-tournaments -->
 
       <!-- Pestaña 3: Clubes, Solicitudes & Finanzas (Alias admin-tab-organizador) -->
       <div class="admin-subtab-pane" id="admin-tab-clubs-finances">
+<div class="v22-profile-wrapper">
+          <!-- Cabecera Tipo Banner Ancho -->
+          <div class="v22-profile-banner liquid-glass-card">
+            <div class="profile-top-half-gradient"></div>
+            <div class="profile-lower-content">
+              <div class="profile-avatar-superposed">🏆</div>
+              <div class="profile-identity-info">
+                <span class="profile-badge-fcf">OFICIAL FCF • TEMPORADA 2026</span>
+                <h2 class="profile-main-title" id="v22ProfileTournamentTitle">Superliga Andina Nocturna 2026</h2>
+                <p class="profile-sub-meta">Fútbol 11 • Sede Salitre Alto Rendimiento • Categoría Libre • 16 Clubes</p>
+              </div>
+              <div class="profile-action-btns">
+                <button type="button" class="btn-tool-outline" onclick="navigateTo('crear')">
+                  <span>✏️ Configurar</span>
+                </button>
+                <button type="button" class="hero-cta-btn" onclick="navigateTo('tv')">
+                  <span>📺 Modo Estadio</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fila de 3 Tarjetas de Contadores Gigantes (Count-Up desde 000) -->
+          <div class="v22-kpi-3-row">
+            <div class="v22-kpi-3-card liquid-glass-card">
+              <span class="kpi-3-label">🏆 Torneos Activos</span>
+              <span class="kpi-3-num count-up" data-target="16">00</span>
+              <span class="kpi-3-sub">✓ 3 con inscripciones abiertas</span>
+            </div>
+            <div class="v22-kpi-3-card liquid-glass-card">
+              <span class="kpi-3-label">⚽ Partidos Jugados</span>
+              <span class="kpi-3-num count-up" data-target="24">00</span>
+              <span class="kpi-3-sub">+6 programados este fin de semana</span>
+            </div>
+            <div class="v22-kpi-3-card liquid-glass-card">
+              <span class="kpi-3-label">💰 Recaudo &amp; Paz y Salvo</span>
+              <span class="kpi-3-num count-up" data-target="1450000" data-prefix="$" data-currency="true">$0</span>
+              <span class="kpi-3-sub">90% de clubes al día</span>
+            </div>
+          </div>
+
+          <!-- Fila Inferior: Reglas FIFA & Actividad + Rendimiento por Jornada (7 Barras) -->
+          <div class="v22-profile-bottom-grid">
+            <!-- Izquierda: Reglas Oficiales & Actividad -->
+            <div class="v22-card liquid-glass-card">
+              <div class="v22-card-header">
+                <div>
+                  <h4 class="v22-card-title">📜 Reglamento Oficial FIFA / FCF</h4>
+                  <p class="v22-card-sub">Normativa aplicada a la competición activa</p>
+                </div>
+                <span class="v22-badge-green">Homologado</span>
+              </div>
+              <div class="rules-list">
+                <div class="rule-pill-item">⏱️ Duración: 2 tiempos de 45 minutos con 15 min de entretiempo.</div>
+                <div class="rule-pill-item">🔄 Sustituciones: Máximo 5 cambios en 3 ventanas reglamentarias.</div>
+                <div class="rule-pill-item">🟨 Tarjetas: 3 amarillas acumuladas generan suspensión automática de 1 fecha.</div>
+                <div class="rule-pill-item">⚖️ Desempate: Diferencia de gol general y mayor cantidad de goles a favor.</div>
+              </div>
+              <div style="margin-top: 1rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.75rem;">
+                <h5 style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #ffffff;">Últimos Marcadores Oficiales:</h5>
+                <div class="recent-match-result">
+                  <span>Real Bogotá FC <strong>3 - 2</strong> Atl. Medellín</span>
+                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
+                </div>
+                <div class="recent-match-result">
+                  <span>Deportivo Cali <strong>1 - 1</strong> Bucaramanga FC</span>
+                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
+                </div>
+                <div class="recent-match-result">
+                  <span>Junior Barranquilla <strong>2 - 0</strong> Águilas</span>
+                  <span class="v22-badge-green" style="font-size: 0.65rem;">Finalizado</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Derecha: Rendimiento por Jornada (7 Barras Verticales) -->
+            <div class="v22-card liquid-glass-card">
+              <div class="v22-card-header">
+                <div>
+                  <h4 class="v22-card-title">📈 Rendimiento Ofensivo por Jornada</h4>
+                  <p class="v22-card-sub">Promedio de anotaciones en las 7 jornadas</p>
+                </div>
+                <span class="v22-badge-cyan">Telemetría 60 FPS</span>
+              </div>
+              <div class="v22-chart-7-bars" id="v22Chart7Bars">
+                <div class="chart-7-col">
+                  <span class="chart-7-val">12</span>
+                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="52" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J1</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val">18</span>
+                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="72" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J2</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val">22</span>
+                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="85" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J3</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val">15</span>
+                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="60" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J4</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val" style="color: #1ec1cb;">26</span>
+                  <div class="chart-7-track"><div class="chart-7-fill v22-bar-dynamic" data-height="100" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl" style="color: #1ec1cb; font-weight: 800;">J5</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val">19</span>
+                  <div class="chart-7-track"><div class="chart-7-fill dimmed v22-bar-dynamic" data-height="76" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J6</span>
+                </div>
+                <div class="chart-7-col">
+                  <span class="chart-7-val">21</span>
+                  <div class="chart-7-track"><div class="chart-7-fill dimmed v22-bar-dynamic" data-height="82" style="height: 0%;"></div></div>
+                  <span class="chart-7-lbl">J7</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- 1. KPIs y Embudo de Cupos -->
         <div class="admin-filters-bar" style="margin-bottom: 1.5rem;">
           <div>
@@ -4456,10 +4301,65 @@
       </div>
 
       <!-- Pestaña 5: Usuarios Registrados -->
-      <div class="admin-subtab-pane" id="admin-tab-users">
-        <div class="admin-table-container">
+            <!-- APARTADO 5: USUARIOS & BITÁCORA OFICIAL DE AUDITORÍA -->
+      <div class="admin-subtab-pane" id="admin-tab-audit">
+        <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🛡️</span> Bitácora Oficial de Auditoría &amp; Actividades en Tiempo Real (fmp_audit_log)
+          </h3>
+          <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Registro inmutable de acciones, cambios de resultados y accesos en la plataforma bajo la Ley 1581 de 2012.</p>
+        </div>
+
+        <div class="admin-filters-bar">
+          <div class="admin-search-wrapper">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="auditSearchInput" placeholder="Buscar por acción, usuario o detalle...">
+          </div>
+          <div class="admin-filter-actions">
+            <select id="auditRoleFilter" class="select-filter-pill">
+              <option value="all">Todos los roles</option>
+              <option value="admin">Administrador</option>
+              <option value="organizer">Organizador</option>
+              <option value="coach">Director Técnico</option>
+              <option value="fan">Aficionado</option>
+            </select>
+            <button type="button" class="btn-tool-outline" id="btnExportAuditCsv" title="Descargar log de auditoría">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Exportar CSV</span>
+            </button>
+            <button type="button" class="btn-tool-outline" id="btnClearAuditLogs" title="Reiniciar auditoría a demostración">
+              <span>🔄 Restaurar Demo</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-table-container audit-table-scroll-container" style="max-height: 540px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2); margin-bottom: 2.5rem;">
+          <table class="admin-data-table" id="tableAuditLogs">
+            <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
+              <tr>
+                <th style="width: 140px;">Fecha y Hora</th>
+                <th style="width: 170px;">Usuario</th>
+                <th style="width: 130px;">Rol</th>
+                <th style="width: 170px;">Acción Realizada</th>
+                <th>Detalles del Evento</th>
+                <th style="width: 160px;">Ubicación / IP</th>
+              </tr>
+            </thead>
+            <tbody id="auditTableBody">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="view-header-bar" style="margin-top: 2rem; margin-bottom: 1.25rem;">
+          <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0; display: flex; align-items: center; gap: 0.5rem;">
+            <span>👥</span> Directorio Oficial de Usuarios Registrados (Ley 1581)
+          </h3>
+          <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Supervisión de cuentas autorizadas, roles deportivos asignados y estado de autenticación.</p>
+        </div>
+        <div class="admin-table-container" style="max-height: 480px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2);">
           <table class="admin-data-table" id="tableAdminUsers">
-            <thead>
+            <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
               <tr>
                 <th>Nombre Completo</th>
                 <th>Correo Electrónico</th>
@@ -4475,83 +4375,116 @@
           </table>
         </div>
       </div>
-        </div> <!-- /bento-central-area -->
+    </div>
+  </div> <!-- /bento-central-area -->
 
-        <!-- 3. PANEL DERECHO (320px) -->
-        <aside class="bento-right-panel" id="adminBentoRightPanel" aria-label="Panel Lateral Deportivo">
-          <!-- Mini Calendario Interactivo del Mes -->
-          <div class="bento-side-card mini-calendar-card">
-            <div class="side-card-header">
-              <h4 class="side-card-title">📅 Noviembre 2026</h4>
-              <span class="badge-status-pill-cyan">TEMPORADA FCF</span>
-            </div>
-            <div class="mini-calendar-grid" id="miniCalendarGrid">
-              <span class="cal-day-name">L</span>
-              <span class="cal-day-name">M</span>
-              <span class="cal-day-name">M</span>
-              <span class="cal-day-name">J</span>
-              <span class="cal-day-name">V</span>
-              <span class="cal-day-name">S</span>
-              <span class="cal-day-name">D</span>
-            </div>
-            <div class="cal-legend-footer">
-              <span class="cal-dot-indicator dot-cyan"></span> Partidos
-              <span class="cal-dot-indicator dot-emerald" style="margin-left: 8px;"></span> Finales
-            </div>
-          </div>
-
-          <!-- Próximos Partidos de la Jornada -->
-          <div class="bento-side-card upcoming-fixtures-side-card">
-            <div class="side-card-header">
-              <h4 class="side-card-title">⚽ Próximos Partidos</h4>
-              <span class="badge-status-pill-cyan">EN VIVO</span>
-            </div>
-            <div class="side-fixtures-list" id="sideFixturesList">
-              <div style="background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(165,243,252,0.15); margin-bottom: 8px;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #a5f3fc; font-weight: 700; margin-bottom: 4px;">
-                  <span>FINAL COPA 2026</span>
-                  <span style="color: #10b981;">18:00</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800; color: #fff;">
-                  <span>Real Madrid</span>
-                  <span style="color: #1ec1cb; background: rgba(30,193,203,0.15); padding: 1px 6px; border-radius: 4px;">VS</span>
-                  <span>Man. City</span>
-                </div>
-                <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 4px;">🏟️ Estadio Metropolitano</div>
-              </div>
-              <div style="background: rgba(0,0,0,0.3); padding: 8px 10px; border-radius: 10px; border: 1px solid rgba(165,243,252,0.15);">
-                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: #a5f3fc; font-weight: 700; margin-bottom: 4px;">
-                  <span>3° PUESTO</span>
-                  <span style="color: #10b981;">15:30</span>
-                </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 800; color: #fff;">
-                  <span>Bayern Múnich</span>
-                  <span style="color: #1ec1cb; background: rgba(30,193,203,0.15); padding: 1px 6px; border-radius: 4px;">VS</span>
-                  <span>Arsenal FC</span>
-                </div>
-                <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 4px;">🏟️ Cancha Central Salitre</div>
+        <!-- 3. PANEL DERECHO (320px) — Mini Calendario, Torneos Destacados 3D y Notificaciones -->
+        <aside class="v22-right-panel" id="adminBentoRightPanel" aria-label="Panel Lateral Deportivo">
+            <!-- Arriba: Mini Calendario Noviembre 2026 -->
+            <div class="v22-side-card liquid-glass-card">
+              <h4 class="v22-side-title">
+                <span>📅 Noviembre, 2026</span>
+                <span class="v22-badge-cyan" style="font-size: 0.65rem;">Jornada 5</span>
+              </h4>
+              <div class="v22-calendar-grid">
+                <span class="v22-cal-header-day">L</span>
+                <span class="v22-cal-header-day">M</span>
+                <span class="v22-cal-header-day">M</span>
+                <span class="v22-cal-header-day">J</span>
+                <span class="v22-cal-header-day">V</span>
+                <span class="v22-cal-header-day">S</span>
+                <span class="v22-cal-header-day">D</span>
+                <!-- Días del mes con resaltado de partidos -->
+                <span class="v22-cal-cell" style="opacity: 0.4;">27</span>
+                <span class="v22-cal-cell" style="opacity: 0.4;">28</span>
+                <span class="v22-cal-cell" style="opacity: 0.4;">29</span>
+                <span class="v22-cal-cell" style="opacity: 0.4;">30</span>
+                <span class="v22-cal-cell">1</span>
+                <span class="v22-cal-cell has-game">2</span>
+                <span class="v22-cal-cell">3</span>
+                <span class="v22-cal-cell">4</span>
+                <span class="v22-cal-cell">5</span>
+                <span class="v22-cal-cell">6</span>
+                <span class="v22-cal-cell">7</span>
+                <span class="v22-cal-cell has-game">8</span>
+                <span class="v22-cal-cell has-game">9</span>
+                <span class="v22-cal-cell">10</span>
+                <span class="v22-cal-cell">11</span>
+                <span class="v22-cal-cell">12</span>
+                <span class="v22-cal-cell">13</span>
+                <span class="v22-cal-cell">14</span>
+                <span class="v22-cal-cell has-game">15</span>
+                <span class="v22-cal-cell today has-game" title="Hoy: Clásico Andino">16</span>
+                <span class="v22-cal-cell">17</span>
+                <span class="v22-cal-cell">18</span>
+                <span class="v22-cal-cell">19</span>
+                <span class="v22-cal-cell">20</span>
+                <span class="v22-cal-cell">21</span>
+                <span class="v22-cal-cell has-game">22</span>
+                <span class="v22-cal-cell has-game">23</span>
+                <span class="v22-cal-cell">24</span>
               </div>
             </div>
-          </div>
 
-          <!-- Feed de Solicitudes y Alertas en Vivo -->
-          <div class="bento-side-card live-feed-side-card">
-            <div class="side-card-header">
-              <h4 class="side-card-title">⚡ Solicitudes &amp; Paz y Salvo</h4>
-              <span class="live-ping-dot"></span>
+            <!-- Medio: Torneos Destacados 3D -->
+            <div class="v22-side-card liquid-glass-card">
+              <h4 class="v22-side-title">
+                <span>🏆 Torneos Destacados</span>
+                <span class="hero-live-badge" style="position: static; padding: 2px 7px;">3D</span>
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
+                  <div class="v22-tourney-sphere-thumb">🏆</div>
+                  <div class="v22-tourney-side-meta">
+                    <span class="v22-tourney-side-title">Copa Colombia Master</span>
+                    <span class="v22-tourney-side-sub">16 Clubes • Bogotá D.C.</span>
+                  </div>
+                </div>
+                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
+                  <div class="v22-tourney-sphere-thumb" style="background: radial-gradient(circle at 35% 35%, #a5f3fc 0%, #10b981 60%, #041014 100%);">⚡</div>
+                  <div class="v22-tourney-side-meta">
+                    <span class="v22-tourney-side-title">Superliga Andina 2026</span>
+                    <span class="v22-tourney-side-sub">12 Clubes • En Juego</span>
+                  </div>
+                </div>
+                <div class="v22-tourney-side-item" onclick="navigateTo('clasificacion')">
+                  <div class="v22-tourney-sphere-thumb" style="background: radial-gradient(circle at 35% 35%, #fde047 0%, #ca8a04 60%, #041014 100%);">🥇</div>
+                  <div class="v22-tourney-side-meta">
+                    <span class="v22-tourney-side-title">Torneo Relámpago Costeño</span>
+                    <span class="v22-tourney-side-sub">8 Clubes • Barranquilla</span>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="side-feed-list" id="sideLiveFeedList">
-              <!-- Renderizado dinámicamente -->
-            </div>
-          </div>
-        </aside>
-      </div> <!-- /admin-bento-layout -->
+
+            <!-- Abajo: Notificaciones & Auditoría en Vivo -->
+            <div class="v22-side-card liquid-glass-card">
+              <h4 class="v22-side-title">
+                <span>🔔 Notificaciones &amp; Auditoría</span>
+                <span class="hero-live-dot"></span>
+              </h4>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div class="v22-alert-item">
+                  <span class="v22-alert-icon">⚽</span>
+                  <div class="v22-alert-text"><strong>Gol registrado:</strong> C. Rodríguez anotó en Salitre (Min 68).</div>
+                </div>
+                <div class="v22-alert-item">
+                  <span class="v22-alert-icon">🛡️</span>
+                  <div class="v22-alert-text"><strong>Acta firmada:</strong> Árbitro FCF cerró partido Real Bogotá 3 - 2 Atl. Medellín.</div>
+                </div>
+                <div class="v22-alert-item">
+                  <span class="v22-alert-icon">📋</span>
+                  <div class="v22-alert-text"><strong>Paz y Salvo:</strong> Solicitud aprobada para Deportivo Cali.</div>
+                </div>
+              </div>
+            </aside>
+</div> <!-- /admin-bento-layout -->
     </div> <!-- /admin-panel-container -->
   </section>
 
   <!-- VISTA 11: PANEL MI CLUB / DIRECTOR TÉCNICO Y PLANTILLAS -->
   <section id="view-club" class="spa-view" data-alias="view-coach">
-    <div class="coach-panel-container">
+    <div class="coach-panel-container admin-dashboard-wrapper">
       <!-- Hero del Club -->
       <div class="club-hero-card">
         <div class="club-hero-left">
@@ -6312,7 +6245,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_liquid_glass_full_screen"></script>
+  <script src="app.js?v=20261116_v22_isolated_shell"></script>
 </body>
 </html>
 

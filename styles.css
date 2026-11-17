@@ -17066,7 +17066,7 @@ header.global-spa-header .header-brand,
   left: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 99998 !important;
+  z-index: 9999999 !important;
   background: #081e22 !important;
   display: none !important;
   align-items: center !important;
@@ -17103,11 +17103,8 @@ header.global-spa-header .header-brand,
   justify-content: center !important;
   margin-bottom: 1.25rem !important;
   position: relative !important;
-  transition: transform 0.85s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease !important;
-}
-
-.splash-icon-box.morphing-to-dock {
-  transform: translate(calc(-50vw + 42px), calc(-50vh + 99px)) scale(0.63) !important;
+  transition: transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease !important;
+  will-change: transform, opacity !important;
 }
 
 .splash-title {
@@ -19381,4 +19378,169 @@ header.global-spa-header,
   position: relative;
   z-index: 99999 !important;
   pointer-events: auto !important;
+}
+
+/* =============================================================================
+   APP SHELL CENTRADO & AISLAMIENTO ESTRICTO POR APARTADOS (DASHBOARD V22)
+   ============================================================================= */
+
+/* 1. Contenedor Centrado Tipo App Shell (max-width: 1380px) */
+.admin-dashboard-wrapper,
+.admin-panel-container,
+.coach-panel-container {
+  width: 100% !important;
+  max-width: 1380px !important;
+  margin: 0 auto !important;
+  padding: 20px 24px !important;
+  box-sizing: border-box !important;
+}
+
+/* 2. Layout Principal del Dashboard en Escritorio (> 1024px) */
+@media (min-width: 1025px) {
+  /* Apartado 1 (Overview): 3 Columnas compactas estilo Dashboard V22 */
+  .bento-dashboard-shell,
+  .admin-bento-layout,
+  .bento-dashboard-shell.shell-three-cols,
+  .admin-bento-layout.shell-three-cols {
+    display: grid !important;
+    grid-template-columns: 64px minmax(0, 1fr) 320px !important;
+    gap: 20px !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    transition: grid-template-columns 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  }
+
+  /* Apartados 2, 3, 4, 5: 2 Columnas (Pill 64px + Área Central Completa 1fr) */
+  .bento-dashboard-shell.shell-two-cols,
+  .admin-bento-layout.shell-two-cols {
+    grid-template-columns: 64px minmax(0, 1fr) !important;
+  }
+
+  .bento-dashboard-shell.shell-two-cols .v22-right-panel,
+  .admin-bento-layout.shell-two-cols .v22-right-panel,
+  .bento-dashboard-shell.shell-two-cols #adminBentoRightPanel,
+  .admin-bento-layout.shell-two-cols #adminBentoRightPanel {
+    display: none !important;
+  }
+}
+
+/* 3. Modo Móvil y Tablet (<= 1024px): Stacking vertical limpio */
+@media (max-width: 1024px) {
+  .bento-dashboard-shell,
+  .admin-bento-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+    padding: 10px 12px !important;
+  }
+
+  .pill-sidebar-wrapper {
+    position: static !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+
+  .pill-dock-capsule {
+    flex-direction: row !important;
+    width: auto !important;
+    height: 52px !important;
+    padding: 6px 12px !important;
+  }
+
+  .pill-dock-group {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
+}
+
+/* 4. Aislamiento Estricto por Apartados: CERO Secciones Visibles Debajo de la Activa */
+.admin-subtab-pane {
+  display: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.admin-subtab-pane.active {
+  display: block !important;
+  height: auto !important;
+  overflow: visible !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  animation: tabSwitch 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+@keyframes tabSwitch {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px) scale(1);
+  }
+}
+
+/* 5. Contenedor de Scroll Interno para la Bitácora Oficial de Auditoría */
+.audit-table-scroll-container {
+  max-height: 540px !important;
+  overflow-y: auto !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(165, 243, 252, 0.2) !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(30, 193, 203, 0.4) transparent !important;
+}
+
+.audit-table-scroll-container::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.audit-table-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(30, 193, 203, 0.4) !important;
+  border-radius: 9999px !important;
+}
+
+/* 6. Panel Derecho de 320px en Overview */
+.v22-right-panel,
+#adminBentoRightPanel {
+  width: 320px !important;
+  min-width: 320px !important;
+  max-width: 320px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+
+/* 7. Ocultar Navbar Global en Admin & Club (Espacio Completo de Pantalla Estilo Dashboard V22) */
+body.route-admin .global-spa-header,
+body.route-admin header.header,
+body.route-admin #mainHeader,
+body.route-club .global-spa-header,
+body.route-club header.header,
+body.route-club #mainHeader,
+body:has(#view-admin.active) .global-spa-header,
+body:has(#view-admin.active) header.header,
+body:has(#view-admin.active) #mainHeader,
+body:has(#view-club.active) .global-spa-header,
+body:has(#view-club.active) header.header,
+body:has(#view-club.active) #mainHeader {
+  display: none !important;
+}
+
+/* Sticky top alineado con inicio del Dashboard cuando no hay navbar global */
+body.route-admin .pill-sidebar-wrapper,
+body.route-club .pill-sidebar-wrapper,
+body:has(#view-admin.active) .pill-sidebar-wrapper,
+body:has(#view-club.active) .pill-sidebar-wrapper {
+  top: 24px !important;
 }

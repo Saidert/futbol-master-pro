@@ -5587,9 +5587,10 @@ window.triggerMicroSkeleton = triggerMicroSkeleton;
 function handleAdminSubtabSwitch(btn) {
   if (!btn) return;
   const targetSubtab = btn.getAttribute('data-subtab');
+  const sectionKey = btn.getAttribute('data-section') || targetSubtab.replace('admin-tab-', '');
   const index = parseInt(btn.getAttribute('data-index') || '0', 10);
 
-  // 1. Botones activos
+  // 1. Botones activos en la Pill Sidebar
   document.querySelectorAll('.admin-subtab-btn').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab);
   });
@@ -5597,34 +5598,60 @@ function handleAdminSubtabSwitch(btn) {
   // 2. Desplazamiento suave del indicador deslizante
   updatePillSlidingIndicator(index);
 
-  // 3. Cambio de panel con micro-skeleton de 250ms
+  // 3. Control de Layout Shell (Overview = 3 Columnas con Panel Derecho; Resto = 2 Columnas Full 1fr)
+  const shell = document.getElementById('adminDashboardShell') || document.querySelector('.admin-bento-layout');
+  const rightPanel = document.getElementById('adminBentoRightPanel');
+  const isOverview = (sectionKey === 'overview' || targetSubtab === 'admin-tab-overview');
+
+  if (shell) {
+    if (isOverview) {
+      shell.classList.remove('shell-two-cols');
+      shell.classList.add('shell-three-cols');
+    } else {
+      shell.classList.remove('shell-three-cols');
+      shell.classList.add('shell-two-cols');
+    }
+  }
+
+  if (rightPanel) {
+    if (isOverview) {
+      rightPanel.style.setProperty('display', 'flex', 'important');
+    } else {
+      rightPanel.style.setProperty('display', 'none', 'important');
+    }
+  }
+
+  // 4. Aislamiento Estricto por Apartados: Cero secciones apiladas debajo
   const targetPane = document.getElementById(targetSubtab);
   document.querySelectorAll('.admin-subtab-pane').forEach(p => {
-    if (p !== targetPane) p.classList.remove('active');
+    if (p !== targetPane) {
+      p.classList.remove('active');
+      p.style.setProperty('display', 'none', 'important');
+    }
   });
 
   if (targetPane) {
     targetPane.classList.add('active');
+    targetPane.style.setProperty('display', 'block', 'important');
     triggerMicroSkeleton(targetPane, () => {
       animateAllCountUps(targetPane);
       animateAllBars(targetPane);
     });
   }
 
-  // 4. Renderizado según subpestaña
-  if (targetSubtab === 'admin-tab-overview' || targetSubtab === 'admin-tab-dashboard' || targetSubtab === 'admin-tab-audit') {
+  // 5. Renderizado Condicional Exclusivo según Apartado
+  if (isOverview) {
     renderAdminLiveDashboard();
-    renderAdminAuditTable();
-  } else if (targetSubtab === 'admin-tab-profile') {
-    renderAdminProfileTab();
-  } else if (targetSubtab === 'admin-tab-tournaments' || targetSubtab === 'admin-tab-corrections') {
+  } else if (sectionKey === 'torneos' || targetSubtab === 'admin-tab-tournaments') {
     renderAdminTournamentsTable();
     renderAdminCorrectionsTab();
-  } else if (targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-organizador') {
+  } else if (sectionKey === 'clubes' || targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-profile') {
     renderAdminOrganizerTab();
-  } else if (targetSubtab === 'admin-tab-venues') {
+    renderAdminProfileTab();
+  } else if (sectionKey === 'canchas' || targetSubtab === 'admin-tab-venues') {
     renderAdminVenuesCatalog();
-  } else if (targetSubtab === 'admin-tab-users') {
+  } else if (sectionKey === 'auditoria' || targetSubtab === 'admin-tab-audit' || targetSubtab === 'admin-tab-users') {
+    renderAdminAuditTable();
     renderAdminUsersTable();
   }
 }
@@ -5648,33 +5675,21 @@ function runDashboardEntranceSequence() {
   const splashContent = document.getElementById('splashCenterContent');
   const splashIcon = document.getElementById('splashIconBox');
   const container = document.querySelector('.admin-panel-container');
+  const topLogo = document.getElementById('pillSidebarTopLogo');
 
   if (!overlay) return;
   isDashboardEntranceRunning = true;
 
-  // Asegurar desplazamiento instantáneo al tope (0, 0)
+  // 1. Reset instantáneo al tope absoluto de la ventana (0, 0)
   try {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   } catch (e) {
     window.scrollTo(0, 0);
   }
 
-  // Medir posición de destino (#pillSidebarTopLogo) en reposo ANTES de cualquier animación
-  const topLogo = document.getElementById('pillSidebarTopLogo');
-  let targetX = 42;
-  let targetY = 99;
-  let scaleFactor = 48 / 76; // ~0.632
-
-  if (topLogo) {
-    const tr = topLogo.getBoundingClientRect();
-    if (tr.width > 0 && tr.left >= 0 && tr.left < 140 && tr.top > 45 && tr.top < 180) {
-      targetX = tr.left + tr.width / 2;
-      targetY = tr.top + tr.height / 2;
-      scaleFactor = tr.width / 76;
-    }
-  }
-
-  // Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.6s)
+  // 2. Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.6s)
   overlay.style.setProperty('display', 'flex', 'important');
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
@@ -5684,47 +5699,71 @@ function runDashboardEntranceSequence() {
     splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
   }
 
-  // A los 1.6s: Desvanecer subtítulo y título de splash suavemente
+  // 3. A los 1.6s: Desvanecer subtítulo y título de splash suavemente
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
   }, 1600);
 
-  // A los 1.8s: Morph cinematográfico hacia el botón superior del Pill Sidebar (Foto 2)
+  // 4. A los 1.8s: Morph cinematográfico EXACTO hacia el botón superior del Pill Sidebar (#pillSidebarTopLogo)
   setTimeout(() => {
     if (splashIcon) {
-      // Re-verificar si topLogo está visible y en rango coherente superior
+      window.scrollTo(0, 0);
+
+      // Medir en tiempo real la posición del destino (#pillSidebarTopLogo)
+      let targetCenterX = 0;
+      let targetCenterY = 0;
+      let scaleFactor = 48 / 76; // ~0.632 (de 76px a 48px)
+
       if (topLogo) {
         const tr = topLogo.getBoundingClientRect();
-        if (tr.width > 0 && tr.left >= 0 && tr.left < 140 && tr.top > 45 && tr.top < 180) {
-          targetX = tr.left + tr.width / 2;
-          targetY = tr.top + tr.height / 2;
+        if (tr.width > 0 && tr.height > 0) {
+          targetCenterX = tr.left + tr.width / 2;
+          targetCenterY = tr.top + tr.height / 2;
           scaleFactor = tr.width / 76;
         }
       }
 
-      // Si targetY se descalibró hacia abajo por scroll o reflow, forzar reposo superior en la píldora
-      if (targetY > 180 || targetY <= 0) targetY = 99;
-      if (targetX > 140 || targetX <= 0) targetX = 42;
+      // Si topLogo aún no tiene dimensiones en el DOM, calcularlo desde el wrapper de la píldora
+      if (!targetCenterX || !targetCenterY) {
+        const sidebar = document.getElementById('adminPillSidebar') || document.querySelector('.pill-sidebar-wrapper');
+        if (sidebar) {
+          const sr = sidebar.getBoundingClientRect();
+          if (sr.width > 0) {
+            targetCenterX = sr.left + sr.width / 2;
+            targetCenterY = sr.top + 24;
+          }
+        }
+      }
+
+      // Fallback seguro si nada tuviera dimensiones
+      if (!targetCenterX) targetCenterX = Math.max(36, (window.innerWidth - 1380) / 2 + 52);
+      if (!targetCenterY) targetCenterY = 56;
 
       const iconRect = splashIcon.getBoundingClientRect();
       const currentCenterX = iconRect.left + iconRect.width / 2;
       const currentCenterY = iconRect.top + iconRect.height / 2;
 
-      // Calcular vector de traslación exacto
-      const dx = targetX - currentCenterX;
-      const dy = targetY - currentCenterY;
+      // Calcular vector de traslación milimétrico exacto
+      const dx = targetCenterX - currentCenterX;
+      const dy = targetCenterY - currentCenterY;
 
-      splashIcon.style.transition = 'transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.5s ease';
+      splashIcon.style.transition = 'transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease';
       splashIcon.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${scaleFactor.toFixed(3)})`;
     }
 
     if (container) container.classList.add('entrance-expanding');
   }, 1800);
 
-  // A los 2.9s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
+  // 5. A los 2.9s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
   setTimeout(() => {
     overlay.classList.add('is-hidden');
-    setTimeout(() => { overlay.style.setProperty('display', 'none', 'important'); }, 450);
+    setTimeout(() => {
+      overlay.style.setProperty('display', 'none', 'important');
+      if (splashIcon) {
+        splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
+        splashIcon.style.transition = 'none';
+      }
+    }, 450);
 
     // Fase 2: Shimmer Skeleton en tarjetas (0.9s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
