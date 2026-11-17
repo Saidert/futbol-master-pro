@@ -73,7 +73,7 @@
     0 0 30px rgba(30, 193, 203, 0.15),
     inset 0 1px 2px rgba(255, 255, 255, 0.65),
     inset 0 -10px 25px rgba(30, 193, 203, 0.18);
-  --ios-blur: blur(32px) saturate(210%) brightness(1.12);
+  --ios-blur: blur(14px) saturate(160%);
   --ios-spring: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -13891,8 +13891,8 @@ body::after {
 .quick-roles-grid,
 .tournament-view-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(30, 193, 203, 0.15) 50%, rgba(10, 35, 42, 0.4) 100%) !important;
-  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   border: 1px solid rgba(165, 243, 252, 0.3) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
   box-shadow: 0 24px 48px rgba(0, 10, 15, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
@@ -14419,8 +14419,8 @@ body.role-organizer .btn-create-header {
     rgba(16, 185, 129, 0.12) 42%,
     rgba(6, 16, 24, 0.65) 100%
   ) !important;
-  backdrop-filter: blur(30px) saturate(195%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(195%) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
   border-left: 1px solid rgba(167, 243, 208, 0.35) !important;
@@ -15057,8 +15057,8 @@ body.role-organizer .btn-create-header {
   padding: 1.65rem 1.85rem !important;
   border-radius: 26px !important;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(18, 38, 30, 0.90) 45%, rgba(10, 22, 18, 0.94) 100%) !important;
-  backdrop-filter: blur(32px) saturate(210%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.55) !important;
   border-left: 1px solid rgba(255, 255, 255, 0.25) !important;
   border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
@@ -16539,8 +16539,8 @@ body.role-admin #mobileBtnCreateNew {
     rgba(30, 193, 203, 0.15) 50%,
     rgba(10, 35, 42, 0.4) 100%
   ) !important;
-  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   border-radius: 28px !important;
   border: 1px solid rgba(165, 243, 252, 0.3) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
@@ -17041,8 +17041,8 @@ header.global-spa-header .header-brand,
     rgba(30, 193, 203, 0.15) 50%,
     rgba(10, 35, 42, 0.4) 100%
   ) !important;
-  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
   border: 1px solid rgba(165, 243, 252, 0.3) !important;
   border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
   border-left: 1.5px solid rgba(165, 243, 252, 0.55) !important;
@@ -17148,33 +17148,28 @@ header.global-spa-header .header-brand,
 }
 
 /* -----------------------------------------------------------------------------
-   1. PILL SIDEBAR: SILUETA UNIFICADA + DROP-SHADOW PERIMETRAL (CERO LÍNEAS INTERNAS)
+   1. PILL SIDEBAR: CRISTAL TRANSLÚCIDO UNIFORME & LIGERO (ALTO RENDIMIENTO 60 FPS)
    ----------------------------------------------------------------------------- */
 
-/* 1. Tubo vertical sin border CSS propio: el borde cian lo genera filter: drop-shadow alrededor de toda la silueta unificada */
+/* Barra lateral de cristal translúcido uniforme y ligera (sin drop-shadows pesados) */
 .pill-sidebar-container,
 .pill-sidebar-dock,
 .pill-sidebar-wrapper {
   position: fixed !important;
   left: 14px !important;
   top: 50% !important;
-  transform: translateY(-50%) !important;
+  transform: translate3d(0, -50%, 0) !important;
   width: 64px !important;
   min-width: 64px !important;
   max-width: 64px !important;
   padding: 12px 10px !important;
   border-radius: 9999px !important;
-  background: #071f26 !important;
-  border: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  /* Dibuja el borde cian únicamente en el contorno exterior de la barra + pestaña fusionadas */
-  filter: 
-    drop-shadow(1.2px 0 0 rgba(165, 243, 252, 0.42))
-    drop-shadow(-1.2px 0 0 rgba(165, 243, 252, 0.42))
-    drop-shadow(0 1.2px 0 rgba(165, 243, 252, 0.42))
-    drop-shadow(0 -1.2px 0 rgba(165, 243, 252, 0.42))
-    drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55)) !important;
+  background: rgba(10, 34, 42, 0.65) !important;
+  backdrop-filter: blur(14px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.28) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  filter: none !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
@@ -17266,11 +17261,19 @@ header.global-spa-header .header-brand,
   overflow: visible !important;
 }
 
-/* 2. Botones inactivos: círculos limpios de 44x44px */
+/* Eliminar por completo los triángulos oscuros que causaban mal contraste */
+.sidebar-nav-btn::before,
+.sidebar-nav-btn::after,
+.sidebar-nav-btn.active::before,
+.sidebar-nav-btn.active::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Botones de la barra con aceleración por hardware (60 FPS) */
 .sidebar-nav-btn {
   position: relative !important;
   width: 44px !important;
-  max-width: 44px !important;
   height: 44px !important;
   border-radius: 9999px !important;
   display: flex !important;
@@ -17278,17 +17281,17 @@ header.global-spa-header .header-brand,
   justify-content: flex-start !important;
   padding: 0 11px !important;
   background: transparent !important;
-  border: none !important;
+  border: 1px solid transparent !important;
   box-shadow: none !important;
-  overflow: visible !important;
+  will-change: transform, width !important;
   cursor: pointer !important;
   color: #94a3b8 !important;
   outline: none !important;
   box-sizing: border-box !important;
   white-space: nowrap !important;
-  transition: max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-              padding 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-              background 0.3s ease !important;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.25s ease,
+              box-shadow 0.25s ease !important;
 }
 
 .sidebar-nav-btn svg {
@@ -17306,17 +17309,27 @@ header.global-spa-header .header-brand,
   color: #ffffff !important;
 }
 
+/* Animaciones GPU sin filter: drop-shadow (60 FPS fluido) */
 @keyframes navLiquidGlide {
   0% {
-    transform: translateY(var(--glide-from, 0px)) scaleX(0.82) scaleY(1.18);
-    filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+    transform: translate3d(0, var(--glide-from, 0px), 0) scaleX(0.82) scaleY(1.18);
   }
   60% {
-    transform: translateY(-2px) scaleX(1.05) scaleY(0.96);
+    transform: translate3d(0, -2px, 0) scaleX(1.05) scaleY(0.96);
   }
   100% {
-    transform: translateY(0) scaleX(1) scaleY(1);
-    filter: drop-shadow(0 0 16px rgba(0, 240, 255, 0.7));
+    transform: translate3d(0, 0, 0) scaleX(1) scaleY(1);
+  }
+}
+
+@keyframes labelSlideIn {
+  0% {
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -17333,17 +17346,18 @@ header.global-spa-header .header-brand,
   }
 }
 
-/* 3. Botón activo (.active): pastilla verde rodeada por una funda sólida #071f26 de 8px que se funde con la barra */
+/* Pastilla activa limpia (igual al Nav de Inicio): sin bordes negros ni contrastes oscuros */
 .sidebar-nav-btn.active {
   width: max-content !important;
   max-width: 240px !important;
-  padding: 0 20px 0 12px !important;
-  background: linear-gradient(135deg, #1EC1CB 0%, #10B981 100%) !important;
-  border: none !important;
-  /* Funda uniforme #071f26 sin desplazamiento ni líneas cian internas */
-  box-shadow: 0 0 0 8px #071f26 !important;
+  padding: 0 18px 0 12px !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.95) 0%, rgba(16, 185, 129, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.55) !important;
+  box-shadow: 
+    0 6px 20px rgba(16, 185, 129, 0.35),
+    inset 0 1px 2px rgba(255, 255, 255, 0.65) !important;
   z-index: 20 !important;
-  animation: navLiquidGlide 0.48s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+  animation: navLiquidGlide 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
   transform-origin: left center !important;
 }
 
@@ -17351,60 +17365,20 @@ header.global-spa-header .header-brand,
   stroke: #ffffff !important;
 }
 
-/* 4. Curvas cóncavas (Liquid Fillets) FUERA del botón verde usando radial-gradient puro (sin box-shadow ni border) */
-.sidebar-nav-btn.active::before,
-.sidebar-nav-btn.active::after {
-  content: "" !important;
-  position: absolute !important;
-  left: 53px !important; /* Justo en el borde derecho del tubo de 64px */
-  width: 12px !important;
-  height: 12px !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Curva cóncava superior (queda de -19px a -7px, nunca toca la pastilla verde) */
-.sidebar-nav-btn.active::before {
-  top: -19px !important;
-  background: radial-gradient(circle at 100% 0%, transparent 11.5px, #071f26 12px) !important;
-}
-
-/* Curva cóncava inferior (queda de -19px a -7px abajo, nunca toca la pastilla verde) */
-.sidebar-nav-btn.active::after {
-  bottom: -19px !important;
-  background: radial-gradient(circle at 100% 100%, transparent 11.5px, #071f26 12px) !important;
-}
-
-/* 5. Animación del texto adentro de la pastilla */
+/* Despliegue suave del nombre del apartado activo */
 .sidebar-item-label {
-  display: inline-block !important;
-  max-width: 0 !important;
-  opacity: 0 !important;
-  overflow: hidden !important;
+  display: none !important;
   white-space: nowrap !important;
-  margin-left: 0 !important;
+  margin-left: 10px !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   color: #ffffff !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  padding: 0 !important;
-  letter-spacing: 0.2px !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
-  transition: max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
-              opacity 0.25s ease 0.08s,
-              margin-left 0.35s ease !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 .sidebar-nav-btn.active .sidebar-item-label {
-  max-width: 180px !important;
-  opacity: 1 !important;
-  margin-left: 10px !important;
+  display: inline-block !important;
+  animation: labelSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
 /* CERO tooltips o labels al pasar el mouse por encima (HOVER OFF) */
@@ -19651,18 +19625,18 @@ body:has(#view-club.active) #mainHeader {
     position: fixed !important;
     left: 14px !important;
     top: 50% !important;
-    transform: translateY(-50%) !important;
+    transform: translate3d(0, -50%, 0) !important;
     width: 64px !important;
     min-width: 64px !important;
     max-width: 64px !important;
-    background: #071f26 !important;
-    border: none !important;
-    filter: 
-      drop-shadow(1.2px 0 0 rgba(165, 243, 252, 0.42))
-      drop-shadow(-1.2px 0 0 rgba(165, 243, 252, 0.42))
-      drop-shadow(0 1.2px 0 rgba(165, 243, 252, 0.42))
-      drop-shadow(0 -1.2px 0 rgba(165, 243, 252, 0.42))
-      drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55)) !important;
+    padding: 12px 10px !important;
+    border-radius: 9999px !important;
+    background: rgba(10, 34, 42, 0.65) !important;
+    backdrop-filter: blur(14px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(160%) !important;
+    border: 1px solid rgba(165, 243, 252, 0.28) !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+    filter: none !important;
   }
 }
 
