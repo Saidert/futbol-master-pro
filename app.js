@@ -2657,12 +2657,18 @@ function setAuthMode(targetMode) {
 window.setAuthMode = setAuthMode;
 
 function pulseHudCorners() {
-  const corners = document.querySelectorAll('.hud-corner-tl, .hud-corner-br');
-  corners.forEach(c => {
-    c.style.animation = 'none';
-    void c.offsetWidth; // forzar reflow
-    c.style.animation = 'hudCornerPulse 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards';
-  });
+  const tl = document.querySelector('.hud-corner-tl');
+  const br = document.querySelector('.hud-corner-br');
+  if (tl) {
+    tl.style.animation = 'none';
+    void tl.offsetWidth; // forzar reflow
+    tl.style.animation = 'hudCornerOpen 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards';
+  }
+  if (br) {
+    br.style.animation = 'none';
+    void br.offsetWidth; // forzar reflow
+    br.style.animation = 'hudCornerOpen 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards';
+  }
 }
 window.pulseHudCorners = pulseHudCorners;
 

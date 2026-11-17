@@ -18656,14 +18656,22 @@ header.global-spa-header .header-brand,
   z-index: 1000 !important;
 }
 
-@keyframes hudCornerPulse {
-  0% { opacity: 0; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 16px rgba(30, 193, 203, 0.8)); }
-  100% { opacity: 1; transform: scale(1); filter: drop-shadow(0 0 8px rgba(30, 193, 203, 0.4)); }
+@keyframes hudCornerOpen {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) rotate(-10deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
 
-.hud-corner-tl, .hud-corner-br {
-  animation: hudCornerPulse 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+.hud-corner-tl {
+  animation: hudCornerOpen 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards !important;
+}
+.hud-corner-br {
+  animation: hudCornerOpen 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards !important;
 }
 
 /* Esquina HUD Superior Izquierda (58px x 58px) */
@@ -18710,6 +18718,16 @@ header.global-spa-header .header-brand,
   transition: height 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
+/* Efecto de Pulso Luminoso Constante en el Marco Sci-Fi */
+@keyframes sciFiGlow {
+  0%, 100% {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 25px rgba(30, 193, 203, 0.15), inset 0 1px 2px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(30, 193, 203, 0.35), inset 0 1px 4px rgba(255, 255, 255, 0.8);
+  }
+}
+
 /* Placa Principal Biselada */
 .glassy-v3-card {
   background: linear-gradient(145deg, rgba(12, 28, 38, 0.78) 0%, rgba(6, 16, 24, 0.88) 100%) !important;
@@ -18725,11 +18743,7 @@ header.global-spa-header .header-brand,
   justify-content: center !important;
   box-sizing: border-box !important;
   transition: min-height 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.75),
-    0 0 35px rgba(30, 193, 203, 0.18),
-    inset 0 1px 2px rgba(255, 255, 255, 0.55),
-    inset 0 0 24px rgba(30, 193, 203, 0.12) !important;
+  animation: sciFiGlow 4s infinite ease-in-out !important;
 }
 
 .glassy-v3-wrapper.mode-login .glassy-v3-card {
