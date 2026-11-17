@@ -17148,47 +17148,10 @@ header.global-spa-header .header-brand,
 }
 
 /* -----------------------------------------------------------------------------
-   1. PILL SIDEBAR FLOTANTE VERTICAL & ACTIVE SLIDING INDICATOR
+   1. PILL SIDEBAR: SILUETA UNIFICADA + DROP-SHADOW PERIMETRAL (CERO LÍNEAS INTERNAS)
    ----------------------------------------------------------------------------- */
-/* #view-admin & #view-club Full Width Edge-to-Edge */
-#view-admin,
-#view-club {
-  max-width: 100% !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 1rem 3rem 1rem !important;
-  box-sizing: border-box !important;
-}
 
-.admin-panel-container,
-.coach-panel-container {
-  max-width: 100% !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-}
-
-.admin-bento-layout,
-.coach-bento-layout {
-  display: flex !important;
-  align-items: flex-start !important;
-  gap: 1.25rem !important;
-  max-width: 100% !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0.5rem 0.5rem 2.5rem 0.5rem !important;
-  box-sizing: border-box !important;
-  position: relative !important;
-}
-
-/* =============================================================================
-   1. PILL SIDEBAR FLOTANTE VERTICAL HUD (EXACTA RÉPLICA PHOTO 2)
-   ============================================================================= */
-/* -----------------------------------------------------------------------------
-   1. PILL SIDEBAR & LIQUID DOCK MORPHING (FUSIÓN CONTINUA + LIQUID METABALL BRIDGE)
-   ----------------------------------------------------------------------------- */
-/* 1. El tubo vertical base de 64px mantiene un color sólido idéntico al puente del botón activo */
+/* 1. Tubo vertical sin border CSS propio: el borde cian lo genera filter: drop-shadow alrededor de toda la silueta unificada */
 .pill-sidebar-container,
 .pill-sidebar-dock,
 .pill-sidebar-wrapper {
@@ -17199,12 +17162,19 @@ header.global-spa-header .header-brand,
   width: 64px !important;
   min-width: 64px !important;
   max-width: 64px !important;
-  padding: 12px 9px !important;
+  padding: 12px 10px !important;
   border-radius: 9999px !important;
   background: #071f26 !important;
-  border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
-  backdrop-filter: blur(28px) !important;
-  -webkit-backdrop-filter: blur(28px) !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  /* Dibuja el borde cian únicamente en el contorno exterior de la barra + pestaña fusionadas */
+  filter: 
+    drop-shadow(1.2px 0 0 rgba(165, 243, 252, 0.42))
+    drop-shadow(-1.2px 0 0 rgba(165, 243, 252, 0.42))
+    drop-shadow(0 1.2px 0 rgba(165, 243, 252, 0.42))
+    drop-shadow(0 -1.2px 0 rgba(165, 243, 252, 0.42))
+    drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55)) !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: flex-start !important;
@@ -17212,7 +17182,6 @@ header.global-spa-header .header-brand,
   overflow: visible !important;
   z-index: 9999 !important;
   box-sizing: border-box !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
   pointer-events: auto !important;
 }
 
@@ -17297,7 +17266,7 @@ header.global-spa-header .header-brand,
   overflow: visible !important;
 }
 
-/* 2. Estado base de los botones (círculo de 44px) */
+/* 2. Botones inactivos: círculos limpios de 44x44px */
 .sidebar-nav-btn {
   position: relative !important;
   width: 44px !important;
@@ -17337,18 +17306,15 @@ header.global-spa-header .header-brand,
   color: #ffffff !important;
 }
 
-/* 3. Al activarse con CLIC (.active), la cápsula verde se estira y su funda exterior se UNE sin costuras al tubo vertical */
+/* 3. Botón activo (.active): pastilla verde rodeada por una funda sólida #071f26 de 8px que se funde con la barra */
 .sidebar-nav-btn.active {
   width: max-content !important;
   max-width: 240px !important;
   padding: 0 20px 0 12px !important;
   background: linear-gradient(135deg, #1EC1CB 0%, #10B981 100%) !important;
-  color: #ffffff !important;
-  /* Solo proyectamos la funda oscura hacia la derecha, arriba y abajo, NUNCA hacia la izquierda para no crear línea divisoria dentro de la barra */
-  box-shadow: 
-    6px 0 0 6px #071f26,
-    6px 0 0 7.5px rgba(165, 243, 252, 0.35),
-    14px 10px 24px rgba(0, 0, 0, 0.5) !important;
+  border: none !important;
+  /* Funda uniforme #071f26 sin desplazamiento ni líneas cian internas */
+  box-shadow: 0 0 0 8px #071f26 !important;
   z-index: 20 !important;
 }
 
@@ -17356,39 +17322,33 @@ header.global-spa-header .header-brand,
   stroke: #ffffff !important;
 }
 
-/* 4. Parche de fusión + Curvas cóncavas (Liquid Bridge) en la unión superior e inferior con la barra */
+/* 4. Curvas cóncavas (Liquid Fillets) FUERA del botón verde usando radial-gradient puro (sin box-shadow ni border) */
 .sidebar-nav-btn.active::before,
 .sidebar-nav-btn.active::after {
   content: "" !important;
   position: absolute !important;
-  left: 38px !important; /* Justo en el borde derecho del tubo de 64px */
-  width: 16px !important;
-  height: 16px !important;
-  background: transparent !important;
+  left: 53px !important; /* Justo en el borde derecho del tubo de 64px */
+  width: 12px !important;
+  height: 12px !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
   pointer-events: none !important;
-  z-index: -1 !important;
-  transition: opacity 0.35s ease !important;
 }
 
-/* Curva cóncava superior que une la pared de la barra con el techo del desplegable */
+/* Curva cóncava superior (queda de -19px a -7px, nunca toca la pastilla verde) */
 .sidebar-nav-btn.active::before {
-  top: -22px !important;
-  border-bottom-left-radius: 14px !important;
-  box-shadow: -6px 6px 0 5px #071f26 !important;
-  border-bottom: 1.5px solid rgba(165, 243, 252, 0.35) !important;
-  border-left: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  top: -19px !important;
+  background: radial-gradient(circle at 100% 0%, transparent 11.5px, #071f26 12px) !important;
 }
 
-/* Curva cóncava inferior que une la pared de la barra con el piso del desplegable */
+/* Curva cóncava inferior (queda de -19px a -7px abajo, nunca toca la pastilla verde) */
 .sidebar-nav-btn.active::after {
-  bottom: -22px !important;
-  border-top-left-radius: 14px !important;
-  box-shadow: -6px -6px 0 5px #071f26 !important;
-  border-top: 1.5px solid rgba(165, 243, 252, 0.35) !important;
-  border-left: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  bottom: -19px !important;
+  background: radial-gradient(circle at 100% 100%, transparent 11.5px, #071f26 12px) !important;
 }
 
-/* 5. Animación fluida del texto al desplegarse */
+/* 5. Animación del texto adentro de la pastilla */
 .sidebar-item-label {
   display: inline-block !important;
   max-width: 0 !important;
@@ -19656,10 +19616,15 @@ body:has(#view-club.active) #mainHeader {
     min-width: 64px !important;
     max-width: 64px !important;
     background: #071f26 !important;
-    border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+    border: none !important;
+    filter: 
+      drop-shadow(1.2px 0 0 rgba(165, 243, 252, 0.42))
+      drop-shadow(-1.2px 0 0 rgba(165, 243, 252, 0.42))
+      drop-shadow(0 1.2px 0 rgba(165, 243, 252, 0.42))
+      drop-shadow(0 -1.2px 0 rgba(165, 243, 252, 0.42))
+      drop-shadow(0 14px 28px rgba(0, 0, 0, 0.55)) !important;
   }
 }
-
 
 /* =============================================================================
    ADMIN SHELL LAYOUT & VIEWPORT (BLOQUEO DE SCROLL EXTERIOR Y FULL WIDTH)
