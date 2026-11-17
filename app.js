@@ -5694,8 +5694,58 @@ function handleAdminSubtabSwitch(btn) {
 }
 window.handleAdminSubtabSwitch = handleAdminSubtabSwitch;
 
+// Limpieza estricta de atributos 'title' para evitar el tooltip negro nativo del navegador (estilo Linear / visionOS)
+const cleanSidebarTitles = () => {
+  if (typeof document === 'undefined') return;
+  document.querySelectorAll('.pill-sidebar-container [title], .pill-sidebar-dock [title], .sidebar-nav-btn[title]').forEach(el => {
+    el.removeAttribute('title');
+  });
+};
+window.cleanSidebarTitles = cleanSidebarTitles;
+
+// Observer para eliminar automáticamente cualquier atributo title que se intente inyectar en la barra
+function initSidebarTitleObserver() {
+  cleanSidebarTitles();
+  if (typeof document === 'undefined') return;
+
+  const sidebars = document.querySelectorAll('.pill-sidebar-container, .pill-sidebar-dock, #adminPillSidebar');
+  sidebars.forEach(sidebar => {
+    if (sidebar.dataset.titleObserverAttached) return;
+    sidebar.dataset.titleObserverAttached = 'true';
+
+    const observer = new MutationObserver(mutations => {
+      let needsClean = false;
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'title') {
+          needsClean = true;
+          break;
+        } else if (m.type === 'childList') {
+          for (const node of m.addedNodes) {
+            if (node.nodeType === 1 && (node.hasAttribute('title') || node.querySelector?.('[title]'))) {
+              needsClean = true;
+              break;
+            }
+          }
+        }
+      }
+      if (needsClean) cleanSidebarTitles();
+    });
+
+    observer.observe(sidebar, {
+      attributes: true,
+      attributeFilter: ['title'],
+      subtree: true,
+      childList: true
+    });
+  });
+}
+window.initSidebarTitleObserver = initSidebarTitleObserver;
+
 // Interacción de Hover y Selección en Pill Sidebar
 function initSidebarHoverInteraction() {
+  cleanSidebarTitles();
+  initSidebarTitleObserver();
+
   document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
     if (!btn.dataset.hoverAttached) {
       btn.dataset.hoverAttached = 'true';
@@ -5703,6 +5753,7 @@ function initSidebarHoverInteraction() {
         // Al seleccionar, ocultar inmediatamente el nombre aunque el cursor siga encima
         btn.classList.add('just-selected');
         btn._selectedAt = Date.now();
+        cleanSidebarTitles();
       });
       btn.addEventListener('mouseleave', () => {
         // Ignorar mouseleave espurio si la pastilla está viajando por la animación navLiquidGlide (0.45s)
