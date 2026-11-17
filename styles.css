@@ -18879,7 +18879,7 @@ header.global-spa-header .header-brand,
   border: 1px solid rgba(165, 243, 252, 0.22) !important;
   border-radius: 10px !important;
   color: #ffffff !important;
-  font-size: 0.95rem !important;
+  font-size: 16px !important;
   outline: none !important;
   transition: all 0.25s ease !important;
   box-sizing: border-box !important;
@@ -19120,4 +19120,174 @@ header.global-spa-header .header-brand,
 @keyframes badgeFadeOut {
   0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+}
+
+
+/* =============================================================================
+   OPTIMIZACIÓN "MOBILE-FIRST" EXTREMA (ANDROID & IPHONE / IOS)
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  /* 1. Corrección de Desbordamiento y Padding Global */
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    -webkit-text-size-adjust: 100% !important;
+  }
+
+  /* Padding lateral seguro de 16px en contenedores principales */
+  .container,
+  .spa-container,
+  .main-content,
+  main,
+  .hero-section,
+  .dashboard-layout,
+  .tournaments-section,
+  .section-container,
+  .bento-grid,
+  .tournament-grid {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* 2. Optimización del Modal Sci-Fi en Celular (Scroll vertical si teclado se despliega) */
+  .auth-modal-overlay {
+    padding: 12px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .glassy-v3-wrapper {
+    width: 92vw !important;
+    max-width: 400px !important;
+    margin: auto !important;
+    transform: none !important;
+  }
+
+  .glassy-v3-frame {
+    max-height: 85vh !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .glassy-v3-card {
+    padding: 1.65rem 1.15rem 1.4rem 1.15rem !important;
+    max-height: 85vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    min-height: auto !important;
+  }
+
+  .glassy-v3-wrapper.mode-login .glassy-v3-card,
+  .glassy-v3-wrapper.mode-signup .glassy-v3-card {
+    min-height: auto !important;
+  }
+
+  /* Esquinas HUD adaptadas a pantallas pequeñas */
+  .hud-corner-tl {
+    top: -6px !important;
+    left: -6px !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+  .hud-corner-br {
+    bottom: -6px !important;
+    right: -6px !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  /* Tipografía escalada en móvil */
+  .glassy-v3-title {
+    font-size: 1.35rem !important;
+    line-height: 1.25 !important;
+  }
+  .glassy-v3-sub {
+    font-size: 0.8rem !important;
+    margin-bottom: 1.1rem !important;
+  }
+
+  /* Selector de roles en móvil */
+  .role-pills-row {
+    gap: 6px !important;
+  }
+  .role-pill-btn {
+    padding: 8px 4px !important;
+    font-size: 0.72rem !important;
+  }
+
+  /* 3. Touch Targets (mínimo 44px x 44px) y Prevención de Zoom en iOS */
+  button,
+  .btn,
+  .nav-link,
+  .mobile-nav-link,
+  .role-pill-btn,
+  .btn-auth-switch,
+  .auth-link-forgot,
+  .glassy-btn-submit {
+    min-height: 44px !important;
+    touch-action: manipulation !important;
+  }
+
+  .glassy-btn-submit {
+    height: 48px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .glassy-v3-close {
+    min-width: 44px !important;
+    min-height: 44px !important;
+    top: 8px !important;
+    right: 12px !important;
+  }
+
+  .btn-toggle-eye {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .glassy-checkbox-label {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+  .glassy-checkbox-label input[type="checkbox"] {
+    width: 20px !important;
+    height: 20px !important;
+    margin-right: 6px !important;
+  }
+
+  /* Prevenir zoom automático de iOS en inputs: font-size >= 16px */
+  input,
+  select,
+  textarea,
+  .glassy-input,
+  .glassy-input-wrap input,
+  .glassy-input.no-toggle,
+  .form-input {
+    font-size: 16px !important;
+    min-height: 46px !important;
+  }
+
+  /* 4. Rendimiento 60 FPS en Android & iPhone */
+  .glassy-v3-card {
+    backdrop-filter: blur(16px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+    will-change: transform, opacity !important;
+  }
+  .glassy-v3-wrapper {
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.75)) !important;
+  }
+  #mercuryStage {
+    will-change: transform !important;
+    transform: translateZ(0) !important;
+  }
 }

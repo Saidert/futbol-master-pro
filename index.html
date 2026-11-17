@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>FutbolMaster Pro | Gestor de Torneos y Partidos</title>
   <meta name="description" content="Plataforma moderna para la gestión integral de torneos, partidos, tablas y llaves de fútbol.">
   
@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_hud_corner_open">
+  <link rel="stylesheet" href="styles.css?v=20261116_mobile_first_v1">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -5419,7 +5419,7 @@
                MODO A: "Bienvenido de Nuevo" (Login - Limpio, SIN selector de roles)
                ========================================== -->
           <div class="glassy-form-pane" id="auth-login-pane">
-            <form id="authLoginForm" class="auth-form auth-form-content" autocomplete="on">
+            <form id="authLoginForm" class="auth-form auth-form-content" autocomplete="off">
               <h2 class="glassy-v3-title">Bienvenido de <span class="highlight-cyan">Nuevo</span></h2>
               <p class="glassy-v3-sub">Ingresa tus credenciales para acceder a Fútbol Master Pro</p>
 
@@ -5427,7 +5427,7 @@
                 <label class="glassy-label" for="authUserName">Correo Electrónico</label>
                 <div class="glassy-input-wrap">
                   <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                  <input type="text" id="authUserName" class="glassy-input no-toggle" placeholder="ej: boadasaidert466@gmail.com, usuario@correo.com" required autocomplete="username">
+                  <input type="email" id="authUserName" name="email_uniqueness_reset" class="glassy-input no-toggle" placeholder="ej: usuario@correo.com" value="" autocomplete="off" data-lpignore="true" required>
                 </div>
               </div>
 
@@ -5435,7 +5435,7 @@
                 <label class="glassy-label" for="authUserPassword">Contraseña</label>
                 <div class="glassy-input-wrap">
                   <svg class="icon-left" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                  <input type="password" id="authUserPassword" class="glassy-input" placeholder="••••••••" required autocomplete="current-password">
+                  <input type="password" id="authUserPassword" name="password_uniqueness_reset" class="glassy-input" placeholder="••••••••" value="" autocomplete="new-password" data-lpignore="true" required>
                   <button type="button" class="btn-toggle-eye" onclick="togglePasswordVisibility('authUserPassword', this)" title="Mostrar/ocultar contraseña" tabindex="-1">
                     <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                   </button>
@@ -5447,7 +5447,7 @@
                   <input type="checkbox" id="authRememberMe" checked>
                   <span>Recordarme</span>
                 </label>
-                <a href="#" class="auth-link-forgot" onclick="event.preventDefault(); showToast('Para soporte o recuperación: utiliza boadasaidert466@gmail.com o escribe a soporte técnico FMP', 'info', 4500);">¿Olvidaste tu contraseña?</a>
+                <a href="#" class="auth-link-forgot" onclick="event.preventDefault(); showToast('Para soporte o recuperación: escribe a soporte técnico oficial FMP', 'info', 4500);">¿Olvidaste tu contraseña?</a>
               </div>
 
               <button type="submit" class="glassy-btn-submit" id="btnSubmitLogin">
@@ -6312,7 +6312,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
-  <script src="app.js?v=20261116_hud_corner_open"></script>
+  <script src="app.js?v=20261116_mobile_first_v1"></script>
 </body>
 </html>
 

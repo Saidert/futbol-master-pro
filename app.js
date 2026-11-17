@@ -2756,6 +2756,12 @@ function openAuthModal(defaultTab = 'auth-login-pane') {
   modal.style.setProperty('display', 'flex', 'important');
   document.body.classList.add('auth-modal-open');
 
+  // Limpiar campos de login para evitar precargas indeseadas
+  const inputUser = document.getElementById('authUserName');
+  const inputPass = document.getElementById('authUserPassword');
+  if (inputUser) inputUser.value = '';
+  if (inputPass) inputPass.value = '';
+
   const paneLogin = document.getElementById('auth-login-pane');
   const paneRegister = document.getElementById('auth-register-pane');
   const badge = document.getElementById('glassyMorphBadge');
@@ -2799,6 +2805,10 @@ function closeAuthModal() {
     modal.style.setProperty('display', 'none', 'important');
     document.body.classList.remove('auth-modal-open');
   }
+  const inputUser = document.getElementById('authUserName');
+  const inputPass = document.getElementById('authUserPassword');
+  if (inputUser) inputUser.value = '';
+  if (inputPass) inputPass.value = '';
   const badge = document.getElementById('glassyMorphBadge');
   if (badge) badge.classList.remove('active', 'is-exiting');
   isAuthModeSwitching = false;
