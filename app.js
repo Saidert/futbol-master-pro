@@ -5716,28 +5716,32 @@ function runDashboardEntranceSequence() {
 
       if (topLogo) {
         const tr = topLogo.getBoundingClientRect();
-        if (tr.width > 0 && tr.height > 0) {
+        if (tr.width > 0 && tr.height > 0 && tr.top > 0 && tr.top < window.innerHeight * 0.75) {
           targetCenterX = tr.left + tr.width / 2;
           targetCenterY = tr.top + tr.height / 2;
           scaleFactor = tr.width / 76;
         }
       }
 
-      // Si topLogo aún no tiene dimensiones en el DOM, calcularlo desde el wrapper de la píldora
+      // Si topLogo aún no tiene dimensiones en el DOM o está fuera de rango, calcularlo desde el wrapper de la píldora
       if (!targetCenterX || !targetCenterY) {
         const sidebar = document.getElementById('adminPillSidebar') || document.querySelector('.pill-sidebar-wrapper');
         if (sidebar) {
           const sr = sidebar.getBoundingClientRect();
-          if (sr.width > 0) {
-            targetCenterX = sr.left + sr.width / 2;
+          if (sr.width > 0 && sr.top > 0 && sr.top < window.innerHeight * 0.75) {
+            targetCenterX = sr.left + 24;
             targetCenterY = sr.top + 24;
           }
         }
       }
 
-      // Fallback seguro si nada tuviera dimensiones
-      if (!targetCenterX) targetCenterX = 38;
-      if (!targetCenterY) targetCenterY = Math.max(120, window.innerHeight / 2 - 200);
+      // Fallback seguro: coordenadas exactas donde descansa el botón en la barra fija
+      if (!targetCenterX) targetCenterX = 38; // 14px left + 24px (mitad de 48px)
+      if (!targetCenterY) {
+        const estSidebarHeight = 440;
+        const estTop = Math.max(80, (window.innerHeight - estSidebarHeight) / 2);
+        targetCenterY = estTop + 24;
+      }
 
       const iconRect = splashIcon.getBoundingClientRect();
       const currentCenterX = iconRect.left + iconRect.width / 2;
