@@ -123,6 +123,8 @@
   </script>
 </head>
 <body class="role-guest not-logged-in" data-route="home">
+  <!-- Fondo Animado Global WebGL Shader ("Silk" Flow Shader) -->
+  <canvas id="silk-webgl-bg" aria-hidden="true"></canvas>
 
   <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
     <div class="dashboard-splash-overlay" id="dashboardSplashOverlay" style="display: none !important;">
@@ -153,20 +155,7 @@
     </defs>
   </svg>
 
-  <!-- Escenario Global Fijo de Física Líquida (Mercury / Blobs Parallax) en toda la aplicación -->
-  <div class="mercury-global-stage stage mercury-stage ios-liquid-bg" id="mercuryStage" aria-hidden="true">
-    <div class="blobs-gooey-layer">
-      <div class="mercury-blob blob blob-1" style="width: 17vw; height: 17vw; min-width: 140px; min-height: 140px; max-width: 200px; max-height: 200px; left: 6%; top: 10%; animation-delay: -2s; animation-duration: 22s;"></div>
-      <div class="mercury-blob blob blob-2" style="width: 14vw; height: 14vw; min-width: 120px; min-height: 120px; max-width: 170px; max-height: 170px; left: 68%; top: 6%; animation-delay: -5s; animation-duration: 18s;"></div>
-      <div class="mercury-blob blob blob-3" style="width: 19vw; height: 19vw; min-width: 150px; min-height: 150px; max-width: 220px; max-height: 220px; left: 14%; top: 52%; animation-delay: -9s; animation-duration: 26s;"></div>
-      <div class="mercury-blob blob blob-4" style="width: 16vw; height: 16vw; min-width: 130px; min-height: 130px; max-width: 180px; max-height: 180px; left: 74%; top: 56%; animation-delay: -14s; animation-duration: 20s;"></div>
-      <div class="mercury-blob blob blob-5" style="width: 15vw; height: 15vw; min-width: 120px; min-height: 120px; max-width: 180px; max-height: 180px; left: 40%; top: 22%; animation-delay: -7s; animation-duration: 24s;"></div>
-      <div class="mercury-blob blob blob-6" style="width: 18vw; height: 18vw; min-width: 140px; min-height: 140px; max-width: 210px; max-height: 210px; left: 82%; top: 28%; animation-delay: -11s; animation-duration: 19s;"></div>
-      <div class="mercury-blob blob blob-7" style="width: 13vw; height: 13vw; min-width: 110px; min-height: 110px; max-width: 150px; max-height: 150px; left: 26%; top: 38%; animation-delay: -10s; animation-duration: 25s;"></div>
-      <div class="mercury-blob blob blob-8" style="width: 15vw; height: 15vw; min-width: 120px; min-height: 120px; max-width: 170px; max-height: 170px; left: 54%; top: 68%; animation-delay: -14s; animation-duration: 23s;"></div>
-      <div class="mercury-blob blob blob-9" style="width: 12vw; height: 12vw; min-width: 100px; min-height: 100px; max-width: 140px; max-height: 140px; left: 88%; top: 78%; animation-delay: -5s; animation-duration: 27s;"></div>
-    </div>
-  </div>
+  <!-- Antiguo escenario de blobs eliminado y reemplazado por WebGL Silk Shader -->
 
   <!-- Banner Modo Espectador (Solo Lectura) -->
   <aside id="publicModeBanner" class="public-mode-banner" style="display: none;">
@@ -6238,6 +6227,7 @@
 
   <datalist id="colombianVenuesDatalist"></datalist>
 
+  <script src="silk-bg.js"></script>
   <script src="app.js?v=20261116_v22_isolated_shell"></script>
 </body>
 </html>

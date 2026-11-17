@@ -99,45 +99,57 @@ body {
 }
 
 /* =============================================================================
-   MOTOR DE FÍSICA LÍQUIDA GLOBAL (MERCURY / BLOBS PARALLAX)
+   FONDO GLOBAL ANIMADO WEBGL SHADER ("SILK" FLOW SHADER)
    Fondo Global Fijo de toda la Plataforma (visionOS / iOS 18 Liquid Glass)
    ============================================================================= */
-body, main, .mercury-global-stage {
+html {
   background-color: #051419 !important;
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(30, 193, 203, 0.32) 0%, transparent 45%),
-    radial-gradient(circle at 85% 75%, rgba(16, 185, 129, 0.22) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.18) 0%, transparent 60%) !important;
-  background-attachment: fixed !important;
+  min-height: 100% !important;
 }
 
-.mercury-global-stage,
-.stage,
-.mercury-stage,
-.ios-liquid-bg,
-.stadium-glow-bg {
+#silk-webgl-bg {
   position: fixed !important;
   inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
   z-index: -999 !important;
   pointer-events: none !important;
-  overflow: hidden !important;
+  display: block !important;
 }
 
-.mercury-global-stage *,
-.stage *,
-.mercury-stage *,
+/* Ocultar completamente los fondos y blobs CSS antiguos */
+#mercuryStage,
+.mercury-global-stage,
+.stage,
+.mercury-stage,
+.ios-liquid-bg,
+.stadium-glow-bg,
 .blobs-gooey-layer,
 .blobs-gooey-layer *,
 .mercury-blob,
-.stage .blob {
+.stage .blob,
+.blob {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
   pointer-events: none !important;
 }
 
-.blobs-gooey-layer {
-  position: absolute !important;
-  inset: 0 !important;
+/* Transparencia estricta en body, main, wrappers y contenedores de vista */
+body,
+main,
+.main-content,
+#app,
+#root,
+.spa-view,
+.admin-shell-layout,
+.admin-active-viewport,
+.admin-dashboard-wrapper,
+.coach-panel-container {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
   width: 100% !important;
   height: 100% !important;
   pointer-events: none !important;
