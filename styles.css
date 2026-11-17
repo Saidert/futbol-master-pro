@@ -17186,9 +17186,9 @@ header.global-spa-header .header-brand,
    1. PILL SIDEBAR FLOTANTE VERTICAL HUD (EXACTA RÉPLICA PHOTO 2)
    ============================================================================= */
 /* -----------------------------------------------------------------------------
-   1. PILL SIDEBAR & LIQUID DOCK MORPHING (TUBO DELGADO 64PX CON DEFORMACIÓN LOCAL EN .active)
+   1. PILL SIDEBAR & LIQUID DOCK MORPHING (FUSIÓN CONTINUA + LIQUID METABALL BRIDGE)
    ----------------------------------------------------------------------------- */
-/* El tubo vertical SIEMPRE se mantiene delgado (64px) de arriba a abajo */
+/* 1. El tubo vertical base de 64px mantiene un color sólido idéntico al puente del botón activo */
 .pill-sidebar-container,
 .pill-sidebar-dock,
 .pill-sidebar-wrapper {
@@ -17201,7 +17201,7 @@ header.global-spa-header .header-brand,
   max-width: 64px !important;
   padding: 12px 9px !important;
   border-radius: 9999px !important;
-  background: rgba(8, 28, 34, 0.95) !important;
+  background: #071f26 !important;
   border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
   backdrop-filter: blur(28px) !important;
   -webkit-backdrop-filter: blur(28px) !important;
@@ -17225,7 +17225,7 @@ header.global-spa-header .header-brand,
   min-width: 44px !important;
   max-width: 44px !important;
   padding: 0 !important;
-  margin: 0 !important;
+  margin: 0 auto !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
@@ -17297,27 +17297,29 @@ header.global-spa-header .header-brand,
   overflow: visible !important;
 }
 
-/* Todos los botones inactivos miden 44x44px exactos dentro del tubo de 64px */
+/* 2. Estado base de los botones (círculo de 44px) */
 .sidebar-nav-btn {
+  position: relative !important;
   width: 44px !important;
-  height: 44px !important;
-  min-width: 44px !important;
   max-width: 44px !important;
+  height: 44px !important;
   border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  position: relative !important;
-  overflow: hidden !important;
-  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  justify-content: flex-start !important;
+  padding: 0 11px !important;
   background: transparent !important;
   border: none !important;
-  outline: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
   cursor: pointer !important;
   color: #94a3b8 !important;
+  outline: none !important;
   box-sizing: border-box !important;
   white-space: nowrap !important;
+  transition: max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              padding 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background 0.3s ease !important;
 }
 
 .sidebar-nav-btn svg {
@@ -17335,20 +17337,18 @@ header.global-spa-header .header-brand,
   color: #ffffff !important;
 }
 
-/* SOLO el apartado seleccionado (.active por CLIC) se despliega y deforma ese renglón */
+/* 3. Al activarse con CLIC (.active), la cápsula verde se estira y su funda exterior se UNE sin costuras al tubo vertical */
 .sidebar-nav-btn.active {
   width: max-content !important;
   max-width: 240px !important;
-  justify-content: flex-start !important;
-  padding: 0 18px 0 12px !important;
-  overflow: visible !important;
+  padding: 0 20px 0 12px !important;
   background: linear-gradient(135deg, #1EC1CB 0%, #10B981 100%) !important;
   color: #ffffff !important;
-  /* Anillo exterior que acopla y deforma el borde oscuro de la barra solo en este botón */
+  /* Solo proyectamos la funda oscura hacia la derecha, arriba y abajo, NUNCA hacia la izquierda para no crear línea divisoria dentro de la barra */
   box-shadow: 
-    0 0 0 6px rgba(8, 28, 34, 0.96),
-    0 0 0 7.5px rgba(165, 243, 252, 0.35),
-    0 12px 24px rgba(0, 0, 0, 0.55) !important;
+    6px 0 0 6px #071f26,
+    6px 0 0 7.5px rgba(165, 243, 252, 0.35),
+    14px 10px 24px rgba(0, 0, 0, 0.5) !important;
   z-index: 20 !important;
 }
 
@@ -17356,11 +17356,46 @@ header.global-spa-header .header-brand,
   stroke: #ffffff !important;
 }
 
+/* 4. Parche de fusión + Curvas cóncavas (Liquid Bridge) en la unión superior e inferior con la barra */
+.sidebar-nav-btn.active::before,
+.sidebar-nav-btn.active::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 38px !important; /* Justo en el borde derecho del tubo de 64px */
+  width: 16px !important;
+  height: 16px !important;
+  background: transparent !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+  transition: opacity 0.35s ease !important;
+}
+
+/* Curva cóncava superior que une la pared de la barra con el techo del desplegable */
+.sidebar-nav-btn.active::before {
+  top: -22px !important;
+  border-bottom-left-radius: 14px !important;
+  box-shadow: -6px 6px 0 5px #071f26 !important;
+  border-bottom: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  border-left: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+}
+
+/* Curva cóncava inferior que une la pared de la barra con el piso del desplegable */
+.sidebar-nav-btn.active::after {
+  bottom: -22px !important;
+  border-top-left-radius: 14px !important;
+  box-shadow: -6px -6px 0 5px #071f26 !important;
+  border-top: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  border-left: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+}
+
+/* 5. Animación fluida del texto al desplegarse */
 .sidebar-item-label {
-  position: static !important;
-  display: none !important;
+  display: inline-block !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
   white-space: nowrap !important;
-  margin-left: 10px !important;
+  margin-left: 0 !important;
   font-size: 13.5px !important;
   font-weight: 700 !important;
   color: #ffffff !important;
@@ -17372,11 +17407,15 @@ header.global-spa-header .header-brand,
   padding: 0 !important;
   letter-spacing: 0.2px !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: max-width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.25s ease 0.08s,
+              margin-left 0.35s ease !important;
 }
 
-/* Mostrar el texto ÚNICAMENTE cuando está activo (.active), NUNCA en :hover */
 .sidebar-nav-btn.active .sidebar-item-label {
-  display: inline-block !important;
+  max-width: 180px !important;
+  opacity: 1 !important;
+  margin-left: 10px !important;
 }
 
 /* CERO tooltips o labels al pasar el mouse por encima (HOVER OFF) */
@@ -19616,6 +19655,8 @@ body:has(#view-club.active) #mainHeader {
     width: 64px !important;
     min-width: 64px !important;
     max-width: 64px !important;
+    background: #071f26 !important;
+    border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
   }
 }
 
@@ -19649,7 +19690,7 @@ body.route-club {
   height: 100vh !important;
   max-width: 100vw !important;
   overflow: hidden !important;
-  padding: 20px 24px 20px 98px !important;
+  padding: 20px 24px 20px 270px !important;
   box-sizing: border-box !important;
   position: relative !important;
 }
