@@ -5736,8 +5736,8 @@ function runDashboardEntranceSequence() {
       }
 
       // Fallback seguro si nada tuviera dimensiones
-      if (!targetCenterX) targetCenterX = Math.max(36, (window.innerWidth - 1380) / 2 + 52);
-      if (!targetCenterY) targetCenterY = 56;
+      if (!targetCenterX) targetCenterX = 38;
+      if (!targetCenterY) targetCenterY = Math.max(120, window.innerHeight / 2 - 200);
 
       const iconRect = splashIcon.getBoundingClientRect();
       const currentCenterX = iconRect.left + iconRect.width / 2;
@@ -5779,10 +5779,15 @@ function runDashboardEntranceSequence() {
       }, 900);
     }
 
-    // Liberar bloqueo de entrada tras completar la coreografía
+    // Liberar bloqueo de entrada y restaurar contenedor limpio tras completar la coreografía
     setTimeout(() => {
+      if (container) {
+        container.classList.remove('entrance-expanding');
+        container.style.filter = 'none';
+        container.style.transform = 'none';
+      }
       isDashboardEntranceRunning = false;
-    }, 1500);
+    }, 1200);
   }, 2900);
 }
 

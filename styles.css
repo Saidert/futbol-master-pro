@@ -17140,7 +17140,7 @@ header.global-spa-header .header-brand,
 
 @keyframes dashboardExpand {
   0% { opacity: 0; filter: blur(12px); transform: translateY(12px); }
-  100% { opacity: 1; filter: blur(0px); transform: translateY(0px); }
+  100% { opacity: 1; filter: none; transform: none; }
 }
 
 .admin-panel-container.entrance-expanding {
@@ -17182,18 +17182,20 @@ header.global-spa-header .header-brand,
   position: relative !important;
 }
 
-/* Wrapper izquierdo vertical */
+/* Wrapper izquierdo vertical fijo */
 .pill-sidebar-wrapper {
+  position: fixed !important;
+  left: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  z-index: 9999 !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
-  gap: 14px !important;
-  position: sticky !important;
-  top: 80px !important;
-  width: 56px !important;
-  min-width: 56px !important;
-  max-width: 56px !important;
-  z-index: 60 !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  width: auto !important;
+  min-width: 52px !important;
+  overflow: visible !important;
 }
 
 /* Botón Superior Independiente (48px x 48px) con Logo */
@@ -17213,6 +17215,8 @@ header.global-spa-header .header-brand,
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
   padding: 0 !important;
   outline: none !important;
+  position: relative !important;
+  overflow: visible !important;
 }
 
 .pill-sidebar-top-logo:hover {
@@ -17247,6 +17251,7 @@ header.global-spa-header .header-brand,
   align-items: center !important;
   gap: 8px !important;
   position: relative !important;
+  overflow: visible !important;
 }
 
 /* Indicador Activo Deslizante (Sliding Active Pill) */
@@ -17273,6 +17278,7 @@ header.global-spa-header .header-brand,
   width: 100% !important;
   align-items: center !important;
   position: relative !important;
+  overflow: visible !important;
 }
 
 .pill-dock-btn {
@@ -17291,6 +17297,7 @@ header.global-spa-header .header-brand,
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s ease !important;
   padding: 0 !important;
   outline: none !important;
+  overflow: visible !important;
 }
 
 .pill-dock-btn:hover {
@@ -17308,6 +17315,65 @@ header.global-spa-header .header-brand,
   height: 20px !important;
   stroke: currentColor !important;
   transition: stroke 0.2s ease !important;
+}
+
+/* Botón con etiqueta interactiva desplegable */
+.sidebar-nav-btn {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  height: 44px !important;
+  border-radius: 9999px !important;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  overflow: visible !important;
+}
+
+.pill-sidebar-top-logo.sidebar-nav-btn {
+  height: 48px !important;
+}
+
+.pill-dock-btn.sidebar-nav-btn {
+  height: 40px !important;
+}
+
+.pill-dock-action-btn.sidebar-nav-btn {
+  height: 38px !important;
+}
+
+/* Etiqueta con el nombre del apartado que se despliega al seleccionar */
+.sidebar-item-label {
+  position: absolute !important;
+  left: 54px !important;
+  white-space: nowrap !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  font-size: 12.5px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3px !important;
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.92), rgba(16, 185, 129, 0.88)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  box-shadow: 0 8px 20px rgba(0, 15, 20, 0.45), 0 0 15px rgba(30, 193, 203, 0.4) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  opacity: 0 !important;
+  transform: translateX(-10px) scale(0.92) !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
+  z-index: 99999 !important;
+}
+
+/* Cuando el icono está seleccionado (activo) o en hover, se despliega el nombre */
+.sidebar-nav-btn.active .sidebar-item-label,
+.sidebar-nav-btn:hover .sidebar-item-label {
+  opacity: 1 !important;
+  transform: translateX(0) scale(1) !important;
+}
+
+/* Al interactuar con la lista, se prioriza el ítem bajo el puntero */
+.pill-dock-group:hover .sidebar-nav-btn.active:not(:hover) .sidebar-item-label {
+  opacity: 0 !important;
+  transform: translateX(-10px) scale(0.92) !important;
 }
 
 /* Tooltips Flotantes para la Barra en Píldora */
@@ -18558,9 +18624,9 @@ header.global-spa-header .header-brand,
 }
 
 /* -----------------------------------------------------------------------------
-   7. RESPONSIVIDAD TOTAL (<= 1024px & <= 768px)
+   7. RESPONSIVIDAD TOTAL (<= 768px Móvil)
    ----------------------------------------------------------------------------- */
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .admin-bento-layout,
   .coach-bento-layout {
     flex-direction: column !important;
@@ -18569,7 +18635,7 @@ header.global-spa-header .header-brand,
 
   .pill-sidebar-wrapper {
     position: fixed !important;
-    bottom: 16px !important;
+    bottom: 14px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     top: auto !important;
@@ -18577,6 +18643,8 @@ header.global-spa-header .header-brand,
     min-width: auto !important;
     max-width: 95vw !important;
     flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px !important;
     z-index: 9999 !important;
   }
 
@@ -18590,6 +18658,10 @@ header.global-spa-header .header-brand,
     min-width: auto !important;
     max-width: 90vw !important;
     padding: 6px 12px !important;
+  }
+
+  .sidebar-item-label {
+    display: none !important;
   }
 
   .pill-dock-group {
@@ -19384,26 +19456,29 @@ header.global-spa-header,
    APP SHELL CENTRADO & AISLAMIENTO ESTRICTO POR APARTADOS (DASHBOARD V22)
    ============================================================================= */
 
-/* 1. Contenedor Centrado Tipo App Shell (max-width: 1380px) */
+/* 1. Contenedor Principal Dashboard a Pantalla Completa con Padding Izquierdo para Pill Sidebar */
 .admin-dashboard-wrapper,
 .admin-panel-container,
 .coach-panel-container {
   width: 100% !important;
-  max-width: 1380px !important;
-  margin: 0 auto !important;
-  padding: 20px 24px !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-left: 92px !important;
+  padding-right: 28px !important;
+  padding-top: 24px !important;
+  padding-bottom: 32px !important;
   box-sizing: border-box !important;
 }
 
-/* 2. Layout Principal del Dashboard en Escritorio (> 1024px) */
-@media (min-width: 1025px) {
-  /* Apartado 1 (Overview): 3 Columnas compactas estilo Dashboard V22 */
+/* 2. Layout Principal del Dashboard en Escritorio (> 768px) */
+@media (min-width: 769px) {
+  /* Apartado 1 (Overview): 2 Columnas (Bento Central 1fr + Panel Derecho 320px) */
   .bento-dashboard-shell,
   .admin-bento-layout,
   .bento-dashboard-shell.shell-three-cols,
   .admin-bento-layout.shell-three-cols {
     display: grid !important;
-    grid-template-columns: 64px minmax(0, 1fr) 320px !important;
+    grid-template-columns: minmax(0, 1fr) 320px !important;
     gap: 20px !important;
     align-items: start !important;
     width: 100% !important;
@@ -19413,10 +19488,10 @@ header.global-spa-header,
     transition: grid-template-columns 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
   }
 
-  /* Apartados 2, 3, 4, 5: 2 Columnas (Pill 64px + Área Central Completa 1fr) */
+  /* Apartados 2, 3, 4, 5: 1 Columna Completa (1fr) */
   .bento-dashboard-shell.shell-two-cols,
   .admin-bento-layout.shell-two-cols {
-    grid-template-columns: 64px minmax(0, 1fr) !important;
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .bento-dashboard-shell.shell-two-cols .v22-right-panel,
@@ -19427,37 +19502,23 @@ header.global-spa-header,
   }
 }
 
-/* 3. Modo Móvil y Tablet (<= 1024px): Stacking vertical limpio */
-@media (max-width: 1024px) {
+/* 3. Modo Móvil (<= 768px): Stacking vertical y Pill Dock inferior */
+@media (max-width: 768px) {
+  .admin-dashboard-wrapper,
+  .admin-panel-container,
+  .coach-panel-container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    padding-bottom: 95px !important;
+  }
+
   .bento-dashboard-shell,
   .admin-bento-layout {
     display: flex !important;
     flex-direction: column !important;
     gap: 16px !important;
     width: 100% !important;
-    padding: 10px 12px !important;
-  }
-
-  .pill-sidebar-wrapper {
-    position: static !important;
-    width: 100% !important;
-    min-width: 100% !important;
-    max-width: 100% !important;
-    flex-direction: row !important;
-    justify-content: center !important;
-    gap: 12px !important;
-  }
-
-  .pill-dock-capsule {
-    flex-direction: row !important;
-    width: auto !important;
-    height: 52px !important;
-    padding: 6px 12px !important;
-  }
-
-  .pill-dock-group {
-    flex-direction: row !important;
-    gap: 8px !important;
+    padding: 0 !important;
   }
 }
 
@@ -19537,10 +19598,13 @@ body:has(#view-club.active) #mainHeader {
   display: none !important;
 }
 
-/* Sticky top alineado con inicio del Dashboard cuando no hay navbar global */
-body.route-admin .pill-sidebar-wrapper,
-body.route-club .pill-sidebar-wrapper,
-body:has(#view-admin.active) .pill-sidebar-wrapper,
-body:has(#view-club.active) .pill-sidebar-wrapper {
-  top: 24px !important;
+/* Posicionamiento fijo centrado de la Pill Sidebar en Escritorio */
+@media (min-width: 769px) {
+  body.route-admin .pill-sidebar-wrapper,
+  body.route-club .pill-sidebar-wrapper,
+  body:has(#view-admin.active) .pill-sidebar-wrapper,
+  body:has(#view-club.active) .pill-sidebar-wrapper {
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
 }
