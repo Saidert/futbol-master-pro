@@ -17274,6 +17274,8 @@ header.global-spa-header .header-brand,
 .sidebar-nav-btn {
   position: relative !important;
   width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
   height: 44px !important;
   border-radius: 9999px !important;
   display: flex !important;
@@ -17283,15 +17285,20 @@ header.global-spa-header .header-brand,
   background: transparent !important;
   border: 1px solid transparent !important;
   box-shadow: none !important;
-  will-change: transform, width !important;
+  will-change: transform, width, max-width !important;
   cursor: pointer !important;
   color: #94a3b8 !important;
   outline: none !important;
   box-sizing: border-box !important;
   white-space: nowrap !important;
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  overflow: visible !important;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              padding 0.32s cubic-bezier(0.22, 1, 0.36, 1),
               background 0.25s ease,
-              box-shadow 0.25s ease !important;
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              color 0.25s ease !important;
 }
 
 .sidebar-nav-btn svg {
@@ -17304,9 +17311,20 @@ header.global-spa-header .header-brand,
   margin: 0 !important;
 }
 
-.sidebar-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
+/* Expansión suave al pasar el cursor (:hover) mostrando el nombre del apartado */
+.sidebar-nav-btn:hover:not(.just-selected) {
+  width: max-content !important;
+  max-width: 240px !important;
+  padding: 0 18px 0 12px !important;
+  background: rgba(7, 28, 35, 0.94) !important;
+  border: 1px solid rgba(165, 243, 252, 0.45) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45) !important;
   color: #ffffff !important;
+  z-index: 30 !important;
+}
+
+.sidebar-nav-btn:hover:not(.just-selected) svg {
+  stroke: #38bdf8 !important;
 }
 
 /* Animaciones GPU sin filter: drop-shadow (60 FPS fluido) */
@@ -17346,11 +17364,13 @@ header.global-spa-header .header-brand,
   }
 }
 
-/* Pastilla activa limpia (igual al Nav de Inicio): sin bordes negros ni contrastes oscuros */
+/* Pastilla activa: por defecto y al seleccionar es un círculo luminoso de 44px x 44px */
 .sidebar-nav-btn.active {
-  width: max-content !important;
-  max-width: 240px !important;
-  padding: 0 18px 0 12px !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  height: 44px !important;
+  padding: 0 11px !important;
   background: linear-gradient(135deg, rgba(30, 193, 203, 0.95) 0%, rgba(16, 185, 129, 0.95) 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.55) !important;
   box-shadow: 
@@ -17365,7 +17385,38 @@ header.global-spa-header .header-brand,
   stroke: #ffffff !important;
 }
 
-/* Despliegue suave del nombre del apartado activo */
+/* Expansión suave de la pastilla activa al pasar el cursor (cuando no está just-selected) */
+.sidebar-nav-btn.active:hover:not(.just-selected) {
+  width: max-content !important;
+  max-width: 240px !important;
+  padding: 0 18px 0 12px !important;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.95) 0%, rgba(16, 185, 129, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 
+    0 8px 24px rgba(16, 185, 129, 0.45),
+    inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  color: #ffffff !important;
+  z-index: 30 !important;
+}
+
+.sidebar-nav-btn.active:hover:not(.just-selected) svg {
+  stroke: #ffffff !important;
+}
+
+/* Estado just-selected: al hacer clic, ocultar de inmediato el nombre y colapsar a 44px x 44px */
+.sidebar-nav-btn.just-selected,
+.sidebar-nav-btn.just-selected:hover {
+  width: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  padding: 0 11px !important;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease !important;
+}
+
+/* Etiqueta del apartado: oculta por defecto en todos los estados */
 .sidebar-item-label {
   display: none !important;
   white-space: nowrap !important;
@@ -17373,21 +17424,26 @@ header.global-spa-header .header-brand,
   font-size: 13.5px !important;
   font-weight: 700 !important;
   color: #ffffff !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.sidebar-nav-btn.active .sidebar-item-label {
+/* Mostrar nombre SOLO al pasar el cursor (:hover) si NO tiene just-selected */
+.sidebar-nav-btn:hover:not(.just-selected) .sidebar-item-label {
   display: inline-block !important;
-  animation: labelSlideIn 0.28s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+  opacity: 1 !important;
+  animation: labelSlideIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
 }
 
-/* CERO tooltips o labels al pasar el mouse por encima (HOVER OFF) */
-.sidebar-nav-btn:not(.active):hover .sidebar-item-label,
-.pill-sidebar-top-logo:hover .sidebar-item-label,
-.sidebar-logo-btn:hover .sidebar-item-label,
-.pill-dock-action-btn:hover .sidebar-item-label {
+/* Forzar ocultamiento estricto si está just-selected */
+.sidebar-nav-btn.just-selected .sidebar-item-label,
+.sidebar-nav-btn.just-selected:hover .sidebar-item-label,
+.pill-sidebar-top-logo .sidebar-item-label {
   display: none !important;
   opacity: 0 !important;
+  animation: none !important;
+  visibility: hidden !important;
 }
 
 /* Botones de acción inferior (+ y Logout) */
@@ -17399,14 +17455,19 @@ header.global-spa-header .header-brand,
   border-radius: 9999px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
+  justify-content: flex-start !important;
+  padding: 0 11px !important;
   border: none !important;
   cursor: pointer !important;
-  transition: all 0.25s ease !important;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              padding 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              background 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease !important;
   outline: none !important;
   box-sizing: border-box !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   flex-shrink: 0 !important;
 }
 
@@ -17418,15 +17479,15 @@ header.global-spa-header .header-brand,
 
 .pill-dock-action-btn.btn-action-add .action-plus-glyph {
   font-size: 1.4rem !important;
-  font-weight: 800 !important;
   line-height: 1 !important;
-}
-
-.pill-dock-action-btn.btn-action-add:hover {
-  background: #10b981 !important;
-  color: #041014 !important;
-  transform: scale(1.08) !important;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
+  font-weight: 400 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
 }
 
 .pill-dock-action-btn.btn-action-logout {
@@ -17435,11 +17496,30 @@ header.global-spa-header .header-brand,
   color: #f87171 !important;
 }
 
-.pill-dock-action-btn.btn-action-logout:hover {
-  background: #ef4444 !important;
+.pill-dock-action-btn.btn-action-logout svg {
+  stroke: #f87171 !important;
+  margin: 0 !important;
+  flex-shrink: 0 !important;
+}
+
+.pill-dock-action-btn:hover:not(.just-selected) {
+  width: max-content !important;
+  max-width: 240px !important;
+  padding: 0 18px 0 12px !important;
+}
+
+.pill-dock-action-btn.btn-action-add:hover:not(.just-selected) {
+  background: rgba(16, 185, 129, 0.35) !important;
+  border-color: rgba(52, 211, 153, 0.7) !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35) !important;
   color: #ffffff !important;
-  transform: scale(1.08) !important;
-  box-shadow: 0 0 16px rgba(239, 68, 68, 0.6) !important;
+}
+
+.pill-dock-action-btn.btn-action-logout:hover:not(.just-selected) {
+  background: rgba(239, 68, 68, 0.35) !important;
+  border-color: rgba(248, 113, 113, 0.7) !important;
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35) !important;
+  color: #ffffff !important;
 }
 
 /* -----------------------------------------------------------------------------

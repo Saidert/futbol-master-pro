@@ -5594,6 +5594,7 @@ function setActiveAdminSection(sectionId) {
 
   // Si ya está activo ese apartado, no re-ejecutar ni reiniciar animación innecesariamente
   if (prevBtn && prevSec === normSection && prevBtn.style.getPropertyValue('--glide-from')) {
+    prevBtn.classList.add('just-selected');
     return;
   }
 
@@ -5603,7 +5604,13 @@ function setActiveAdminSection(sectionId) {
     const sec = b.getAttribute('data-section') || b.getAttribute('data-subtab')?.replace('admin-tab-', '');
     const isMatch = (sec === normSection || b.getAttribute('data-subtab') === sectionId || b.getAttribute('data-section') === sectionId);
     b.classList.toggle('active', isMatch);
-    if (isMatch) activeBtn = b;
+    if (isMatch) {
+      activeBtn = b;
+      b.classList.add('just-selected');
+      b._selectedAt = Date.now();
+    } else {
+      b.classList.remove('just-selected');
+    }
   });
 
   // Animación de deslizamiento líquido vertical con inercia elástica (igual al Nav de Inicio)
@@ -5686,6 +5693,42 @@ function handleAdminSubtabSwitch(btn) {
   setActiveAdminSection(sectionKey);
 }
 window.handleAdminSubtabSwitch = handleAdminSubtabSwitch;
+
+// Interacción de Hover y Selección en Pill Sidebar
+function initSidebarHoverInteraction() {
+  document.querySelectorAll('.sidebar-nav-btn').forEach(btn => {
+    if (!btn.dataset.hoverAttached) {
+      btn.dataset.hoverAttached = 'true';
+      btn.addEventListener('click', () => {
+        // Al seleccionar, ocultar inmediatamente el nombre aunque el cursor siga encima
+        btn.classList.add('just-selected');
+        btn._selectedAt = Date.now();
+      });
+      btn.addEventListener('mouseleave', () => {
+        // Ignorar mouseleave espurio si la pastilla está viajando por la animación navLiquidGlide (0.45s)
+        if (Date.now() - (btn._selectedAt || 0) < 480) {
+          setTimeout(() => {
+            if (!btn.matches(':hover')) {
+              btn.classList.remove('just-selected');
+            }
+          }, 480);
+          return;
+        }
+        // Al sacar el cursor, permitir que vuelva a aparecer la próxima vez que pase el mouse
+        btn.classList.remove('just-selected');
+      });
+    }
+  });
+}
+window.initSidebarHoverInteraction = initSidebarHoverInteraction;
+
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSidebarHoverInteraction);
+  } else {
+    initSidebarHoverInteraction();
+  }
+}
 
 function renderAdminProfileTab() {
   const titleEl = document.getElementById('v22ProfileTournamentTitle');
@@ -5868,6 +5911,7 @@ function initAdminPanelControls() {
   }
 
   // 1. Navegación por subpestañas con Pill Dock y Micro-Skeleton
+  if (typeof initSidebarHoverInteraction === 'function') initSidebarHoverInteraction();
   const subtabBtns = document.querySelectorAll('.admin-subtab-btn');
   subtabBtns.forEach(btn => {
     if (!btn.dataset.v22Attached) {
@@ -15663,6 +15707,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // Interacción de Hover y Selección en Pill Sidebar
+  if (typeof initSidebarHoverInteraction === 'function') initSidebarHoverInteraction();
 
   // Navegación de Subpestañas en Admin V22
   document.querySelectorAll('.admin-subtab-btn').forEach(btn => {
