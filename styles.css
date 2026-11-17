@@ -17185,24 +17185,39 @@ header.global-spa-header .header-brand,
 /* =============================================================================
    1. PILL SIDEBAR FLOTANTE VERTICAL HUD (EXACTA RÉPLICA PHOTO 2)
    ============================================================================= */
-.pill-sidebar-wrapper {
-  position: fixed !important;
-  left: 14px !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+/* -----------------------------------------------------------------------------
+   1. PILL SIDEBAR & LIQUID DOCK MORPHING (CERO HOVER - LIQUID MORPH SOLO EN .active)
+   ----------------------------------------------------------------------------- */
+.pill-sidebar-wrapper,
+.pill-sidebar-container {
+  position: relative !important;
+  left: auto !important;
+  top: auto !important;
+  transform: none !important;
   z-index: 9999 !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
+  align-items: flex-start !important;
+  align-self: center !important;
   gap: 12px !important;
   width: auto !important;
-  min-width: 52px !important;
+  min-width: 62px !important;
+  max-width: 260px !important;
+  padding: 12px 7px !important;
+  border-radius: 36px !important;
+  background: linear-gradient(145deg, rgba(12, 38, 46, 0.90), rgba(6, 20, 26, 0.96)) !important;
+  backdrop-filter: blur(32px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
+  border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.4) !important;
+  box-sizing: border-box !important;
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
   overflow: visible !important;
   pointer-events: auto !important;
-  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
 
-/* Botón Superior Independiente (48px x 48px) con Logo Circular Flotante */
+/* Botón Top Logo */
 .pill-sidebar-top-logo {
   width: 48px !important;
   height: 48px !important;
@@ -17220,7 +17235,7 @@ header.global-spa-header .header-brand,
   padding: 0 !important;
   outline: none !important;
   position: relative !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   flex-shrink: 0 !important;
 }
 
@@ -17238,136 +17253,172 @@ header.global-spa-header .header-brand,
   border-radius: 50% !important;
 }
 
-/* Cápsula de cristal estilizada con blur */
-.pill-dock-capsule {
-  width: 52px !important;
-  min-width: 52px !important;
-  max-width: 52px !important;
-  padding: 10px 6px !important;
-  border-radius: 36px !important;
-  background: linear-gradient(145deg, rgba(12, 38, 46, 0.85), rgba(6, 20, 26, 0.94)) !important;
-  backdrop-filter: blur(32px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(200%) !important;
-  border: 1.5px solid rgba(165, 243, 252, 0.35) !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 8px !important;
-  position: relative !important;
-  box-sizing: border-box !important;
-  flex-shrink: 0 !important;
-  overflow: visible !important;
-}
-
-/* Ocultar viejo indicador deslizante si estorba */
-.pill-dock-sliding-indicator {
-  display: none !important;
-}
-
+/* Grupos y divisores */
 .pill-dock-group {
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
+  align-items: flex-start !important;
   gap: 8px !important;
   width: 100% !important;
   position: relative !important;
   overflow: visible !important;
 }
 
-/* Botones de navegación dentro del capsule */
-.pill-dock-btn {
-  width: 40px !important;
-  height: 40px !important;
-  min-width: 40px !important;
-  border-radius: 50% !important;
+.pill-dock-divider {
+  width: 32px !important;
+  height: 1px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  margin: 4px auto !important;
+  align-self: center !important;
+  flex-shrink: 0 !important;
+}
+
+.pill-dock-actions {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 8px !important;
+  width: 100% !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Botón base dentro de la Pill Sidebar (48px x 48px inactivo) */
+.sidebar-nav-btn {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  border-radius: 24px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important;
   background: transparent !important;
   border: none !important;
   outline: none !important;
   cursor: pointer !important;
   color: #94a3b8 !important;
-  transition: all 0.25s ease !important;
   position: relative !important;
-  overflow: visible !important;
-  padding: 0 !important;
+  overflow: hidden !important;
+  padding: 0 0 0 14px !important;
   box-sizing: border-box !important;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  white-space: nowrap !important;
 }
 
-.pill-dock-btn svg {
+.sidebar-nav-btn svg {
   width: 20px !important;
   height: 20px !important;
+  min-width: 20px !important;
   stroke: currentColor !important;
-  transition: stroke 0.2s ease !important;
+  transition: stroke 0.25s ease !important;
   flex-shrink: 0 !important;
 }
 
-.pill-dock-btn:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+.sidebar-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #ffffff !important;
 }
 
-.pill-dock-btn.active {
+/* Botón Activo: morphing elástico interno */
+.sidebar-nav-btn.active {
+  width: auto !important;
+  max-width: 240px !important;
   background: linear-gradient(135deg, #1ec1cb 0%, #10b981 100%) !important;
   color: #ffffff !important;
-  box-shadow: 0 0 18px rgba(30, 193, 203, 0.55), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
+  padding: 0 18px 0 14px !important;
 }
 
-.pill-dock-btn.active svg {
+.sidebar-nav-btn.active svg {
   stroke: #ffffff !important;
 }
 
-/* Separador sutil */
-.pill-dock-divider {
-  width: 24px !important;
-  height: 1px !important;
-  background: rgba(255, 255, 255, 0.15) !important;
-  margin: 4px 0 !important;
+/* Etiqueta interna dentro del botón: invisible por defecto (cero hover) */
+.sidebar-item-label {
+  display: none !important;
+  max-width: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+  position: static !important;
+  transform: none !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-/* Botones de acción rápida inferiores (+ y LogOut) */
-.pill-dock-actions {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  gap: 8px !important;
-  width: 100% !important;
-  position: relative !important;
-  overflow: visible !important;
+/* Visible ÚNICAMENTE en botón con clase .active */
+.sidebar-nav-btn.active .sidebar-item-label {
+  display: inline-block !important;
+  max-width: 200px !important;
+  opacity: 1 !important;
+  margin-left: 10px !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  letter-spacing: 0.2px !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+  transition: opacity 0.25s ease 0.05s !important;
 }
 
+/* CERO tooltips o labels al pasar el mouse por encima (HOVER OFF) */
+.sidebar-nav-btn:hover .sidebar-item-label,
+.pill-sidebar-top-logo:hover .sidebar-item-label,
+.pill-dock-btn:hover .sidebar-item-label,
+.pill-dock-action-btn:hover .sidebar-item-label,
+.admin-subtab-btn:hover .sidebar-item-label {
+  opacity: 0 !important;
+  display: none !important;
+}
+
+.sidebar-nav-btn.active:hover .sidebar-item-label,
+.admin-subtab-btn.active:hover .sidebar-item-label {
+  opacity: 1 !important;
+  display: inline-block !important;
+}
+
+/* Botones de acción inferior */
 .pill-dock-action-btn {
-  width: 38px !important;
-  height: 38px !important;
-  min-width: 38px !important;
-  border-radius: 50% !important;
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  max-width: 48px !important;
+  border-radius: 24px !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  padding: 0 !important;
   border: none !important;
   cursor: pointer !important;
   transition: all 0.25s ease !important;
-  position: relative !important;
-  overflow: visible !important;
-  padding: 0 !important;
   outline: none !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
 }
 
 .pill-dock-action-btn.btn-action-add {
   background: rgba(16, 185, 129, 0.18) !important;
   border: 1px solid rgba(16, 185, 129, 0.45) !important;
   color: #34d399 !important;
-  font-size: 1.25rem !important;
+}
+
+.pill-dock-action-btn.btn-action-add .action-plus-glyph {
+  font-size: 1.5rem !important;
   font-weight: 800 !important;
+  line-height: 1 !important;
 }
 
 .pill-dock-action-btn.btn-action-add:hover {
   background: #10b981 !important;
   color: #041014 !important;
-  transform: scale(1.1) !important;
+  transform: scale(1.08) !important;
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.6) !important;
 }
 
@@ -17380,39 +17431,8 @@ header.global-spa-header .header-brand,
 .pill-dock-action-btn.btn-action-logout:hover {
   background: #ef4444 !important;
   color: #ffffff !important;
-  transform: scale(1.1) !important;
+  transform: scale(1.08) !important;
   box-shadow: 0 0 16px rgba(239, 68, 68, 0.6) !important;
-}
-
-/* Tooltip / Label Flotante al Pasar el Mouse */
-.sidebar-item-label {
-  position: absolute !important;
-  left: 56px !important;
-  top: 50% !important;
-  transform: translateY(-50%) translateX(-8px) scale(0.92) !important;
-  white-space: nowrap !important;
-  padding: 6px 14px !important;
-  border-radius: 9999px !important;
-  font-size: 12.5px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.3px !important;
-  color: #ffffff !important;
-  background: linear-gradient(135deg, rgba(30, 193, 203, 0.95), rgba(16, 185, 129, 0.9)) !important;
-  border: 1px solid rgba(255, 255, 255, 0.65) !important;
-  box-shadow: 0 8px 20px rgba(0, 15, 20, 0.45), 0 0 15px rgba(30, 193, 203, 0.4) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  transition: opacity 0.25s cubic-bezier(0.22, 1, 0.36, 1), transform 0.25s cubic-bezier(0.22, 1, 0.36, 1) !important;
-  z-index: 99999 !important;
-}
-
-.pill-sidebar-top-logo:hover .sidebar-item-label,
-.pill-dock-btn:hover .sidebar-item-label,
-.pill-dock-action-btn:hover .sidebar-item-label {
-  opacity: 1 !important;
-  transform: translateY(-50%) translateX(0px) scale(1) !important;
 }
 
 /* -----------------------------------------------------------------------------
@@ -19570,13 +19590,166 @@ body:has(#view-club.active) #mainHeader {
   display: none !important;
 }
 
-/* Posicionamiento fijo centrado de la Pill Sidebar en Escritorio */
+/* Posicionamiento centrado en el layout de la Pill Sidebar en Escritorio */
 @media (min-width: 769px) {
   body.route-admin .pill-sidebar-wrapper,
   body.route-club .pill-sidebar-wrapper,
   body:has(#view-admin.active) .pill-sidebar-wrapper,
   body:has(#view-club.active) .pill-sidebar-wrapper {
-    top: 50% !important;
-    transform: translateY(-50%) !important;
+    position: relative !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
+    align-self: center !important;
+  }
+}
+
+
+/* =============================================================================
+   ADMIN SHELL LAYOUT & VIEWPORT (BLOQUEO DE SCROLL EXTERIOR Y FULL WIDTH)
+   ============================================================================= */
+body.route-admin,
+body.route-club {
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+#view-admin.spa-view.active,
+#view-admin.active {
+  display: block !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.admin-shell-layout {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 24px !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  overflow: hidden !important;
+  padding: 20px 24px 20px 14px !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+.admin-active-viewport {
+  flex: 1 1 0% !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: calc(100vh - 40px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  padding-right: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* Custom Scrollbar interna para .admin-active-viewport */
+.admin-active-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+.admin-active-viewport::-webkit-scrollbar-track {
+  background: rgba(8, 28, 34, 0.4);
+  border-radius: 4px;
+}
+.admin-active-viewport::-webkit-scrollbar-thumb {
+  background: rgba(30, 193, 203, 0.35);
+  border-radius: 4px;
+}
+.admin-active-viewport::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 193, 203, 0.65);
+}
+
+/* Secciones individuales: aislamiento total */
+section[data-admin-section] {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Apartado 1: Overview (Bento Grid 2 Columnas: Central expandido + Panel Derecho 360px) */
+section[data-admin-section="overview"].active {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) 360px !important;
+  gap: 20px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Apartados 2, 3, 4, 5: Ancho completo de 1 columna */
+section[data-admin-section="torneos"].active,
+section[data-admin-section="clubes"].active,
+section[data-admin-section="canchas"].active,
+section[data-admin-section="auditoria"].active {
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* No truncar nombres de clubes si hay espacio disponible */
+.admin-club-card .club-name,
+.bento-club-name,
+.tourney-table-name,
+.club-card-title,
+.org-club-title,
+.club-name-cell {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  word-break: break-word !important;
+}
+
+/* Responsivo Móvil (<= 768px) */
+@media (max-width: 768px) {
+  .admin-shell-layout {
+    flex-direction: column !important;
+    padding: 12px 12px 85px 12px !important;
+    height: auto !important;
+    overflow-y: auto !important;
+  }
+  .pill-sidebar-wrapper,
+  .pill-sidebar-container {
+    position: fixed !important;
+    bottom: 12px !important;
+    left: 50% !important;
+    top: auto !important;
+    transform: translateX(-50%) !important;
+    flex-direction: row !important;
+    align-self: center !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 96vw !important;
+    padding: 8px 12px !important;
+    border-radius: 40px !important;
+    z-index: 99999 !important;
+  }
+  .pill-dock-group {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
+  .pill-dock-actions {
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
+  .pill-dock-divider {
+    width: 1px !important;
+    height: 24px !important;
+    margin: 0 4px !important;
+  }
+  .sidebar-item-label {
+    display: none !important;
+  }
+  .admin-active-viewport {
+    height: auto !important;
+    overflow: visible !important;
+  }
+  section[data-admin-section="overview"].active {
+    grid-template-columns: 1fr !important;
   }
 }

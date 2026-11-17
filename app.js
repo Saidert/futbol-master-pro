@@ -5584,76 +5584,84 @@ function triggerMicroSkeleton(targetPane, callback) {
 }
 window.triggerMicroSkeleton = triggerMicroSkeleton;
 
+function setActiveAdminSection(sectionId) {
+  if (!sectionId) sectionId = 'overview';
+  const normSection = sectionId.replace('admin-tab-', '');
+
+  // 1. Desmarcar todos los botones y marcar exclusivamente el seleccionado
+  const allBtns = document.querySelectorAll('.admin-subtab-btn');
+  let activeBtn = null;
+  allBtns.forEach(b => {
+    const sec = b.getAttribute('data-section') || b.getAttribute('data-subtab')?.replace('admin-tab-', '');
+    const isMatch = (sec === normSection || b.getAttribute('data-subtab') === sectionId || b.getAttribute('data-section') === sectionId);
+    b.classList.toggle('active', isMatch);
+    if (isMatch) activeBtn = b;
+  });
+
+  // 2. Ocultar absolutamente todas las secciones con display: none !important tanto por clase como inline
+  const allSections = document.querySelectorAll('section[data-admin-section], .admin-section-pane');
+  allSections.forEach(sec => {
+    sec.classList.remove('active');
+    sec.style.setProperty('display', 'none', 'important');
+  });
+
+  // 3. Activar y desplegar la sección solicitada
+  const targetSection = document.querySelector(`section[data-admin-section="${normSection}"]`) || 
+                        document.getElementById(`admin-tab-${normSection}`) ||
+                        document.getElementById(sectionId);
+  const rightPanel = document.getElementById('adminBentoRightPanel');
+
+  if (targetSection) {
+    targetSection.classList.add('active');
+    if (normSection === 'overview') {
+      targetSection.style.setProperty('display', 'grid', 'important');
+      if (rightPanel) rightPanel.style.setProperty('display', 'flex', 'important');
+    } else {
+      targetSection.style.setProperty('display', 'block', 'important');
+      if (rightPanel && targetSection.contains(rightPanel)) {
+        // En overview ya se oculta junto con el padre
+      } else if (rightPanel) {
+        rightPanel.style.setProperty('display', 'none', 'important');
+      }
+    }
+
+    if (typeof triggerMicroSkeleton === 'function') {
+      triggerMicroSkeleton(targetSection, () => {
+        if (typeof animateAllCountUps === 'function') animateAllCountUps(targetSection);
+        if (typeof animateAllBars === 'function') animateAllBars(targetSection);
+      });
+    }
+  }
+
+  // 4. Renderizado Condicional Exclusivo según Apartado
+  if (normSection === 'overview') {
+    if (typeof renderAdminLiveDashboard === 'function') renderAdminLiveDashboard();
+  } else if (normSection === 'torneos' || normSection === 'tournaments') {
+    if (typeof renderAdminTournamentsTable === 'function') renderAdminTournamentsTable();
+    if (typeof renderAdminCorrectionsTab === 'function') renderAdminCorrectionsTab();
+  } else if (normSection === 'clubes' || normSection === 'clubs-finances' || normSection === 'profile') {
+    if (typeof renderAdminOrganizerTab === 'function') renderAdminOrganizerTab();
+    if (typeof renderAdminProfileTab === 'function') renderAdminProfileTab();
+  } else if (normSection === 'canchas' || normSection === 'venues') {
+    if (typeof renderAdminVenuesCatalog === 'function') renderAdminVenuesCatalog();
+  } else if (normSection === 'auditoria' || normSection === 'audit' || normSection === 'users') {
+    if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
+    if (typeof renderAdminUsersTable === 'function') renderAdminUsersTable();
+  }
+
+  // 5. Sincronizar indicador deslizante si existe
+  if (activeBtn && typeof updatePillSlidingIndicator === 'function') {
+    const idx = parseInt(activeBtn.getAttribute('data-index') || '0', 10);
+    updatePillSlidingIndicator(idx);
+  }
+}
+window.setActiveAdminSection = setActiveAdminSection;
+
 function handleAdminSubtabSwitch(btn) {
   if (!btn) return;
   const targetSubtab = btn.getAttribute('data-subtab');
-  const sectionKey = btn.getAttribute('data-section') || targetSubtab.replace('admin-tab-', '');
-  const index = parseInt(btn.getAttribute('data-index') || '0', 10);
-
-  // 1. Botones activos en la Pill Sidebar
-  document.querySelectorAll('.admin-subtab-btn').forEach(b => {
-    b.classList.toggle('active', b.getAttribute('data-subtab') === targetSubtab);
-  });
-
-  // 2. Desplazamiento suave del indicador deslizante
-  updatePillSlidingIndicator(index);
-
-  // 3. Control de Layout Shell (Overview = 3 Columnas con Panel Derecho; Resto = 2 Columnas Full 1fr)
-  const shell = document.getElementById('adminDashboardShell') || document.querySelector('.admin-bento-layout');
-  const rightPanel = document.getElementById('adminBentoRightPanel');
-  const isOverview = (sectionKey === 'overview' || targetSubtab === 'admin-tab-overview');
-
-  if (shell) {
-    if (isOverview) {
-      shell.classList.remove('shell-two-cols');
-      shell.classList.add('shell-three-cols');
-    } else {
-      shell.classList.remove('shell-three-cols');
-      shell.classList.add('shell-two-cols');
-    }
-  }
-
-  if (rightPanel) {
-    if (isOverview) {
-      rightPanel.style.setProperty('display', 'flex', 'important');
-    } else {
-      rightPanel.style.setProperty('display', 'none', 'important');
-    }
-  }
-
-  // 4. Aislamiento Estricto por Apartados: Cero secciones apiladas debajo
-  const targetPane = document.getElementById(targetSubtab);
-  document.querySelectorAll('.admin-subtab-pane').forEach(p => {
-    if (p !== targetPane) {
-      p.classList.remove('active');
-      p.style.setProperty('display', 'none', 'important');
-    }
-  });
-
-  if (targetPane) {
-    targetPane.classList.add('active');
-    targetPane.style.setProperty('display', 'block', 'important');
-    triggerMicroSkeleton(targetPane, () => {
-      animateAllCountUps(targetPane);
-      animateAllBars(targetPane);
-    });
-  }
-
-  // 5. Renderizado Condicional Exclusivo según Apartado
-  if (isOverview) {
-    renderAdminLiveDashboard();
-  } else if (sectionKey === 'torneos' || targetSubtab === 'admin-tab-tournaments') {
-    renderAdminTournamentsTable();
-    renderAdminCorrectionsTab();
-  } else if (sectionKey === 'clubes' || targetSubtab === 'admin-tab-clubs-finances' || targetSubtab === 'admin-tab-profile') {
-    renderAdminOrganizerTab();
-    renderAdminProfileTab();
-  } else if (sectionKey === 'canchas' || targetSubtab === 'admin-tab-venues') {
-    renderAdminVenuesCatalog();
-  } else if (sectionKey === 'auditoria' || targetSubtab === 'admin-tab-audit' || targetSubtab === 'admin-tab-users') {
-    renderAdminAuditTable();
-    renderAdminUsersTable();
-  }
+  const sectionKey = btn.getAttribute('data-section') || (targetSubtab ? targetSubtab.replace('admin-tab-', '') : 'overview');
+  setActiveAdminSection(sectionKey);
 }
 window.handleAdminSubtabSwitch = handleAdminSubtabSwitch;
 
@@ -6182,30 +6190,12 @@ function renderAdminView() {
   const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const role = normalizeRole(session?.role || 'fan');
 
-  // Asegurar botón activo y posición del Pill Dock
+  // Asegurar sección activa sin apilar otras vistas
   let activeSubtab = document.querySelector('.admin-subtab-btn.active');
-  if (!activeSubtab) {
-    activeSubtab = document.querySelector('.pill-dock-btn[data-subtab="admin-tab-overview"]') || document.querySelector('.admin-subtab-btn');
-    if (activeSubtab) activeSubtab.classList.add('active');
-  }
-
-  if (activeSubtab) {
-    const paneId = activeSubtab.getAttribute('data-subtab');
-    const idx = parseInt(activeSubtab.getAttribute('data-index') || '0', 10);
-    updatePillSlidingIndicator(idx);
-    document.querySelectorAll('.admin-subtab-btn').forEach(b => b.classList.toggle('active', b.getAttribute('data-subtab') === paneId));
-    document.querySelectorAll('.admin-subtab-pane').forEach(p => p.classList.toggle('active', p.id === paneId));
-  }
-
-  renderAdminLiveDashboard();
+  const sectionKey = activeSubtab ? (activeSubtab.getAttribute('data-section') || activeSubtab.getAttribute('data-subtab')?.replace('admin-tab-', '') || 'overview') : 'overview';
+  
+  setActiveAdminSection(sectionKey);
   renderAdminStats();
-  renderAdminAuditTable();
-  renderAdminVenuesCatalog();
-  renderAdminTournamentsTable();
-  renderAdminUsersTable();
-  renderAdminCorrectionsTab();
-  renderAdminOrganizerTab();
-  renderAdminProfileTab();
 
   // Coreografía exacta de entrada V22 (00:00.0s a 00:02.5s)
   runDashboardEntranceSequence();
