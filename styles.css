@@ -17187,7 +17187,7 @@ header.global-spa-header .header-brand,
   align-items: flex-start !important;
   gap: 10px !important;
   overflow: visible !important;
-  z-index: 9999 !important;
+  z-index: 99999 !important;
   box-sizing: border-box !important;
   pointer-events: auto !important;
 }
@@ -17439,6 +17439,7 @@ header.global-spa-header .header-brand,
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  z-index: 999999 !important;
 }
 
 /* Mostrar nombre SOLO al pasar el cursor (:hover) si NO tiene just-selected */
@@ -19456,10 +19457,10 @@ body.route-club .main-content,
   max-width: 100% !important;
   width: 100% !important;
   margin: 0 !important;
-  padding-left: clamp(12px, 1.8vw, 24px) !important;
-  padding-right: clamp(12px, 1.8vw, 24px) !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 3rem !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
   box-sizing: border-box !important;
 }
 
@@ -19756,20 +19757,44 @@ body.route-club {
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
-  gap: 24px !important;
+  gap: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
   max-width: 100vw !important;
   overflow: hidden !important;
-  padding: 20px 24px 20px 270px !important;
+  padding: 20px 0 !important;
   box-sizing: border-box !important;
   position: relative !important;
 }
 
+@media (min-width: 769px) {
+  .admin-dashboard-wrapper,
+  .admin-active-viewport,
+  .dashboard-main-content,
+  main > section:has(.pill-sidebar-container),
+  .coach-panel-container {
+    margin-left: 92px !important;
+    margin-right: 18px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: calc(100vw - 110px) !important;
+    max-width: calc(100vw - 110px) !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* Asegurar que la etiqueta flotante en :hover pase por encima de las tarjetas sin empujarlas */
+.pill-sidebar-container,
+.pill-sidebar-dock,
+.pill-sidebar-wrapper {
+  z-index: 99999 !important;
+}
+.sidebar-item-label {
+  z-index: 999999 !important;
+}
+
 .admin-active-viewport {
   flex: 1 1 0% !important;
-  width: 100% !important;
-  max-width: 100% !important;
   height: calc(100vh - 40px) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
