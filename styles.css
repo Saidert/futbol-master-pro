@@ -13848,9 +13848,11 @@ body::after {
   box-sizing: border-box !important;
 }
 
-/* 3. MATERIAL ÓPTICO «APPLE iOS 26 LIQUID GLASS» (TODAS LAS TARJETAS Y PANELES) */
+/* 3. MATERIAL ÓPTICO «CYAN FROSTED LIQUID GLASS» (TODAS LAS TARJETAS Y PANELES) */
 .liquid-glass-3d,
+.liquid-glass-card,
 .recent-tournament-card,
+.tournament-card,
 .tournament-card-item,
 .tournament-config-card,
 .tournament-live-preview-card,
@@ -13858,6 +13860,12 @@ body::after {
 .admin-live-dashboard-card,
 .admin-dashboard-card,
 .admin-panel-card,
+.admin-bento-card,
+.bento-card,
+.kpi-card,
+.v22-card,
+.v22-hero-banner,
+.feature-card,
 .cancha-card,
 .canchas-filters-container,
 .coach-card,
@@ -13882,23 +13890,13 @@ body::after {
 .torneos-empty-card,
 .quick-roles-grid,
 .tournament-view-card {
-  background: linear-gradient(
-    145deg,
-    rgba(255, 255, 255, 0.22) 0%,
-    rgba(255, 255, 255, 0.08) 42%,
-    rgba(16, 185, 129, 0.12) 100%
-  ) !important;
-  backdrop-filter: blur(30px) saturate(195%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(195%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.45) !important;
-  border-left: 1px solid rgba(167, 243, 208, 0.32) !important;
-  border-radius: 26px !important;
-  box-shadow:
-    0 24px 48px -12px rgba(0, 0, 0, 0.65),
-    0 0 28px -6px rgba(16, 185, 129, 0.18),
-    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.42),
-    inset 0 -1px 2px 0 rgba(16, 185, 129, 0.18) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(30, 193, 203, 0.15) 50%, rgba(10, 35, 42, 0.4) 100%) !important;
+  backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(210%) brightness(1.15) !important;
+  border: 1px solid rgba(165, 243, 252, 0.3) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+  box-shadow: 0 24px 48px rgba(0, 10, 15, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
+  border-radius: 28px !important;
   transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), box-shadow 0.35s ease, border-color 0.35s ease !important;
   overflow: hidden !important;
   position: relative !important;
@@ -17109,7 +17107,7 @@ header.global-spa-header .header-brand,
 }
 
 .splash-icon-box.morphing-to-dock {
-  transform: translate(calc(-50vw + 52px), calc(-50vh + 104px)) scale(0.63) !important;
+  transform: translate(calc(-50vw + 42px), calc(-50vh + 99px)) scale(0.63) !important;
 }
 
 .splash-title {
@@ -19290,4 +19288,97 @@ header.global-spa-header .header-brand,
     will-change: transform !important;
     transform: translateZ(0) !important;
   }
+}
+
+/* =============================================================================
+   DASHBOARD EDGE-TO-EDGE FULL SCREEN (CERCA DE LOS BORDES) & CLICK SHIELD
+   ============================================================================= */
+.main-content:has(#view-admin.active),
+.main-content:has(#view-club.active),
+body.route-admin .main-content,
+body.route-club .main-content,
+#view-admin.active,
+#view-club.active {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding-left: clamp(12px, 1.8vw, 24px) !important;
+  padding-right: clamp(12px, 1.8vw, 24px) !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 3rem !important;
+  box-sizing: border-box !important;
+}
+
+.admin-panel-container,
+.coach-panel-container {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.admin-bento-layout,
+.coach-bento-layout {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1.25rem !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0.25rem 0 2.5rem 0 !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+}
+
+.bento-central-area {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+.v22-dashboard-wrapper {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 1.5rem !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.v22-main-column {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1.25rem !important;
+}
+
+.v22-right-panel {
+  width: 330px !important;
+  min-width: 320px !important;
+  max-width: 340px !important;
+  flex-shrink: 0 !important;
+}
+
+#mercuryStage,
+.mercury-global-stage {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: -999 !important;
+  pointer-events: none !important;
+}
+
+header,
+header.global-spa-header,
+.global-spa-header,
+#mainHeader,
+.header-main-bar,
+.user-auth-wrap,
+.user-dropdown-menu,
+.auth-modal-overlay,
+.glassy-v3-wrapper {
+  position: relative;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
 }

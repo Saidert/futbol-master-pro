@@ -4149,6 +4149,8 @@ function navigateToView(targetRoute, updateHash = true) {
       if (isTarget) viewFound = true;
       view.classList.toggle('active', isTarget);
     });
+    document.body.classList.toggle('route-admin', routeId === 'admin');
+    document.body.classList.toggle('route-club', routeId === 'club');
   }
 
   // Fallback si la vista no se encontró
@@ -5659,42 +5661,50 @@ function runDashboardEntranceSequence() {
 
   // Medir posición de destino (#pillSidebarTopLogo) en reposo ANTES de cualquier animación
   const topLogo = document.getElementById('pillSidebarTopLogo');
-  let targetX = 35;
-  let targetY = 104;
+  let targetX = 42;
+  let targetY = 99;
   let scaleFactor = 48 / 76; // ~0.632
 
   if (topLogo) {
     const tr = topLogo.getBoundingClientRect();
-    if (tr.width > 0 && tr.left >= 0 && tr.top > 0) {
+    if (tr.width > 0 && tr.left >= 0 && tr.left < 140 && tr.top > 45 && tr.top < 180) {
       targetX = tr.left + tr.width / 2;
       targetY = tr.top + tr.height / 2;
       scaleFactor = tr.width / 76;
     }
   }
 
-  // Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.2s)
+  // Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.6s)
   overlay.style.setProperty('display', 'flex', 'important');
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
   if (splashIcon) {
     splashIcon.classList.remove('morphing-to-dock');
+    splashIcon.style.transition = 'none';
     splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
   }
 
-  // A los 1.2s: Morph cinematográfico hacia el botón superior del Pill Sidebar (Foto 2)
+  // A los 1.6s: Desvanecer subtítulo y título de splash suavemente
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
+  }, 1600);
 
+  // A los 1.8s: Morph cinematográfico hacia el botón superior del Pill Sidebar (Foto 2)
+  setTimeout(() => {
     if (splashIcon) {
-      // Re-verificar si topLogo está visible y estable
+      // Re-verificar si topLogo está visible y en rango coherente superior
       if (topLogo) {
         const tr = topLogo.getBoundingClientRect();
-        if (tr.width > 0 && tr.left >= 0 && tr.top > 0) {
+        if (tr.width > 0 && tr.left >= 0 && tr.left < 140 && tr.top > 45 && tr.top < 180) {
           targetX = tr.left + tr.width / 2;
           targetY = tr.top + tr.height / 2;
           scaleFactor = tr.width / 76;
         }
       }
+
+      // Si targetY se descalibró hacia abajo por scroll o reflow, forzar reposo superior en la píldora
+      if (targetY > 180 || targetY <= 0) targetY = 99;
+      if (targetX > 140 || targetX <= 0) targetX = 42;
 
       const iconRect = splashIcon.getBoundingClientRect();
       const currentCenterX = iconRect.left + iconRect.width / 2;
@@ -5704,13 +5714,14 @@ function runDashboardEntranceSequence() {
       const dx = targetX - currentCenterX;
       const dy = targetY - currentCenterY;
 
+      splashIcon.style.transition = 'transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.5s ease';
       splashIcon.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${scaleFactor.toFixed(3)})`;
     }
 
     if (container) container.classList.add('entrance-expanding');
-  }, 1200);
+  }, 1800);
 
-  // A los 2.2s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
+  // A los 2.9s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
   setTimeout(() => {
     overlay.classList.add('is-hidden');
     setTimeout(() => { overlay.style.setProperty('display', 'none', 'important'); }, 450);
@@ -5733,8 +5744,9 @@ function runDashboardEntranceSequence() {
     setTimeout(() => {
       isDashboardEntranceRunning = false;
     }, 1500);
-  }, 2200);
+  }, 2900);
 }
+
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
 
 function initAdminPanelControls() {
@@ -14000,53 +14012,34 @@ function initFootballExperience() {
     });
   });
 
-  // 2. Mouse Tracking con Campo de Fuerza Magnética de 400px en Elementos de Fútbol
-  window.addEventListener('mousemove', (e) => {
-    const halfW = window.innerWidth / 2;
-    const halfH = window.innerHeight / 2;
-    footballState.targetMouse.x = (e.clientX - halfW) / halfW;
-    footballState.targetMouse.y = (e.clientY - halfH) / halfH;
+  // 2. Movimiento Autónomo Continuo en Elementos de Fútbol (Sin dependencia del ratón)
+  // Las burbujas, orbes y trofeo oscilan suave y orgánicamente en un bucle continuo
 
-    const repulsionRadius = 400; // Radio exacto de 400px
-    floatingItems.forEach(item => {
-      const rect = item.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const dx = centerX - e.clientX;
-      const dy = centerY - e.clientY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-
-      if (dist < repulsionRadius && dist > 0) {
-        const force = Math.pow(1 - dist / repulsionRadius, 1.4) * 65;
-        const pushX = (dx / dist) * force;
-        const pushY = (dy / dist) * force;
-      b.style.transform = `translate(${bx}px, ${by}px)`;
-      } else {
-        item.style.transform = 'translate(0px, 0px)';
-      }
-    });
-  }, { passive: true });
-
-  // 3. Animación continua RAF (Inclinación 3D del Trofeo y Flotación Suave)
+  // 3. Animación continua RAF (Inclinación 3D del Trofeo y Flotación Suave Autónoma)
   function updateFootballLoop(time) {
     requestAnimationFrame(updateFootballLoop);
 
-    footballState.currentMouse.x += (footballState.targetMouse.x - footballState.currentMouse.x) * 0.055;
-    footballState.currentMouse.y += (footballState.targetMouse.y - footballState.currentMouse.y) * 0.055;
+    const tSec = time * 0.001;
+    // Oscilación autónoma continua suave
+    footballState.targetMouse.x = Math.sin(tSec * 0.6) * 0.28;
+    footballState.targetMouse.y = Math.cos(tSec * 0.8) * 0.22;
+
+    footballState.currentMouse.x += (footballState.targetMouse.x - footballState.currentMouse.x) * 0.045;
+    footballState.currentMouse.y += (footballState.targetMouse.y - footballState.currentMouse.y) * 0.045;
 
     // Inclinación 3D del Trofeo y Balón Central
     if (trophyStage && !footballState.isSwitching) {
-      const rotX = (-footballState.currentMouse.y * 22).toFixed(2);
-      const rotY = (footballState.currentMouse.x * 26 + footballState.switchSpin).toFixed(2);
+      const rotX = (-footballState.currentMouse.y * 18).toFixed(2);
+      const rotY = (footballState.currentMouse.x * 22 + footballState.switchSpin).toFixed(2);
       trophyStage.style.transform = `perspective(1200px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
     }
 
     // Ondulación de flotación en las insignias orbitales
-    const tSec = time * 0.001;
     const badges = document.querySelectorAll('.orbit-badge');
     badges.forEach((b, idx) => {
-      const wave = Math.sin(tSec * 1.8 + idx * 2) * 5;
-      const bx = (footballState.currentMouse.x * 12).toFixed(1);
+      const wave = Math.sin(tSec * 1.8 + idx * 2) * 6;
+      const waveX = Math.cos(tSec * 1.4 + idx * 1.5) * 4;
+      const bx = (footballState.currentMouse.x * 12 + waveX).toFixed(1);
       const by = (footballState.currentMouse.y * 12 + wave).toFixed(1);
       b.style.transform = `translate(${bx}px, ${by}px)`;
     });
