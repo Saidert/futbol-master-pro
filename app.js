@@ -5875,14 +5875,14 @@ function runDashboardEntranceSequence() {
       // Medir en tiempo real la posición del destino (#pillSidebarTopLogo)
       let targetCenterX = 0;
       let targetCenterY = 0;
-      let scaleFactor = 48 / 76; // ~0.632 (de 76px a 48px)
+      let scaleFactor = 44 / 84; // ~0.524 (de 84px a 44px)
 
       if (topLogo) {
         const tr = topLogo.getBoundingClientRect();
         if (tr.width > 0 && tr.height > 0 && tr.top > 0 && tr.top < window.innerHeight * 0.75) {
           targetCenterX = tr.left + tr.width / 2;
           targetCenterY = tr.top + tr.height / 2;
-          scaleFactor = tr.width / 76;
+          scaleFactor = tr.width / 84;
         }
       }
 

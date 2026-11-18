@@ -17104,12 +17104,12 @@ header.global-spa-header .header-brand,
 }
 
 .splash-icon-box {
-  width: 76px !important;
-  height: 76px !important;
+  width: 84px !important;
+  height: 84px !important;
   border-radius: 50% !important;
-  background: radial-gradient(circle at 35% 35%, rgba(165, 243, 252, 0.45) 0%, rgba(30, 193, 203, 0.3) 40%, rgba(8, 30, 36, 0.95) 100%) !important;
-  border: 2px solid #1ec1cb !important;
-  box-shadow: 0 0 35px rgba(30, 193, 203, 0.75), inset 0 0 16px rgba(165, 243, 252, 0.5) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: 0 0 35px rgba(30, 193, 203, 0.7), 0 0 60px rgba(16, 185, 129, 0.35) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -17118,54 +17118,27 @@ header.global-spa-header .header-brand,
   transition: transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease !important;
   will-change: transform, opacity !important;
   overflow: visible !important;
+  padding: 0 !important;
 }
 
-.splash-icon-box .pro-chilena-emblem {
-  width: 58px !important;
-  height: 58px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  pointer-events: none !important;
-}
-
-.splash-icon-box .chilena-master-svg {
-  width: 58px !important;
-  height: 58px !important;
+.splash-icon-box svg.full-soccer-ball-svg {
+  width: 84px !important;
+  height: 84px !important;
+  min-width: 84px !important;
+  min-height: 84px !important;
   display: block !important;
   overflow: visible !important;
-  filter: drop-shadow(0 0 8px rgba(30, 193, 203, 0.45)) !important;
+  filter: drop-shadow(0 0 16px rgba(30, 193, 203, 0.6)) !important;
+  animation: splashBallGlow 2.2s ease-in-out infinite alternate !important;
 }
 
-.splash-icon-box .orbital-ring {
-  transform-box: fill-box !important;
-  transform-origin: center center !important;
-  animation: splashOrbitalSpin 8s linear infinite !important;
-}
-
-@keyframes splashOrbitalSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.splash-icon-box .kick-impact-burst {
-  transform-box: fill-box !important;
-  transform-origin: center center !important;
-  animation: splashStrikePulse 1.8s ease-in-out infinite alternate !important;
-}
-
-@keyframes splashStrikePulse {
-  0%   { opacity: 0.5; transform: scale(0.85); }
-  100% { opacity: 1; transform: scale(1.15); }
-}
-
-.splash-icon-box .chilena-power-trail {
-  animation: splashTrailGlow 2.2s ease-in-out infinite alternate !important;
-}
-
-@keyframes splashTrailGlow {
-  0%   { opacity: 0.75; }
-  100% { opacity: 1; stroke-width: 3.6px; }
+@keyframes splashBallGlow {
+  0% {
+    filter: drop-shadow(0 0 12px rgba(30, 193, 203, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 26px rgba(30, 193, 203, 0.9)) drop-shadow(0 0 45px rgba(16, 185, 129, 0.45));
+  }
 }
 
 .splash-title {
@@ -17241,7 +17214,7 @@ header.global-spa-header .header-brand,
   pointer-events: auto !important;
 }
 
-/* Balón de fútbol / Chilena Acrobática Pro limpia y perfectamente centrada + giro al actualizar */
+/* Balón de fútbol completo estilo Champions/Pro (100% del círculo de 44px) */
 .sidebar-ball-refresh-btn,
 .pill-sidebar-container > *:first-child {
   position: relative !important;
@@ -17255,42 +17228,30 @@ header.global-spa-header .header-brand,
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  background: rgba(16, 185, 129, 0.16) !important;
-  border: 1.5px solid rgba(30, 193, 203, 0.55) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 15px rgba(30, 193, 203, 0.3) !important;
   text-indent: 0 !important;
   font-size: 0 !important;
   overflow: visible !important;
   cursor: pointer !important;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, background 0.28s ease !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
 }
 
 .sidebar-ball-refresh-btn:hover,
 .pill-sidebar-container > *:first-child:hover {
-  background: rgba(16, 185, 129, 0.25) !important;
-  border-color: rgba(30, 193, 203, 0.85) !important;
-  box-shadow: 0 0 20px rgba(30, 193, 203, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
+  transform: scale(1.08) !important;
+  box-shadow: 0 0 25px rgba(30, 193, 203, 0.75), 0 0 40px rgba(16, 185, 129, 0.4) !important;
 }
 
-.sidebar-ball-refresh-btn .pro-chilena-emblem,
-.pill-sidebar-container > *:first-child .pro-chilena-emblem {
-  width: 28px !important;
-  height: 28px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  pointer-events: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
+.sidebar-ball-refresh-btn svg.full-soccer-ball-svg,
 .sidebar-ball-refresh-btn svg.chilena-master-svg,
 .sidebar-ball-refresh-btn svg.soccer-ball-icon,
 .pill-sidebar-container > *:first-child svg {
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  min-height: 28px !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
   margin: 0 !important;
   padding: 0 !important;
   position: static !important;
@@ -17302,16 +17263,17 @@ header.global-spa-header .header-brand,
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
+.sidebar-ball-refresh-btn:hover svg.full-soccer-ball-svg,
 .sidebar-ball-refresh-btn:hover svg.chilena-master-svg,
-.sidebar-ball-refresh-btn:hover svg.soccer-ball-icon,
 .pill-sidebar-container > *:first-child:hover svg {
-  transform: scale(1.08) !important;
+  transform: scale(1.06) !important;
 }
 
+.sidebar-ball-refresh-btn.spinning svg.full-soccer-ball-svg,
 .sidebar-ball-refresh-btn.spinning svg.chilena-master-svg,
 .sidebar-ball-refresh-btn.spinning svg.soccer-ball-icon,
 .pill-sidebar-container > *:first-child.spinning svg {
-  transform: rotate(360deg) scale(1.08) !important;
+  transform: rotate(360deg) scale(1.06) !important;
 }
 
 /* Grupos y divisores */
