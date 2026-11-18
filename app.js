@@ -5831,10 +5831,52 @@ window.renderAdminProfileTab = renderAdminProfileTab;
 
 let isDashboardEntranceRunning = false;
 
+function runSplashKickToSidebar() {
+  const splashBall = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
+  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child');
+  const splashOverlay = document.querySelector('.splash-screen-overlay, #admin-splash-screen, #dashboardSplashOverlay, .dashboard-splash-overlay');
+
+  if (splashBall && sidebarBallBtn) {
+    // Ocultar temporalmente el balón de la barra mientras el balón central está en el aire
+    sidebarBallBtn.style.opacity = '0';
+
+    const splashRect = splashBall.getBoundingClientRect();
+    const targetRect = sidebarBallBtn.getBoundingClientRect();
+
+    if (splashRect.width > 0 && targetRect.width > 0) {
+      const deltaX = (targetRect.left + targetRect.width / 2) - (splashRect.left + splashRect.width / 2);
+      const deltaY = (targetRect.top + targetRect.height / 2) - (splashRect.top + splashRect.height / 2);
+      const targetScale = targetRect.width / splashRect.width;
+
+      splashBall.style.setProperty('--dock-x', `${deltaX}px`);
+      splashBall.style.setProperty('--dock-y', `${deltaY}px`);
+      splashBall.style.setProperty('--dock-scale', `${targetScale || 0.5}`);
+    }
+  }
+
+  // En el instante exacto en que el balón aterriza en la barra lateral (1280ms):
+  setTimeout(() => {
+    if (sidebarBallBtn) {
+      sidebarBallBtn.style.opacity = '1';
+      sidebarBallBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+      sidebarBallBtn.style.transform = 'scale(1.15)';
+      setTimeout(() => { sidebarBallBtn.style.transform = 'scale(1)'; }, 250);
+    }
+    if (splashOverlay) {
+      splashOverlay.style.transition = 'opacity 0.25s ease';
+      splashOverlay.style.opacity = '0';
+      setTimeout(() => {
+        splashOverlay.style.display = 'none';
+        isDashboardEntranceRunning = false;
+      }, 250);
+    }
+  }, 1280);
+}
+
 function runDashboardEntranceSequence() {
   if (isDashboardEntranceRunning) return;
 
-  const overlay = document.getElementById('dashboardSplashOverlay');
+  const overlay = document.getElementById('dashboardSplashOverlay') || document.querySelector('.splash-screen-overlay, #admin-splash-screen, .dashboard-splash-overlay');
   const splashContent = document.getElementById('splashCenterContent');
   const container = document.querySelector('.admin-panel-container');
 
@@ -5852,6 +5894,7 @@ function runDashboardEntranceSequence() {
 
   // 2. Fase 1: Splash screen visible con secuencia de patada cinematográfica
   overlay.style.setProperty('display', 'flex', 'important');
+  overlay.style.opacity = '1';
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
 
@@ -5869,22 +5912,18 @@ function runDashboardEntranceSequence() {
     }
   });
 
+  // Ejecutar docking balístico milimétrico hacia la barra lateral
+  runSplashKickToSidebar();
+
   // 3. A los 0.95s: Desvanecer subtítulo y título de splash suavemente
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
   }, 950);
 
-  // 4. A los 1450ms (1.45s): Secuencia completa finalizada (patada a 0.4s, viaje a 0.62s, impacto lateral)
-  // Desmontar/ocultar el overlay del Splash Screen suavemente
+  // 4. A los 1280ms: Al aterrizar el balón, activar expansión del dashboard y shimmer
   setTimeout(() => {
     overlay.classList.add('is-hidden');
     if (container) container.classList.add('entrance-expanding');
-
-    setTimeout(() => {
-      overlay.style.setProperty('display', 'none', 'important');
-      isDashboardEntranceRunning = false;
-      if (splashContent) splashContent.classList.remove('text-fade-out');
-    }, 280);
 
     // Fase 2: Shimmer Skeleton en tarjetas (0.7s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
@@ -5899,9 +5938,10 @@ function runDashboardEntranceSequence() {
         if (typeof animateAllBars === 'function') animateAllBars(activePane);
       }, 700);
     }
-  }, 1450);
+  }, 1280);
 }
 
+window.runSplashKickToSidebar = runSplashKickToSidebar;
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
 
 function initAdminPanelControls() {
