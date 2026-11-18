@@ -129,41 +129,71 @@
   <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
     <div class="dashboard-splash-overlay" id="dashboardSplashOverlay" style="display: none !important;">
       <div class="splash-center-content" id="splashCenterContent">
-        <div class="splash-icon-box" id="splashIconBox">
-          <!-- BALÓN COMPLETO (Ocupa todo el círculo) -->
-          <svg class="full-soccer-ball-svg" viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div class="splash-kick-scene">
+          <!-- 1. EL BALÓN ACTUAL (Conserva aquí adentro el SVG del balón que ya tienes) -->
+          <div class="splash-ball-wrapper" id="splash-main-ball">
+            <svg class="full-soccer-ball-svg" viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <radialGradient id="ballSphereGrad" cx="35%" cy="28%" r="70%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="35%" stop-color="#1EC1CB" />
+                  <stop offset="75%" stop-color="#0A3A42" />
+                  <stop offset="100%" stop-color="#041519" />
+                </radialGradient>
+                <linearGradient id="seamGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="50%" stop-color="#1EC1CB" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+              </defs>
+
+              <!-- Esfera base del balón (100% del círculo) -->
+              <circle cx="50" cy="50" r="48" fill="url(#ballSphereGrad)" stroke="url(#seamGlow)" stroke-width="2.5" />
+
+              <!-- Pentágono central oscuro con borde luminoso -->
+              <polygon points="50,31 68,44 61,65 39,65 32,44" fill="#05181E" stroke="#1EC1CB" stroke-width="2.2" stroke-linejoin="round" />
+
+              <!-- Pentágonos periféricos del balón -->
+              <polygon points="50,2 64,12 58,21 42,21 36,12" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon points="96,35 88,52 77,47 77,32 88,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon points="79,90 62,95 58,83 70,73 82,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon points="21,90 38,95 42,83 30,73 18,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon points="4,35 12,52 23,47 23,32 12,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+
+              <!-- Costuras que unen los paneles -->
+              <path d="M50 31 L50 21 M68 44 L77 41 M61 65 L70 73 M39 65 L30 73 M32 44 L23 41" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
+
+              <!-- Brillo de cristal superior -->
+              <ellipse cx="38" cy="22" rx="16" ry="7" transform="rotate(-18 38 22)" fill="#FFFFFF" opacity="0.35" />
+            </svg>
+          </div>
+
+          <!-- 2. DESTELLO DE IMPACTO EN EL COSTADO DERECHO DEL BALÓN -->
+          <div class="kick-impact-flash-right"></div>
+
+          <!-- 3. SILUETA DEL JUGADOR A LA DERECHA PATEANDO EL BALÓN HACIA LA IZQUIERDA -->
+          <svg class="right-side-striker" viewBox="0 0 140 180" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
-              <radialGradient id="ballSphereGrad" cx="35%" cy="28%" r="70%">
-                <stop offset="0%" stop-color="#FFFFFF" />
-                <stop offset="35%" stop-color="#1EC1CB" />
-                <stop offset="75%" stop-color="#0A3A42" />
-                <stop offset="100%" stop-color="#041519" />
-              </radialGradient>
-              <linearGradient id="seamGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <linearGradient id="strikerCyanGlow" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stop-color="#FFFFFF" />
                 <stop offset="50%" stop-color="#1EC1CB" />
                 <stop offset="100%" stop-color="#10B981" />
               </linearGradient>
             </defs>
-
-            <!-- Esfera base del balón (100% del círculo) -->
-            <circle cx="50" cy="50" r="48" fill="url(#ballSphereGrad)" stroke="url(#seamGlow)" stroke-width="2.5" />
-
-            <!-- Pentágono central oscuro con borde luminoso -->
-            <polygon points="50,31 68,44 61,65 39,65 32,44" fill="#05181E" stroke="#1EC1CB" stroke-width="2.2" stroke-linejoin="round" />
-
-            <!-- Pentágonos periféricos del balón -->
-            <polygon points="50,2 64,12 58,21 42,21 36,12" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-            <polygon points="96,35 88,52 77,47 77,32 88,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-            <polygon points="79,90 62,95 58,83 70,73 82,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-            <polygon points="21,90 38,95 42,83 30,73 18,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-            <polygon points="4,35 12,52 23,47 23,32 12,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-
-            <!-- Costuras que unen los paneles -->
-            <path d="M50 31 L50 21 M68 44 L77 41 M61 65 L70 73 M39 65 L30 73 M32 44 L23 41" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
-
-            <!-- Brillo de cristal superior -->
-            <ellipse cx="38" cy="22" rx="16" ry="7" transform="rotate(-18 38 22)" fill="#FFFFFF" opacity="0.35" />
+            <!-- Cabeza -->
+            <circle cx="78" cy="36" r="18" stroke="url(#strikerCyanGlow)" stroke-width="4.5" fill="rgba(30, 193, 203, 0.15)" />
+            <!-- Torso y brazos -->
+            <line x1="78" y1="56" x2="78" y2="118" stroke="url(#strikerCyanGlow)" stroke-width="5.5" stroke-linecap="round" />
+            <path d="M46 80 L78 76 L112 72" stroke="#1EC1CB" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Pierna derecha de apoyo -->
+            <path d="M78 118 L86 148 L94 170" stroke="#1EC1CB" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+            <!-- Estela curva de la patada -->
+            <path class="kick-arc-trail" d="M68 158 C 45 162, 22 148, 8 126" stroke="#10B981" stroke-width="4" stroke-linecap="round" stroke-dasharray="90" stroke-dashoffset="90" />
+            <!-- Pierna izquierda articulada que patea el balón -->
+            <g class="kicking-leg-group">
+              <path d="M78 116 L52 128 L12 124" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
+              <circle cx="10" cy="123" r="5" fill="#10B981" />
+            </g>
           </svg>
         </div>
         <h2 class="splash-title" id="splashTitle">Fútbol Master Pro • Control Center</h2>

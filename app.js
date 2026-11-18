@@ -5836,9 +5836,7 @@ function runDashboardEntranceSequence() {
 
   const overlay = document.getElementById('dashboardSplashOverlay');
   const splashContent = document.getElementById('splashCenterContent');
-  const splashIcon = document.getElementById('splashIconBox');
   const container = document.querySelector('.admin-panel-container');
-  const topLogo = document.getElementById('pillSidebarTopLogo');
 
   if (!overlay) return;
   isDashboardEntranceRunning = true;
@@ -5852,87 +5850,43 @@ function runDashboardEntranceSequence() {
     window.scrollTo(0, 0);
   }
 
-  // 2. Fase 1: Splash screen visible centrado con pulso luminoso (0.0s - 1.6s)
+  // 2. Fase 1: Splash screen visible con secuencia de patada cinematográfica
   overlay.style.setProperty('display', 'flex', 'important');
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
-  if (splashIcon) {
-    splashIcon.classList.remove('morphing-to-dock');
-    splashIcon.style.transition = 'none';
-    splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
-  }
 
-  // 3. A los 1.6s: Desvanecer subtítulo y título de splash suavemente
+  // Reiniciar animaciones CSS de la escena de patada en cada apertura
+  const ballWrapper = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
+  const striker = document.querySelector('.right-side-striker');
+  const flash = document.querySelector('.kick-impact-flash-right');
+  const leg = document.querySelector('.kicking-leg-group');
+  const trail = document.querySelector('.kick-arc-trail');
+  [ballWrapper, striker, flash, leg, trail].forEach(el => {
+    if (el) {
+      el.style.animation = 'none';
+      el.offsetHeight; // forzar reflow
+      el.style.animation = '';
+    }
+  });
+
+  // 3. A los 0.95s: Desvanecer subtítulo y título de splash suavemente
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
-  }, 1600);
+  }, 950);
 
-  // 4. A los 1.8s: Morph cinematográfico EXACTO hacia el botón superior del Pill Sidebar (#pillSidebarTopLogo)
-  setTimeout(() => {
-    if (splashIcon) {
-      window.scrollTo(0, 0);
-
-      // Medir en tiempo real la posición del destino (#pillSidebarTopLogo)
-      let targetCenterX = 0;
-      let targetCenterY = 0;
-      let scaleFactor = 44 / 84; // ~0.524 (de 84px a 44px)
-
-      if (topLogo) {
-        const tr = topLogo.getBoundingClientRect();
-        if (tr.width > 0 && tr.height > 0 && tr.top > 0 && tr.top < window.innerHeight * 0.75) {
-          targetCenterX = tr.left + tr.width / 2;
-          targetCenterY = tr.top + tr.height / 2;
-          scaleFactor = tr.width / 84;
-        }
-      }
-
-      // Si topLogo aún no tiene dimensiones en el DOM o está fuera de rango, calcularlo desde el wrapper de la píldora
-      if (!targetCenterX || !targetCenterY) {
-        const sidebar = document.getElementById('adminPillSidebar') || document.querySelector('.pill-sidebar-wrapper');
-        if (sidebar) {
-          const sr = sidebar.getBoundingClientRect();
-          if (sr.width > 0 && sr.top > 0 && sr.top < window.innerHeight * 0.75) {
-            targetCenterX = sr.left + 24;
-            targetCenterY = sr.top + 24;
-          }
-        }
-      }
-
-      // Fallback seguro: coordenadas exactas donde descansa el botón en la barra fija
-      if (!targetCenterX) targetCenterX = 46; // 14px left + 32px (mitad de 64px)
-      if (!targetCenterY) {
-        const estSidebarHeight = 440;
-        const estTop = Math.max(80, (window.innerHeight - estSidebarHeight) / 2);
-        targetCenterY = estTop + 24;
-      }
-
-      const iconRect = splashIcon.getBoundingClientRect();
-      const currentCenterX = iconRect.left + iconRect.width / 2;
-      const currentCenterY = iconRect.top + iconRect.height / 2;
-
-      // Calcular vector de traslación milimétrico exacto
-      const dx = targetCenterX - currentCenterX;
-      const dy = targetCenterY - currentCenterY;
-
-      splashIcon.style.transition = 'transform 1.1s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.4s ease';
-      splashIcon.style.transform = `translate(${Math.round(dx)}px, ${Math.round(dy)}px) scale(${scaleFactor.toFixed(3)})`;
-    }
-
-    if (container) container.classList.add('entrance-expanding');
-  }, 1800);
-
-  // 5. A los 2.9s: Ocultar overlay suavemente (fade-out) y dar paso a la Fase 2 (Shimmer Skeleton)
+  // 4. A los 1450ms (1.45s): Secuencia completa finalizada (patada a 0.4s, viaje a 0.62s, impacto lateral)
+  // Desmontar/ocultar el overlay del Splash Screen suavemente
   setTimeout(() => {
     overlay.classList.add('is-hidden');
+    if (container) container.classList.add('entrance-expanding');
+
     setTimeout(() => {
       overlay.style.setProperty('display', 'none', 'important');
-      if (splashIcon) {
-        splashIcon.style.transform = 'translate(0px, 0px) scale(1)';
-        splashIcon.style.transition = 'none';
-      }
-    }, 450);
+      isDashboardEntranceRunning = false;
+      if (splashContent) splashContent.classList.remove('text-fade-out');
+    }, 280);
 
-    // Fase 2: Shimmer Skeleton en tarjetas (0.9s)
+    // Fase 2: Shimmer Skeleton en tarjetas (0.7s)
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
     if (activePane) {
       activePane.classList.add('is-micro-skeleton');
@@ -5941,21 +5895,11 @@ function runDashboardEntranceSequence() {
         activePane.classList.add('fade-stagger-in');
 
         // Fase 3: Count-up cinematográfico de 1400ms & crecimiento elástico de barras
-        animateAllCountUps(activePane, 1400);
-        animateAllBars(activePane);
-      }, 900);
+        if (typeof animateAllCountUps === 'function') animateAllCountUps(activePane, 1400);
+        if (typeof animateAllBars === 'function') animateAllBars(activePane);
+      }, 700);
     }
-
-    // Liberar bloqueo de entrada y restaurar contenedor limpio tras completar la coreografía
-    setTimeout(() => {
-      if (container) {
-        container.classList.remove('entrance-expanding');
-        container.style.filter = 'none';
-        container.style.transform = 'none';
-      }
-      isDashboardEntranceRunning = false;
-    }, 1200);
-  }, 2900);
+  }, 1450);
 }
 
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
