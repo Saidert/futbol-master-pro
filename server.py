@@ -592,22 +592,99 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
 
             # 5b. Endpoint de Notificación de Rechazo por Correo Electrónico
             if path == '/api/notifications/reject-email':
-                to_email = (body.get('toEmail') or '').strip().lower()
+                to_email = (body.get('toEmail') or body.get('email') or '').strip().lower()
                 club_name = body.get('clubName', 'Club')
                 tournament_name = body.get('tournamentName', 'Torneo Oficial')
                 reasons = body.get('reasons', [])
-                notes = (body.get('notes') or '').strip()
-                coach_name = body.get('coachName', 'Delegado')
+                notes = (body.get('notes') or body.get('observations') or '').strip()
+                coach_name = body.get('coachName') or body.get('dtName') or 'Delegado'
+                dt_phone = (body.get('dtPhone') or body.get('phone') or '+57 310 445 8899').strip()
 
                 if not to_email:
                     return self.send_error_json("El correo electrónico del delegado es obligatorio.", 400)
 
                 notif_id = f"notif_{uuid.uuid4().hex[:8]}"
+                rad_id = f"RAD-FMP-2026-{uuid.uuid4().hex[:6].upper()}"
                 now = datetime.now().isoformat()
-                reason_str = ", ".join(reasons) if isinstance(reasons, list) else str(reasons)
+                reasons_list = reasons if isinstance(reasons, list) else [str(reasons)]
+                reason_str = ", ".join(reasons_list) if reasons_list else "Incumplimiento de requisitos reglamentarios"
+                reasons_html = "".join([f"<li style='margin-bottom:6px;'><strong>{r}</strong></li>" for r in reasons_list])
+
                 msg = f"Tu solicitud de inscripción para el club '{club_name}' en el torneo '{tournament_name}' no ha sido aprobada por la mesa directiva. Motivo principal: {reason_str}."
                 if notes:
                     msg += f" Observaciones del organizador: {notes}"
+
+                html_letter = f"""
+                <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; color: #0f172a; padding: 24px; border-radius: 10px; border: 1px solid #e2e8f0; border-top: 5px solid #ef4444;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0f172a; padding-bottom: 12px; margin-bottom: 16px;">
+                    <div>
+                      <h2 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #047857;">FÚTBOL MASTER PRO • AUDITORÍA OFICIAL</h2>
+                      <div style="font-size: 0.78rem; color: #475569; font-weight: 600;">Resolución de Dictamen de Inscripción</div>
+                    </div>
+                    <div style="text-align: right;">
+                      <span style="background: #fef2f2; border: 1px solid #f87171; color: #b91c1c; font-size: 0.72rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">RADICADO OFICIAL</span>
+                      <div style="font-size: 0.75rem; font-weight: 700; color: #0f172a; margin-top: 3px;">{rad_id}</div>
+                    </div>
+                  </div>
+
+                  <p style="font-size: 0.88rem; margin: 0 0 12px 0;">
+                    Estimado(a) <strong>{coach_name}</strong>, Director Técnico / Delegado del club <strong>{club_name}</strong>:
+                  </p>
+
+                  <p style="font-size: 0.85rem; line-height: 1.5; color: #334155; margin: 0 0 14px 0;">
+                    Le informamos que tras la auditoría técnica de nómina y verificación financiera para la competición <strong>{tournament_name}</strong>, su solicitud de inscripción ha sido <strong>DEVUELTA / RECHAZADA</strong> por la mesa organizadora.
+                  </p>
+
+                  <div style="background: #fff1f2; border-left: 4px solid #ef4444; border-radius: 4px; padding: 12px; margin-bottom: 14px;">
+                    <div style="font-size: 0.82rem; font-weight: 800; color: #991b1b; margin-bottom: 6px;">CAUSALES OFICIALES DEL DICTAMEN:</div>
+                    <ul style="margin: 0; padding-left: 18px; font-size: 0.82rem; color: #7f1d1d;">
+                      {reasons_html}
+                    </ul>
+                  </div>
+
+                  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 16px;">
+                    <div style="font-size: 0.8rem; font-weight: 700; color: #334155; margin-bottom: 4px;">OBSERVACIONES DEL COMITÉ ORGANIZADOR:</div>
+                    <div style="font-size: 0.82rem; color: #475569; font-style: italic;">"{notes or 'No se registraron observaciones adicionales.'}"</div>
+                  </div>
+
+                  <div style="background: #ecfdf5; border: 1px solid #10b981; border-radius: 6px; padding: 12px; margin-bottom: 16px;">
+                    <div style="font-size: 0.82rem; font-weight: 800; color: #065f46; margin-bottom: 4px;">INSTRUCCIONES DE SUBSANACIÓN INMEDIATA:</div>
+                    <p style="margin: 0; font-size: 0.8rem; color: #047857; line-height: 1.4;">
+                      Para corregir esta postulación, ingrese a la plataforma Fútbol Master Pro en la sección <strong>Mi Club</strong> y pulse <strong>"🔄 Subsanar y Reenviar Documentos"</strong>. Cargue únicamente el comprobante corregido o la planilla completa.
+                    </p>
+                  </div>
+
+                  <div style="border-top: 1px dashed #cbd5e1; padding-top: 12px; font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between;">
+                    <div>Emitido por: Comité de Control FMP</div>
+                    <div>Fecha: {now[:10]} {now[11:16]}</div>
+                  </div>
+                </div>
+                """
+
+                # Intento seguro de despacho SMTP si está configurado en el entorno
+                smtp_host = os.environ.get('SMTP_HOST')
+                if smtp_host:
+                    try:
+                        import smtplib
+                        from email.mime.text import MIMEText
+                        from email.mime.multipart import MIMEMultipart
+
+                        smtp_user = os.environ.get('SMTP_USER')
+                        smtp_pass = os.environ.get('SMTP_PASS')
+                        smtp_port = int(os.environ.get('SMTP_PORT', 587))
+                        msg_mime = MIMEMultipart('alternative')
+                        msg_mime['Subject'] = f"Dictamen de Inscripción ({rad_id}) - {club_name}"
+                        msg_mime['From'] = smtp_user or "no-reply@futbolmaster.co"
+                        msg_mime['To'] = to_email
+                        msg_mime.attach(MIMEText(msg, 'plain'))
+                        msg_mime.attach(MIMEText(html_letter, 'html'))
+                        with smtplib.SMTP(smtp_host, smtp_port, timeout=5) as server:
+                            server.starttls()
+                            if smtp_user and smtp_pass:
+                                server.login(smtp_user, smtp_pass)
+                            server.sendmail(msg_mime['From'], [to_email], msg_mime.as_string())
+                    except Exception as smtp_err:
+                        print(f"SMTP dispatch info (fallback activo): {smtp_err}")
 
                 try:
                     conn.execute("""
@@ -618,13 +695,20 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
                 except Exception:
                     pass
 
-                self.log_audit_db(conn, user_id, "Organizador", user_role, "NOTIFICACION_RECHAZO_EMAIL", f"Notificación de rechazo procesada para {to_email} del club '{club_name}' ({reason_str})")
+                self.log_audit_db(conn, user_id, "Organizador", user_role, "NOTIFICACION_RECHAZO_EMAIL", f"Notificación de rechazo procesada para {to_email} del club '{club_name}' ({reason_str}) [Radicado: {rad_id}]")
                 return self.send_json({
                     "ok": True,
+                    "status": "dispatched",
+                    "radicado": rad_id,
                     "message": f"Correo de notificación procesado exitosamente hacia {to_email}",
                     "to": to_email,
-                    "subject": "Estado de Inscripción Rechazada - Fútbol Master Pro",
-                    "body": msg
+                    "clubName": club_name,
+                    "tournamentName": tournament_name,
+                    "coachName": coach_name,
+                    "dtPhone": dt_phone,
+                    "subject": f"Estado de Inscripción Rechazada ({rad_id}) - {club_name}",
+                    "body": msg,
+                    "htmlLetter": html_letter
                 })
 
             # 6. Registro de Jugador en Plantilla (Fase 5)

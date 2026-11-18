@@ -494,6 +494,152 @@ function fixMojibakeDeep(obj) {
 }
 
 // =============================================================================
+// BÓVEDA DE ARCHIVOS INDEXEDDB (FMPFileVault) - EVITA QUOTAEXCEEDEDERROR EN LOCALSTORAGE
+// =============================================================================
+
+const FMPFileVault = {
+  DB_NAME: 'fmp_documents_db',
+  STORE_NAME: 'files',
+  _db: null,
+  _memVault: new Map(),
+
+  async init() {
+    if (this._db) return this._db;
+    if (typeof window === 'undefined' || !window.indexedDB) {
+      console.warn('IndexedDB no disponible. Usando bóveda de memoria de respaldo.');
+      return null;
+    }
+    return new Promise((resolve) => {
+      try {
+        const req = window.indexedDB.open(this.DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(this.STORE_NAME)) {
+            db.createObjectStore(this.STORE_NAME, { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = (e) => {
+          this._db = e.target.result;
+          resolve(this._db);
+        };
+        req.onerror = (e) => {
+          console.warn('Error abriendo IndexedDB (modo fallback activo):', e);
+          resolve(null);
+        };
+      } catch (err) {
+        console.warn('Fallo al inicializar IndexedDB:', err);
+        resolve(null);
+      }
+    });
+  },
+
+  async putFile(key, dataUrl, meta = {}) {
+    if (!key || !dataUrl) return false;
+    this._memVault.set(key, { id: key, dataUrl, meta, updatedAt: new Date().toISOString() });
+    try {
+      const db = await this.init();
+      if (!db) return true;
+      return new Promise((resolve) => {
+        try {
+          const tx = db.transaction(this.STORE_NAME, 'readwrite');
+          const store = tx.objectStore(this.STORE_NAME);
+          store.put({ id: key, dataUrl, meta, updatedAt: new Date().toISOString() });
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        } catch (e) {
+          resolve(false);
+        }
+      });
+    } catch (e) {
+      return false;
+    }
+  },
+
+  async getFile(key) {
+    if (!key) return null;
+    if (this._memVault.has(key)) {
+      return this._memVault.get(key);
+    }
+    try {
+      const db = await this.init();
+      if (!db) return null;
+      return new Promise((resolve) => {
+        try {
+          const tx = db.transaction(this.STORE_NAME, 'readonly');
+          const store = tx.objectStore(this.STORE_NAME);
+          const req = store.get(key);
+          req.onsuccess = () => {
+            const res = req.result || null;
+            if (res) this._memVault.set(key, res);
+            resolve(res);
+          };
+          req.onerror = () => resolve(null);
+        } catch (e) {
+          resolve(null);
+        }
+      });
+    } catch (e) {
+      return null;
+    }
+  },
+
+  async deleteFile(key) {
+    if (!key) return;
+    this._memVault.delete(key);
+    try {
+      const db = await this.init();
+      if (!db) return;
+      const tx = db.transaction(this.STORE_NAME, 'readwrite');
+      tx.objectStore(this.STORE_NAME).delete(key);
+    } catch (e) {}
+  }
+};
+window.FMPFileVault = FMPFileVault;
+
+/**
+ * Comprime automáticamente imágenes de comprobantes usando un <canvas> en memoria.
+ * Limita el ancho a 1000px y aplica compresión JPEG al 72% para ahorrar 85%+ de peso.
+ */
+async function compressImageFile(file, maxWidth = 1000, quality = 0.72) {
+  if (!file) return null;
+  if (!file.type || !file.type.startsWith('image/')) {
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const compressed = canvas.toDataURL('image/jpeg', quality);
+        resolve(compressed);
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+window.compressImageFile = compressImageFile;
+
+// =============================================================================
 // MOTOR CENTRAL DE BASE DE DATOS (FMPStore Engine) - FOOTBALL_MASTER_PRO_DB_V1
 // =============================================================================
 
@@ -578,7 +724,29 @@ const FMPStore = {
         this.triggerAutoSaveIndicator();
       }
     } catch (e) {
-      console.error('Error al persistir en FMPStore:', e);
+      if (e.name === 'QuotaExceededError' || e.code === 22 || (e.message && e.message.toLowerCase().includes('quota'))) {
+        console.warn('FMPStore QuotaExceededError detectado: podando URLs binarias pesadas a vault://...');
+        if (Array.isArray(this.db.registrations)) {
+          this.db.registrations.forEach(r => {
+            if (r.rosterFileUrl && r.rosterFileUrl.startsWith('data:')) {
+              FMPFileVault.putFile('roster_' + r.id, r.rosterFileUrl, { fileName: r.rosterFileName, type: 'roster' });
+              r.rosterFileUrl = 'vault://roster_' + r.id;
+            }
+            if (r.paymentReceiptUrl && r.paymentReceiptUrl.startsWith('data:')) {
+              FMPFileVault.putFile('payment_' + r.id, r.paymentReceiptUrl, { fileName: r.paymentReceiptFileName, type: 'payment' });
+              r.paymentReceiptUrl = 'vault://payment_' + r.id;
+            }
+          });
+        }
+        try {
+          localStorage.setItem(this.KEY, JSON.stringify(this.db));
+          localStorage.setItem(FMP_KEYS.REGISTRATIONS, JSON.stringify(this.db.registrations));
+        } catch (e2) {
+          console.error('Error crítico al guardar en localStorage tras podar:', e2);
+        }
+      } else {
+        console.error('Error al persistir en FMPStore:', e);
+      }
     }
   },
 
@@ -6011,9 +6179,6 @@ function refreshAdminDashboardData(btnEl) {
     renderAdminPendingApplications();
   }
 
-  // Re-ejecutar cinemática de patada hacia la barra con force = true
-  runDashboardEntranceSequence(true);
-
   if (typeof showToast === 'function') {
     showToast('Datos del Dashboard actualizados ⚽', 'success', 2200);
   }
@@ -6262,19 +6427,22 @@ function runDashboardEntranceSequence(force = false) {
 
   if (!overlay) return;
 
-  // Si no es forzado y ya se reprodujo en esta sesión, saltar animación cinematográfica
-  const hasPlayed = sessionStorage.getItem('fmp_splash_played');
-  if (!force && hasPlayed === 'true') {
+  // Si no es forzado y ya se completó el splash en esta sesión, entrar directo en <150ms
+  const hasCompleted = (sessionStorage.getItem('fmp_splash_completed') === 'true') || (sessionStorage.getItem('fmp_splash_played') === 'true');
+  if (!force && hasCompleted) {
     overlay.classList.add('is-hidden');
     overlay.style.setProperty('display', 'none', 'important');
     if (splashContent) splashContent.classList.add('text-fade-out');
     if (container) container.classList.add('entrance-expanding');
-    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn');
-    if (sidebarBallBtn) sidebarBallBtn.style.opacity = '1';
+    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, #pillSidebarTopLogo');
+    if (sidebarBallBtn) {
+      sidebarBallBtn.style.opacity = '1';
+      sidebarBallBtn.style.transform = 'scale(1)';
+    }
 
     const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
     if (activePane) {
-      if (typeof animateAllCountUps === 'function') animateAllCountUps(activePane, 800);
+      if (typeof animateAllCountUps === 'function') animateAllCountUps(activePane, 350);
       if (typeof animateAllBars === 'function') animateAllBars(activePane);
     }
     return;
@@ -6282,6 +6450,7 @@ function runDashboardEntranceSequence(force = false) {
 
   isDashboardEntranceRunning = true;
   sessionStorage.setItem('fmp_splash_played', 'true');
+  sessionStorage.setItem('fmp_splash_completed', 'true');
 
   // 1. Reset instantáneo al tope absoluto de la ventana (0, 0)
   try {
@@ -16341,7 +16510,7 @@ Fútbol Master Pro • Sistema de Gestión y Telemetría Oficial
   }
 }
 
-function openTournamentApplicationModal(tId, isCorrection = false) {
+function openTournamentApplicationModal(tId, isCorrection = false, existingRegId = null) {
   const modal = document.getElementById('modalApplyTournament');
   if (!modal) return;
 
@@ -16354,6 +16523,10 @@ function openTournamentApplicationModal(tId, isCorrection = false) {
   const paymentFile = document.getElementById('applyPaymentReceipt');
   const previewRoster = document.getElementById('previewRosterPdfName');
   const previewPayment = document.getElementById('previewPaymentReceiptName');
+  const hiddenExistingId = document.getElementById('applyExistingRegId');
+  const correctionBanner = document.getElementById('applyCorrectionBanner');
+  const correctionReasonsText = document.getElementById('applyCorrectionReasonsText');
+  const submitBtn = modal.querySelector('button[type="submit"]');
 
   if (rosterFile) rosterFile.value = '';
   if (paymentFile) paymentFile.value = '';
@@ -16376,17 +16549,82 @@ function openTournamentApplicationModal(tId, isCorrection = false) {
     }
   }
 
-  const session = FMPStore.getSession();
-  if (session && session.loggedIn) {
-    if (coachInput && !coachInput.value) coachInput.value = session.name || 'Mario Alberto Yepes';
-    if (emailInput && !emailInput.value) emailInput.value = session.email || 'delegado@atleticobogota.co';
-    if (clubInput && !clubInput.value) clubInput.value = session.clubName || 'Atlético Bogotá FC';
-    if (cityInput && !cityInput.value) cityInput.value = session.city || 'Bogotá D.C.';
+  // Buscar registro previo si estamos en modo subsanación
+  let targetReg = null;
+  const regs = FMPStore.getRegistrations();
+  if (existingRegId) {
+    targetReg = regs.find(r => r.id === existingRegId);
+  } else if (isCorrection) {
+    const session = FMPStore.getSession();
+    const myEmail = session?.email || '';
+    targetReg = regs.find(r => (r.status === 'rechazado') && (
+      (r.coachEmail && r.coachEmail.toLowerCase() === myEmail.toLowerCase()) ||
+      (r.coachId && session && r.coachId === session.userId) ||
+      (tId && r.tournamentId === tId)
+    )) || regs.find(r => r.status === 'rechazado');
+  }
+
+  if (hiddenExistingId) {
+    hiddenExistingId.value = (isCorrection && targetReg) ? targetReg.id : '';
+  }
+
+  if (isCorrection && targetReg) {
+    if (clubInput) clubInput.value = targetReg.clubName || '';
+    if (cityInput) cityInput.value = targetReg.city || 'Bogotá D.C.';
+    if (coachInput) coachInput.value = targetReg.coachName || targetReg.dtName || '';
+    if (emailInput) emailInput.value = targetReg.coachEmail || targetReg.email || '';
+    if (select && targetReg.tournamentId) select.value = targetReg.tournamentId;
+
+    if (correctionBanner) {
+      correctionBanner.style.display = 'block';
+      if (correctionReasonsText) {
+        correctionReasonsText.innerHTML = `<strong>Observaciones oficiales del dictamen:</strong> ${escapeHtml(targetReg.observations || 'Por favor reemplaza el documento requerido o actualiza el comprobante bancario.')}`;
+      }
+    }
+
+    // En modo subsanación, los inputs no son forzosos si el archivo previo ya existe
+    if (rosterFile) rosterFile.required = !Boolean(targetReg.rosterFileUrl);
+    if (paymentFile) paymentFile.required = !Boolean(targetReg.paymentReceiptUrl);
+
+    if (targetReg.rosterFileName && previewRoster) {
+      previewRoster.style.display = 'flex';
+      previewRoster.innerHTML = `<span style="color: #38bdf8; font-size: 0.78rem;">📄 Archivo actual: <strong>${escapeHtml(targetReg.rosterFileName)}</strong> (Carga un archivo nuevo solo si vas a corregirlo)</span>`;
+    }
+    if (targetReg.paymentReceiptFileName && previewPayment) {
+      previewPayment.style.display = 'flex';
+      previewPayment.innerHTML = `<span style="color: #38bdf8; font-size: 0.78rem;">💵 Archivo actual: <strong>${escapeHtml(targetReg.paymentReceiptFileName)}</strong> (Carga un archivo nuevo solo si vas a corregirlo)</span>`;
+    }
+
+    if (submitBtn) {
+      submitBtn.innerHTML = '<span>🔄 Reenviar Documentos Subsanados</span>';
+      submitBtn.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
+      submitBtn.style.color = '#000';
+      submitBtn.style.fontWeight = '800';
+    }
   } else {
-    if (clubInput && !clubInput.value) clubInput.value = 'Atlético Bogotá FC';
-    if (coachInput && !coachInput.value) coachInput.value = 'Mario Alberto Yepes';
-    if (emailInput && !emailInput.value) emailInput.value = 'delegado@atleticobogota.co';
-    if (cityInput && !cityInput.value) cityInput.value = 'Bogotá D.C.';
+    if (correctionBanner) correctionBanner.style.display = 'none';
+    if (rosterFile) rosterFile.required = true;
+    if (paymentFile) paymentFile.required = true;
+
+    const session = FMPStore.getSession();
+    if (session && session.loggedIn) {
+      if (coachInput && !coachInput.value) coachInput.value = session.name || 'Mario Alberto Yepes';
+      if (emailInput && !emailInput.value) emailInput.value = session.email || 'delegado@atleticobogota.co';
+      if (clubInput && !clubInput.value) clubInput.value = session.clubName || 'Atlético Bogotá FC';
+      if (cityInput && !cityInput.value) cityInput.value = session.city || 'Bogotá D.C.';
+    } else {
+      if (clubInput && !clubInput.value) clubInput.value = 'Atlético Bogotá FC';
+      if (coachInput && !coachInput.value) coachInput.value = 'Mario Alberto Yepes';
+      if (emailInput && !emailInput.value) emailInput.value = 'delegado@atleticobogota.co';
+      if (cityInput && !cityInput.value) cityInput.value = 'Bogotá D.C.';
+    }
+
+    if (submitBtn) {
+      submitBtn.innerHTML = '<span>🚀 Enviar Solicitud de Inscripción</span>';
+      submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+      submitBtn.style.color = '#fff';
+      submitBtn.style.fontWeight = '700';
+    }
   }
 
   const titleEl = modal.querySelector('h3');
@@ -16441,7 +16679,9 @@ async function handleTournamentApplicationSubmit(event) {
   const emailInput = document.getElementById('applyCoachEmail');
   const rosterFile = document.getElementById('applyRosterPdf');
   const paymentFile = document.getElementById('applyPaymentReceipt');
+  const hiddenExistingId = document.getElementById('applyExistingRegId');
 
+  const existingRegId = (hiddenExistingId?.value || '').trim();
   const tournamentId = tSelect?.value;
   const clubName = (clubInput?.value || '').trim();
   const city = (cityInput?.value || 'Bogotá D.C.').trim();
@@ -16459,8 +16699,17 @@ async function handleTournamentApplicationSubmit(event) {
     return;
   }
 
+  const tournaments = FMPStore.getTournaments();
+  const targetT = tournaments.find(t => t.id === tournamentId);
+  const tournamentName = targetT?.config?.name || targetT?.name || 'Copa Colombia Metropolitana 2026';
+  const session = FMPStore.getSession();
+
+  const isCorrection = Boolean(existingRegId);
+  const regId = isCorrection ? existingRegId : ('reg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
+
+  // 1. Procesar Planilla PDF
   let rosterDataUrl = null;
-  let rosterFileName = 'Planilla_Oficial_Jugadores.pdf';
+  let rosterFileName = null;
   if (rosterFile && rosterFile.files && rosterFile.files[0]) {
     const f = rosterFile.files[0];
     rosterFileName = f.name;
@@ -16471,60 +16720,110 @@ async function handleTournamentApplicationSubmit(event) {
         reader.onerror = () => resolve(null);
         reader.readAsDataURL(f);
       });
+      if (rosterDataUrl) {
+        await FMPFileVault.putFile('roster_' + regId, rosterDataUrl, { fileName: rosterFileName, type: 'roster' });
+      }
     } catch (e) {
-      console.warn('Error reading roster file:', e);
+      console.warn('Error guardando en FMPFileVault (roster):', e);
     }
   }
 
+  // 2. Procesar Comprobante de Pago (con compresión automática si es imagen)
   let paymentDataUrl = null;
-  let paymentFileName = 'Comprobante_Pago_Transferencia.pdf';
+  let paymentFileName = null;
   if (paymentFile && paymentFile.files && paymentFile.files[0]) {
     const f = paymentFile.files[0];
     paymentFileName = f.name;
     try {
-      paymentDataUrl = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => resolve(null);
-        reader.readAsDataURL(f);
-      });
+      paymentDataUrl = await compressImageFile(f, 1000, 0.72);
+      if (paymentDataUrl) {
+        await FMPFileVault.putFile('payment_' + regId, paymentDataUrl, { fileName: paymentFileName, type: 'payment' });
+      }
     } catch (e) {
-      console.warn('Error reading payment file:', e);
+      console.warn('Error guardando en FMPFileVault (pago):', e);
     }
   }
 
-  const tournaments = FMPStore.getTournaments();
-  const targetT = tournaments.find(t => t.id === tournamentId);
-  const tournamentName = targetT?.config?.name || targetT?.name || 'Copa Colombia Metropolitana 2026';
+  if (isCorrection) {
+    // =========================================================================
+    // FLUJO DE SUBSANACIÓN: ACTUALIZAR EL REGISTRO EXISTENTE SIN DUPLICAR
+    // =========================================================================
+    const regs = FMPStore.getRegistrations();
+    const existingReg = regs.find(r => r.id === existingRegId);
 
-  const session = FMPStore.getSession();
-  const regId = 'reg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+    if (existingReg) {
+      existingReg.clubName = clubName;
+      existingReg.city = city;
+      existingReg.coachName = coachName;
+      existingReg.coachEmail = coachEmail;
+      existingReg.tournamentId = tournamentId;
+      existingReg.tournamentName = tournamentName;
 
-  const newReg = {
-    id: regId,
-    tournamentId: tournamentId,
-    tournamentName: tournamentName,
-    clubName: clubName,
-    city: city,
-    coachId: session?.userId || 'usr_coach_' + Date.now(),
-    coachName: coachName,
-    coachEmail: coachEmail,
-    email: coachEmail,
-    status: 'en_revision',
-    statusText: 'En Revisión de Mesa',
-    paymentStatus: 'under_review',
-    paymentFee: 350000,
-    feeCurrency: 'COP',
-    rosterFileName: rosterFileName,
-    rosterFileUrl: rosterDataUrl || '',
-    paymentReceiptFileName: paymentFileName,
-    paymentReceiptUrl: paymentDataUrl || '',
-    submittedAt: new Date().toISOString(),
-    observations: ''
-  };
+      if (rosterFileName && rosterDataUrl) {
+        existingReg.rosterFileName = rosterFileName;
+        existingReg.rosterFileUrl = 'vault://roster_' + existingRegId;
+      }
+      if (paymentFileName && paymentDataUrl) {
+        existingReg.paymentReceiptFileName = paymentFileName;
+        existingReg.paymentReceiptUrl = 'vault://payment_' + existingRegId;
+      }
 
-  FMPStore.saveRegistration(newReg);
+      existingReg.status = 'revision_final';
+      existingReg.statusText = 'En Revisión (Subsanada)';
+      existingReg.previousObservations = existingReg.observations || '';
+      existingReg.observations = '';
+      existingReg.submittedAt = new Date().toISOString();
+      existingReg.subsanadaAt = new Date().toISOString();
 
+      FMPStore.saveRegistration(existingReg);
+      FMPStore.logAudit('SOLICITUD_SUBSANADA', `El club ${clubName} subsanó sus documentos para el torneo "${tournamentName}"`);
+      FMPStore.addNotification({
+        userId: 'organizer',
+        title: '🔄 Documentos Subsanados',
+        message: `El club "${clubName}" ha subsanado sus documentos para "${tournamentName}". Listo para nueva auditoría.`,
+        type: 'info'
+      });
+
+      if (typeof showToast === 'function') {
+        showToast('✅ Documentos subsanados y reenviados exitosamente a la mesa organizadora', 'success', 4500);
+      }
+    }
+  } else {
+    // =========================================================================
+    // NUEVA POSTULACIÓN INICIAL (REFERENCIAS LIGERAS A VAULT EN LOCALSTORAGE)
+    // =========================================================================
+    const newReg = {
+      id: regId,
+      tournamentId: tournamentId,
+      tournamentName: tournamentName,
+      clubName: clubName,
+      city: city,
+      coachId: session?.userId || 'usr_coach_' + Date.now(),
+      coachName: coachName,
+      coachEmail: coachEmail,
+      email: coachEmail,
+      status: 'en_revision',
+      statusText: 'En Revisión de Mesa',
+      paymentStatus: 'under_review',
+      paymentFee: 350000,
+      feeCurrency: 'COP',
+      rosterFileName: rosterFileName || 'Planilla_Oficial_Jugadores.pdf',
+      rosterFileUrl: rosterDataUrl ? ('vault://roster_' + regId) : '',
+      paymentReceiptFileName: paymentFileName || 'Comprobante_Pago_Transferencia.pdf',
+      paymentReceiptUrl: paymentDataUrl ? ('vault://payment_' + regId) : '',
+      submittedAt: new Date().toISOString(),
+      observations: ''
+    };
+
+    FMPStore.saveRegistration(newReg);
+    FMPStore.logAudit('SOLICITUD_INSCRIPCION_ENVIADA', `Club ${clubName} postuló con comprobante y planilla PDF al torneo "${tournamentName}"`);
+
+    if (typeof showToast === 'function') {
+      showToast('✅ Solicitud enviada al organizador para revisión de documentos y pago', 'success', 4500);
+    }
+  }
+
+  // Notificar al backend de forma asíncrona
   try {
     fetch('/api/registrations/apply', {
       method: 'POST',
@@ -16536,20 +16835,15 @@ async function handleTournamentApplicationSubmit(event) {
         coachName: coachName,
         coachEmail: coachEmail,
         city: city,
-        pdfUrl: rosterDataUrl ? 'data:attached' : '',
+        pdfUrl: 'vault://roster_' + regId,
         pdfAttached: Boolean(rosterDataUrl),
-        feeAmount: 350000
+        feeAmount: 350000,
+        isCorrection: isCorrection
       })
     }).catch(e => console.warn('Backend sync warning:', e));
   } catch (err) {}
 
-  FMPStore.logAudit('SOLICITUD_INSCRIPCION_ENVIADA', `Club ${clubName} postuló con comprobante y planilla PDF al torneo "${tournamentName}"`);
-
   closeTournamentApplicationModal();
-
-  if (typeof showToast === 'function') {
-    showToast('✅ Solicitud enviada al organizador para revisión de documentos y pago', 'success', 4500);
-  }
 
   if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
   if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
@@ -16647,7 +16941,7 @@ function renderAdminPendingApplications() {
   if (containerClubs) containerClubs.innerHTML = renderInboxHtml(pendingRegs);
 }
 
-function viewApplicationDocument(regId, docType) {
+async function viewApplicationDocument(regId, docType) {
   const modal = document.getElementById('modalDocumentViewer');
   const title = document.getElementById('viewerDocTitle');
   const subtitle = document.getElementById('viewerDocSubtitle');
@@ -16665,8 +16959,17 @@ function viewApplicationDocument(regId, docType) {
     if (title) title.textContent = `Planilla Oficial de Jugadores (PDF) - ${reg.clubName || reg.teamName}`;
     if (subtitle) subtitle.textContent = `Expediente oficial presentado por el DT ${reg.coachName || reg.dtName || 'Delegado'} • ${reg.tournamentName || 'Torneo'}`;
 
-    const pdfUrl = reg.rosterFileUrl;
-    if (pdfUrl && pdfUrl.startsWith('data:')) {
+    let pdfUrl = reg.rosterFileUrl;
+    if (pdfUrl && pdfUrl.startsWith('vault://')) {
+      const key = pdfUrl.replace('vault://', '');
+      const item = await FMPFileVault.getFile(key);
+      if (item && item.dataUrl) pdfUrl = item.dataUrl;
+    } else if (!pdfUrl && typeof FMPFileVault !== 'undefined') {
+      const item = await FMPFileVault.getFile('roster_' + reg.id);
+      if (item && item.dataUrl) pdfUrl = item.dataUrl;
+    }
+
+    if (pdfUrl && (pdfUrl.startsWith('data:') || pdfUrl.startsWith('blob:') || pdfUrl.startsWith('http'))) {
       body.innerHTML = `
         <div style="width: 100%; height: 500px; display: flex; flex-direction: column;">
           <iframe src="${pdfUrl}" style="width: 100%; height: 100%; border: none; border-radius: 8px; background: #fff;"></iframe>
@@ -16745,8 +17048,17 @@ function viewApplicationDocument(regId, docType) {
     if (title) title.textContent = `Comprobante de Transferencia / Consignación - ${reg.clubName || reg.teamName}`;
     if (subtitle) subtitle.textContent = `Soporte económico de inscripción por valor de $350.000 COP • ${reg.tournamentName || 'Torneo'}`;
 
-    const payUrl = reg.paymentReceiptUrl;
-    if (payUrl && payUrl.startsWith('data:image/')) {
+    let payUrl = reg.paymentReceiptUrl;
+    if (payUrl && payUrl.startsWith('vault://')) {
+      const key = payUrl.replace('vault://', '');
+      const item = await FMPFileVault.getFile(key);
+      if (item && item.dataUrl) payUrl = item.dataUrl;
+    } else if (!payUrl && typeof FMPFileVault !== 'undefined') {
+      const item = await FMPFileVault.getFile('payment_' + reg.id);
+      if (item && item.dataUrl) payUrl = item.dataUrl;
+    }
+
+    if (payUrl && (payUrl.startsWith('data:image/') || payUrl.startsWith('blob:'))) {
       body.innerHTML = `
         <div style="max-height: 520px; overflow: auto; text-align: center;">
           <img src="${payUrl}" alt="Comprobante de Pago" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
@@ -16754,7 +17066,8 @@ function viewApplicationDocument(regId, docType) {
       `;
       if (dlBtn) {
         dlBtn.href = payUrl;
-        dlBtn.download = reg.paymentReceiptFileName || 'Comprobante_Pago.png';
+        dlBtn.download = reg.paymentReceiptFileName || 'Comprobante_Pago.jpg';
+        dlBtn.style.display = 'inline-flex';
       }
     } else if (payUrl && payUrl.startsWith('data:application/pdf')) {
       body.innerHTML = `
@@ -16765,6 +17078,7 @@ function viewApplicationDocument(regId, docType) {
       if (dlBtn) {
         dlBtn.href = payUrl;
         dlBtn.download = reg.paymentReceiptFileName || 'Comprobante_Pago.pdf';
+        dlBtn.style.display = 'inline-flex';
       }
     } else {
       body.innerHTML = `
@@ -16997,27 +17311,90 @@ Fútbol Master Pro • FCF Homologada
   const mailtoSubject = `Estado de Inscripción Rechazada - ${clubName} - Fútbol Master Pro`;
   const mailtoUrl = `mailto:${encodeURIComponent(toEmail)}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(formalBody)}`;
 
+  const rawPhone = reg.dtPhone || reg.phone || '+57 310 445 8899';
+  const cleanPhone = rawPhone.replace(/\D/g, '');
+  const waMsg = `Hola ${reg.coachName || 'Delegado'}, te informamos desde la mesa directiva de Fútbol Master Pro que tu solicitud de inscripción para el club "${clubName}" en el torneo "${tourneyName}" ha sido devuelta para subsanación.\n\nCausales del dictamen:\n${reasonsFormatted}\n\nObservaciones: ${notesText || 'Revisar documentación requerida.'}\n\nPor favor ingresa a la plataforma (sección Mi Club) y pulsa "🔄 Subsanar y Reenviar Documentos".`;
+
   try {
-    const a = document.createElement('a');
-    a.href = mailtoUrl;
-    a.target = '_blank';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  } catch (err) {
-    window.location.href = mailtoUrl;
-  }
+    fetch('/api/notifications/reject-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: toEmail,
+        toEmail: toEmail,
+        clubName: clubName,
+        tournamentName: tourneyName,
+        reasons: reasonsList,
+        observations: notesText,
+        notes: notesText,
+        fullReason: fullReasonText,
+        coachName: reg.coachName || reg.dtName || 'Delegado',
+        dtPhone: rawPhone
+      })
+    }).then(res => res.json()).then(data => {
+      console.log('Reject email endpoint response:', data);
+      const subRadEl = document.getElementById('receiptRadicadoSubtitle');
+      if (subRadEl && data.radicado) {
+        subRadEl.textContent = `Radicado Oficial: ${data.radicado}`;
+      }
+      const previewEl = document.getElementById('receiptLetterPreview');
+      if (previewEl && data.htmlLetter) {
+        previewEl.innerHTML = data.htmlLetter;
+      }
+    }).catch(err => {
+      console.warn('Backend reject-email notification warning:', err);
+    });
+  } catch (e) {}
 
   closeRejectApplicationModal();
 
+  // Abrir Modal de Comprobante de Notificación Despachada (sin ventanas mailto forzadas)
+  const modalReceipt = document.getElementById('modalRejectReceipt');
+  if (modalReceipt) {
+    const previewEl = document.getElementById('receiptLetterPreview');
+    if (previewEl) {
+      previewEl.innerHTML = `
+        <div style="font-weight: 800; color: #b91c1c; margin-bottom: 8px;">RESOLUCIÓN OFICIAL DE NO ADMISIÓN</div>
+        <div style="margin-bottom: 8px;"><strong>Destinatario:</strong> ${escapeHtml(reg.coachName || 'Delegado')} (${escapeHtml(toEmail)})</div>
+        <div style="margin-bottom: 8px;"><strong>Club:</strong> ${escapeHtml(clubName)} • <strong>Torneo:</strong> ${escapeHtml(tourneyName)}</div>
+        <div style="background: #fff1f2; border-left: 3px solid #ef4444; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
+          <strong>Causales Dictaminadas:</strong><br>
+          ${reasonsList.map(r => `• ${escapeHtml(r)}`).join('<br>')}
+        </div>
+        <div><strong>Observaciones:</strong> <em>${escapeHtml(notesText || 'Sin observaciones adicionales.')}</em></div>
+      `;
+    }
+    const waBtn = document.getElementById('receiptBtnWhatsApp');
+    if (waBtn) {
+      waBtn.href = `https://api.whatsapp.com/send?phone=${cleanPhone.startsWith('57') ? cleanPhone : ('57' + cleanPhone)}&text=${encodeURIComponent(waMsg)}`;
+    }
+    const mailBtn = document.getElementById('receiptBtnMailto');
+    if (mailBtn) {
+      mailBtn.href = mailtoUrl;
+    }
+
+    modalReceipt.style.setProperty('display', 'flex', 'important');
+    modalReceipt.classList.add('active');
+  }
+
   if (typeof showToast === 'function') {
-    showToast(`❌ Solicitud rechazada. Correo oficial redactado y despachado a ${toEmail}`, 'warning', 4500);
+    showToast(`❌ Solicitud rechazada. Notificación oficial radicada y despachada a ${toEmail}`, 'warning', 4500);
   }
 
   if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
   if (typeof renderAdminStats === 'function') renderAdminStats();
   if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
 }
+
+function closeRejectReceiptModal() {
+  const modal = document.getElementById('modalRejectReceipt');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+}
+window.closeRejectReceiptModal = closeRejectReceiptModal;
 
 function renderCoachRegistrationStatusCard() {
   const container = document.getElementById('coachRegistrationStatusCard');
@@ -17089,7 +17466,7 @@ function renderCoachRegistrationStatusCard() {
           ${escapeHtml(myReg.observations || 'Incumplimiento de requisitos documentales o comprobante de pago no válido.')}
         </div>
         <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem;">
-          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${myReg.tournamentId}', true)" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #f59e0b; color: #000; font-weight: 800;">
+          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${myReg.tournamentId}', true, '${myReg.id}')" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #f59e0b; color: #000; font-weight: 800;">
             <span>🔄 Subsanar y Reenviar Documentos</span>
           </button>
           <button type="button" class="btn-ghost" onclick="viewApplicationDocument('${myReg.id}', 'roster')" style="font-size: 0.8rem; padding: 4px 10px;">
@@ -17140,3 +17517,7 @@ window.openRejectApplicationModal = openRejectApplicationModal;
 window.closeRejectApplicationModal = closeRejectApplicationModal;
 window.handleRejectApplicationSubmit = handleRejectApplicationSubmit;
 window.renderCoachRegistrationStatusCard = renderCoachRegistrationStatusCard;
+window.closeRejectReceiptModal = closeRejectReceiptModal;
+window.openRegisterTeamApplicationModal = function(tId = null, existingRegId = null) {
+  openTournamentApplicationModal(tId, Boolean(existingRegId), existingRegId);
+};

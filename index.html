@@ -6452,6 +6452,18 @@
       </div>
 
       <form id="formApplyTournament" onsubmit="handleTournamentApplicationSubmit(event)" style="padding: 1rem 0;">
+        <input type="hidden" id="applyExistingRegId" value="">
+
+        <!-- Banner de Subsanación (Visible solo en modo corrección) -->
+        <div id="applyCorrectionBanner" style="display: none; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); border-left: 4px solid #f59e0b; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; gap: 8px; color: #fbbf24; font-weight: 800; font-size: 0.88rem; margin-bottom: 4px;">
+            <span>⚠️</span>
+            <span>MOTIVOS DE LA DEVOLUCIÓN A SUBSANAR</span>
+          </div>
+          <div id="applyCorrectionReasonsText" style="color: #fef3c7; font-size: 0.82rem; line-height: 1.4; margin-bottom: 6px;"></div>
+          <div style="font-size: 0.75rem; color: #cbd5e1;">Reemplaza únicamente los documentos objetados (Planilla o Pago) y pulsa "Reenviar Documentos Subsanados".</div>
+        </div>
+
         <!-- Selector de Torneo -->
         <div class="form-group" style="margin-bottom: 1rem;">
           <label for="applyTournamentSelect" style="color: #a5f3fc; font-weight: 700; font-size: 0.85rem;">Torneo Seleccionado *</label>
@@ -6587,6 +6599,50 @@
     </div>
   </div>
 
+  <!-- MODAL: COMPROBANTE DE NOTIFICACIÓN DE RECHAZO DESPACHADA -->
+  <div id="modalRejectReceipt" class="modal-overlay" style="display: none;">
+    <div class="modal-dialog modal-liquid-glass" style="max-width: 640px; width: 95%; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(16, 185, 129, 0.3); padding-bottom: 0.85rem;">
+        <div class="modal-match-summary">
+          <span class="modal-icon">📋</span>
+          <div>
+            <h3 style="margin: 0; color: #34d399; font-size: 1.15rem;">Notificación Oficial Despachada</h3>
+            <p style="margin: 0; color: #94a3b8; font-size: 0.82rem;" id="receiptRadicadoSubtitle">Radicado FMP Oficial</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeRejectReceiptModal()">&times;</button>
+      </div>
+
+      <div style="padding: 1rem 0;">
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;">
+          <span style="font-size: 1.4rem;">✅</span>
+          <div>
+            <div style="color: #34d399; font-weight: 700; font-size: 0.9rem;">Resolución registrada en servidor y buzón de Mi Club</div>
+            <div style="color: #cbd5e1; font-size: 0.78rem;">El delegado recibirá las causales y podrá subsanar inmediatamente sin duplicar registros.</div>
+          </div>
+        </div>
+
+        <div id="receiptLetterPreview" style="background: #ffffff; color: #0f172a; padding: 1.25rem; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 0.82rem; line-height: 1.5; max-height: 320px; overflow-y: auto; border-left: 4px solid #ef4444; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+          <!-- Carta pre-redactada dinámica -->
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem;">
+          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a id="receiptBtnWhatsApp" href="#" target="_blank" class="btn-primary-neon" style="flex: 1; min-width: 200px; background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-color: #25d366; color: #ffffff; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700;">
+              <span>📲 Enviar también por WhatsApp al DT</span>
+            </a>
+            <a id="receiptBtnMailto" href="#" target="_blank" class="btn-ghost" style="flex: 1; min-width: 180px; text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-size: 0.8rem; color: #94a3b8;">
+              <span>✉️ Abrir en cliente de correo</span>
+            </a>
+          </div>
+          <button type="button" class="btn-ghost" onclick="closeRejectReceiptModal()" style="width: 100%; text-align: center;">
+            <span>Entendido / Cerrar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: VISOR DE DOCUMENTO (PDF / SOPORTE DE PAGO) -->
   <div id="modalDocumentViewer" class="modal-overlay" style="display: none;">
     <div class="modal-dialog modal-liquid-glass" style="max-width: 860px; width: 95%; max-height: 90vh; overflow-y: auto;">
@@ -6638,7 +6694,7 @@
   <datalist id="colombianVenuesDatalist"></datalist>
 
   <script src="silk-bg.js"></script>
-  <script src="app.js?v=20261116_v22_isolated_shell"></script>
+  <script src="app.js?v=20261118_v24_architect"></script>
 </body>
 </html>
 
