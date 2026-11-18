@@ -922,14 +922,14 @@ const FMPStore = {
       }
     ];
 
-    // 3. Torneo Demo Completo en Curso: "Copa Colombia Master 2026"
+    // 3. Torneo Demo Completo en Curso: "Copa Colombia Master 2026", "Superliga Andina Nocturna 2026" y "Torneo Relámpago Costeño 2026"
     const seedTournament = this.createDemoTournamentSeed();
-    const seedOpenTournament = this.createOpenDemoTournamentSeed();
+    const seedAndina = this.createAndinaDemoTournamentSeed();
     const seedCaribe = this.createCaribeDemoTournamentSeed();
+    const seedOpenTournament = this.createOpenDemoTournamentSeed();
     const seedCafe = this.createCafeDemoTournamentSeed();
     const seedSantander = this.createSantanderDemoTournamentSeed();
-    const seedAndina = this.createAndinaDemoTournamentSeed();
-    this.db.tournaments = [seedTournament, seedOpenTournament, seedCaribe, seedCafe, seedSantander, seedAndina];
+    this.db.tournaments = [seedTournament, seedAndina, seedCaribe, seedOpenTournament, seedCafe, seedSantander];
 
     // 4. Sesión Activa Inicial (Cerrada por defecto hasta login formal)
     this.db.currentSession = null;
@@ -1179,27 +1179,27 @@ const FMPStore = {
 
   createCaribeDemoTournamentSeed() {
     return {
-      id: 'tournament_liga_caribe_2026',
+      id: 'tournament_relampago_costeno_2026',
       organizerId: 'usr-org-1',
       organizer_id: 'usr-org-1',
-      organizerName: 'Andrés Montoya',
-      name: 'Liga Élite del Caribe 2026',
-      description: 'Campeonato costero de alto rendimiento con sede en Barranquilla y Cartagena. Cupos limitados para clubes federados.',
+      organizerName: 'Víctor Pacheco',
+      name: 'Torneo Relámpago Costeño 2026',
+      description: 'Competición relámpago en Barranquilla y la Costa Caribe con clubes federados de alta intensidad.',
       sport: 'futbol11',
       format: 'league_single',
       category: 'Libre Masculino',
-      status: 'open_registration',
+      status: 'en_curso',
       startDate: '2026-11-15',
       endDate: '2027-01-20',
       regStartDate: '2026-10-15',
       regEndDate: '2026-12-25',
-      maxTeams: 10,
+      maxTeams: 4,
       playDays: ['viernes', 'sábado', 'domingo'],
       timeSlots: ['16:00', '18:00', '20:00'],
       venueIds: ['vn-baq-1', 'vn-ctg-1'],
       config: {
-        name: 'Liga Élite del Caribe 2026',
-        description: 'Campeonato costero de alto rendimiento con sede en Barranquilla y Cartagena.',
+        name: 'Torneo Relámpago Costeño 2026',
+        description: 'Competición relámpago en Barranquilla y la Costa Caribe con clubes federados.',
         sport: 'futbol11',
         format: 'league_single',
         matchDuration: 90,
@@ -1211,12 +1211,48 @@ const FMPStore = {
         timeSlots: ['16:00', '18:00', '20:00'],
         venues: ['vn-baq-1', 'vn-ctg-1']
       },
-      teams: [],
-      matches: [],
-      standings: [],
-      isGenerated: false,
+      teams: [
+        { id: 'tm_baq_1', name: 'Academia Barranquilla FC', city: 'Barranquilla', color: '#dc2626' },
+        { id: 'tm_baq_2', name: 'Real Cartagena Costeño', city: 'Cartagena', color: '#f59e0b' },
+        { id: 'tm_baq_3', name: 'Jaguares del Sinú', city: 'Montería', color: '#0284c7' },
+        { id: 'tm_baq_4', name: 'Unión Magdalena Pro', city: 'Santa Marta', color: '#1e3a8a' }
+      ],
+      matches: [
+        {
+          id: 'mt_costeno_1',
+          round: 1,
+          homeTeamId: 'tm_baq_1',
+          homeTeamName: 'Academia Barranquilla FC',
+          awayTeamId: 'tm_baq_2',
+          awayTeamName: 'Real Cartagena Costeño',
+          status: 'finished',
+          isFinished: true,
+          homeScore: 3,
+          awayScore: 2,
+          scoreHome: 3,
+          scoreAway: 2,
+          venue: 'Cancha Bombonera Barranquilla'
+        },
+        {
+          id: 'mt_costeno_2',
+          round: 1,
+          homeTeamId: 'tm_baq_3',
+          homeTeamName: 'Jaguares del Sinú',
+          awayTeamId: 'tm_baq_4',
+          awayTeamName: 'Unión Magdalena Pro',
+          status: 'finished',
+          isFinished: true,
+          homeScore: 1,
+          awayScore: 0,
+          scoreHome: 1,
+          scoreAway: 0,
+          venue: 'Cancha El Pibe Valderrama'
+        }
+      ],
+      isGenerated: true,
       isPublicMode: false,
-      filters: { round: 'all', team: 'all', group: 'all', status: 'all', search: '' }
+      filters: { round: 'all', team: 'all', group: 'all', status: 'all', search: '' },
+      updatedAt: new Date().toISOString()
     };
   },
 
@@ -2377,7 +2413,7 @@ function updateAuthUI() {
   const dropdownLinkAdmin = document.getElementById('dropdownLinkAdmin');
 
   // Limpiar clases de rol del body
-  document.body.classList.remove('role-admin', 'role-organizer', 'role-coach', 'role-fan', 'role-guest', 'not-logged-in', 'logged-in');
+  document.body.classList.remove('role-admin', 'role-organizer', 'role-coach', 'role-fan', 'role-guest', 'role-spectator', 'not-logged-in', 'logged-in');
 
   // Hidratar fecha dinámica de reporte oficial
   const printReportDate = document.getElementById('printReportDate');
@@ -2394,15 +2430,18 @@ function updateAuthUI() {
     userDropdownDemoSection.style.display = 'none';
   }
 
+  const dropdownLogoutDivider = document.getElementById('dropdownLogoutDivider');
+  const btnLogoutUser = document.getElementById('btnLogoutUser');
+
   const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const isLogged = Boolean(session && session.loggedIn && session.userId);
 
   // EVALUAR ESTADOS ESTRICTOS (Matriz de Visibilidad de 5 Estados)
   if (!isLogged) {
     // =========================================================================
-    // ESTADO 1A: SIN SESIÓN INICIADA (Visitante)
+    // ESTADO 1A: SIN SESIÓN INICIADA (Visitante Oficial / Modo Espectador)
     // =========================================================================
-    document.body.classList.add('role-guest', 'not-logged-in');
+    document.body.classList.add('role-guest', 'role-spectator', 'not-logged-in');
 
     // 1. Enlaces visibles en <nav> y móvil: ÚNICAMENTE Inicio, Torneos y Canchas
     if (headerNavCenter) headerNavCenter.style.display = '';
@@ -2429,12 +2468,24 @@ function updateAuthUI() {
     if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Acceso Clubes / Organizador';
     if (userAvatarBadge) { userAvatarBadge.style.display = 'none'; userAvatarBadge.textContent = ''; }
     if (authIconSvg) authIconSvg.style.display = 'inline-block';
-    if (userDropdownMenu) userDropdownMenu.style.display = 'none';
-    if (dropdownUserName) dropdownUserName.textContent = 'Visitante';
-    if (dropdownUserEmail) dropdownUserEmail.textContent = 'Sin sesión iniciada';
+    
+    // Rellenar dinámicamente los 3 spans por defecto para visitante
+    if (dropdownUserName) dropdownUserName.textContent = 'Visitante Oficial';
+    if (dropdownUserEmail) dropdownUserEmail.textContent = 'Modo Espectador (Solo Lectura)';
+    if (dropdownUserRolePill) dropdownUserRolePill.innerHTML = '<span class="user-role-pill role-spectator">🇨🇴 Red FCF Activa</span>';
+    if (dropdownLogoutDivider) dropdownLogoutDivider.style.display = 'none';
+    if (btnLogoutUser) btnLogoutUser.style.display = 'none';
 
     if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos';
     if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos';
+
+    // CTA de Hero en Modo Espectador
+    const btnHeroCreate = document.getElementById('btnHeroCreate') || document.querySelector('.btn-hero-create');
+    if (btnHeroCreate) {
+      btnHeroCreate.setAttribute('href', '#/torneos');
+      btnHeroCreate.setAttribute('title', 'Explorar torneos oficiales y competiciones en vivo');
+      btnHeroCreate.innerHTML = '<span class="explore-icon">⚽</span><span>EXPLORAR TORNEOS EN VIVO</span>';
+    }
 
     filterTournamentTabsByRole('guest');
     applyRoleGuards('guest');
@@ -2444,6 +2495,10 @@ function updateAuthUI() {
     document.body.classList.add('logged-in');
     const role = normalizeRole(session.role || 'fan');
     document.body.classList.add(`role-${role}`);
+    if (role === 'fan' || role === 'guest') {
+      document.body.classList.add('role-spectator');
+    }
+
     const userName = session.name || (role === 'admin' ? 'Carlos Mendoza' : (role === 'coach' ? 'Mario Yepes (DT)' : (role === 'organizer' ? 'Organizador' : 'Aficionado')));
     const initials = userName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
@@ -2463,7 +2518,23 @@ function updateAuthUI() {
         coach: '<span class="user-role-pill role-coach">📋 Director Técnico / Delegado</span>',
         fan: '<span class="user-role-pill role-fan">👀 Aficionado / Seguidor</span>'
       };
-      dropdownUserRolePill.innerHTML = roleBadges[role] || '<span class="user-role-pill">Usuario</span>';
+      dropdownUserRolePill.innerHTML = roleBadges[role] || '<span class="user-role-pill">🇨🇴 Red FCF Activa</span>';
+    }
+    if (dropdownLogoutDivider) dropdownLogoutDivider.style.display = 'block';
+    if (btnLogoutUser) btnLogoutUser.style.display = 'flex';
+
+    // CTA de Hero según rol
+    const btnHeroCreate = document.getElementById('btnHeroCreate') || document.querySelector('.btn-hero-create');
+    if (btnHeroCreate) {
+      if (role === 'admin' || role === 'organizer') {
+        btnHeroCreate.setAttribute('href', '#/crear');
+        btnHeroCreate.setAttribute('title', 'Iniciar un nuevo torneo');
+        btnHeroCreate.innerHTML = '<span class="plus-icon">+</span><span>CREAR MI TORNEO</span>';
+      } else {
+        btnHeroCreate.setAttribute('href', '#/torneos');
+        btnHeroCreate.setAttribute('title', 'Explorar torneos oficiales y competiciones en vivo');
+        btnHeroCreate.innerHTML = '<span class="explore-icon">⚽</span><span>EXPLORAR TORNEOS EN VIVO</span>';
+      }
     }
 
     if (role === 'fan') {
@@ -2854,31 +2925,27 @@ function initAuthControls() {
     });
   }
 
+function toggleUserDropdownMenu(e) {
+  if (e) e.stopPropagation();
+  const menu = document.getElementById('userDropdownMenu');
+  if (!menu) return;
+  const isVis = menu.style.display === 'block';
+  menu.style.display = isVis ? 'none' : 'block';
+}
+window.toggleUserDropdownMenu = toggleUserDropdownMenu;
+
   // Clic en Header Auth / Avatar
   if (btnAuthHeader) {
     btnAuthHeader.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (userSession && userSession.loggedIn) {
-        if (userDropdownMenu) {
-          const isVis = userDropdownMenu.style.display === 'block';
-          userDropdownMenu.style.display = isVis ? 'none' : 'block';
-        }
-      } else {
-        openAuthModal('auth-login-pane');
-      }
+      toggleUserDropdownMenu(e);
     });
   }
 
   if (btnMobileAuth) {
-    btnMobileAuth.addEventListener('click', () => {
+    btnMobileAuth.addEventListener('click', (e) => {
       if (dom.mobileNavDrawer) dom.mobileNavDrawer.style.display = 'none';
-      if (userSession && userSession.loggedIn) {
-        if (userDropdownMenu) {
-          userDropdownMenu.style.display = userDropdownMenu.style.display === 'block' ? 'none' : 'block';
-        }
-      } else {
-        openAuthModal('auth-login-pane');
-      }
+      toggleUserDropdownMenu(e);
     });
   }
 
@@ -3543,12 +3610,272 @@ function saveState() {
 }
 
 /**
+ * Precarga el Escenario Colombia oficial por defecto:
+ * 1. Superliga Andina Nocturna 2026 (4 clubes: Bogotá FC Master, América Master, Santa Fe Senior, Cali Deportivo)
+ * 2. Copa Colombia Master 2026 en Bogotá D.C. (8 clubes: Millonarios FC, Nacional, América, Junior, Santa Fe, Cali, Medellín, Once Caldas)
+ * 3. Torneo Relámpago Costeño 2026 en Barranquilla (4 clubes: Academia Barranquilla, Real Cartagena, Jaguares, Unión Magdalena)
+ * Total: 16 clubes reales con calendarios, marcadores y clasificaciones desde el primer arranque.
+ */
+function loadDefaultColombiaSeed() {
+  const t1 = {
+    id: 'tournament_superliga_andina_2026',
+    organizerId: 'usr-org-1',
+    organizer_id: 'usr-org-1',
+    organizerName: 'Andrés Montoya',
+    name: 'Superliga Andina Nocturna 2026',
+    description: 'Fútbol nocturno en grama sintética y natural con iluminación LED profesional en Bogotá y Cali.',
+    sport: 'f11',
+    format: 'league_single',
+    category: 'Libre Masculino',
+    status: 'en_curso',
+    startDate: '2026-09-01',
+    endDate: '2026-12-15',
+    maxTeams: 4,
+    config: {
+      name: 'Superliga Andina Nocturna 2026',
+      description: 'Fútbol nocturno en grama sintética y natural con iluminación LED profesional.',
+      sport: 'f11',
+      format: 'league_single',
+      matchDuration: 90
+    },
+    teams: [
+      { id: 'tm-bog-01', name: 'Bogotá FC Master', city: 'Bogotá', color: '#10b981' },
+      { id: 'tm-cali-01', name: 'América Master', city: 'Cali', color: '#ef4444' },
+      { id: 'tm-bog-02', name: 'Santa Fe Senior', city: 'Bogotá', color: '#dc2626' },
+      { id: 'tm-cali-02', name: 'Cali Deportivo', city: 'Cali', color: '#059669' }
+    ],
+    matches: [
+      {
+        id: 'mt-andina-1',
+        round: 1,
+        teamHomeId: 'tm-bog-01',
+        teamHomeName: 'Bogotá FC Master',
+        homeTeamId: 'tm-bog-01',
+        homeTeamName: 'Bogotá FC Master',
+        teamAwayId: 'tm-cali-02',
+        teamAwayName: 'Cali Deportivo',
+        awayTeamId: 'tm-cali-02',
+        awayTeamName: 'Cali Deportivo',
+        venue: 'Complejo Salitre Alto Rendimiento',
+        date: '2026-10-31',
+        time: '18:00',
+        status: 'finished',
+        isFinished: true,
+        scoreHome: 2,
+        scoreAway: 1,
+        homeScore: 2,
+        awayScore: 1
+      },
+      {
+        id: 'mt-andina-2',
+        round: 1,
+        teamHomeId: 'tm-cali-01',
+        teamHomeName: 'América Master',
+        homeTeamId: 'tm-cali-01',
+        homeTeamName: 'América Master',
+        teamAwayId: 'tm-bog-02',
+        teamAwayName: 'Santa Fe Senior',
+        awayTeamId: 'tm-bog-02',
+        awayTeamName: 'Santa Fe Senior',
+        venue: 'Sede Campestre La Zarcita',
+        date: '2026-10-31',
+        time: '20:00',
+        status: 'finished',
+        isFinished: true,
+        scoreHome: 1,
+        scoreAway: 1,
+        homeScore: 1,
+        awayScore: 1
+      }
+    ],
+    isGenerated: true,
+    updatedAt: new Date().toISOString()
+  };
+
+  const t2 = {
+    id: 'tournament_cc_master_2026',
+    organizerId: 'usr-org-1',
+    organizer_id: 'usr-org-1',
+    organizerName: 'Carlos Mendoza',
+    name: 'Copa Colombia Master 2026',
+    description: 'Torneo oficial de fútbol colombiano en Bogotá D.C. con 8 clubes profesionales, fixture programado y marcadores en vivo.',
+    sport: 'f11',
+    format: 'league_single',
+    category: 'Libre / Mayores',
+    status: 'en_curso',
+    config: {
+      name: 'Copa Colombia Master 2026',
+      description: 'Torneo oficial de fútbol colombiano en Bogotá D.C. con 8 clubes en formato Liga Todos contra Todos.',
+      sport: 'f11',
+      format: 'league_single',
+      matchDuration: 90
+    },
+    teams: [
+      { id: 'team_col_1', name: 'Millonarios FC', city: 'Bogotá', color: '#1e3a8a' },
+      { id: 'team_col_2', name: 'Atlético Nacional', city: 'Medellín', color: '#047857' },
+      { id: 'team_col_3', name: 'América de Cali', city: 'Cali', color: '#dc2626' },
+      { id: 'team_col_4', name: 'Junior de Barranquilla', city: 'Barranquilla', color: '#ef4444' },
+      { id: 'team_col_5', name: 'Independiente Santa Fe', city: 'Bogotá', color: '#b91c1c' },
+      { id: 'team_col_6', name: 'Deportivo Cali', city: 'Cali', color: '#15803d' },
+      { id: 'team_col_7', name: 'Independiente Medellín', city: 'Medellín', color: '#991b1b' },
+      { id: 'team_col_8', name: 'Once Caldas', city: 'Manizales', color: '#f59e0b' }
+    ],
+    matches: [
+      {
+        id: 'match_cc_1',
+        round: 1,
+        homeTeamId: 'team_col_1',
+        homeTeamName: 'Millonarios FC',
+        awayTeamId: 'team_col_5',
+        awayTeamName: 'Independiente Santa Fe',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 2,
+        awayScore: 1,
+        scoreHome: 2,
+        scoreAway: 1,
+        venue: 'Estadio El Campín (Bogotá)'
+      },
+      {
+        id: 'match_cc_2',
+        round: 1,
+        homeTeamId: 'team_col_2',
+        homeTeamName: 'Atlético Nacional',
+        awayTeamId: 'team_col_7',
+        awayTeamName: 'Independiente Medellín',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 3,
+        awayScore: 0,
+        scoreHome: 3,
+        scoreAway: 0,
+        venue: 'Estadio Atanasio Girardot (Medellín)'
+      },
+      {
+        id: 'match_cc_3',
+        round: 1,
+        homeTeamId: 'team_col_3',
+        homeTeamName: 'América de Cali',
+        awayTeamId: 'team_col_6',
+        awayTeamName: 'Deportivo Cali',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 1,
+        awayScore: 1,
+        scoreHome: 1,
+        scoreAway: 1,
+        venue: 'Estadio Pascual Guerrero (Cali)'
+      },
+      {
+        id: 'match_cc_4',
+        round: 1,
+        homeTeamId: 'team_col_4',
+        homeTeamName: 'Junior de Barranquilla',
+        awayTeamId: 'team_col_8',
+        awayTeamName: 'Once Caldas',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 2,
+        awayScore: 0,
+        scoreHome: 2,
+        scoreAway: 0,
+        venue: 'Estadio Metropolitano (Barranquilla)'
+      }
+    ],
+    isGenerated: true,
+    updatedAt: new Date().toISOString()
+  };
+
+  const t3 = {
+    id: 'tournament_relampago_costeno_2026',
+    organizerId: 'usr-org-1',
+    organizer_id: 'usr-org-1',
+    organizerName: 'Víctor Pacheco',
+    name: 'Torneo Relámpago Costeño 2026',
+    description: 'Competición relámpago en Barranquilla y la Costa Caribe con clubes federados de alta intensidad.',
+    sport: 'f11',
+    format: 'league_single',
+    category: 'Libre Masculino',
+    status: 'en_curso',
+    config: {
+      name: 'Torneo Relámpago Costeño 2026',
+      description: 'Competición relámpago en Barranquilla y la Costa Caribe con clubes federados.',
+      sport: 'f11',
+      format: 'league_single',
+      matchDuration: 90
+    },
+    teams: [
+      { id: 'tm_baq_1', name: 'Academia Barranquilla FC', city: 'Barranquilla', color: '#dc2626' },
+      { id: 'tm_baq_2', name: 'Real Cartagena Costeño', city: 'Cartagena', color: '#f59e0b' },
+      { id: 'tm_baq_3', name: 'Jaguares del Sinú', city: 'Montería', color: '#0284c7' },
+      { id: 'tm_baq_4', name: 'Unión Magdalena Pro', city: 'Santa Marta', color: '#1e3a8a' }
+    ],
+    matches: [
+      {
+        id: 'mt_costeno_1',
+        round: 1,
+        homeTeamId: 'tm_baq_1',
+        homeTeamName: 'Academia Barranquilla FC',
+        awayTeamId: 'tm_baq_2',
+        awayTeamName: 'Real Cartagena Costeño',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 3,
+        awayScore: 2,
+        scoreHome: 3,
+        scoreAway: 2,
+        venue: 'Cancha Bombonera Barranquilla'
+      },
+      {
+        id: 'mt_costeno_2',
+        round: 1,
+        homeTeamId: 'tm_baq_3',
+        homeTeamName: 'Jaguares del Sinú',
+        awayTeamId: 'tm_baq_4',
+        awayTeamName: 'Unión Magdalena Pro',
+        status: 'finished',
+        isFinished: true,
+        homeScore: 1,
+        awayScore: 0,
+        scoreHome: 1,
+        scoreAway: 0,
+        venue: 'Cancha El Pibe Valderrama'
+      }
+    ],
+    isGenerated: true,
+    updatedAt: new Date().toISOString()
+  };
+
+  const seedList = [t1, t2, t3];
+  if (typeof FMPStore !== 'undefined' && FMPStore.db) {
+    FMPStore.db.tournaments = seedList;
+    FMPStore.save(false);
+  }
+  savedTournaments = seedList;
+  if (!activeTournamentId) {
+    activeTournamentId = t2.id;
+    tournamentState = JSON.parse(JSON.stringify(t2));
+  }
+  try {
+    localStorage.setItem(STORAGE_KEY_TOURNAMENTS, JSON.stringify(seedList));
+    localStorage.setItem(STORAGE_KEY_ACTIVE_ID, activeTournamentId);
+  } catch(e){}
+  return seedList;
+}
+window.loadDefaultColombiaSeed = loadDefaultColombiaSeed;
+
+/**
  * Carga todos los torneos guardados desde FMPStore (FOOTBALL_MASTER_PRO_DB_V1)
  */
 function loadState() {
   try {
     FMPStore.init();
     savedTournaments = FMPStore.getTournaments();
+
+    // Precargar Escenario Colombia si no existen torneos o están vacíos
+    if (!savedTournaments || savedTournaments.length === 0 || !savedTournaments.some(t => Array.isArray(t.teams) && t.teams.length > 0)) {
+      savedTournaments = loadDefaultColombiaSeed();
+    }
 
     // Recuperar torneo activo de la sesión persistente
     const sessionActiveId = FMPStore.getSession()?.activeTournamentId;
@@ -3583,8 +3910,8 @@ function loadState() {
     }
   } catch (error) {
     console.error('Error al cargar torneos desde FMPStore:', error);
-    savedTournaments = [];
-    activeTournamentId = null;
+    savedTournaments = loadDefaultColombiaSeed();
+    activeTournamentId = savedTournaments[0]?.id || null;
   }
 }
 
@@ -4090,13 +4417,20 @@ function navigateToView(targetRoute, updateHash = true) {
   });
   document.body.classList.add('route-' + routeId);
 
-  // Control estricto de visibilidad del Header según ruta:
-  // En admin, ocultar header global para que la Pill Sidebar sea la única barra de control limpia
+  // Control estricto de visibilidad del Header y Aside según ruta:
+  // En admin, ocultar header global y aside para que la Pill Sidebar y el Dashboard aprovechen el 100% de la pantalla
+  const isInAdmin = (routeId === 'admin') || (window.location.hash && window.location.hash.startsWith('#/admin'));
+  document.body.classList.toggle('in-admin-dashboard', isInAdmin);
+  document.body.classList.toggle('route-admin', isInAdmin);
+
   const mainHeaderEl = document.getElementById('mainHeader');
-  if (routeId === 'admin') {
+  const asideEl = document.querySelector('aside.public-mode-banner, aside');
+  if (isInAdmin) {
     if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
+    if (asideEl) asideEl.style.setProperty('display', 'none', 'important');
   } else {
     if (mainHeaderEl) mainHeaderEl.style.removeProperty('display');
+    if (asideEl) asideEl.style.removeProperty('display');
   }
 
   // En Inicio, Mis Torneos, Crear Torneo, Admin y Club se muestra el Header general
@@ -4242,6 +4576,19 @@ function navigateToView(targetRoute, updateHash = true) {
  * Escucha cambios en el hash de la URL para permitir navegación con botones atrás/adelante
  */
 function handleHashChange() {
+  const hash = window.location.hash || '';
+  const isInAdmin = hash.startsWith('#/admin');
+  document.body.classList.toggle('in-admin-dashboard', isInAdmin);
+  document.body.classList.toggle('route-admin', isInAdmin);
+  const mainHeaderEl = document.getElementById('mainHeader');
+  const asideEl = document.querySelector('aside.public-mode-banner, aside');
+  if (isInAdmin) {
+    if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
+    if (asideEl) asideEl.style.setProperty('display', 'none', 'important');
+  } else {
+    if (mainHeaderEl) mainHeaderEl.style.removeProperty('display');
+    if (asideEl) asideEl.style.removeProperty('display');
+  }
   const route = getNormalizedRoute();
   navigateToView(route, false);
 }
@@ -4447,19 +4794,31 @@ function startNewTournamentDraft() {
  */
 function renderHomeView() {
   const d = (typeof dom !== 'undefined' && dom) ? dom : (window.dom || {});
-  const rawList = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0)
+  let rawList = (typeof FMPStore !== 'undefined' && Array.isArray(FMPStore.getTournaments()) && FMPStore.getTournaments().length > 0)
     ? FMPStore.getTournaments()
     : ((typeof savedTournaments !== 'undefined' && Array.isArray(savedTournaments) && savedTournaments.length > 0)
       ? savedTournaments
-      : ((typeof DEMO_TOURNAMENTS_SEED !== 'undefined' && Array.isArray(DEMO_TOURNAMENTS_SEED)) ? DEMO_TOURNAMENTS_SEED : []));
+      : []);
+
+  // Precargar Escenario Colombia si no hay torneos o están vacíos
+  if (!rawList || rawList.length === 0 || !rawList.some(t => Array.isArray(t.teams) && t.teams.length > 0)) {
+    if (typeof loadDefaultColombiaSeed === 'function') {
+      rawList = loadDefaultColombiaSeed();
+    }
+  }
 
   // Filtrar estrictamente cualquier torneo vacío de relleno o "Torneo Sin Título"
-  const list = rawList.filter(t => {
+  let list = rawList.filter(t => {
     const name = (t.config?.name || t.name || '').trim();
     const isFiller = !name || name.toLowerCase() === 'torneo sin título' || name.toLowerCase() === 'sin título';
     const hasData = (Array.isArray(t.teams) && t.teams.length > 0) || (Array.isArray(t.matches) && t.matches.length > 0);
     return !isFiller && hasData;
   });
+
+  if (list.length === 0 && typeof loadDefaultColombiaSeed === 'function') {
+    rawList = loadDefaultColombiaSeed();
+    list = rawList;
+  }
 
   const totalTournaments = list.length;
 
@@ -14029,7 +14388,23 @@ function initSlideTabsNav() {
 
 function initApp() {
   window._fmpIsBooting = true;
+
+  // Detección inicial estricta de ruta admin para ocultar header antes de pintar
+  if (window.location.hash && window.location.hash.startsWith('#/admin')) {
+    document.body.classList.add('in-admin-dashboard', 'route-admin');
+    const mainHeaderEl = document.getElementById('mainHeader');
+    if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
+  }
+
   loadState();
+
+  // Precargar Escenario Colombia si no hay torneos o están vacíos
+  const existingTourneys = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : savedTournaments;
+  if (!existingTourneys || existingTourneys.length === 0 || !existingTourneys.some(t => Array.isArray(t.teams) && t.teams.length > 0)) {
+    if (typeof loadDefaultColombiaSeed === 'function') {
+      loadDefaultColombiaSeed();
+    }
+  }
 
   // Detección inicial de Modo Público por parámetro URL (?view=public)
   try {

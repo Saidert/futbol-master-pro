@@ -420,24 +420,36 @@
 
         <!-- Botón Iniciar Sesión / Cuenta de Usuario -->
         <div class="user-auth-wrap" id="userAuthWrap">
-          <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Iniciar Sesión o ver perfil" onclick="if(window.openAuthModal) openAuthModal('auth-login-pane');">
+          <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Perfil y roles de usuario" onclick="toggleUserDropdownMenu(event)">
             <span class="user-avatar-badge" id="userAvatarBadge" style="display: none;">👤</span>
             <svg class="auth-icon-svg" id="authIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span class="auth-btn-label" id="authBtnLabel">Iniciar Sesión</span>
+            <span class="auth-btn-label" id="authBtnLabel">Acceso Clubes / Organizador</span>
           </button>
 
-          <!-- Menú Desplegable del Perfil: Nombre, Correo, Rol Fijo y Cerrar Sesión -->
+          <!-- Menú Desplegable del Perfil: Nombre, Correo, Rol Fijo y Accesos Rápidos -->
           <div class="user-dropdown-menu" id="userDropdownMenu" style="display: none;">
             <div class="user-dropdown-header">
               <div class="user-avatar-badge" id="dropdownUserAvatarBadge">👤</div>
               <div class="user-info-text">
-                <span class="user-name-label" id="userNameLabel"></span>
-                <span class="user-role-label" id="userRoleLabel"></span>
-                <span class="user-role-pill" id="userRolePill"></span>
+                <span class="user-name-label" id="userNameLabel">Visitante Oficial</span>
+                <span class="user-role-label" id="userRoleLabel">Modo Espectador (Solo Lectura)</span>
+                <span class="user-role-pill" id="userRolePill">🇨🇴 Red FCF Activa</span>
               </div>
             </div>
             <div class="user-dropdown-divider"></div>
-            <button type="button" class="user-menu-item logout" id="btnLogoutUser" onclick="handleLogout(event)">
+            <div class="user-quick-roles" id="userDropdownQuickRoles">
+              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('organizer'); navigateToView('admin'); toggleUserDropdownMenu();">
+                <span>🔑 Iniciar Sesión como Organizador</span>
+              </button>
+              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('coach'); navigateToView('club'); toggleUserDropdownMenu();">
+                <span>🛡️ Acceso Delegado de Club</span>
+              </button>
+              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('fan'); navigateToView('torneos'); toggleUserDropdownMenu();">
+                <span>👁️ Vista Espectador</span>
+              </button>
+            </div>
+            <div class="user-dropdown-divider" id="dropdownLogoutDivider" style="display: none;"></div>
+            <button type="button" class="user-menu-item logout" id="btnLogoutUser" onclick="handleLogout(event)" style="display: none;">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
               <span>Cerrar Sesión</span>
             </button>
@@ -627,7 +639,7 @@
             </p>
 
             <div class="hero-actions-row">
-              <a href="#/crear" class="primary-btn btn-hero-create" title="Iniciar un nuevo torneo">
+              <a href="#/crear" class="primary-btn btn-hero-create" id="btnHeroCreate" title="Iniciar un nuevo torneo">
                 <span class="plus-icon">+</span>
                 <span>CREAR MI TORNEO</span>
               </a>

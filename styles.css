@@ -20285,19 +20285,48 @@ section[data-admin-section="auditoria"].active {
    ============================================================================= */
 
 /* 1. Ocultar header global en #/admin para máxima amplitud */
+@media (min-width: 769px) {
+  .mobile-nav-drawer {
+    display: none !important;
+  }
+}
+
+body.in-admin-dashboard > header,
+body.in-admin-dashboard > aside,
+body.in-admin-dashboard #mainHeader,
+body.route-admin > header,
+body.route-admin > aside,
 body.route-admin #mainHeader {
   display: none !important;
 }
+
+body.in-admin-dashboard main,
+body.route-admin main,
+body.in-admin-dashboard .main-content,
 body.route-admin .main-content {
-  padding-top: 0 !important;
+  padding-top: 18px !important;
   margin-top: 0 !important;
 }
 
 /* 2. Modo Espectador Estricto */
+body.role-spectator a[href="#/crear"],
+body.role-spectator a[href="#/admin"],
+body.role-spectator [title*="Crear"]:not(.btn-hero-create),
+body.role-spectator [title*="Iniciar un nuevo torneo"]:not(.btn-hero-create),
+body.role-spectator .btn-create-header,
+body.role-spectator #btnHeaderCrear,
+body.role-spectator #btnDropdownCreateNew,
+body.role-spectator #btnAdminQuickTournament,
+body.role-spectator .btn-start-tournament,
+body.role-spectator .btn-open-t,
+body.role-spectator .btn-delete-t,
+body.public-mode-active a[href="#/crear"],
+body.public-mode-active a[href="#/admin"],
+body.public-mode-active [title*="Crear"]:not(.btn-hero-create),
+body.public-mode-active [title*="Iniciar un nuevo torneo"]:not(.btn-hero-create),
 body.public-mode-active .btn-create-header,
 body.public-mode-active #btnHeaderCrear,
 body.public-mode-active #btnDropdownCreateNew,
-body.public-mode-active .btn-hero-create,
 body.public-mode-active #btnAdminQuickTournament,
 body.public-mode-active .btn-start-tournament,
 body.public-mode-active .btn-action-manage.btn-open-t,
@@ -20545,4 +20574,93 @@ body.public-mode-active .btn-delete-t {
 .checkbox-reason-label input {
   margin-top: 3px;
   accent-color: #ef4444;
+}
+
+/* =============================================================================
+   5. EVITAR TEXTOS CORTADOS EN EL BENTO GRID ("Atlético Naciona" y "CALENDARIO T")
+   ============================================================================= */
+
+/* Evitar que los nombres de clubes se corten en Clubes Inscritos */
+.club-mini-card,
+[data-admin-section="overview"] .club-card-item,
+.v22-club-item {
+  padding: 14px 16px !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.club-mini-card h4,
+.club-mini-card .club-name,
+[data-admin-section="overview"] .club-card-item h4,
+.v22-club-name {
+  font-size: 14.5px !important;
+  line-height: 1.25 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-break: break-word !important;
+}
+
+/* Evitar que "CALENDARIO TOTAL" se corte en Progreso de Partidos */
+.match-progress-card,
+[data-admin-section="overview"] .progress-bento-card,
+.v22-progress-card {
+  padding: 22px 24px !important;
+  overflow: visible !important;
+}
+
+.match-stats-box,
+.progress-stats-pills,
+.v22-big-stat-duo {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(115px, 1fr)) !important;
+  gap: 12px !important;
+  padding: 12px 14px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.match-stats-box span,
+.match-stats-box small,
+.v22-big-stat-duo .stat-mini-lbl,
+.v22-big-stat-duo span {
+  font-size: 10.5px !important;
+  letter-spacing: 0.3px !important;
+  white-space: normal !important;
+  line-height: 1.2 !important;
+  display: block !important;
+}
+
+/* =============================================================================
+   ESTILOS ADICIONALES: MENÚ DESPLEGABLE RÁPIDO DE ROLES
+   ============================================================================= */
+.user-quick-roles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px 0;
+}
+
+.user-quick-roles .user-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.user-quick-roles .user-menu-item:hover {
+  background: rgba(30, 193, 203, 0.15);
+  color: #a5f3fc;
 }
