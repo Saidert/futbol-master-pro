@@ -2421,12 +2421,12 @@ function updateAuthUI() {
     if (dropdownLinkCoach) dropdownLinkCoach.style.display = 'none';
     if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = 'none';
 
-    // 3. Zona derecha: Sin notificaciones y botón "Iniciar Sesión" limpio
+    // 3. Zona derecha: Sin notificaciones y botón "Acceso Clubes / Organizador"
     if (notificationsWrap) notificationsWrap.style.display = 'none';
     if (notificationsBadge) notificationsBadge.style.display = 'none';
     if (btnMobileLogout) btnMobileLogout.style.display = 'none';
-    if (authBtnText) authBtnText.textContent = 'Iniciar Sesión';
-    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Iniciar Sesión';
+    if (authBtnText) authBtnText.textContent = 'Acceso Clubes / Organizador';
+    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Acceso Clubes / Organizador';
     if (userAvatarBadge) { userAvatarBadge.style.display = 'none'; userAvatarBadge.textContent = ''; }
     if (authIconSvg) authIconSvg.style.display = 'inline-block';
     if (userDropdownMenu) userDropdownMenu.style.display = 'none';
@@ -4091,6 +4091,14 @@ function navigateToView(targetRoute, updateHash = true) {
   document.body.classList.add('route-' + routeId);
 
   // Control estricto de visibilidad del Header según ruta:
+  // En admin, ocultar header global para que la Pill Sidebar sea la única barra de control limpia
+  const mainHeaderEl = document.getElementById('mainHeader');
+  if (routeId === 'admin') {
+    if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
+  } else {
+    if (mainHeaderEl) mainHeaderEl.style.removeProperty('display');
+  }
+
   // En Inicio, Mis Torneos, Crear Torneo, Admin y Club se muestra el Header general
   // En Equipos, Calendario, Clasificación, Cuadro, Herramientas y TV se activa el MODO DASHBOARD
   if (['home', 'torneos', 'canchas', 'crear', 'admin', 'club'].includes(routeId)) {
@@ -4742,14 +4750,14 @@ function renderTournamentsListView() {
         </button>
       `;
     } else if (role === 'coach') {
-      const isOpen = (t.status === 'open_registration');
+      const isFinished = (t.status === 'finished');
       actionButtonsHtml = `
-        ${isOpen ? `
-        <button type="button" class="btn-action-manage btn-apply-coach-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 160px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-          <span>📝 Inscribir mi Equipo</span>
+        ${!isFinished ? `
+        <button type="button" class="btn-action-manage btn-apply-coach-t" onclick="openTournamentApplicationModal('${escapeHtml(t.id)}')" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 170px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>📋 Solicitar Inscripción al Torneo</span>
         </button>` : ''}
-        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 130px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399;">
+        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 120px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399;">
           <span>👁️ Ver Torneo</span>
         </button>
         <button type="button" class="btn-chip btn-tv-t" data-id="${escapeHtml(t.id)}" title="Ver en Modo TV" style="padding: 0.5rem 0.75rem; font-size: 0.8rem;">
@@ -4757,8 +4765,14 @@ function renderTournamentsListView() {
         </button>
       `;
     } else {
+      const isFinished = (t.status === 'finished');
       actionButtonsHtml = `
-        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 150px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5); color: #34d399;">
+        ${!isFinished ? `
+        <button type="button" class="btn-action-manage btn-apply-coach-t" onclick="openTournamentApplicationModal('${escapeHtml(t.id)}')" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 170px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; font-weight: 700; border: none; box-shadow: 0 4px 14px rgba(16,185,129,0.4);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <span>📋 Solicitar Inscripción al Torneo</span>
+        </button>` : ''}
+        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 140px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5); color: #34d399;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
           <span>Ver Calendario & Tabla</span>
         </button>
@@ -5634,6 +5648,13 @@ function refreshAdminDashboardData(btnEl) {
     if (typeof animateAllBars === 'function') animateAllBars(targetSection);
   }
 
+  if (typeof renderAdminPendingApplications === 'function') {
+    renderAdminPendingApplications();
+  }
+
+  // Re-ejecutar cinemática de patada hacia la barra con force = true
+  runDashboardEntranceSequence(true);
+
   if (typeof showToast === 'function') {
     showToast('Datos del Dashboard actualizados ⚽', 'success', 2200);
   }
@@ -5873,7 +5894,7 @@ function runSplashKickToSidebar() {
   }, 1280);
 }
 
-function runDashboardEntranceSequence() {
+function runDashboardEntranceSequence(force = false) {
   if (isDashboardEntranceRunning) return;
 
   const overlay = document.getElementById('dashboardSplashOverlay') || document.querySelector('.splash-screen-overlay, #admin-splash-screen, .dashboard-splash-overlay');
@@ -5881,7 +5902,27 @@ function runDashboardEntranceSequence() {
   const container = document.querySelector('.admin-panel-container');
 
   if (!overlay) return;
+
+  // Si no es forzado y ya se reprodujo en esta sesión, saltar animación cinematográfica
+  const hasPlayed = sessionStorage.getItem('fmp_splash_played');
+  if (!force && hasPlayed === 'true') {
+    overlay.classList.add('is-hidden');
+    overlay.style.setProperty('display', 'none', 'important');
+    if (splashContent) splashContent.classList.add('text-fade-out');
+    if (container) container.classList.add('entrance-expanding');
+    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn');
+    if (sidebarBallBtn) sidebarBallBtn.style.opacity = '1';
+
+    const activePane = document.querySelector('.admin-subtab-pane.active') || document.getElementById('admin-tab-overview');
+    if (activePane) {
+      if (typeof animateAllCountUps === 'function') animateAllCountUps(activePane, 800);
+      if (typeof animateAllBars === 'function') animateAllBars(activePane);
+    }
+    return;
+  }
+
   isDashboardEntranceRunning = true;
+  sessionStorage.setItem('fmp_splash_played', 'true');
 
   // 1. Reset instantáneo al tope absoluto de la ventana (0, 0)
   try {
@@ -5923,6 +5964,8 @@ function runDashboardEntranceSequence() {
   // 4. A los 1280ms: Al aterrizar el balón, activar expansión del dashboard y shimmer
   setTimeout(() => {
     overlay.classList.add('is-hidden');
+    overlay.style.setProperty('display', 'none', 'important');
+    isDashboardEntranceRunning = false;
     if (container) container.classList.add('entrance-expanding');
 
     // Fase 2: Shimmer Skeleton en tarjetas (0.7s)
@@ -6336,6 +6379,10 @@ function renderAdminView() {
   
   setActiveAdminSection(sectionKey);
   renderAdminStats();
+
+  if (typeof renderAdminPendingApplications === 'function') {
+    renderAdminPendingApplications();
+  }
 
   // Coreografía exacta de entrada V22 (00:00.0s a 00:02.5s)
   runDashboardEntranceSequence();
@@ -7078,6 +7125,9 @@ function renderCoachView() {
   }
 
   // FASE 2: Resumen del Equipo, Módulo Disciplinario y Carnets Digitales
+  if (typeof renderCoachRegistrationStatusCard === 'function') {
+    renderCoachRegistrationStatusCard();
+  }
   renderCoachDashboardSummary();
   renderCoachDisciplinarySection();
   renderCoachRosterTable();
@@ -15312,7 +15362,18 @@ window.openOfficialPdfViewer = function(regId) {
  * Carga el escenario completo de demostración para Colombia
  * Torneo: Copa Colombia Metropolitana 2026 con 2 solicitudes realistas (1 en pendiente inicial, 1 en revisión final con jugadores y menor con acudiente legal)
  */
-function loadCompleteColombiaScenario() {
+function loadCompleteColombiaScenario(skipConfirm = false) {
+  if (!skipConfirm) {
+    if (typeof showConfirmActionModal === 'function') {
+      showConfirmActionModal({
+        title: '🇨🇴 ¿Cargar Escenario Colombia?',
+        message: 'Se cargará el torneo oficial de demostración "Copa Colombia Metropolitana 2026" con clubes de Barranquilla, Bogotá y Medellín, y solicitudes oficiales para auditar. ¿Deseas continuar?',
+        onConfirm: () => loadCompleteColombiaScenario(true)
+      });
+      return;
+    }
+  }
+
   const scenarioTourneyId = 'tourney_colombia_' + Date.now();
   const scenarioTourney = {
     id: scenarioTourneyId,
@@ -15354,11 +15415,16 @@ function loadCompleteColombiaScenario() {
       primaryColor: '#1e3a8a',
       shield: '',
       dtName: 'Carlos Mario Estrada',
+      coachName: 'Carlos Mario Estrada',
+      coachEmail: 'dt.millonarios@fmp.co',
+      email: 'dt.millonarios@fmp.co',
       dtDocType: 'CC',
       dtDocNumber: '79845123',
       dtPhone: '+57 311 456 7890',
-      dtEmail: 'dt.millonarios@fmp.co',
-      status: 'pendiente_inicial',
+      status: 'en_revision',
+      statusText: 'En Revisión de Mesa',
+      paymentStatus: 'under_review',
+      paymentFee: 350000,
       submittedAt: new Date(Date.now() - 3600000 * 2).toISOString(),
       roster: [],
       pdfAttachment: null,
@@ -15373,11 +15439,16 @@ function loadCompleteColombiaScenario() {
       primaryColor: '#dc2626',
       shield: '',
       dtName: 'Víctor Danilo Pacheco',
+      coachName: 'Víctor Danilo Pacheco',
+      coachEmail: 'dt.barranquilla@fmp.co',
+      email: 'dt.barranquilla@fmp.co',
       dtDocType: 'CC',
       dtDocNumber: '72189456',
       dtPhone: '+57 300 987 6543',
-      dtEmail: 'dt.pacheco@academiabaq.com',
-      status: 'revision_final',
+      status: 'en_revision',
+      statusText: 'En Revisión de Mesa',
+      paymentStatus: 'under_review',
+      paymentFee: 350000,
       submittedAt: new Date(Date.now() - 3600000 * 24).toISOString(),
       submittedDocsAt: new Date(Date.now() - 3600000 * 4).toISOString(),
       playersCount: 8,
@@ -15406,12 +15477,15 @@ function loadCompleteColombiaScenario() {
   logAudit('ESCENARIO_COLOMBIA_CARGADO', 'Cargó el escenario completo de prueba de Colombia (Copa Metropolitana 2026 con 2 clubes en proceso)');
   addNotification(
     'organizer',
-    'Escenario Colombia cargado con éxito: Tienes 1 solicitud pendiente inicial y 1 solicitud en revisión final lista para inspeccionar y habilitar.',
+    'Escenario Colombia cargado con éxito: Tienes 2 solicitudes en proceso listas para inspeccionar en la bandeja del organizador.',
     'info'
   );
 
-  navigateToView('solicitudes');
-  showToast('ðŸ‡¨ðŸ‡´ Escenario de Colombia cargado con éxito. Visualizando Solicitudes & Docs.', 'success', 4500);
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+
+  navigateToView('admin');
+  showToast('🇨🇴 Escenario de Colombia cargado con éxito. Visualizando Bandeja de Solicitudes.', 'success', 4500);
 }
 
 
@@ -15792,4 +15866,902 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', () => handleAdminSubtabSwitch(btn));
     }
   });
+
+  // Inicializar bandeja de solicitudes en admin y panel coach si ya están en DOM
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
 });
+
+/* ==========================================================================
+   SISTEMA DE SOLICITUD DE INSCRIPCIÓN CON PDF, VALIDACIÓN ECONÓMICA Y DICTAMEN
+   ========================================================================== */
+
+let currentConfirmActionCallback = null;
+
+function showConfirmActionModal({ title, message, onConfirm }) {
+  const modal = document.getElementById('modalConfirmAction');
+  const titleEl = document.getElementById('confirmActionTitle');
+  const msgEl = document.getElementById('confirmActionMessage');
+  const okBtn = document.getElementById('btnConfirmActionOk');
+
+  if (!modal) {
+    if (confirm(message || '¿Confirmar acción?')) {
+      if (typeof onConfirm === 'function') onConfirm();
+    }
+    return;
+  }
+
+  if (titleEl && title) titleEl.textContent = title;
+  if (msgEl && message) msgEl.textContent = message;
+  currentConfirmActionCallback = onConfirm;
+
+  if (okBtn) {
+    okBtn.onclick = () => {
+      closeConfirmActionModal();
+      if (typeof currentConfirmActionCallback === 'function') {
+        const cb = currentConfirmActionCallback;
+        currentConfirmActionCallback = null;
+        cb();
+      }
+    };
+  }
+
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('active');
+}
+
+function closeConfirmActionModal() {
+  const modal = document.getElementById('modalConfirmAction');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+  currentConfirmActionCallback = null;
+}
+
+function downloadSampleRosterPdf() {
+  const content = `%PDF-1.4
+% FCF OFICIAL - FÚTBOL MASTER PRO
+PLANILLA OFICIAL DE JUGADORES - FÚTBOL MASTER PRO 2026
+Federación Colombiana de Torneos Homologados
+
+INSTRUCCIONES PARA EL DELEGADO / DT:
+1. Diligencie la información completa de cada jugador (Máximo 25 jugadores).
+2. Es obligatorio incluir copia o número de CC/TI, EPS activa y firma.
+3. Para menores de 18 años, incluya los datos del tutor legal y consentimiento firmado.
+
+FORMATO DE JUGADORES:
+------------------------------------------------------------------------------------------------------
+No. | Dorsal | Nombre Completo              | Tipo Doc | No. Documento | EPS / Seguro | Acudiente / Tutor
+------------------------------------------------------------------------------------------------------
+01  | 10     | Carlos Andrés Valderrama     | CC       | 1.098.443.210 | Sura EPS     | N/A
+02  | 09     | Falcao García Zárate         | CC       | 1.082.991.044 | Sanitas EPS  | N/A
+03  | 01     | David Ospina Ramírez         | CC       | 1.077.552.193 | Compensar    | N/A
+04  | 07     | Luis Fernando Díaz           | CC       | 1.045.789.231 | Coomeva EPS  | N/A
+05  | 08     | Juan Guillermo Cuadrado      | CC       | 1.033.441.982 | EPS S.O.S    | N/A
+06  | 11     | James David Rodríguez        | CC       | 1.022.901.884 | Famisanar    | N/A
+------------------------------------------------------------------------------------------------------
+
+REQUISITOS ADJUNTOS OBLIGATORIOS:
+- Certificación EPS vigente (no mayor a 30 días).
+- Documento de identidad escaneado.
+- Firma y huella del delegado responsable.
+
+Fútbol Master Pro • Sistema de Gestión y Telemetría Oficial
+`;
+
+  const blob = new Blob([content], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Plantilla_Modelo_Planilla_Oficial_FCF_FutbolMasterPro.pdf';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  if (typeof showToast === 'function') {
+    showToast('📥 Plantilla Guía Oficial descargada. Completa y adjunta tu PDF.', 'info', 3000);
+  }
+}
+
+function openTournamentApplicationModal(tId, isCorrection = false) {
+  const modal = document.getElementById('modalApplyTournament');
+  if (!modal) return;
+
+  const select = document.getElementById('applyTournamentSelect');
+  const clubInput = document.getElementById('applyClubName');
+  const cityInput = document.getElementById('applyCity');
+  const coachInput = document.getElementById('applyCoachName');
+  const emailInput = document.getElementById('applyCoachEmail');
+  const rosterFile = document.getElementById('applyRosterPdf');
+  const paymentFile = document.getElementById('applyPaymentReceipt');
+  const previewRoster = document.getElementById('previewRosterPdfName');
+  const previewPayment = document.getElementById('previewPaymentReceiptName');
+
+  if (rosterFile) rosterFile.value = '';
+  if (paymentFile) paymentFile.value = '';
+  if (previewRoster) { previewRoster.style.display = 'none'; previewRoster.innerHTML = ''; }
+  if (previewPayment) { previewPayment.style.display = 'none'; previewPayment.innerHTML = ''; }
+
+  const tournaments = FMPStore.getTournaments();
+  if (select) {
+    if (tournaments.length === 0) {
+      select.innerHTML = '<option value="default_tourney">Copa Colombia Metropolitana 2026 (F11) - Cuota: $350.000 COP</option>';
+    } else {
+      select.innerHTML = tournaments.map(t => `
+        <option value="${t.id}" ${t.id === tId ? 'selected' : ''}>
+          ${escapeHtml(t.config?.name || t.name || 'Torneo Sin Título')} (${(t.config?.sport || t.sport || 'F11').toUpperCase()}) - Cuota: $350.000 COP
+        </option>
+      `).join('');
+      if (!tId && tournaments.length > 0) {
+        tId = tournaments[0].id;
+      }
+    }
+  }
+
+  const session = FMPStore.getSession();
+  if (session && session.loggedIn) {
+    if (coachInput && !coachInput.value) coachInput.value = session.name || 'Mario Alberto Yepes';
+    if (emailInput && !emailInput.value) emailInput.value = session.email || 'delegado@atleticobogota.co';
+    if (clubInput && !clubInput.value) clubInput.value = session.clubName || 'Atlético Bogotá FC';
+    if (cityInput && !cityInput.value) cityInput.value = session.city || 'Bogotá D.C.';
+  } else {
+    if (clubInput && !clubInput.value) clubInput.value = 'Atlético Bogotá FC';
+    if (coachInput && !coachInput.value) coachInput.value = 'Mario Alberto Yepes';
+    if (emailInput && !emailInput.value) emailInput.value = 'delegado@atleticobogota.co';
+    if (cityInput && !cityInput.value) cityInput.value = 'Bogotá D.C.';
+  }
+
+  const titleEl = modal.querySelector('h3');
+  if (titleEl) {
+    titleEl.textContent = isCorrection 
+      ? '🔄 Subsanar y Reenviar Documentos de Inscripción' 
+      : '📋 Solicitar Inscripción al Torneo Oficial';
+  }
+
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('active');
+}
+
+function closeTournamentApplicationModal() {
+  const modal = document.getElementById('modalApplyTournament');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+}
+
+function handleApplyTournamentChange(tId) {
+  const feeBadge = document.getElementById('applyFeeBadge');
+  if (feeBadge) feeBadge.textContent = '$350.000 COP';
+}
+
+function handleFileSelectPreview(input, previewId) {
+  const preview = document.getElementById(previewId);
+  if (!preview) return;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    const sizeKb = Math.round(file.size / 1024);
+    preview.style.display = 'flex';
+    preview.innerHTML = `
+      <span style="font-weight: 700; color: #34d399;">📎 ${escapeHtml(file.name)}</span>
+      <span style="font-size: 0.75rem; color: #94a3b8;">(${sizeKb} KB)</span>
+    `;
+  } else {
+    preview.style.display = 'none';
+    preview.innerHTML = '';
+  }
+}
+
+async function handleTournamentApplicationSubmit(event) {
+  event.preventDefault();
+
+  const tSelect = document.getElementById('applyTournamentSelect');
+  const clubInput = document.getElementById('applyClubName');
+  const cityInput = document.getElementById('applyCity');
+  const coachInput = document.getElementById('applyCoachName');
+  const emailInput = document.getElementById('applyCoachEmail');
+  const rosterFile = document.getElementById('applyRosterPdf');
+  const paymentFile = document.getElementById('applyPaymentReceipt');
+
+  const tournamentId = tSelect?.value;
+  const clubName = (clubInput?.value || '').trim();
+  const city = (cityInput?.value || 'Bogotá D.C.').trim();
+  const coachName = (coachInput?.value || '').trim();
+  const coachEmail = (emailInput?.value || '').trim();
+
+  if (!tournamentId || !clubName || !coachName || !coachEmail) {
+    if (typeof showToast === 'function') showToast('Por favor completa todos los campos obligatorios.', 'error');
+    return;
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(coachEmail)) {
+    if (typeof showToast === 'function') showToast('Por favor ingresa un correo electrónico válido.', 'error');
+    return;
+  }
+
+  let rosterDataUrl = null;
+  let rosterFileName = 'Planilla_Oficial_Jugadores.pdf';
+  if (rosterFile && rosterFile.files && rosterFile.files[0]) {
+    const f = rosterFile.files[0];
+    rosterFileName = f.name;
+    try {
+      rosterDataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(f);
+      });
+    } catch (e) {
+      console.warn('Error reading roster file:', e);
+    }
+  }
+
+  let paymentDataUrl = null;
+  let paymentFileName = 'Comprobante_Pago_Transferencia.pdf';
+  if (paymentFile && paymentFile.files && paymentFile.files[0]) {
+    const f = paymentFile.files[0];
+    paymentFileName = f.name;
+    try {
+      paymentDataUrl = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(f);
+      });
+    } catch (e) {
+      console.warn('Error reading payment file:', e);
+    }
+  }
+
+  const tournaments = FMPStore.getTournaments();
+  const targetT = tournaments.find(t => t.id === tournamentId);
+  const tournamentName = targetT?.config?.name || targetT?.name || 'Copa Colombia Metropolitana 2026';
+
+  const session = FMPStore.getSession();
+  const regId = 'reg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+
+  const newReg = {
+    id: regId,
+    tournamentId: tournamentId,
+    tournamentName: tournamentName,
+    clubName: clubName,
+    city: city,
+    coachId: session?.userId || 'usr_coach_' + Date.now(),
+    coachName: coachName,
+    coachEmail: coachEmail,
+    email: coachEmail,
+    status: 'en_revision',
+    statusText: 'En Revisión de Mesa',
+    paymentStatus: 'under_review',
+    paymentFee: 350000,
+    feeCurrency: 'COP',
+    rosterFileName: rosterFileName,
+    rosterFileUrl: rosterDataUrl || '',
+    paymentReceiptFileName: paymentFileName,
+    paymentReceiptUrl: paymentDataUrl || '',
+    submittedAt: new Date().toISOString(),
+    observations: ''
+  };
+
+  FMPStore.saveRegistration(newReg);
+
+  try {
+    fetch('/api/registrations/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: regId,
+        tournamentId: tournamentId,
+        clubName: clubName,
+        coachName: coachName,
+        coachEmail: coachEmail,
+        city: city,
+        pdfUrl: rosterDataUrl ? 'data:attached' : '',
+        pdfAttached: Boolean(rosterDataUrl),
+        feeAmount: 350000
+      })
+    }).catch(e => console.warn('Backend sync warning:', e));
+  } catch (err) {}
+
+  FMPStore.logAudit('SOLICITUD_INSCRIPCION_ENVIADA', `Club ${clubName} postuló con comprobante y planilla PDF al torneo "${tournamentName}"`);
+
+  closeTournamentApplicationModal();
+
+  if (typeof showToast === 'function') {
+    showToast('✅ Solicitud enviada al organizador para revisión de documentos y pago', 'success', 4500);
+  }
+
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+}
+
+function renderAdminPendingApplications() {
+  const containerOverview = document.getElementById('adminPendingApplicationsOverview');
+  const containerClubs = document.getElementById('adminPendingApplicationsClubs');
+  const badgeOverview = document.getElementById('pendingOverviewCount');
+  const badgeClubs = document.getElementById('pendingClubsCount');
+
+  const allRegs = FMPStore.getRegistrations();
+  const pendingRegs = allRegs.filter(r => 
+    r.status === 'en_revision' || 
+    r.status === 'pendiente' || 
+    r.status === 'pending' || 
+    r.status === 'submitted' ||
+    r.status === 'pendiente_inicial' ||
+    r.status === 'revision_final'
+  );
+
+  const count = pendingRegs.length;
+  if (badgeOverview) badgeOverview.textContent = `${count} pendientes`;
+  if (badgeClubs) badgeClubs.textContent = `${count} pendientes`;
+
+  const renderInboxHtml = (list) => {
+    if (list.length === 0) {
+      return `
+        <div style="padding: 2rem 1rem; text-align: center; color: #94a3b8;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.7;">✨</div>
+          <p style="margin: 0; font-size: 0.9rem; font-weight: 600; color: #cbd5e1;">Bandeja al día</p>
+          <span style="font-size: 0.8rem; color: #64748b;">No hay solicitudes pendientes de inscripción en este momento. Todas las postulaciones han sido auditadas.</span>
+        </div>
+      `;
+    }
+
+    return `
+      <div class="pending-apps-list">
+        ${list.map(r => {
+          const clubName = r.clubName || r.teamName || 'Club Sin Nombre';
+          const coachName = r.coachName || r.dtName || 'Delegado Oficial';
+          const coachEmail = r.coachEmail || r.email || r.dtEmail || 'contacto@club.co';
+          const tourneyName = r.tournamentName || 'Copa Colombia Metropolitana 2026';
+          const dateStr = r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('es-CO', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+
+          return `
+            <div class="pending-app-row" id="pendingRow_${r.id}">
+              <div class="pending-app-club-col">
+                <div class="club-avatar-circle">${escapeHtml(clubName.substring(0, 2).toUpperCase())}</div>
+                <div>
+                  <h4 style="margin: 0; font-size: 0.95rem; font-weight: 700; color: #f8fafc;">${escapeHtml(clubName)}</h4>
+                  <div style="font-size: 0.78rem; color: #38bdf8; font-weight: 600;">🏆 ${escapeHtml(tourneyName)}</div>
+                  <div style="font-size: 0.75rem; color: #94a3b8; display: flex; align-items: center; gap: 4px; margin-top: 2px;">
+                    <span>👤 ${escapeHtml(coachName)}</span>
+                    <span>•</span>
+                    <span style="color: #67e8f9;">✉️ ${escapeHtml(coachEmail)}</span>
+                    <span>•</span>
+                    <span>🕒 ${dateStr}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pending-app-status-col">
+                <span class="badge-economic-status badge-verified">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Requisito Económico: $350.000 COP</span>
+                </span>
+                <span class="badge-economic-status badge-under-review">
+                  <span>📄 Planilla Oficial Adjunta</span>
+                </span>
+              </div>
+
+              <div class="pending-app-actions-col">
+                <button type="button" class="btn-view-doc" onclick="viewApplicationDocument('${r.id}', 'roster')" title="Ver Planilla Oficial de Jugadores en PDF">
+                  <span>📄 Ver Planilla PDF</span>
+                </button>
+                <button type="button" class="btn-view-doc" onclick="viewApplicationDocument('${r.id}', 'payment')" title="Ver Comprobante de Transferencia / Consignación">
+                  <span>💵 Ver Soporte de Pago</span>
+                </button>
+                <button type="button" class="btn-approve-app" onclick="approveTournamentApplication('${r.id}')" title="Aprobar e Inscribir Oficialmente en el Torneo">
+                  <span>✅ Aprobar e Inscribir</span>
+                </button>
+                <button type="button" class="btn-reject-app" onclick="openRejectApplicationModal('${r.id}')" title="Rechazar Solicitud y Enviar Notificación con Justificación">
+                  <span>❌ Rechazar</span>
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  };
+
+  if (containerOverview) containerOverview.innerHTML = renderInboxHtml(pendingRegs);
+  if (containerClubs) containerClubs.innerHTML = renderInboxHtml(pendingRegs);
+}
+
+function viewApplicationDocument(regId, docType) {
+  const modal = document.getElementById('modalDocumentViewer');
+  const title = document.getElementById('viewerDocTitle');
+  const subtitle = document.getElementById('viewerDocSubtitle');
+  const body = document.getElementById('viewerDocBody');
+  const dlBtn = document.getElementById('viewerDownloadBtn');
+  const icon = document.getElementById('viewerDocIcon');
+
+  if (!modal || !body) return;
+
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId) || { clubName: 'Club Postulante', tournamentName: 'Torneo Oficial' };
+
+  if (docType === 'roster') {
+    if (icon) icon.textContent = '📄';
+    if (title) title.textContent = `Planilla Oficial de Jugadores (PDF) - ${reg.clubName || reg.teamName}`;
+    if (subtitle) subtitle.textContent = `Expediente oficial presentado por el DT ${reg.coachName || reg.dtName || 'Delegado'} • ${reg.tournamentName || 'Torneo'}`;
+
+    const pdfUrl = reg.rosterFileUrl;
+    if (pdfUrl && pdfUrl.startsWith('data:')) {
+      body.innerHTML = `
+        <div style="width: 100%; height: 500px; display: flex; flex-direction: column;">
+          <iframe src="${pdfUrl}" style="width: 100%; height: 100%; border: none; border-radius: 8px; background: #fff;"></iframe>
+        </div>
+      `;
+      if (dlBtn) {
+        dlBtn.href = pdfUrl;
+        dlBtn.download = reg.rosterFileName || 'Planilla_Oficial.pdf';
+        dlBtn.style.display = 'inline-flex';
+      }
+    } else {
+      body.innerHTML = `
+        <div style="width: 100%; background: #ffffff; color: #0f172a; padding: 2rem; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); font-family: sans-serif;">
+          <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 1rem; margin-bottom: 1.25rem;">
+            <div>
+              <h2 style="margin: 0; font-size: 1.25rem; font-weight: 800; color: #047857; letter-spacing: -0.5px;">FEDERACIÓN COLOMBIANA DE FÚTBOL • FMP</h2>
+              <div style="font-size: 0.82rem; font-weight: 700; color: #334155;">PLANILLA OFICIAL DE INSCRIPCIÓN Y AFILIACIÓN 2026</div>
+              <div style="font-size: 0.78rem; color: #64748b;">Torneo: ${escapeHtml(reg.tournamentName || 'Copa Colombia Metropolitana 2026')}</div>
+            </div>
+            <div style="text-align: right;">
+              <span style="display: inline-block; background: #ecfdf5; border: 1px solid #10b981; color: #065f46; font-size: 0.75rem; font-weight: 800; padding: 3px 8px; border-radius: 4px;">DOCUMENTO HOMOLOGADO</span>
+              <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px;">ID Expediente: ${escapeHtml(reg.id)}</div>
+            </div>
+          </div>
+
+          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.85rem; margin-bottom: 1.25rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 0.82rem;">
+            <div><strong>Club:</strong> ${escapeHtml(reg.clubName || reg.teamName)}</div>
+            <div><strong>Delegado / DT:</strong> ${escapeHtml(reg.coachName || reg.dtName || 'Carlos Mario Estrada')}</div>
+            <div><strong>Correo de Contacto:</strong> ${escapeHtml(reg.coachEmail || reg.email || reg.dtEmail || 'dt@club.co')}</div>
+            <div><strong>Ciudad Sede:</strong> ${escapeHtml(reg.city || 'Bogotá D.C.')}</div>
+            <div><strong>Categoría:</strong> Libre / Mayores</div>
+            <div><strong>Póliza EPS:</strong> Cobertura Médica Verificada</div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1.5rem;">
+            <thead>
+              <tr style="background: #065f46; color: #ffffff; text-align: left;">
+                <th style="padding: 6px 10px; border: 1px solid #047857;">Dorsal</th>
+                <th style="padding: 6px 10px; border: 1px solid #047857;">Nombre Completo del Jugador</th>
+                <th style="padding: 6px 10px; border: 1px solid #047857;">Doc. Identidad</th>
+                <th style="padding: 6px 10px; border: 1px solid #047857;">Posición</th>
+                <th style="padding: 6px 10px; border: 1px solid #047857;">EPS</th>
+                <th style="padding: 6px 10px; border: 1px solid #047857;">Estado Ficha</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding: 6px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: center;">10</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Carlos Andrés Valderrama</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">CC 1.098.443.210</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Mediocampista</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Sura EPS</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1; color: #059669; font-weight: 700;">Habilitado</td></tr>
+              <tr style="background: #f8fafc;"><td style="padding: 6px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: center;">09</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Radamel Falcao García</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">CC 1.082.991.044</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Delantero</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Sanitas EPS</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1; color: #059669; font-weight: 700;">Habilitado</td></tr>
+              <tr><td style="padding: 6px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: center;">01</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">David Ospina Ramírez</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">CC 1.077.552.193</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Arquero</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Compensar</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1; color: #059669; font-weight: 700;">Habilitado</td></tr>
+              <tr style="background: #f8fafc;"><td style="padding: 6px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: center;">07</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Luis Fernando Díaz</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">CC 1.045.789.231</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Extremo</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Coomeva</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1; color: #059669; font-weight: 700;">Habilitado</td></tr>
+              <tr><td style="padding: 6px 10px; border: 1px solid #cbd5e1; font-weight: 700; text-align: center;">14</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Mateo Restrepo (Menor de edad)</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">TI 1.114.890.332</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Defensa</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1;">Sura EPS</td><td style="padding: 6px 10px; border: 1px solid #cbd5e1; color: #0284c7; font-weight: 700;">Acudiente: Jorge Restrepo (CC 71.345.901)</td></tr>
+            </tbody>
+          </table>
+
+          <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed #cbd5e1; font-size: 0.78rem; color: #64748b;">
+            <div>
+              <div style="font-weight: 700; color: #334155; margin-bottom: 30px;">FIRMA Y SELLO DEL DELEGADO DT:</div>
+              <div style="border-top: 1px solid #334155; width: 220px; padding-top: 4px; font-weight: 700; color: #0f172a;">${escapeHtml(reg.coachName || reg.dtName || 'Carlos Mario Estrada')}</div>
+              <div>C.C. 19.892.403 de Bogotá</div>
+            </div>
+            <div style="text-align: right;">
+              <div style="display: inline-block; padding: 10px 14px; border: 2px solid #059669; border-radius: 8px; color: #059669; font-weight: 800; text-align: center; transform: rotate(-3deg);">
+                SELLO OFICIAL DE AUDITORÍA FMP<br><span style="font-size: 0.68rem; font-weight: 500;">EXPEDIENTE LISTO PARA DICTAMEN</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      if (dlBtn) {
+        dlBtn.href = '#';
+        dlBtn.onclick = (e) => { e.preventDefault(); downloadSampleRosterPdf(); };
+      }
+    }
+  } else if (docType === 'payment') {
+    if (icon) icon.textContent = '💵';
+    if (title) title.textContent = `Comprobante de Transferencia / Consignación - ${reg.clubName || reg.teamName}`;
+    if (subtitle) subtitle.textContent = `Soporte económico de inscripción por valor de $350.000 COP • ${reg.tournamentName || 'Torneo'}`;
+
+    const payUrl = reg.paymentReceiptUrl;
+    if (payUrl && payUrl.startsWith('data:image/')) {
+      body.innerHTML = `
+        <div style="max-height: 520px; overflow: auto; text-align: center;">
+          <img src="${payUrl}" alt="Comprobante de Pago" style="max-width: 100%; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5);">
+        </div>
+      `;
+      if (dlBtn) {
+        dlBtn.href = payUrl;
+        dlBtn.download = reg.paymentReceiptFileName || 'Comprobante_Pago.png';
+      }
+    } else if (payUrl && payUrl.startsWith('data:application/pdf')) {
+      body.innerHTML = `
+        <div style="width: 100%; height: 500px;">
+          <iframe src="${payUrl}" style="width: 100%; height: 100%; border: none; border-radius: 8px; background: #fff;"></iframe>
+        </div>
+      `;
+      if (dlBtn) {
+        dlBtn.href = payUrl;
+        dlBtn.download = reg.paymentReceiptFileName || 'Comprobante_Pago.pdf';
+      }
+    } else {
+      body.innerHTML = `
+        <div style="max-width: 440px; margin: 0 auto; background: #ffffff; color: #0f172a; padding: 1.5rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-family: monospace;">
+          <div style="text-align: center; border-bottom: 2px dashed #cbd5e1; padding-bottom: 1rem; margin-bottom: 1rem;">
+            <div style="font-size: 1.25rem; font-weight: 800; color: #1e3a8a;">BANCOLOMBIA S.A.</div>
+            <div style="font-size: 0.8rem; color: #64748b;">COMPROBANTE OFICIAL DE TRANSFERENCIA EXITOSA</div>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px;">Canal: App Bancolombia / PSE Transfer</div>
+          </div>
+
+          <div style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between;"><span>Fecha y Hora:</span> <strong>${new Date().toLocaleDateString('es-CO')} - 10:42 AM</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Número de Aprobación:</span> <strong>#TRX-88492019</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Cuenta Origen:</span> <strong>Ahorros ****5512</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Cuenta Destino (FMP):</span> <strong>Ahorros 245-098231-11</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Titular Receptor:</span> <strong>Fútbol Master Pro SAS</strong></div>
+            <div style="display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0; padding-top: 6px; margin-top: 6px;">
+              <span>Club Pagador:</span> <strong>${escapeHtml(reg.clubName || reg.teamName)}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Delegado / DT:</span> <strong>${escapeHtml(reg.coachName || reg.dtName || 'Carlos Mario Estrada')}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span>Concepto:</span> <strong>Inscripción Torneo 2026</strong>
+            </div>
+          </div>
+
+          <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 1rem; text-align: center; margin-bottom: 1rem;">
+            <div style="font-size: 0.8rem; color: #166534; font-weight: 700;">VALOR TOTAL CONSIGNADO</div>
+            <div style="font-size: 1.75rem; font-weight: 900; color: #15803d; letter-spacing: -0.5px;">$350.000 COP</div>
+            <div style="font-size: 0.72rem; color: #16a34a; font-weight: 600; margin-top: 2px;">ESTADO: FONDOS VERIFICADOS EN CUENTA</div>
+          </div>
+
+          <div style="text-align: center; font-size: 0.72rem; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 0.75rem;">
+            Conserva este soporte para cualquier reclamación ante la mesa organizadora.
+          </div>
+        </div>
+      `;
+      if (dlBtn) {
+        dlBtn.href = '#';
+        dlBtn.onclick = (e) => { e.preventDefault(); if (typeof showToast === 'function') showToast('Descargando soporte en alta definición...', 'info'); };
+      }
+    }
+  }
+
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('active');
+}
+
+function closeDocumentViewerModal() {
+  const modal = document.getElementById('modalDocumentViewer');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+}
+
+function approveTournamentApplication(regId) {
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+  if (!reg) {
+    if (typeof showToast === 'function') showToast('Solicitud no encontrada.', 'error');
+    return;
+  }
+
+  showConfirmActionModal({
+    title: '¿Aprobar e Inscribir Club?',
+    message: `¿Confirmas la admisión oficial de "${reg.clubName || reg.teamName}" en el torneo? El equipo quedará habilitado para el fixture oficial y se notificará al DT.`,
+    onConfirm: () => {
+      reg.status = 'habilitado';
+      reg.statusText = 'Aprobado Oficialmente';
+      reg.paymentStatus = 'verified';
+      reg.reviewedAt = new Date().toISOString();
+      FMPStore.save();
+
+      const tourneys = FMPStore.getTournaments();
+      const tourney = tourneys.find(t => t.id === reg.tournamentId) || tourneys[0];
+      if (tourney) {
+        if (!Array.isArray(tourney.teams)) tourney.teams = [];
+        const tName = reg.clubName || reg.teamName;
+        const exists = tourney.teams.some(t => t.name?.toLowerCase() === tName.toLowerCase());
+        if (!exists) {
+          tourney.teams.push({
+            id: 'tm_' + Date.now(),
+            name: tName,
+            color: '#10b981',
+            city: reg.city || 'Bogotá D.C.',
+            shield: '',
+            players: [
+              'Carlos Andrés Valderrama',
+              'Radamel Falcao García',
+              'David Ospina Ramírez',
+              'Luis Fernando Díaz'
+            ]
+          });
+          FMPStore.saveTournament(tourney);
+        }
+      }
+
+      FMPStore.logAudit('INSCRIPCION_APROBADA', `El comité organizador aprobó la inscripción oficial del club ${reg.clubName || reg.teamName} con pago verificado.`);
+      FMPStore.addNotification({
+        userId: reg.coachId,
+        title: '¡Inscripción Aprobada!',
+        message: `Tu club ${reg.clubName || reg.teamName} ha sido admitido oficialmente en el torneo "${reg.tournamentName || 'Copa Oficial'}". Revisa el fixture en Mi Club.`,
+        type: 'success'
+      });
+
+      if (typeof showToast === 'function') {
+        showToast(`✅ Club "${reg.clubName || reg.teamName}" aprobado e inscrito oficialmente en el torneo`, 'success', 4000);
+      }
+
+      if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+      if (typeof renderAdminStats === 'function') renderAdminStats();
+      if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+    }
+  });
+}
+
+function openRejectApplicationModal(regId) {
+  const modal = document.getElementById('modalRejectApplication');
+  const hiddenInput = document.getElementById('rejectApplicationId');
+  const subTitle = document.getElementById('rejectAppSubTitle');
+  const form = document.getElementById('formRejectApplication');
+
+  if (!modal) return;
+
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+
+  if (hiddenInput) hiddenInput.value = regId;
+  if (subTitle && reg) {
+    subTitle.textContent = `Notificación oficial a ${reg.clubName || reg.teamName} (${reg.coachEmail || reg.email || reg.dtEmail || 'DT'})`;
+  }
+  if (form) form.reset();
+
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('active');
+}
+
+function closeRejectApplicationModal() {
+  const modal = document.getElementById('modalRejectApplication');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+}
+
+async function handleRejectApplicationSubmit(event) {
+  event.preventDefault();
+
+  const hiddenInput = document.getElementById('rejectApplicationId');
+  const notesEl = document.getElementById('rejectObservationsText');
+  const regId = hiddenInput?.value;
+  const notesText = (notesEl?.value || '').trim();
+
+  const checkedBoxes = Array.from(document.querySelectorAll('input[name="rejectReason"]:checked'));
+  if (checkedBoxes.length === 0) {
+    if (typeof showToast === 'function') showToast('Debes seleccionar al menos una causal oficial del rechazo.', 'warning', 3000);
+    return;
+  }
+
+  const reasonsList = checkedBoxes.map(cb => cb.value);
+  const reasonsFormatted = reasonsList.map(r => `• ${r}`).join('\n');
+  const fullReasonText = reasonsList.join('; ') + (notesText ? ` | Observaciones: ${notesText}` : '');
+
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+  if (!reg) {
+    if (typeof showToast === 'function') showToast('Solicitud no encontrada.', 'error');
+    return;
+  }
+
+  reg.status = 'rechazado';
+  reg.statusText = 'Inscripción Rechazada';
+  reg.observations = fullReasonText;
+  reg.reviewedAt = new Date().toISOString();
+  FMPStore.save();
+
+  FMPStore.logAudit('INSCRIPCION_RECHAZADA', `Solicitud ${regId} de ${reg.clubName} rechazada. Motivo: ${fullReasonText}`);
+  FMPStore.addNotification({
+    userId: reg.coachId,
+    title: '⚠️ Inscripción Rechazada',
+    message: `Tu solicitud de inscripción para ${reg.clubName} fue rechazada: ${reasonsList[0]}. Ingresa a Mi Club para subsanar los documentos.`,
+    type: 'error'
+  });
+
+  const clubName = reg.clubName || reg.teamName || 'Club Postulante';
+  const toEmail = reg.coachEmail || reg.email || reg.dtEmail || 'delegado@club.co';
+  const tourneyName = reg.tournamentName || 'Copa Colombia Metropolitana 2026';
+
+  try {
+    fetch('/api/notifications/reject-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: toEmail,
+        clubName: clubName,
+        tournamentName: tourneyName,
+        reasons: reasonsList,
+        observations: notesText,
+        fullReason: fullReasonText
+      })
+    }).then(res => res.json()).then(data => {
+      console.log('Reject email endpoint response:', data);
+    }).catch(err => {
+      console.warn('Backend reject-email notification warning:', err);
+    });
+  } catch (e) {}
+
+  const formalBody = `Estimado(a) Director Técnico / Delegado del club ${clubName},
+
+Le informamos que tras la auditoría técnica de documentos y verificación financiera para el torneo "${tourneyName}", su solicitud de inscripción ha sido RECHAZADA por el comité organizador.
+
+CAUSALES DEL RECHAZO:
+${reasonsFormatted}
+
+OBSERVACIONES DEL ORGANIZADOR:
+${notesText || 'No se registraron observaciones adicionales.'}
+
+INSTRUCCIONES DE SUBSANACIÓN:
+Para subsanar esta postulación, por favor ingrese a la plataforma Fútbol Master Pro (sección "Mi Club") y utilice el botón "🔄 Subsanar y Reenviar Documentos" cargando el comprobante corregido o la planilla completa con las firmas reglamentarias.
+
+Atentamente,
+Comité Organizador & Mesa de Control
+Fútbol Master Pro • FCF Homologada
+`;
+
+  const mailtoSubject = `Estado de Inscripción Rechazada - ${clubName} - Fútbol Master Pro`;
+  const mailtoUrl = `mailto:${encodeURIComponent(toEmail)}?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(formalBody)}`;
+
+  try {
+    const a = document.createElement('a');
+    a.href = mailtoUrl;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  } catch (err) {
+    window.location.href = mailtoUrl;
+  }
+
+  closeRejectApplicationModal();
+
+  if (typeof showToast === 'function') {
+    showToast(`❌ Solicitud rechazada. Correo oficial redactado y despachado a ${toEmail}`, 'warning', 4500);
+  }
+
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderAdminStats === 'function') renderAdminStats();
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+}
+
+function renderCoachRegistrationStatusCard() {
+  const container = document.getElementById('coachRegistrationStatusCard');
+  if (!container) return;
+
+  const session = FMPStore.getSession();
+  const myEmail = session?.email || 'delegado@atleticobogota.co';
+  const myClubName = (session?.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
+
+  const regs = FMPStore.getRegistrations();
+  const myReg = regs.find(r => 
+    (r.coachEmail && r.coachEmail.toLowerCase() === myEmail.toLowerCase()) ||
+    (r.email && r.email.toLowerCase() === myEmail.toLowerCase()) ||
+    (r.dtEmail && r.dtEmail.toLowerCase() === myEmail.toLowerCase()) ||
+    (r.coachId && session && r.coachId === session.userId) ||
+    (r.clubName && r.clubName.toLowerCase().trim() === myClubName)
+  ) || regs[0];
+
+  if (!myReg) {
+    container.innerHTML = `
+      <div class="coach-registration-hero-strip" style="background: rgba(16, 185, 129, 0.08); border-color: rgba(16, 185, 129, 0.25);">
+        <div class="reg-hero-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">
+          <span>📋 POSTULACIÓN ABIERTA</span>
+        </div>
+        <h3 class="reg-hero-title">Inscribe tu Club al Torneo Oficial 2026</h3>
+        <p class="reg-hero-desc">Sube la planilla de jugadores en PDF y el comprobante de consignación ($350.000 COP) para ser auditado por la mesa organizadora.</p>
+        <div>
+          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
+            <span>📋 Solicitar Inscripción al Torneo</span>
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const status = (myReg.status || '').toLowerCase();
+  const tName = myReg.tournamentName || 'Copa Colombia Metropolitana 2026';
+
+  if (status === 'habilitado' || status === 'aprobado') {
+    container.innerHTML = `
+      <div class="coach-registration-hero-strip status-approved">
+        <div class="reg-hero-badge badge-approved">
+          <span>✅ INSCRIPCIÓN OFICIAL CONFIRMADA</span>
+        </div>
+        <h3 class="reg-hero-title">¡Club Habilitado para Competir!</h3>
+        <p class="reg-hero-desc">
+          Tu club <strong>${escapeHtml(myReg.clubName || 'Mi Club')}</strong> ha completado la auditoría de documentos y el requisito económico ($350.000 COP) para <strong>${escapeHtml(tName)}</strong>.
+        </p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.5rem;">
+          <span style="font-size: 0.82rem; color: #34d399; font-weight: 700;">🟢 Estado: Habilitado en Fixture Oficial</span>
+          <button type="button" class="btn-ghost" onclick="viewApplicationDocument('${myReg.id}', 'roster')" style="font-size: 0.8rem; padding: 4px 10px;">
+            <span>📄 Ver Planilla Aprobada</span>
+          </button>
+        </div>
+      </div>
+    `;
+  } else if (status === 'rechazado') {
+    container.innerHTML = `
+      <div class="coach-registration-hero-strip status-rejected">
+        <div class="reg-hero-badge badge-rejected">
+          <span>⚠️ INSCRIPCIÓN RECHAZADA - ACCIÓN REQUERIDA</span>
+        </div>
+        <h3 class="reg-hero-title">La postulación requiere subsanación inmediata</h3>
+        <p class="reg-hero-desc">
+          El comité organizador revisó tu solicitud para <strong>${escapeHtml(tName)}</strong> y dictaminó:
+        </p>
+        <div style="background: rgba(0,0,0,0.3); border-left: 3px solid #ef4444; padding: 0.75rem 1rem; border-radius: 4px; margin: 0.5rem 0; font-size: 0.82rem; color: #fca5a5;">
+          ${escapeHtml(myReg.observations || 'Incumplimiento de requisitos documentales o comprobante de pago no válido.')}
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.75rem;">
+          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${myReg.tournamentId}', true)" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-color: #f59e0b; color: #000; font-weight: 800;">
+            <span>🔄 Subsanar y Reenviar Documentos</span>
+          </button>
+          <button type="button" class="btn-ghost" onclick="viewApplicationDocument('${myReg.id}', 'roster')" style="font-size: 0.8rem; padding: 4px 10px;">
+            <span>📄 Ver Planilla Enviada</span>
+          </button>
+        </div>
+      </div>
+    `;
+  } else {
+    // en_revision / pendiente
+    container.innerHTML = `
+      <div class="coach-registration-hero-strip status-pending">
+        <div class="reg-hero-badge badge-pending">
+          <span>⏳ INSCRIPCIÓN EN AUDITORÍA OFICIAL</span>
+        </div>
+        <h3 class="reg-hero-title">Documentos y Pago en Proceso de Validación</h3>
+        <p class="reg-hero-desc">
+          Tu solicitud para <strong>${escapeHtml(myReg.clubName || 'Mi Club')}</strong> en <strong>${escapeHtml(tName)}</strong> fue radicada con éxito. La mesa organizadora está verificando la planilla de jugadores y la cuota de $350.000 COP.
+        </p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; margin-top: 0.5rem;">
+          <span style="font-size: 0.82rem; color: #fbbf24; font-weight: 600;">🕒 Tiempo estimado de dictamen: Menos de 24 horas</span>
+          <button type="button" class="btn-ghost" onclick="viewApplicationDocument('${myReg.id}', 'roster')" style="font-size: 0.8rem; padding: 4px 10px;">
+            <span>📄 Ver Planilla Radicada</span>
+          </button>
+          <button type="button" class="btn-ghost" onclick="viewApplicationDocument('${myReg.id}', 'payment')" style="font-size: 0.8rem; padding: 4px 10px;">
+            <span>💵 Ver Comprobante Radicado</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }
+}
+
+// Exportar globalmente
+window.showConfirmActionModal = showConfirmActionModal;
+window.closeConfirmActionModal = closeConfirmActionModal;
+window.downloadSampleRosterPdf = downloadSampleRosterPdf;
+window.openTournamentApplicationModal = openTournamentApplicationModal;
+window.closeTournamentApplicationModal = closeTournamentApplicationModal;
+window.handleApplyTournamentChange = handleApplyTournamentChange;
+window.handleFileSelectPreview = handleFileSelectPreview;
+window.handleTournamentApplicationSubmit = handleTournamentApplicationSubmit;
+window.renderAdminPendingApplications = renderAdminPendingApplications;
+window.viewApplicationDocument = viewApplicationDocument;
+window.closeDocumentViewerModal = closeDocumentViewerModal;
+window.approveTournamentApplication = approveTournamentApplication;
+window.openRejectApplicationModal = openRejectApplicationModal;
+window.closeRejectApplicationModal = closeRejectApplicationModal;
+window.handleRejectApplicationSubmit = handleRejectApplicationSubmit;
+window.renderCoachRegistrationStatusCard = renderCoachRegistrationStatusCard;

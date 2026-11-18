@@ -20278,3 +20278,271 @@ section[data-admin-section="auditoria"].active {
     grid-template-columns: 1fr !important;
   }
 }
+
+
+/* =============================================================================
+   MÓDULOS DE INSCRIPCIÓN PRO, ROLES UX Y BANDEJA DE SOLICITUDES (BLOQUE A Y B)
+   ============================================================================= */
+
+/* 1. Ocultar header global en #/admin para máxima amplitud */
+body.route-admin #mainHeader {
+  display: none !important;
+}
+body.route-admin .main-content {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* 2. Modo Espectador Estricto */
+body.public-mode-active .btn-create-header,
+body.public-mode-active #btnHeaderCrear,
+body.public-mode-active #btnDropdownCreateNew,
+body.public-mode-active .btn-hero-create,
+body.public-mode-active #btnAdminQuickTournament,
+body.public-mode-active .btn-start-tournament,
+body.public-mode-active .btn-action-manage.btn-open-t,
+body.public-mode-active .btn-delete-t {
+  display: none !important;
+}
+
+/* 3. Panel de Solicitudes en el Dashboard */
+.admin-pending-applications-card {
+  margin-bottom: 1.5rem !important;
+  background: rgba(10, 30, 38, 0.75) !important;
+  border: 1px solid rgba(30, 193, 203, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px !important;
+  padding: 1.25rem 1.5rem !important;
+  backdrop-filter: blur(12px) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-pending-applications-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #10b981 0%, #1ec1cb 50%, #3b82f6 100%);
+}
+
+.pending-apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 1rem;
+}
+
+.pending-app-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(5, 20, 26, 0.6);
+  border: 1px solid rgba(30, 193, 203, 0.18);
+  border-radius: 12px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pending-app-row:hover {
+  border-color: rgba(30, 193, 203, 0.45);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
+}
+
+.pending-app-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.pending-app-club {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pending-app-meta {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.pending-app-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.pending-app-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-view-doc {
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: rgba(30, 193, 203, 0.12);
+  border: 1px solid rgba(30, 193, 203, 0.35);
+  color: #a5f3fc;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.btn-view-doc:hover {
+  background: rgba(30, 193, 203, 0.25);
+  border-color: #1ec1cb;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-approve-app {
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.btn-approve-app:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+}
+
+.btn-reject-app {
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.btn-reject-app:hover {
+  background: rgba(239, 68, 68, 0.28);
+  border-color: #ef4444;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+/* 4. Tarjeta Estado de Inscripción en Mi Club */
+.coach-registration-hero-strip {
+  margin-bottom: 1.25rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(10, 30, 38, 0.7);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* 5. Modales Liquid Glass */
+.modal-liquid-glass {
+  background: rgba(8, 26, 33, 0.94) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(30, 193, 203, 0.15) !important;
+  border-radius: 16px !important;
+  color: #e2e8f0;
+}
+
+.economic-req-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.15rem;
+  font-size: 0.83rem;
+  color: #cbd5e1;
+}
+
+.file-upload-tile {
+  border: 1.5px dashed rgba(30, 193, 203, 0.4);
+  background: rgba(5, 20, 26, 0.5);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 1rem;
+  position: relative;
+}
+.file-upload-tile:hover {
+  border-color: #1ec1cb;
+  background: rgba(5, 20, 26, 0.75);
+}
+
+.file-upload-tile input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.file-chosen-preview {
+  font-size: 0.82rem;
+  color: #34d399;
+  font-weight: 700;
+  margin-top: 0.4rem;
+  word-break: break-all;
+}
+
+.checkbox-reasons-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+}
+
+.checkbox-reason-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  color: #f1f5f9;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s ease;
+}
+.checkbox-reason-label:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+.checkbox-reason-label input {
+  margin-top: 3px;
+  accent-color: #ef4444;
+}

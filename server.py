@@ -517,9 +517,12 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
 
                 reg_id = f"reg-{int(datetime.now().timestamp()*1000)}"
                 now = datetime.now().isoformat()
+                pdf_attached = 1 if (body.get('pdfUrl') or body.get('pdfAttached') or body.get('pdfName')) else 0
+                coach_email = body.get('coachEmail') or body.get('email') or 'coach@futbolmaster.co'
+
                 conn.execute("""
                     INSERT INTO registrations (id, tournament_id, tournament_name, team_id, team_name, city, color, shield_svg, coach_id, coach_name, coach_doc, coach_phone, coach_email, status, feedback_reason, pdf_attached, submitted_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendiente_inicial', '', 0, ?);
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pendiente_inicial', '', ?, ?);
                 """, (
                     reg_id,
                     tournament_id,
@@ -533,7 +536,8 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
                     body.get('coachName', 'Director Técnico'),
                     body.get('coachDoc', '79845123'),
                     body.get('coachPhone', '+57 3001234567'),
-                    body.get('coachEmail', 'coach@futbolmaster.co'),
+                    coach_email,
+                    pdf_attached,
                     now
                 ))
                 conn.commit()
@@ -575,7 +579,7 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
                 )
 
                 # Si se habilita definitivamente, vincular a tournament_teams
-                if new_status == 'habilitado':
+                if new_status in ['habilitado', 'aprobada_inicial']:
                     tt_id = f"tt_{reg['tournament_id']}_{reg['team_id'] or reg_id}"
                     conn.execute(
                         "INSERT OR IGNORE INTO tournament_teams (id, tournament_id, team_id, group_name, joined_at) VALUES (?, ?, ?, 'Grupo Único', ?)",
@@ -585,6 +589,43 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
                 conn.commit()
                 self.log_audit_db(conn, user_id, "Dictaminador", user_role, "REVISION_SOLICITUD", f"Solicitud {reg_id} ({reg['team_name']}) actualizada a '{new_status}'. Observación: {reason}")
                 return self.send_json({"ok": True, "message": f"Solicitud actualizada a {new_status}"})
+
+            # 5b. Endpoint de Notificación de Rechazo por Correo Electrónico
+            if path == '/api/notifications/reject-email':
+                to_email = (body.get('toEmail') or '').strip().lower()
+                club_name = body.get('clubName', 'Club')
+                tournament_name = body.get('tournamentName', 'Torneo Oficial')
+                reasons = body.get('reasons', [])
+                notes = (body.get('notes') or '').strip()
+                coach_name = body.get('coachName', 'Delegado')
+
+                if not to_email:
+                    return self.send_error_json("El correo electrónico del delegado es obligatorio.", 400)
+
+                notif_id = f"notif_{uuid.uuid4().hex[:8]}"
+                now = datetime.now().isoformat()
+                reason_str = ", ".join(reasons) if isinstance(reasons, list) else str(reasons)
+                msg = f"Tu solicitud de inscripción para el club '{club_name}' en el torneo '{tournament_name}' no ha sido aprobada por la mesa directiva. Motivo principal: {reason_str}."
+                if notes:
+                    msg += f" Observaciones del organizador: {notes}"
+
+                try:
+                    conn.execute("""
+                        INSERT INTO notifications (id, target_role, target_user_id, title, message, link, read, created_at)
+                        VALUES (?, 'coach', NULL, 'Inscripción Rechazada', ?, '/club', 0, ?)
+                    """, (notif_id, msg, now))
+                    conn.commit()
+                except Exception:
+                    pass
+
+                self.log_audit_db(conn, user_id, "Organizador", user_role, "NOTIFICACION_RECHAZO_EMAIL", f"Notificación de rechazo procesada para {to_email} del club '{club_name}' ({reason_str})")
+                return self.send_json({
+                    "ok": True,
+                    "message": f"Correo de notificación procesado exitosamente hacia {to_email}",
+                    "to": to_email,
+                    "subject": "Estado de Inscripción Rechazada - Fútbol Master Pro",
+                    "body": msg
+                })
 
             # 6. Registro de Jugador en Plantilla (Fase 5)
             if path == '/api/players/register':
