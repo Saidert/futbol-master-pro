@@ -130,10 +130,64 @@
     <div class="dashboard-splash-overlay" id="dashboardSplashOverlay" style="display: none !important;">
       <div class="splash-center-content" id="splashCenterContent">
         <div class="splash-icon-box" id="splashIconBox">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polygon points="12 6 15 10 13 15 11 15 9 10 12 6"></polygon>
-          </svg>
+          <div class="pro-chilena-emblem">
+            <svg class="chilena-master-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Gradiente líquido Cyan a Esmeralda -->
+                <linearGradient id="proCyanEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="40%" stop-color="#1EC1CB" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+                <!-- Gradiente 3D para el Balón Pro -->
+                <radialGradient id="ball3DGrad" cx="35%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="55%" stop-color="#E2F8FA" />
+                  <stop offset="85%" stop-color="#1EC1CB" />
+                  <stop offset="100%" stop-color="#073B44" />
+                </radialGradient>
+                <!-- Brillo de impacto -->
+                <radialGradient id="strikeGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                  <stop offset="45%" stop-color="#1EC1CB" stop-opacity="0.6" />
+                  <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- Anillo orbital de telemetría -->
+              <circle class="orbital-ring" cx="40" cy="40" r="36" stroke="url(#proCyanEmerald)" stroke-width="1.5" stroke-dasharray="45 25 15 25" stroke-linecap="round" opacity="0.55" />
+
+              <!-- Estela curva de potencia de la patada (Slash de la chilena) -->
+              <path class="chilena-power-trail" d="M14 54 C 8 30, 26 10, 56 16" stroke="url(#proCyanEmerald)" stroke-width="3.2" stroke-linecap="round" />
+
+              <!-- Silueta Articulada del Jugador haciendo la Chilena -->
+              <g class="chilena-player-body">
+                <!-- Cabeza y espalda arqueada en el aire -->
+                <circle cx="22" cy="52" r="4.8" fill="url(#proCyanEmerald)" />
+                <path d="M26 48 C 32 43, 37 37, 40 30" stroke="url(#proCyanEmerald)" stroke-width="5" stroke-linecap="round" />
+                <!-- Brazos abiertos de equilibrio acrobático -->
+                <path d="M28 46 L 18 57 M31 43 L 40 51" stroke="#1EC1CB" stroke-width="3" stroke-linecap="round" />
+                <!-- Pierna de tijera (impulso) -->
+                <path d="M38 33 L 26 25 L 18 29" stroke="#10B981" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" />
+                <!-- Pierna de remate (conectando el balón arriba) -->
+                <path class="chilena-strike-leg" d="M40 30 L 47 19 L 53 15" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+
+              <!-- Destello de impacto al patear -->
+              <circle class="kick-impact-burst" cx="58" cy="18" r="14" fill="url(#strikeGlow)" />
+
+              <!-- BALÓN DE FÚTBOL 3D PRO MEJORADO -->
+              <g class="pro-soccer-ball">
+                <!-- Esfera 3D con volumen -->
+                <circle cx="58" cy="18" r="10.5" fill="url(#ball3DGrad)" stroke="#FFFFFF" stroke-width="1.2" />
+                <!-- Paneles clásicos de balón de campeonato (Pentágono central + costuras) -->
+                <polygon points="58,13 62.2,16 60.6,20.8 55.4,20.8 53.8,16" fill="#062229" stroke="#1EC1CB" stroke-width="0.7" />
+                <path d="M58 13 L58 7.8 M62.2 16 L67.2 14.5 M60.6 20.8 L64.2 25.2 M55.4 20.8 L51.8 25.2 M53.8 16 L48.8 14.5" stroke="#062229" stroke-width="1.3" stroke-linecap="round" />
+                <!-- Brillo especular superior -->
+                <ellipse cx="55" cy="12.5" rx="3.2" ry="1.4" transform="rotate(-20 55 12.5)" fill="#FFFFFF" opacity="0.85" />
+              </g>
+            </svg>
+          </div>
         </div>
         <h2 class="splash-title" id="splashTitle">Fútbol Master Pro • Control Center</h2>
         <p class="splash-subtitle" id="splashSubtitle">Iniciando telemetría oficial FCF...</p>
@@ -152,6 +206,23 @@
         <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -10" result="goo" />
         <feComposite in="SourceGraphic" in2="goo" operator="atop" />
       </filter>
+      <!-- Gradientes Globales Permanentes para Emblema Chilena + Balón 3D Pro -->
+      <linearGradient id="proCyanEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#FFFFFF" />
+        <stop offset="40%" stop-color="#1EC1CB" />
+        <stop offset="100%" stop-color="#10B981" />
+      </linearGradient>
+      <radialGradient id="ball3DGrad" cx="35%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#FFFFFF" />
+        <stop offset="55%" stop-color="#E2F8FA" />
+        <stop offset="85%" stop-color="#1EC1CB" />
+        <stop offset="100%" stop-color="#073B44" />
+      </radialGradient>
+      <radialGradient id="strikeGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+        <stop offset="45%" stop-color="#1EC1CB" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+      </radialGradient>
     </defs>
   </svg>
 
@@ -3467,17 +3538,66 @@
 
       <!-- 1. BARRA IZQUIERDA (Pill Sidebar Container) -->
       <aside class="pill-sidebar-container pill-sidebar-wrapper pill-sidebar-dock" id="adminPillSidebar">
-        <!-- Top Soccer Ball Refresh Button -->
+        <!-- Top Soccer Ball Refresh Button (Chilena Acrobática + Balón 3D Pro) -->
         <button type="button" class="sidebar-nav-btn sidebar-ball-refresh-btn pill-sidebar-top-logo" id="pillSidebarTopLogo" aria-label="Actualizar datos" onclick="refreshAdminDashboardData(this)">
-          <svg class="soccer-ball-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10" stroke="#1EC1CB" fill="rgba(30, 193, 203, 0.12)" />
-            <polygon points="12 7 16.5 10.2 14.8 15.5 9.2 15.5 7.5 10.2" stroke="#FFFFFF" fill="rgba(16, 185, 129, 0.35)" />
-            <line x1="12" y1="2" x2="12" y2="7" stroke="#1EC1CB" />
-            <line x1="21.5" y1="8.9" x2="16.5" y2="10.2" stroke="#1EC1CB" />
-            <line x1="17.9" y1="20.1" x2="14.8" y2="15.5" stroke="#1EC1CB" />
-            <line x1="6.1" y1="20.1" x2="9.2" y2="15.5" stroke="#1EC1CB" />
-            <line x1="2.5" y1="8.9" x2="7.5" y2="10.2" stroke="#1EC1CB" />
-          </svg>
+          <div class="pro-chilena-emblem">
+            <svg class="chilena-master-svg" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Gradiente líquido Cyan a Esmeralda -->
+                <linearGradient id="proCyanEmerald_dock" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="40%" stop-color="#1EC1CB" />
+                  <stop offset="100%" stop-color="#10B981" />
+                </linearGradient>
+                <!-- Gradiente 3D para el Balón Pro -->
+                <radialGradient id="ball3DGrad_dock" cx="35%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#FFFFFF" />
+                  <stop offset="55%" stop-color="#E2F8FA" />
+                  <stop offset="85%" stop-color="#1EC1CB" />
+                  <stop offset="100%" stop-color="#073B44" />
+                </radialGradient>
+                <!-- Brillo de impacto -->
+                <radialGradient id="strikeGlow_dock" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                  <stop offset="45%" stop-color="#1EC1CB" stop-opacity="0.6" />
+                  <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+
+              <!-- Anillo orbital de telemetría -->
+              <circle class="orbital-ring" cx="40" cy="40" r="36" stroke="url(#proCyanEmerald_dock)" stroke-width="1.5" stroke-dasharray="45 25 15 25" stroke-linecap="round" opacity="0.55" />
+
+              <!-- Estela curva de potencia de la patada (Slash de la chilena) -->
+              <path class="chilena-power-trail" d="M14 54 C 8 30, 26 10, 56 16" stroke="url(#proCyanEmerald_dock)" stroke-width="3.2" stroke-linecap="round" />
+
+              <!-- Silueta Articulada del Jugador haciendo la Chilena -->
+              <g class="chilena-player-body">
+                <!-- Cabeza y espalda arqueada en el aire -->
+                <circle cx="22" cy="52" r="4.8" fill="url(#proCyanEmerald_dock)" />
+                <path d="M26 48 C 32 43, 37 37, 40 30" stroke="url(#proCyanEmerald_dock)" stroke-width="5" stroke-linecap="round" />
+                <!-- Brazos abiertos de equilibrio acrobático -->
+                <path d="M28 46 L 18 57 M31 43 L 40 51" stroke="#1EC1CB" stroke-width="3" stroke-linecap="round" />
+                <!-- Pierna de tijera (impulso) -->
+                <path d="M38 33 L 26 25 L 18 29" stroke="#10B981" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" />
+                <!-- Pierna de remate (conectando el balón arriba) -->
+                <path class="chilena-strike-leg" d="M40 30 L 47 19 L 53 15" stroke="#FFFFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" />
+              </g>
+
+              <!-- Destello de impacto al patear -->
+              <circle class="kick-impact-burst" cx="58" cy="18" r="14" fill="url(#strikeGlow_dock)" />
+
+              <!-- BALÓN DE FÚTBOL 3D PRO MEJORADO -->
+              <g class="pro-soccer-ball">
+                <!-- Esfera 3D con volumen -->
+                <circle cx="58" cy="18" r="10.5" fill="url(#ball3DGrad_dock)" stroke="#FFFFFF" stroke-width="1.2" />
+                <!-- Paneles clásicos de balón de campeonato (Pentágono central + costuras) -->
+                <polygon points="58,13 62.2,16 60.6,20.8 55.4,20.8 53.8,16" fill="#062229" stroke="#1EC1CB" stroke-width="0.7" />
+                <path d="M58 13 L58 7.8 M62.2 16 L67.2 14.5 M60.6 20.8 L64.2 25.2 M55.4 20.8 L51.8 25.2 M53.8 16 L48.8 14.5" stroke="#062229" stroke-width="1.3" stroke-linecap="round" />
+                <!-- Brillo especular superior -->
+                <ellipse cx="55" cy="12.5" rx="3.2" ry="1.4" transform="rotate(-20 55 12.5)" fill="#FFFFFF" opacity="0.85" />
+              </g>
+            </svg>
+          </div>
           <span class="sidebar-item-label">Actualizar Datos</span>
         </button>
 
