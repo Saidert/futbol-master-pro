@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261116_v22_isolated_shell">
+  <link rel="stylesheet" href="styles.css?v=20261118_v25_header">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -41,10 +41,13 @@
     header button,
     header .btn,
     header .btn-auth-header,
+    header .btn-header-login,
+    header #btnHeaderLogin,
     header .btn-create-header,
     header #btnHeaderCrear,
     .user-auth-wrap,
     #btnAuthHeader,
+    #btnHeaderLogin,
     #btnMobileAuth,
     .admin-subtab-btn,
     .pill-nav-item,
@@ -418,12 +421,18 @@
           </div>
         </div>
 
-        <!-- Botón Iniciar Sesión / Cuenta de Usuario -->
+        <!-- Botones de Autenticación y Perfil / Roles de Usuario -->
         <div class="user-auth-wrap" id="userAuthWrap">
-          <button type="button" class="btn-auth-header glass" id="btnAuthHeader" title="Perfil y roles de usuario" onclick="toggleUserDropdownMenu(event)">
-            <span class="user-avatar-badge" id="userAvatarBadge" style="display: none;">👤</span>
-            <svg class="auth-icon-svg" id="authIconSvg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-            <span class="auth-btn-label" id="authBtnLabel">Acceso Clubes / Organizador</span>
+          <!-- Botón Principal con Gradiente Esmeralda/Cian: 🔑 Iniciar Sesión (Modo Espectador) -->
+          <button type="button" class="btn-header-login" id="btnHeaderLogin" onclick="openAuthModal('auth-login-pane')" title="Iniciar Sesión en Fútbol Master Pro">
+            <span>🔑 Iniciar Sesión</span>
+          </button>
+
+          <!-- Botón Avatar / Selector de Rol (👤 en modo espectador, Avatar + Nombre • Rol en autenticado) -->
+          <button type="button" class="btn-auth-header glass avatar-circle-only" id="btnAuthHeader" title="Perfil y roles de usuario" onclick="toggleUserDropdownMenu(event)">
+            <span class="user-avatar-badge" id="userAvatarBadge">👤</span>
+            <svg class="auth-icon-svg" id="authIconSvg" style="display: none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span class="auth-btn-label" id="authBtnLabel" style="display: none;"></span>
           </button>
 
           <!-- Menú Desplegable del Perfil: Nombre, Correo, Rol Fijo y Accesos Rápidos -->
@@ -438,14 +447,14 @@
             </div>
             <div class="user-dropdown-divider"></div>
             <div class="user-quick-roles" id="userDropdownQuickRoles">
-              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('organizer'); navigateToView('admin'); toggleUserDropdownMenu();">
-                <span>🔑 Iniciar Sesión como Organizador</span>
+              <button type="button" class="user-menu-item" onclick="openAuthModal('auth-login-pane'); toggleUserDropdownMenu();">
+                <span>🔑 Iniciar Sesión / Registro</span>
               </button>
               <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('coach'); navigateToView('club'); toggleUserDropdownMenu();">
-                <span>🛡️ Acceso Delegado de Club</span>
+                <span>👔 Delegado de Club</span>
               </button>
-              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('fan'); navigateToView('torneos'); toggleUserDropdownMenu();">
-                <span>👁️ Vista Espectador</span>
+              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('organizer'); navigateToView('admin'); toggleUserDropdownMenu();">
+                <span>🏆 Organizador / Admin</span>
               </button>
             </div>
             <div class="user-dropdown-divider" id="dropdownLogoutDivider" style="display: none;"></div>
@@ -5581,6 +5590,36 @@
                 <span>Iniciar Sesión &rarr;</span>
               </button>
 
+              <!-- Accesos Rápidos de Demostración (Demo 1 Clic) -->
+              <div class="auth-quick-test-section">
+                <div class="quick-test-header">
+                  <span>⚡</span><span>Accesos Rápidos de Demostración</span>
+                </div>
+                <div class="quick-test-grid">
+                  <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('organizador@futbolmaster.co', 'org123', 'organizer')">
+                    <span class="demo-role-icon">🏆</span>
+                    <div class="demo-role-info">
+                      <strong>Organizador</strong>
+                      <span>organizador@...</span>
+                    </div>
+                  </button>
+                  <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('tecnico@futbolmaster.co', 'coach123', 'coach')">
+                    <span class="demo-role-icon">📋</span>
+                    <div class="demo-role-info">
+                      <strong>Delegado / DT</strong>
+                      <span>tecnico@...</span>
+                    </div>
+                  </button>
+                </div>
+                <button type="button" class="btn-quick-demo-login btn-quick-demo-superadmin" onclick="quickFillAndLogin('boadasaidert466@gmail.com', '123Sai', 'admin')">
+                  <span class="demo-role-icon">👑</span>
+                  <div class="demo-role-info">
+                    <strong>Administrador General (Superadmin)</strong>
+                    <span>boadasaidert466@gmail.com</span>
+                  </div>
+                </button>
+              </div>
+
               <div class="glassy-footer-switch">
                 <div class="glassy-divider"></div>
                 <p class="switch-text">¿No tienes una cuenta? <button type="button" class="btn-auth-switch" onclick="switchAuthMode('register')">Regístrate</button></p>
@@ -6694,7 +6733,7 @@
   <datalist id="colombianVenuesDatalist"></datalist>
 
   <script src="silk-bg.js"></script>
-  <script src="app.js?v=20261118_v24_architect"></script>
+  <script src="app.js?v=20261118_v25_header"></script>
 </body>
 </html>
 

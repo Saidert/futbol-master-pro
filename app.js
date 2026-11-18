@@ -2548,6 +2548,8 @@ function updatePublicModeBannerVisibility() {
 }
 
 function updateAuthUI() {
+  const btnHeaderLogin = document.getElementById('btnHeaderLogin');
+  const btnAuthHeader = document.getElementById('btnAuthHeader');
   const authBtnText = document.getElementById('authBtnLabel') || document.getElementById('authBtnText');
   const mobileAuthBtnLabel = document.getElementById('mobileAuthBtnLabel');
   const userAvatarBadge = document.getElementById('userAvatarBadge');
@@ -2628,14 +2630,30 @@ function updateAuthUI() {
     if (dropdownLinkCoach) dropdownLinkCoach.style.display = 'none';
     if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = 'none';
 
-    // 3. Zona derecha: Sin notificaciones y botón "Acceso Clubes / Organizador"
+    // 3. Zona derecha: Mostrar "🔑 Iniciar Sesión" y botón circular "👤" (#btnAuthHeader)
+    if (btnHeaderLogin) {
+      btnHeaderLogin.style.display = 'inline-flex';
+    }
+    if (btnAuthHeader) {
+      btnAuthHeader.style.display = 'inline-flex';
+      btnAuthHeader.classList.add('avatar-circle-only');
+      btnAuthHeader.title = 'Selector de roles y perfil de usuario';
+    }
+    if (userAvatarBadge) {
+      userAvatarBadge.style.display = 'inline-flex';
+      userAvatarBadge.textContent = '👤';
+    }
+    if (authIconSvg) authIconSvg.style.display = 'none';
+    if (authBtnText) {
+      authBtnText.style.display = 'none';
+      authBtnText.textContent = '';
+    }
+    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = '🔑 Iniciar Sesión';
+
+    // Campana de notificaciones OCULTA en modo espectador
     if (notificationsWrap) notificationsWrap.style.display = 'none';
     if (notificationsBadge) notificationsBadge.style.display = 'none';
     if (btnMobileLogout) btnMobileLogout.style.display = 'none';
-    if (authBtnText) authBtnText.textContent = 'Acceso Clubes / Organizador';
-    if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = 'Acceso Clubes / Organizador';
-    if (userAvatarBadge) { userAvatarBadge.style.display = 'none'; userAvatarBadge.textContent = ''; }
-    if (authIconSvg) authIconSvg.style.display = 'inline-block';
     
     // Rellenar dinámicamente los 3 spans por defecto para visitante
     if (dropdownUserName) dropdownUserName.textContent = 'Visitante Oficial';
@@ -2667,7 +2685,14 @@ function updateAuthUI() {
       document.body.classList.add('role-spectator');
     }
 
-    const userName = session.name || (role === 'admin' ? 'Carlos Mendoza' : (role === 'coach' ? 'Mario Yepes (DT)' : (role === 'organizer' ? 'Organizador' : 'Aficionado')));
+    // Ocultar botón de Iniciar Sesión en modo autenticado
+    if (btnHeaderLogin) btnHeaderLogin.style.display = 'none';
+    if (btnAuthHeader) {
+      btnAuthHeader.style.display = 'inline-flex';
+      btnAuthHeader.classList.remove('avatar-circle-only');
+    }
+
+    const userName = session.name || (role === 'admin' ? 'Carlos Mendoza' : (role === 'coach' ? 'Mario Yepes (DT)' : (role === 'organizer' ? 'Carlos Mendoza' : 'Aficionado')));
     const initials = userName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
 
     if (userAvatarBadge) {
@@ -2728,8 +2753,11 @@ function updateAuthUI() {
 
       // 3. Zona derecha: Notificaciones visibles y Perfil del Aficionado
       if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
-      if (authBtnText) authBtnText.textContent = userName.split(' ')[0] || 'Mi Cuenta';
-      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = userName || 'Mi Cuenta';
+      if (authBtnText) {
+        authBtnText.style.display = 'inline-block';
+        authBtnText.textContent = `${userName} • Aficionado`;
+      }
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Aficionado`;
       if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos';
       if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos';
 
@@ -2756,8 +2784,11 @@ function updateAuthUI() {
 
       // 3. Zona derecha: Notificaciones visibles y Perfil del DT
       if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
-      if (authBtnText) authBtnText.textContent = userName.split(' ')[0] || 'Mi Club';
-      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = userName || 'Mi Club';
+      if (authBtnText) {
+        authBtnText.style.display = 'inline-block';
+        authBtnText.textContent = `${userName} • Delegado DT`;
+      }
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Delegado DT`;
       if (navLinkTorneosText) navLinkTorneosText.textContent = 'Mis Torneos';
       if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Mis Torneos';
 
@@ -2788,8 +2819,11 @@ function updateAuthUI() {
       if (mobileNavCreateLink) mobileNavCreateLink.style.display = 'flex';
       if (mobileBtnCreateNew) mobileBtnCreateNew.style.display = 'flex';
       if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
-      if (authBtnText) authBtnText.textContent = userName.split(' ')[0] || 'Organizador';
-      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = userName || 'Organizador';
+      if (authBtnText) {
+        authBtnText.style.display = 'inline-block';
+        authBtnText.textContent = `${userName} • Organizador`;
+      }
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Organizador`;
       if (navLinkTorneosText) navLinkTorneosText.textContent = 'Mis Torneos';
       if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Mis Torneos';
 
@@ -2812,8 +2846,11 @@ function updateAuthUI() {
       if (mobileNavCreateLink) mobileNavCreateLink.style.display = 'flex';
       if (mobileBtnCreateNew) mobileBtnCreateNew.style.display = 'flex';
       if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
-      if (authBtnText) authBtnText.textContent = userName.split(' ')[0] || 'Admin';
-      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = userName || 'Admin';
+      if (authBtnText) {
+        authBtnText.style.display = 'inline-block';
+        authBtnText.textContent = `${userName} • Organizador`;
+      }
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Organizador`;
 
       // Redirección automática a #/admin
       const curR = getNormalizedRoute();
@@ -3093,14 +3130,53 @@ function initAuthControls() {
     });
   }
 
+let lastUserDropdownToggleTime = 0;
 function toggleUserDropdownMenu(e) {
-  if (e) e.stopPropagation();
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+  }
+  const now = Date.now();
+  if (now - lastUserDropdownToggleTime < 120) return;
+  lastUserDropdownToggleTime = now;
+
   const menu = document.getElementById('userDropdownMenu');
   if (!menu) return;
-  const isVis = menu.style.display === 'block';
-  menu.style.display = isVis ? 'none' : 'block';
+  const isVis = menu.style.display === 'block' || menu.classList.contains('active');
+  if (isVis) {
+    menu.style.display = 'none';
+    menu.classList.remove('active');
+  } else {
+    menu.style.display = 'block';
+    menu.classList.add('active');
+  }
 }
 window.toggleUserDropdownMenu = toggleUserDropdownMenu;
+
+window.quickFillAndLogin = function(email, pass, role) {
+  const inputUser = document.getElementById('authUserName');
+  const inputPass = document.getElementById('authUserPassword');
+  if (inputUser) inputUser.value = email;
+  if (inputPass) inputPass.value = pass;
+  
+  if (role) {
+    if (typeof setCurrentUserByRole === 'function') {
+      setCurrentUserByRole(role);
+    }
+    if (typeof closeAuthModal === 'function') {
+      closeAuthModal();
+    }
+    if (typeof showToast === 'function') {
+      const titles = { admin: 'Administrador General', organizer: 'Organizador', coach: 'Delegado DT' };
+      showToast(`¡Sesión iniciada como ${titles[role] || role}!`, 'success', 2500);
+    }
+    if (typeof navigateToView === 'function') {
+      if (role === 'admin' || role === 'organizer') navigateToView('admin');
+      else if (role === 'coach') navigateToView('club');
+      else navigateToView('torneos');
+    }
+  }
+};
 
   // Clic en Header Auth / Avatar
   if (btnAuthHeader) {

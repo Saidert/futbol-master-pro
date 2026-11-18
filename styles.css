@@ -20664,3 +20664,337 @@ body.public-mode-active .btn-delete-t {
   background: rgba(30, 193, 203, 0.15);
   color: #a5f3fc;
 }
+
+/* =============================================================================
+   RESTAURACIÓN HEADER: BOTÓN INICIAR SESIÓN, MENÚ DE ROLES (👤) Y CENTRADO DE LOGO
+   ============================================================================= */
+
+/* 1. Centrado Matemático del Icono del Logo Principal */
+.header-brand .brand-icon,
+.brand-icon {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-indent: 0 !important;
+  border-radius: 50% !important;
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  position: relative !important;
+  overflow: visible !important;
+  box-sizing: border-box !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45) !important;
+}
+
+.header-brand .brand-icon svg,
+.brand-icon svg {
+  display: block !important;
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 2 !important;
+  color: #0b0f19 !important;
+  transform: none !important;
+}
+
+.header-brand:hover .brand-icon svg {
+  transform: scale(1.08) !important;
+}
+
+.header-brand .brand-icon .pulse-ring,
+.brand-icon .pulse-ring {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 50% !important;
+  border: 2px solid #10b981 !important;
+  margin: auto !important;
+  padding: 0 !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  box-sizing: border-box !important;
+  animation: pulse-ring 2.5s infinite !important;
+}
+
+@media (max-width: 768px) {
+  .header-brand .brand-icon {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    text-indent: 0 !important;
+  }
+  .header-brand .brand-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    margin: 0 auto !important;
+  }
+}
+
+/* 2. Contenedor de Autenticación en Header */
+.user-auth-wrap {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  z-index: 99999 !important;
+}
+
+/* 3. Botón Principal "🔑 Iniciar Sesión" */
+.btn-header-login {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.45rem !important;
+  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%) !important;
+  color: #03150f !important;
+  font-family: var(--font-primary, system-ui) !important;
+  font-size: 0.82rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.25px !important;
+  padding: 0.42rem 0.95rem !important;
+  border-radius: 9999px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.6) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-right: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45), 0 0 10px rgba(6, 182, 212, 0.3), inset 0 1px 1.5px rgba(255, 255, 255, 0.75) !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  text-decoration: none !important;
+  transition: all 0.22s cubic-bezier(0.32, 0.72, 0, 1) !important;
+  position: relative !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+
+.btn-header-login:hover {
+  transform: translateY(-1.5px) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.55), 0 0 16px rgba(16, 185, 129, 0.4), inset 0 1.5px 2px rgba(255, 255, 255, 0.9) !important;
+  filter: brightness(1.07) !important;
+}
+
+.btn-header-login:active {
+  transform: translateY(0.5px) scale(0.97) !important;
+}
+
+/* 4. Botón Avatar Circular / Selector de Roles (#btnAuthHeader) */
+.btn-auth-header.avatar-circle-only {
+  width: 38px !important;
+  height: 38px !important;
+  min-width: 38px !important;
+  min-height: 38px !important;
+  padding: 0 !important;
+  border-radius: 50% !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-indent: 0 !important;
+}
+
+.btn-auth-header.avatar-circle-only .user-avatar-badge {
+  margin: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.15rem !important;
+  line-height: 1 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.btn-auth-header:not(.avatar-circle-only) {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.55rem !important;
+  padding: 0.35rem 0.85rem 0.35rem 0.45rem !important;
+  border-radius: 9999px !important;
+  max-width: 320px !important;
+  white-space: nowrap !important;
+}
+
+.btn-auth-header:not(.avatar-circle-only) .user-avatar-badge {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.35) 0%, rgba(6, 182, 212, 0.35) 100%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.5) !important;
+  color: #a5f3fc !important;
+  font-size: 0.76rem !important;
+  font-weight: 800 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-transform: uppercase !important;
+}
+
+.btn-auth-header:not(.avatar-circle-only) .auth-btn-label {
+  display: inline-block !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: #e2e8f0 !important;
+  letter-spacing: 0.2px !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  max-width: 220px !important;
+}
+
+/* 5. Menú Dropdown de Usuario / Roles */
+.user-dropdown-menu {
+  min-width: 260px !important;
+  border-radius: 14px !important;
+  background: rgba(8, 22, 28, 0.96) !important;
+  border: 1px solid rgba(30, 193, 203, 0.3) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(30, 193, 203, 0.15) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+/* 6. Accesos Rápidos de Demostración en Modal de Login */
+.auth-quick-test-section {
+  margin-top: 1rem !important;
+  padding-top: 0.85rem !important;
+  border-top: 1px dashed rgba(255, 255, 255, 0.15) !important;
+}
+
+.quick-test-header {
+  font-size: 0.72rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  color: #a5f3fc !important;
+  margin-bottom: 0.6rem !important;
+  text-align: center !important;
+  font-weight: 800 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.4rem !important;
+}
+
+.quick-test-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.btn-quick-demo-login {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  padding: 0.45rem 0.65rem !important;
+  background: rgba(16, 185, 129, 0.08) !important;
+  border: 1px solid rgba(16, 185, 129, 0.25) !important;
+  border-radius: 8px !important;
+  color: #f1f5f9 !important;
+  cursor: pointer !important;
+  font-family: var(--font-primary, system-ui) !important;
+  transition: all 0.2s ease !important;
+  text-align: left !important;
+}
+
+.btn-quick-demo-login:hover {
+  background: rgba(16, 185, 129, 0.2) !important;
+  border-color: rgba(30, 193, 203, 0.5) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2) !important;
+}
+
+.btn-quick-demo-superadmin {
+  width: 100% !important;
+  justify-content: flex-start !important;
+  background: rgba(234, 179, 8, 0.08) !important;
+  border-color: rgba(234, 179, 8, 0.3) !important;
+}
+
+.btn-quick-demo-superadmin:hover {
+  background: rgba(234, 179, 8, 0.18) !important;
+  border-color: rgba(234, 179, 8, 0.6) !important;
+  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.25) !important;
+}
+
+.demo-role-icon {
+  font-size: 1.1rem !important;
+  flex-shrink: 0 !important;
+}
+
+.demo-role-info {
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+.demo-role-info strong {
+  font-size: 0.78rem !important;
+  color: #fff !important;
+  white-space: nowrap !important;
+}
+
+.demo-role-info span {
+  font-size: 0.68rem !important;
+  color: #94a3b8 !important;
+  white-space: nowrap !important;
+  text-overflow: ellipsis !important;
+  overflow: hidden !important;
+}
+
+/* 7. Blindaje CSS: Modo Espectador NO debe ocultar elementos de Auth */
+body.role-spectator #btnAuthHeader,
+body.role-spectator .user-auth-wrap {
+  display: inline-flex !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.role-spectator:not(.logged-in) #btnHeaderLogin,
+body.not-logged-in #btnHeaderLogin,
+body.role-guest #btnHeaderLogin {
+  display: inline-flex !important;
+  pointer-events: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+body.logged-in #btnHeaderLogin {
+  display: none !important;
+}
+
+body.role-spectator #userDropdownMenu {
+  pointer-events: auto !important;
+}
+
+body.role-spectator #userDropdownMenu.active,
+body.role-spectator #userDropdownMenu[style*="display: block"] {
+  display: block !important;
+}
