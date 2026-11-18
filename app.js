@@ -5584,6 +5584,62 @@ function triggerMicroSkeleton(targetPane, callback) {
 }
 window.triggerMicroSkeleton = triggerMicroSkeleton;
 
+// Caché de apartados ya montados para evitar re-renderizar innerHTML al alternar pestañas
+window._adminMountedSections = window._adminMountedSections || {};
+
+function mountAdminSectionData(normSection, force = false) {
+  if (!window._adminMountedSections) window._adminMountedSections = {};
+  if (!force && window._adminMountedSections[normSection]) {
+    return false; // Ya montado previamente; cambio instantáneo sin costo de CPU
+  }
+  window._adminMountedSections[normSection] = true;
+
+  if (normSection === 'overview') {
+    if (typeof renderAdminLiveDashboard === 'function') renderAdminLiveDashboard();
+  } else if (normSection === 'torneos' || normSection === 'tournaments') {
+    if (typeof renderAdminTournamentsTable === 'function') renderAdminTournamentsTable();
+    if (typeof renderAdminCorrectionsTab === 'function') renderAdminCorrectionsTab();
+  } else if (normSection === 'clubes' || normSection === 'clubs-finances' || normSection === 'profile') {
+    if (typeof renderAdminOrganizerTab === 'function') renderAdminOrganizerTab();
+    if (typeof renderAdminProfileTab === 'function') renderAdminProfileTab();
+  } else if (normSection === 'canchas' || normSection === 'venues') {
+    if (typeof renderAdminVenuesCatalog === 'function') renderAdminVenuesCatalog();
+  } else if (normSection === 'auditoria' || normSection === 'audit' || normSection === 'users') {
+    if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
+    if (typeof renderAdminUsersTable === 'function') renderAdminUsersTable();
+  }
+
+  return true;
+}
+window.mountAdminSectionData = mountAdminSectionData;
+
+function refreshAdminDashboardData(btnEl) {
+  const btn = btnEl || document.querySelector('.sidebar-ball-refresh-btn') || document.getElementById('pillSidebarTopLogo');
+  if (btn) {
+    btn.classList.add('spinning');
+    setTimeout(() => btn.classList.remove('spinning'), 650);
+  }
+
+  // Limpiar caché de montado para forzar recarga de datos frescos
+  window._adminMountedSections = {};
+
+  const activeBtn = document.querySelector('.admin-subtab-btn.active');
+  const activeSec = activeBtn ? (activeBtn.getAttribute('data-section') || activeBtn.getAttribute('data-subtab')?.replace('admin-tab-', '') || 'overview') : 'overview';
+
+  mountAdminSectionData(activeSec, true);
+
+  const targetSection = document.querySelector(`section[data-admin-section="${activeSec}"]`);
+  if (targetSection) {
+    if (typeof animateAllCountUps === 'function') animateAllCountUps(targetSection);
+    if (typeof animateAllBars === 'function') animateAllBars(targetSection);
+  }
+
+  if (typeof showToast === 'function') {
+    showToast('Datos del Dashboard actualizados ⚽', 'success', 2200);
+  }
+}
+window.refreshAdminDashboardData = refreshAdminDashboardData;
+
 function setActiveAdminSection(sectionId) {
   if (!sectionId) sectionId = 'overview';
   const normSection = sectionId.replace('admin-tab-', '');
@@ -5624,14 +5680,14 @@ function setActiveAdminSection(sectionId) {
     activeBtn.style.setProperty('--glide-from', '0px');
   }
 
-  // 2. Ocultar absolutamente todas las secciones con display: none !important tanto por clase como inline
+  // 2. Ocultar absolutamente todas las secciones con display: none !important (Cero lag)
   const allSections = document.querySelectorAll('section[data-admin-section], .admin-section-pane');
   allSections.forEach(sec => {
     sec.classList.remove('active', 'active-view');
     sec.style.setProperty('display', 'none', 'important');
   });
 
-  // 3. Activar y desplegar la sección solicitada con morphing elástico
+  // 3. Activar y desplegar la sección solicitada (SOLO alternar visibilidad a 60 FPS)
   const targetSection = document.querySelector(`section[data-admin-section="${normSection}"]`) || 
                         document.getElementById(`admin-tab-${normSection}`) ||
                         document.getElementById(sectionId);
@@ -5639,7 +5695,6 @@ function setActiveAdminSection(sectionId) {
 
   if (targetSection) {
     targetSection.classList.remove('active-view');
-    void targetSection.offsetHeight;
     targetSection.classList.add('active', 'active-view');
 
     if (normSection === 'overview') {
@@ -5654,28 +5709,12 @@ function setActiveAdminSection(sectionId) {
       }
     }
 
-    if (typeof triggerMicroSkeleton === 'function') {
-      triggerMicroSkeleton(targetSection, () => {
-        if (typeof animateAllCountUps === 'function') animateAllCountUps(targetSection);
-        if (typeof animateAllBars === 'function') animateAllBars(targetSection);
-      });
+    // 4. Montar datos ÚNICAMENTE la primera vez que se visita (Lazy Mount)
+    const wasJustMounted = mountAdminSectionData(normSection, false);
+    if (wasJustMounted) {
+      if (typeof animateAllCountUps === 'function') animateAllCountUps(targetSection);
+      if (typeof animateAllBars === 'function') animateAllBars(targetSection);
     }
-  }
-
-  // 4. Renderizado Condicional Exclusivo según Apartado
-  if (normSection === 'overview') {
-    if (typeof renderAdminLiveDashboard === 'function') renderAdminLiveDashboard();
-  } else if (normSection === 'torneos' || normSection === 'tournaments') {
-    if (typeof renderAdminTournamentsTable === 'function') renderAdminTournamentsTable();
-    if (typeof renderAdminCorrectionsTab === 'function') renderAdminCorrectionsTab();
-  } else if (normSection === 'clubes' || normSection === 'clubs-finances' || normSection === 'profile') {
-    if (typeof renderAdminOrganizerTab === 'function') renderAdminOrganizerTab();
-    if (typeof renderAdminProfileTab === 'function') renderAdminProfileTab();
-  } else if (normSection === 'canchas' || normSection === 'venues') {
-    if (typeof renderAdminVenuesCatalog === 'function') renderAdminVenuesCatalog();
-  } else if (normSection === 'auditoria' || normSection === 'audit' || normSection === 'users') {
-    if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
-    if (typeof renderAdminUsersTable === 'function') renderAdminUsersTable();
   }
 
   // 5. Sincronizar indicador deslizante si existe

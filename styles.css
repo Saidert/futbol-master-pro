@@ -17192,57 +17192,56 @@ header.global-spa-header .header-brand,
   pointer-events: auto !important;
 }
 
-/* Centrar el icono del botón superior del logo */
-.pill-sidebar-container > *:first-child,
-.sidebar-logo-btn,
-.pill-sidebar-top-logo {
+/* Balón de fútbol limpio y perfectamente centrado + giro al actualizar */
+.sidebar-ball-refresh-btn,
+.pill-sidebar-container > *:first-child {
+  position: relative !important;
   width: 44px !important;
-  height: 44px !important;
   min-width: 44px !important;
   max-width: 44px !important;
+  height: 44px !important;
   padding: 0 !important;
   margin: 0 auto !important;
   border-radius: 50% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1.5px solid rgba(30, 193, 203, 0.55) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
   text-indent: 0 !important;
-  background: radial-gradient(circle at 35% 35%, rgba(30, 193, 203, 0.45) 0%, rgba(8, 28, 34, 0.95) 100%) !important;
-  border: 1.5px solid rgba(165, 243, 252, 0.6) !important;
-  box-shadow: 0 0 22px rgba(30, 193, 203, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.75) !important;
-  cursor: pointer !important;
+  font-size: 0 !important;
   overflow: visible !important;
-  position: relative !important;
-  flex-shrink: 0 !important;
-  outline: none !important;
-  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease !important;
+  cursor: pointer !important;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.28s ease, background 0.28s ease !important;
 }
 
-.sidebar-logo-btn:hover,
-.pill-sidebar-top-logo:hover {
-  transform: scale(1.08) !important;
-  box-shadow: 0 0 30px rgba(30, 193, 203, 0.8), inset 0 1px 3px #ffffff !important;
+.sidebar-ball-refresh-btn:hover,
+.pill-sidebar-container > *:first-child:hover {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: rgba(30, 193, 203, 0.85) !important;
+  box-shadow: 0 0 20px rgba(30, 193, 203, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.7) !important;
 }
 
-.pill-sidebar-container > *:first-child svg,
-.pill-sidebar-container > *:first-child span,
-.sidebar-logo-btn svg,
-.pill-sidebar-top-logo svg {
-  margin: 0 auto !important;
+.sidebar-ball-refresh-btn svg.soccer-ball-icon,
+.pill-sidebar-container > *:first-child svg {
+  width: 22px !important;
+  height: 22px !important;
+  min-width: 22px !important;
+  min-height: 22px !important;
+  margin: 0 !important;
+  padding: 0 !important;
   position: static !important;
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
   transform: none !important;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
-.sidebar-logo-btn .top-logo-sphere,
-.pill-sidebar-top-logo .top-logo-sphere {
-  width: 100% !important;
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border-radius: 50% !important;
-  overflow: hidden !important;
-  margin: 0 auto !important;
+.sidebar-ball-refresh-btn:hover svg.soccer-ball-icon,
+.sidebar-ball-refresh-btn.spinning svg.soccer-ball-icon {
+  transform: rotate(360deg) scale(1.1) !important;
 }
 
 /* Grupos y divisores */
@@ -17355,17 +17354,9 @@ header.global-spa-header .header-brand,
   }
 }
 
-@keyframes viewSmoothMorph {
-  0% {
-    opacity: 0;
-    transform: translateY(14px) scale(0.985);
-    filter: blur(6px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    filter: blur(0px);
-  }
+@keyframes fastTabSwitch {
+  from { opacity: 0; transform: translate3d(0, 6px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
 /* Pastilla activa: círculo luminoso de 44px x 44px fijo que viaja con glide */
@@ -19921,11 +19912,48 @@ body.route-club {
   background: rgba(30, 193, 203, 0.65);
 }
 
-/* Animación de Entrada Morphing Elástico por Vista */
+/* Transición Ultraligera de Cambio de Apartado a 60 FPS */
+[data-admin-section] {
+  will-change: opacity, transform;
+  contain: content;
+}
+
+[data-admin-section].active-view,
+[data-admin-section][style*="grid"],
+[data-admin-section][style*="block"],
 .admin-active-viewport > section.active,
 .admin-active-viewport > [data-admin-section].active-view,
 .admin-active-viewport > [data-admin-section].active {
-  animation: viewSmoothMorph 0.42s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+  animation: fastTabSwitch 0.18s ease-out forwards !important;
+}
+
+/* Eliminación estricta de backdrop-filter en tarjetas internas contra el Lag */
+[data-admin-section] *,
+.bento-card,
+.admin-bento-card,
+.v22-card,
+.club-mini-card,
+.match-progress-card,
+.tournament-card,
+.coach-panel-container .glass-panel,
+.coach-panel-container .coach-next-match-card,
+.coach-panel-container .club-hero-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Acabado Cristal Líquido de Alto Rendimiento (60 FPS sin costo de blur) */
+.bento-card,
+.admin-bento-card,
+.v22-card,
+.match-progress-card,
+.tournament-card {
+  background: linear-gradient(135deg, rgba(12, 42, 50, 0.86) 0%, rgba(7, 26, 32, 0.92) 100%) !important;
+  border: 1px solid rgba(165, 243, 252, 0.25) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35) !important;
+  contain: layout paint style;
 }
 
 /* Secciones individuales: aislamiento total */

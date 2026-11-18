@@ -289,6 +289,9 @@ void main() {
   let isPaused = false;
   let startTime = performance.now();
 
+  let lastFrameTime = 0;
+  const targetInterval = 1000 / 30; // ~33.3ms (30 FPS cap para liberar GPU)
+
   function compileShader(gl, type, source) {
     const shader = gl.createShader(type);
     gl.shaderSource(shader, source);
@@ -303,7 +306,7 @@ void main() {
 
   function resize() {
     if (!canvas || !gl) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = 0.75; // Resolución optimizada a 0.75x: 70% menos carga GPU manteniendo suavidad visual
     const w = Math.max(1, Math.floor(window.innerWidth * dpr));
     const h = Math.max(1, Math.floor(window.innerHeight * dpr));
     if (canvas.width !== w || canvas.height !== h) {
@@ -315,6 +318,11 @@ void main() {
 
   function render(now) {
     if (isPaused || !gl || !program) return;
+    if (now - lastFrameTime < targetInterval) {
+      animId = requestAnimationFrame(render);
+      return;
+    }
+    lastFrameTime = now;
     resize();
     const seconds = (now - startTime) * 0.001;
     // u_scene = vec4(canvas width, canvas height, seconds * 0.86, 4.0)

@@ -3467,15 +3467,18 @@
 
       <!-- 1. BARRA IZQUIERDA (Pill Sidebar Container) -->
       <aside class="pill-sidebar-container pill-sidebar-wrapper pill-sidebar-dock" id="adminPillSidebar">
-        <!-- Top Logo -->
-        <button type="button" class="sidebar-nav-btn pill-sidebar-top-logo sidebar-logo-btn" id="pillSidebarTopLogo" onclick="navigateTo('home')">
-          <div class="top-logo-sphere">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <polygon points="12 6 15 10 13 15 11 15 9 10 12 6"></polygon>
-            </svg>
-          </div>
-          <span class="sidebar-item-label">Ir al Inicio</span>
+        <!-- Top Soccer Ball Refresh Button -->
+        <button type="button" class="sidebar-nav-btn sidebar-ball-refresh-btn pill-sidebar-top-logo" id="pillSidebarTopLogo" aria-label="Actualizar datos" onclick="refreshAdminDashboardData(this)">
+          <svg class="soccer-ball-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" stroke="#1EC1CB" fill="rgba(30, 193, 203, 0.12)" />
+            <polygon points="12 7 16.5 10.2 14.8 15.5 9.2 15.5 7.5 10.2" stroke="#FFFFFF" fill="rgba(16, 185, 129, 0.35)" />
+            <line x1="12" y1="2" x2="12" y2="7" stroke="#1EC1CB" />
+            <line x1="21.5" y1="8.9" x2="16.5" y2="10.2" stroke="#1EC1CB" />
+            <line x1="17.9" y1="20.1" x2="14.8" y2="15.5" stroke="#1EC1CB" />
+            <line x1="6.1" y1="20.1" x2="9.2" y2="15.5" stroke="#1EC1CB" />
+            <line x1="2.5" y1="8.9" x2="7.5" y2="10.2" stroke="#1EC1CB" />
+          </svg>
+          <span class="sidebar-item-label">Actualizar Datos</span>
         </button>
 
         <div class="pill-dock-divider"></div>
