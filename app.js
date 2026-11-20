@@ -5340,9 +5340,12 @@ function renderTournamentsListView() {
     let actionButtonsHtml = '';
     if (role === 'admin' || role === 'organizer') {
       actionButtonsHtml = `
-        <button type="button" class="btn-action-manage btn-open-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 110px;">
+        <button type="button" class="btn-action-manage btn-open-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 100px;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
           <span>Gestionar</span>
+        </button>
+        <button type="button" class="btn-chip btn-cuadro-t" data-id="${escapeHtml(t.id)}" title="Ver Fases Eliminatorias (Cuadro 5 Columnas)" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; color: #1EC1CB; border-color: rgba(30,193,203,0.4); background: rgba(30,193,203,0.12);">
+          <span>🔀 Cuadro</span>
         </button>
         <button type="button" class="btn-chip btn-tv-t" data-id="${escapeHtml(t.id)}" title="Ver en Modo TV / Pantalla Gigante" style="padding: 0.5rem 0.75rem; font-size: 0.8rem;">
           <span>📺 Modo TV</span>
@@ -5360,8 +5363,11 @@ function renderTournamentsListView() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           <span>📋 Solicitar Inscripción al Torneo</span>
         </button>` : ''}
-        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 120px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399;">
+        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 110px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4); color: #34d399;">
           <span>👁️ Ver Torneo</span>
+        </button>
+        <button type="button" class="btn-chip btn-cuadro-t" data-id="${escapeHtml(t.id)}" title="Ver Fases Eliminatorias (Cuadro 5 Columnas)" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; color: #1EC1CB; border-color: rgba(30,193,203,0.4); background: rgba(30,193,203,0.12);">
+          <span>🔀 Cuadro</span>
         </button>
         <button type="button" class="btn-chip btn-tv-t" data-id="${escapeHtml(t.id)}" title="Ver en Modo TV" style="padding: 0.5rem 0.75rem; font-size: 0.8rem;">
           <span>📺 Modo TV</span>
@@ -5375,9 +5381,12 @@ function renderTournamentsListView() {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
           <span>📋 Solicitar Inscripción al Torneo</span>
         </button>` : ''}
-        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 140px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5); color: #34d399;">
+        <button type="button" class="btn-action-manage btn-view-public-t" data-id="${escapeHtml(t.id)}" style="flex: 1; min-width: 130px; background: rgba(16,185,129,0.2); border: 1px solid rgba(16,185,129,0.5); color: #34d399;">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span>Ver Calendario & Tabla</span>
+          <span>Calendario</span>
+        </button>
+        <button type="button" class="btn-chip btn-cuadro-t" data-id="${escapeHtml(t.id)}" title="Ver Fases Eliminatorias (Cuadro 5 Columnas)" style="padding: 0.5rem 0.75rem; font-size: 0.8rem; color: #1EC1CB; border-color: rgba(30,193,203,0.4); background: rgba(30,193,203,0.12);">
+          <span>🔀 Cuadro</span>
         </button>
         <button type="button" class="btn-chip btn-tv-t" data-id="${escapeHtml(t.id)}" title="Ver en Modo TV" style="padding: 0.5rem 0.85rem; font-size: 0.8rem;">
           <span>📺 Modo TV</span>
@@ -5472,7 +5481,18 @@ function renderTournamentsListView() {
     });
   });
 
-  // 3. Botón Ver en Modo TV
+  // 3. Botón Ver Fases Eliminatorias (Cuadro)
+  dom.tournamentsCardsGrid.querySelectorAll('.btn-cuadro-t').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const tId = btn.getAttribute('data-id');
+      isManagingTournament = true;
+      document.body.classList.add('managing-tournament');
+      setActiveTournament(tId, 'cuadro');
+    });
+  });
+
+  // 4. Botón Ver en Modo TV
   dom.tournamentsCardsGrid.querySelectorAll('.btn-tv-t').forEach(btn => {
     btn.addEventListener('click', () => {
       const tId = btn.getAttribute('data-id');
@@ -6454,11 +6474,11 @@ let isDashboardEntranceRunning = false;
 
 function runSplashKickToSidebar() {
   const splashBall = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
-  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child');
+  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
   const splashOverlay = document.querySelector('.splash-screen-overlay, #admin-splash-screen, #dashboardSplashOverlay, .dashboard-splash-overlay');
 
   if (splashBall && sidebarBallBtn) {
-    // Ocultar temporalmente el balón de la barra mientras el balón central está en el aire
+    // Ocultar temporalmente el botón de destino en la barra lateral mientras el balón central se forma y despliega
     sidebarBallBtn.style.opacity = '0';
 
     const splashRect = splashBall.getBoundingClientRect();
@@ -6475,7 +6495,7 @@ function runSplashKickToSidebar() {
     }
   }
 
-  // En el instante exacto en que el balón aterriza en la barra lateral (1280ms):
+  // A los 1340ms exactos (cuando termina el despliegue al botón superior):
   setTimeout(() => {
     if (sidebarBallBtn) {
       sidebarBallBtn.style.opacity = '1';
@@ -6491,7 +6511,7 @@ function runSplashKickToSidebar() {
         isDashboardEntranceRunning = false;
       }, 250);
     }
-  }, 1280);
+  }, 1340);
 }
 
 function runDashboardEntranceSequence(force = false) {
@@ -6537,19 +6557,24 @@ function runDashboardEntranceSequence(force = false) {
     window.scrollTo(0, 0);
   }
 
-  // 2. Fase 1: Splash screen visible con secuencia de patada cinematográfica
+  // 2. Fase 1: Splash screen visible con secuencia de ensamblaje del balón dinámico
   overlay.style.setProperty('display', 'flex', 'important');
   overlay.style.opacity = '1';
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
 
-  // Reiniciar animaciones CSS de la escena de patada en cada apertura
+  // Reiniciar animaciones CSS de las piezas del balón en cada apertura
   const ballWrapper = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
-  const striker = document.querySelector('.right-side-striker');
-  const flash = document.querySelector('.kick-impact-flash-right');
-  const leg = document.querySelector('.kicking-leg-group');
-  const trail = document.querySelector('.kick-arc-trail');
-  [ballWrapper, striker, flash, leg, trail].forEach(el => {
+  const ballHalo = document.querySelector('.ball-assembly-halo');
+  const assemblingBall = document.querySelector('.assembling-ball');
+  const ring = document.querySelector('.ball-outer-ring');
+  const sphere = document.querySelector('.ball-sphere-fill');
+  const core = document.querySelector('.ball-core-pentagon');
+  const seams = document.querySelector('.ball-seams');
+  const gloss = document.querySelector('.ball-gloss');
+  const panels = document.querySelectorAll('.ball-panel');
+
+  [ballWrapper, ballHalo, assemblingBall, ring, sphere, core, seams, gloss, ...panels].forEach(el => {
     if (el) {
       el.style.animation = 'none';
       el.offsetHeight; // forzar reflow
@@ -6565,7 +6590,7 @@ function runDashboardEntranceSequence(force = false) {
     if (splashContent) splashContent.classList.add('text-fade-out');
   }, 950);
 
-  // 4. A los 1280ms: Al aterrizar el balón, activar expansión del dashboard y shimmer
+  // 4. A los 1340ms exactos: Al terminar el despliegue del balón, acoplar en la barra, expandir dashboard y shimmer
   setTimeout(() => {
     overlay.classList.add('is-hidden');
     overlay.style.setProperty('display', 'none', 'important');
@@ -6585,7 +6610,7 @@ function runDashboardEntranceSequence(force = false) {
         if (typeof animateAllBars === 'function') animateAllBars(activePane);
       }, 700);
     }
-  }, 1280);
+  }, 1340);
 }
 
 window.runSplashKickToSidebar = runSplashKickToSidebar;
@@ -13083,365 +13108,196 @@ function renderStandingsTable(standings) {
 // =============================================================================
 
 function renderBrackets() {
-  renderBracketsTree(tournamentState.matches || []);
-}
+  const container = dom.bracketsTreeContainer || document.getElementById('bracketsTreeContainer');
+  if (!container) return;
 
-function renderBracketsTree(matches) {
-  if (!dom.bracketsTreeContainer) return;
+  const { qf1, qf2, qf3, qf4, sf1, sf2, finalM } = ensureSymmetricKnockoutStructure();
 
-  const format = tournamentState.config?.format || 'league_single';
-  const teams = tournamentState.teams || [];
-  const teamCount = teams.length;
+  container.innerHTML = `
+    <div class="bracket-5col-grid" id="bracket5ColGrid">
+      <svg class="bracket-connector-svg" id="bracketConnectorSvg" aria-hidden="true">
+        <path id="conn-qf1-sf1" class="${qf1.isFinished ? 'branch-active' : ''}" />
+        <path id="conn-qf2-sf1" class="${qf2.isFinished ? 'branch-active' : ''}" />
+        <path id="conn-sf1-final" class="${sf1.isFinished ? 'branch-active' : ''}" />
+        <path id="conn-sf2-final" class="${sf2.isFinished ? 'branch-active' : ''}" />
+        <path id="conn-qf3-sf2" class="${qf3.isFinished ? 'branch-active' : ''}" />
+        <path id="conn-qf4-sf2" class="${qf4.isFinished ? 'branch-active' : ''}" />
+      </svg>
 
-  // Filtrar partidos de fase regular (Liga o Grupos)
-  const regularMatches = matches.filter(m => 
-    !m.isBye && !m.isKnockout && 
-    !m.id.startsWith('ko-') && 
-    !m.id.startsWith('grp-semi') && 
-    !m.id.startsWith('grp-final') && 
-    !m.id.startsWith('grp-qf') &&
-    !m.id.startsWith('grp-third-place')
-  );
-
-  const totalRegular = regularMatches.length;
-  const playedRegular = regularMatches.filter(m => m.isFinished || m.status === 'finished').length;
-  const isRegularComplete = totalRegular > 0 && playedRegular === totalRegular;
-
-  // Filtrar partidos de eliminación directa
-  let knockoutMatches = matches.filter(m => 
-    !m.isBye && (
-      m.isKnockout || 
-      m.id.startsWith('ko-') || 
-      m.id.startsWith('grp-semi') || 
-      m.id.startsWith('grp-final') ||
-      m.id.startsWith('grp-qf') ||
-      m.id.startsWith('grp-third-place')
-    )
-  );
-
-  // Determinar fase inicial según cantidad de equipos
-  let initialRoundName = 'Semifinales';
-  let targetQualifiedCount = 4;
-  if (teamCount >= 16) {
-    initialRoundName = 'Octavos de Final';
-    targetQualifiedCount = 16;
-  } else if (teamCount >= 8) {
-    initialRoundName = 'Cuartos de Final';
-    targetQualifiedCount = 8;
-  } else if (teamCount >= 4) {
-    initialRoundName = 'Semifinales';
-    targetQualifiedCount = 4;
-  } else {
-    initialRoundName = 'Gran Final 🏆';
-    targetQualifiedCount = 2;
-  }
-
-  // Si no hay llaves de eliminación directa generadas aún, armamos la estructura proyectada
-  if (knockoutMatches.length === 0) {
-    const standings = calculateStandings();
-
-    if (targetQualifiedCount === 16) {
-      const seeds = [
-        [1, 16], [8, 9], [4, 13], [5, 12],
-        [2, 15], [7, 10], [3, 14], [6, 11]
-      ];
-      knockoutMatches = seeds.map(([s1, s2], idx) => {
-        const team1 = isRegularComplete && standings[s1 - 1] ? getTeamById(standings[s1 - 1].teamId) : null;
-        const team2 = isRegularComplete && standings[s2 - 1] ? getTeamById(standings[s2 - 1].teamId) : null;
-        return {
-          id: `ko-octavos-${idx + 1}`,
-          round: 1,
-          roundName: 'Octavos de Final',
-          homeTeamId: team1?.id || null,
-          awayTeamId: team2?.id || null,
-          homeTeamPlaceholder: isRegularComplete ? (team1?.name || `${s1}.º Clasificado`) : `${s1}.º Puesto Liga`,
-          awayTeamPlaceholder: isRegularComplete ? (team2?.name || `${s2}.º Clasificado`) : `${s2}.º Puesto Liga`,
-          homeScore: null, awayScore: null, isFinished: false
-        };
-      });
-
-      for (let i = 0; i < 4; i++) {
-        knockoutMatches.push({
-          id: `ko-cuartos-${i + 1}`,
-          round: 2,
-          roundName: 'Cuartos de Final',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: `Ganador Octavos ${i * 2 + 1}`,
-          awayTeamPlaceholder: `Ganador Octavos ${i * 2 + 2}`,
-          homeScore: null, awayScore: null, isFinished: false
-        });
-      }
-
-      knockoutMatches.push(
-        {
-          id: 'ko-semi-1', round: 3, roundName: 'Semifinales',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Cuartos 1',
-          awayTeamPlaceholder: 'Ganador Cuartos 2',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-semi-2', round: 3, roundName: 'Semifinales',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Cuartos 3',
-          awayTeamPlaceholder: 'Ganador Cuartos 4',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-final', round: 4, roundName: 'Gran Final 🏆',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Semifinal 1',
-          awayTeamPlaceholder: 'Ganador Semifinal 2',
-          homeScore: null, awayScore: null, isFinished: false
-        }
-      );
-
-    } else if (targetQualifiedCount === 8) {
-      const seeds = [[1, 8], [4, 5], [2, 7], [3, 6]];
-      knockoutMatches = seeds.map(([s1, s2], idx) => {
-        const team1 = isRegularComplete && standings[s1 - 1] ? getTeamById(standings[s1 - 1].teamId) : null;
-        const team2 = isRegularComplete && standings[s2 - 1] ? getTeamById(standings[s2 - 1].teamId) : null;
-        return {
-          id: `ko-cuartos-${idx + 1}`,
-          round: 1,
-          roundName: 'Cuartos de Final',
-          homeTeamId: team1?.id || null,
-          awayTeamId: team2?.id || null,
-          homeTeamPlaceholder: isRegularComplete ? (team1?.name || `${s1}.º Clasificado`) : `${s1}.º Puesto Liga`,
-          awayTeamPlaceholder: isRegularComplete ? (team2?.name || `${s2}.º Clasificado`) : `${s2}.º Puesto Liga`,
-          homeScore: null, awayScore: null, isFinished: false
-        };
-      });
-
-      knockoutMatches.push(
-        {
-          id: 'ko-semi-1', round: 2, roundName: 'Semifinales',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Cuartos 1',
-          awayTeamPlaceholder: 'Ganador Cuartos 2',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-semi-2', round: 2, roundName: 'Semifinales',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Cuartos 3',
-          awayTeamPlaceholder: 'Ganador Cuartos 4',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-final', round: 3, roundName: 'Gran Final 🏆',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Semifinal 1',
-          awayTeamPlaceholder: 'Ganador Semifinal 2',
-          homeScore: null, awayScore: null, isFinished: false
-        }
-      );
-
-    } else if (targetQualifiedCount === 4) {
-      const team1 = isRegularComplete && standings[0] ? getTeamById(standings[0].teamId) : null;
-      const team2 = isRegularComplete && standings[1] ? getTeamById(standings[1].teamId) : null;
-      const team3 = isRegularComplete && standings[2] ? getTeamById(standings[2].teamId) : null;
-      const team4 = isRegularComplete && standings[3] ? getTeamById(standings[3].teamId) : null;
-
-      knockoutMatches = [
-        {
-          id: 'ko-semi-1', round: 1, roundName: 'Semifinales',
-          homeTeamId: team1?.id || null, awayTeamId: team4?.id || null,
-          homeTeamPlaceholder: isRegularComplete ? (team1?.name || '1.º Clasificado') : '1.º Puesto Liga',
-          awayTeamPlaceholder: isRegularComplete ? (team4?.name || '4.º Clasificado') : '4.º Puesto Liga',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-semi-2', round: 1, roundName: 'Semifinales',
-          homeTeamId: team2?.id || null, awayTeamId: team3?.id || null,
-          homeTeamPlaceholder: isRegularComplete ? (team2?.name || '2.º Clasificado') : '2.º Puesto Liga',
-          awayTeamPlaceholder: isRegularComplete ? (team3?.name || '3.º Clasificado') : '3.º Puesto Liga',
-          homeScore: null, awayScore: null, isFinished: false
-        },
-        {
-          id: 'ko-final', round: 2, roundName: 'Gran Final 🏆',
-          homeTeamId: null, awayTeamId: null,
-          homeTeamPlaceholder: 'Ganador Semifinal 1',
-          awayTeamPlaceholder: 'Ganador Semifinal 2',
-          homeScore: null, awayScore: null, isFinished: false
-        }
-      ];
-    } else {
-      const team1 = isRegularComplete && standings[0] ? getTeamById(standings[0].teamId) : null;
-      const team2 = isRegularComplete && standings[1] ? getTeamById(standings[1].teamId) : null;
-
-      knockoutMatches = [
-        {
-          id: 'ko-final', round: 1, roundName: 'Gran Final 🏆',
-          homeTeamId: team1?.id || null, awayTeamId: team2?.id || null,
-          homeTeamPlaceholder: isRegularComplete ? (team1?.name || '1.º Clasificado') : '1.º Puesto Liga',
-          awayTeamPlaceholder: isRegularComplete ? (team2?.name || '2.º Clasificado') : '2.º Puesto Liga',
-          homeScore: null, awayScore: null, isFinished: false
-        }
-      ];
-    }
-  }
-
-  // Generar banner explicativo sobre el estado de clasificación
-  let statusBannerHtml = '';
-  if (totalRegular > 0) {
-    const pct = Math.round((playedRegular / totalRegular) * 100);
-    if (!isRegularComplete) {
-      statusBannerHtml = `
-        <div class="bracket-phase-status-banner in-progress">
-          <div class="banner-status-icon">⏳</div>
-          <div class="banner-status-body">
-            <h4 class="banner-status-title">Fase Regular en Disputa (${playedRegular} de ${totalRegular} partidos jugados)</h4>
-            <p class="banner-status-desc">Los clubes clasificados a <strong>${initialRoundName}</strong> se determinarán y asignarán automáticamente según la <strong>Tabla de Posiciones</strong> una vez finalizados todos los partidos de la fase de liga.</p>
-          </div>
-          <div class="banner-status-tag">${pct}% Jugado</div>
-        </div>
-      `;
-    } else {
-      statusBannerHtml = `
-        <div class="bracket-phase-status-banner completed">
-          <div class="banner-status-icon">🏆</div>
-          <div class="banner-status-body">
-            <h4 class="banner-status-title">¡Fase Regular Completada con Éxito!</h4>
-            <p class="banner-status-desc">Los mejores <strong>${targetQualifiedCount} clubes</strong> han clasificado oficialmente y sus llaves eliminatorias para <strong>${initialRoundName}</strong> han sido asignadas según la tabla de posiciones.</p>
-          </div>
-          <div class="banner-status-tag completed">✓ Clasificados Confirmados</div>
-        </div>
-      `;
-    }
-  }
-
-  const roundMap = {};
-  knockoutMatches.forEach(m => {
-    let key = m.roundName;
-    if (key.includes('Dieciseisavos')) key = 'Dieciseisavos de Final';
-    else if (key.includes('Octavos')) key = 'Octavos de Final';
-    else if (key.includes('Cuartos')) key = 'Cuartos de Final';
-    else if (key.includes('Semifinal')) key = 'Semifinales';
-    else if (key.includes('Tercer')) key = 'Partido por el 3.º Puesto';
-    else if (key.includes('Final')) key = 'Gran Final 🏆';
-
-    if (!roundMap[key]) roundMap[key] = [];
-    roundMap[key].push(m);
-  });
-
-  const finalMatch = knockoutMatches.find(m => m.roundName && m.roundName.includes('Final') && !m.roundName.includes('Semifinal') && m.isFinished);
-  let championTeam = null;
-  if (finalMatch && finalMatch.homeScore !== null && finalMatch.awayScore !== null) {
-    if (finalMatch.homeScore > finalMatch.awayScore) {
-      championTeam = getTeamById(finalMatch.homeTeamId);
-    } else if (finalMatch.awayScore > finalMatch.homeScore) {
-      championTeam = getTeamById(finalMatch.awayTeamId);
-    } else if (typeof finalMatch.homePenalties === 'number' && typeof finalMatch.awayPenalties === 'number') {
-      championTeam = finalMatch.homePenalties > finalMatch.awayPenalties 
-        ? getTeamById(finalMatch.homeTeamId) 
-        : getTeamById(finalMatch.awayTeamId);
-    }
-  }
-
-  const roundOrder = [
-    'Dieciseisavos de Final',
-    'Octavos de Final',
-    'Cuartos de Final',
-    'Semifinales',
-    'Partido por el 3.º Puesto',
-    'Gran Final 🏆'
-  ];
-
-  const activeRounds = roundOrder.filter(r => roundMap[r] && roundMap[r].length > 0);
-
-  let roundsHtml = '';
-  activeRounds.forEach((roundTitle, rIdx) => {
-    const rMatches = roundMap[roundTitle];
-    const isFinal = roundTitle.includes('Final') && !roundTitle.includes('Semifinal');
-    const isThird = roundTitle.includes('3er Puesto');
-    const isLastRound = rIdx === activeRounds.length - 1;
-
-    let headerClass = '';
-    if (isFinal) headerClass = 'final';
-    else if (isThird) headerClass = 'third';
-
-    // Agrupar en pares para trazar LÍNEAS de conexión
-    let pairsHtml = '';
-    for (let i = 0; i < rMatches.length; i += 2) {
-      const match1 = rMatches[i];
-      const match2 = rMatches[i + 1];
-
-      const hasNext = !isFinal && !isThird && !isLastRound;
-
-      pairsHtml += `
-        <div class="bracket-pair-wrapper ${hasNext ? 'has-next' : ''}">
-          ${renderBracketNode(match1, hasNext, rIdx > 0)}
-          ${match2 ? renderBracketNode(match2, hasNext, rIdx > 0) : ''}
-        </div>
-      `;
-    }
-
-    roundsHtml += `
-      <div class="bracket-round-column">
-        <div class="bracket-round-header ${headerClass}">${escapeHtml(roundTitle)}</div>
-        <div class="bracket-matches-column">
-          ${pairsHtml}
+      <!-- COLUMNA 1: CUARTOS DE FINAL (Izq) -->
+      <div class="bracket-col col-qf col-left">
+        <div class="bracket-col-header">CUARTOS DE FINAL</div>
+        <div class="bracket-cards-stack">
+          ${renderSymmetricBracketCard(qf1, 'QF 01', 'card-qf-1')}
+          ${renderSymmetricBracketCard(qf2, 'QF 02', 'card-qf-2')}
         </div>
       </div>
-    `;
-  });
 
-  if (championTeam) {
-    roundsHtml += `
-      <div class="bracket-round-column" style="justify-content: center;">
-        <div class="bracket-round-header final">CAMPEÓN OFICIAL</div>
-        <div class="bracket-champion-box">
-          <span class="champion-trophy">🏆</span>
-          <span class="champion-label">¡CAMPEÓN DEL TORNEO!</span>
-          <h4 class="champion-team-name">${escapeHtml(championTeam.name)}</h4>
-          <div style="width: 50px; height: 50px; margin: 0.75rem auto 0; display:flex; align-items:center; justify-content:center;">
-            ${renderTeamShieldElement(championTeam)}
-          </div>
+      <!-- COLUMNA 2: SEMIFINAL (Izq) -->
+      <div class="bracket-col col-sf col-left">
+        <div class="bracket-col-header">SEMIFINAL</div>
+        <div class="bracket-cards-stack centered">
+          ${renderSymmetricBracketCard(sf1, 'SF 01', 'card-sf-1')}
         </div>
       </div>
-    `;
-  }
 
-  dom.bracketsTreeContainer.innerHTML = `
-    ${statusBannerHtml}
-    <div class="bracket-rounds-horizontal-track">
-      ${roundsHtml}
+      <!-- COLUMNA 3: CENTRO (FINAL + CAMPEÓN) -->
+      <div class="bracket-col col-center">
+        <div class="bracket-col-header">GRAN FINAL</div>
+        <div class="bracket-cards-stack center-stack">
+          ${renderSymmetricBracketCard(finalM, 'FINAL', 'card-final')}
+          ${renderChampionCard(finalM)}
+        </div>
+      </div>
+
+      <!-- COLUMNA 4: SEMIFINAL (Der) -->
+      <div class="bracket-col col-sf col-right">
+        <div class="bracket-col-header">SEMIFINAL</div>
+        <div class="bracket-cards-stack centered">
+          ${renderSymmetricBracketCard(sf2, 'SF 02', 'card-sf-2')}
+        </div>
+      </div>
+
+      <!-- COLUMNA 5: CUARTOS DE FINAL (Der) -->
+      <div class="bracket-col col-qf col-right">
+        <div class="bracket-col-header">CUARTOS DE FINAL</div>
+        <div class="bracket-cards-stack">
+          ${renderSymmetricBracketCard(qf3, 'QF 03', 'card-qf-3')}
+          ${renderSymmetricBracketCard(qf4, 'QF 04', 'card-qf-4')}
+        </div>
+      </div>
     </div>
   `;
+
+  // Calcular conectores en el siguiente frame
+  requestAnimationFrame(() => {
+    updateBracketConnectors();
+  });
 }
 
-function renderBracketNode(m, hasOutgoing = false, hasIncoming = false) {
+function ensureSymmetricKnockoutStructure() {
+  if (!tournamentState.matches) tournamentState.matches = [];
+  const matches = tournamentState.matches;
+
+  const findOrCreate = (id, roundName, round, nextMatchId, nextSlot, defaultHome, defaultAway) => {
+    let m = matches.find(x => x.id === id);
+    if (!m) {
+      m = matches.find(x => x.roundName && x.roundName.toLowerCase().includes(roundName.toLowerCase()) && !matches.some(o => o !== x && o.id === id));
+    }
+    if (!m) {
+      m = {
+        id: id,
+        round: round,
+        roundName: roundName,
+        isKnockout: true,
+        homeTeamId: null,
+        awayTeamId: null,
+        homeTeamPlaceholder: defaultHome,
+        awayTeamPlaceholder: defaultAway,
+        homeScore: null,
+        awayScore: null,
+        homePenalties: null,
+        awayPenalties: null,
+        status: 'pending',
+        isFinished: false,
+        isLocked: false,
+        venue: 'Cancha Central',
+        date: '',
+        time: '',
+        nextMatchId: nextMatchId,
+        nextSlot: nextSlot
+      };
+      matches.push(m);
+    } else {
+      m.id = m.id || id;
+      m.isKnockout = true;
+      if (nextMatchId) m.nextMatchId = nextMatchId;
+      if (nextSlot) m.nextSlot = nextSlot;
+    }
+    return m;
+  };
+
+  const qf1 = findOrCreate('ko-qf-1', 'Cuartos 1', 1, 'ko-sf-1', 'home', '1º Grupo A', '2º Grupo B');
+  const qf2 = findOrCreate('ko-qf-2', 'Cuartos 2', 1, 'ko-sf-1', 'away', '1º Grupo C', '2º Grupo D');
+  const qf3 = findOrCreate('ko-qf-3', 'Cuartos 3', 1, 'ko-sf-2', 'home', '1º Grupo B', '2º Grupo A');
+  const qf4 = findOrCreate('ko-qf-4', 'Cuartos 4', 1, 'ko-sf-2', 'away', '1º Grupo D', '2º Grupo C');
+  const sf1 = findOrCreate('ko-sf-1', 'Semifinal 1', 2, 'ko-final', 'home', 'Ganador QF 01', 'Ganador QF 02');
+  const sf2 = findOrCreate('ko-sf-2', 'Semifinal 2', 2, 'ko-final', 'away', 'Ganador QF 03', 'Ganador QF 04');
+  const finalM = findOrCreate('ko-final', 'Gran Final 🏆', 3, null, null, 'Ganador SF 01', 'Ganador SF 02');
+
+  // Si los cuartos no tienen equipos asignados pero hay equipos o tabla en el torneo
+  const teams = tournamentState.teams || [];
+  let standings = [];
+  try {
+    if (typeof calculateStandings === 'function') standings = calculateStandings();
+  } catch (e) {}
+
+  const getTeamFromStandingOrList = (idx) => {
+    if (standings && standings[idx]) return getTeamById(standings[idx].teamId);
+    if (teams && teams[idx]) return teams[idx];
+    return null;
+  };
+
+  if (teams.length >= 8) {
+    const t1 = getTeamFromStandingOrList(0);
+    const t8 = getTeamFromStandingOrList(7);
+    const t4 = getTeamFromStandingOrList(3);
+    const t5 = getTeamFromStandingOrList(4);
+    const t2 = getTeamFromStandingOrList(1);
+    const t7 = getTeamFromStandingOrList(6);
+    const t3 = getTeamFromStandingOrList(2);
+    const t6 = getTeamFromStandingOrList(5);
+
+    if (!qf1.homeTeamId && t1) { qf1.homeTeamId = t1.id; qf1.homeTeamPlaceholder = t1.name; }
+    if (!qf1.awayTeamId && t8) { qf1.awayTeamId = t8.id; qf1.awayTeamPlaceholder = t8.name; }
+    if (!qf2.homeTeamId && t4) { qf2.homeTeamId = t4.id; qf2.homeTeamPlaceholder = t4.name; }
+    if (!qf2.awayTeamId && t5) { qf2.awayTeamId = t5.id; qf2.awayTeamPlaceholder = t5.name; }
+    if (!qf3.homeTeamId && t2) { qf3.homeTeamId = t2.id; qf3.homeTeamPlaceholder = t2.name; }
+    if (!qf3.awayTeamId && t7) { qf3.awayTeamId = t7.id; qf3.awayTeamPlaceholder = t7.name; }
+    if (!qf4.homeTeamId && t3) { qf4.homeTeamId = t3.id; qf4.homeTeamPlaceholder = t3.name; }
+    if (!qf4.awayTeamId && t6) { qf4.awayTeamId = t6.id; qf4.awayTeamPlaceholder = t6.name; }
+  } else if (teams.length >= 4) {
+    if (!qf1.homeTeamId && teams[0]) { qf1.homeTeamId = teams[0].id; qf1.homeTeamPlaceholder = teams[0].name; }
+    if (!qf2.homeTeamId && teams[1]) { qf2.homeTeamId = teams[1].id; qf2.homeTeamPlaceholder = teams[1].name; }
+    if (!qf3.homeTeamId && teams[2]) { qf3.homeTeamId = teams[2].id; qf3.homeTeamPlaceholder = teams[2].name; }
+    if (!qf4.homeTeamId && teams[3]) { qf4.homeTeamId = teams[3].id; qf4.homeTeamPlaceholder = teams[3].name; }
+  }
+
+  // Asegurar avance de ganadores
+  [qf1, qf2, qf3, qf4, sf1, sf2, finalM].forEach(m => {
+    if (m.isFinished) propagateKnockoutWinner(m);
+  });
+
+  return { qf1, qf2, qf3, qf4, sf1, sf2, finalM };
+}
+
+function renderSymmetricBracketCard(m, code, cardId) {
   const homeTeam = getTeamById(m.homeTeamId);
   const awayTeam = getTeamById(m.awayTeamId);
 
   const homeName = homeTeam ? homeTeam.name : (m.homeTeamPlaceholder || 'Por definir');
-  const homeColor = homeTeam ? homeTeam.color : '#475569';
+  const homeColor = homeTeam ? (homeTeam.color || '#1EC1CB') : '#475569';
   const awayName = awayTeam ? awayTeam.name : (m.awayTeamPlaceholder || 'Por definir');
-  const awayColor = awayTeam ? awayTeam.color : '#475569';
+  const awayColor = awayTeam ? (awayTeam.color || '#10B981') : '#475569';
+
+  const isFinished = (m.isFinished === true) || (m.status === 'finished');
+  const isLive = (m.status === 'live');
+  let statusClass = 'proximo';
+  let statusText = 'PRÓXIMO';
+  if (isFinished) {
+    statusClass = 'finalizado';
+    statusText = 'FINALIZADO';
+  } else if (isLive) {
+    statusClass = 'envivo';
+    statusText = 'EN VIVO';
+  }
 
   let homeScoreDisplay = (m.homeScore !== null && m.homeScore !== undefined) ? m.homeScore : '-';
   let awayScoreDisplay = (m.awayScore !== null && m.awayScore !== undefined) ? m.awayScore : '-';
 
-  // Solo mostrar etiqueta de penales si el partido finalizó empatado en tiempo regular y hubo tanda de penales
-  let penaltiesTag = '';
-  if (
-    m.isFinished === true &&
-    typeof m.homePenalties === 'number' &&
-    typeof m.awayPenalties === 'number' &&
-    Number.isFinite(m.homePenalties) &&
-    Number.isFinite(m.awayPenalties) &&
-    m.homeScore !== null &&
-    m.awayScore !== null &&
-    m.homeScore === m.awayScore &&
-    (m.homePenalties > 0 || m.awayPenalties > 0)
-  ) {
-    penaltiesTag = `<span class="bracket-penalties-tag">Pen: ${m.homePenalties} - ${m.awayPenalties}</span>`;
-  }
-
-  const isFinished = m.isFinished === true;
   let homeWon = false;
   let awayWon = false;
+  let penaltiesInfo = '';
 
   if (isFinished && m.homeScore !== null && m.awayScore !== null) {
     if (m.homeScore > m.awayScore) homeWon = true;
@@ -13449,39 +13305,245 @@ function renderBracketNode(m, hasOutgoing = false, hasIncoming = false) {
     else if (typeof m.homePenalties === 'number' && typeof m.awayPenalties === 'number') {
       if (m.homePenalties > m.awayPenalties) homeWon = true;
       else if (m.awayPenalties > m.homePenalties) awayWon = true;
+      penaltiesInfo = `Pen: ${m.homePenalties}-${m.awayPenalties}`;
     }
   }
 
-  const isFinalNode = m.roundName && m.roundName.includes('Final') && !m.roundName.includes('Semifinal');
-  const connectorClasses = `${hasOutgoing ? 'has-connector' : ''} ${hasIncoming ? 'has-incoming' : ''} ${isFinalNode ? 'is-final' : ''}`;
+  let dateVenue = 'Por programar';
+  if (m.venue || m.date) {
+    dateVenue = [m.date, m.time, m.venue].filter(Boolean).join(' • ') || 'Por programar';
+  }
+
+  const isOrg = (typeof isOrganizerOrAdmin === 'function' && isOrganizerOrAdmin(window.userSession?.role)) ||
+                (document.body.classList.contains('role-admin') || document.body.classList.contains('role-organizer'));
+  const clickHint = isOrg ? 'title="Haz clic para registrar o editar el marcador de esta llave"' : '';
+  const cursorStyle = isOrg ? 'cursor: pointer;' : '';
 
   return `
-    <div class="bracket-match-node ${isFinished ? 'is-finished' : ''} ${connectorClasses}">
-      <div class="bracket-match-meta-bar">
-        <span>${escapeHtml(m.venue || 'Estadio')}</span>
-        ${penaltiesTag}
+    <div class="bracket-glass-card" id="${cardId}" data-match-id="${m.id}" onclick="handleBracketCardClick('${m.id}')" style="${cursorStyle}" ${clickHint}>
+      <div class="bracket-card-top-bar">
+        <span class="bracket-code-badge">${code}</span>
+        <span class="bracket-status-pill status-${statusClass}">${statusText}</span>
       </div>
 
       <div class="bracket-team-slot ${homeWon ? 'is-winner' : ''}">
-        <div class="bracket-team-meta">
+        <div class="bracket-team-info">
           <span class="bracket-team-dot" style="background-color: ${escapeHtml(homeColor)};"></span>
           <span class="bracket-team-name" title="${escapeHtml(homeName)}">${escapeHtml(homeName)}</span>
-          ${homeWon ? '<span class="bracket-winner-check">✓</span>' : ''}
+          ${homeWon ? '<span class="winner-check-mark">✓</span>' : ''}
         </div>
         <span class="bracket-team-score">${homeScoreDisplay}</span>
       </div>
 
       <div class="bracket-team-slot ${awayWon ? 'is-winner' : ''}">
-        <div class="bracket-team-meta">
+        <div class="bracket-team-info">
           <span class="bracket-team-dot" style="background-color: ${escapeHtml(awayColor)};"></span>
           <span class="bracket-team-name" title="${escapeHtml(awayName)}">${escapeHtml(awayName)}</span>
-          ${awayWon ? '<span class="bracket-winner-check">✓</span>' : ''}
+          ${awayWon ? '<span class="winner-check-mark">✓</span>' : ''}
         </div>
         <span class="bracket-team-score">${awayScoreDisplay}</span>
+      </div>
+
+      <div class="bracket-card-footer">
+        <span class="bracket-footer-venue">📍 ${escapeHtml(dateVenue)}</span>
+        ${penaltiesInfo ? `<span class="bracket-footer-pen">${penaltiesInfo}</span>` : ''}
+        ${isOrg ? '<span class="bracket-edit-badge" title="Editar marcador">✏️</span>' : ''}
       </div>
     </div>
   `;
 }
+
+function renderChampionCard(finalM) {
+  let championName = 'Por definir';
+  let championDesc = 'El ganador aparecerá aquí';
+  let isCrown = false;
+  let championShieldHtml = '';
+
+  if (finalM && (finalM.isFinished || finalM.status === 'finished') && finalM.homeScore !== null && finalM.awayScore !== null) {
+    let winnerId = null;
+    let winnerPlaceholder = null;
+    if (finalM.homeScore > finalM.awayScore) {
+      winnerId = finalM.homeTeamId;
+      winnerPlaceholder = finalM.homeTeamPlaceholder;
+    } else if (finalM.awayScore > finalM.homeScore) {
+      winnerId = finalM.awayTeamId;
+      winnerPlaceholder = finalM.awayTeamPlaceholder;
+    } else if (typeof finalM.homePenalties === 'number' && typeof finalM.awayPenalties === 'number') {
+      if (finalM.homePenalties > finalM.awayPenalties) {
+        winnerId = finalM.homeTeamId;
+        winnerPlaceholder = finalM.homeTeamPlaceholder;
+      } else {
+        winnerId = finalM.awayTeamId;
+        winnerPlaceholder = finalM.awayTeamPlaceholder;
+      }
+    }
+
+    const team = getTeamById(winnerId);
+    if (team) {
+      championName = team.name;
+      championDesc = '¡Monarca Oficial del Torneo!';
+      isCrown = true;
+      championShieldHtml = `<div style="width: 44px; height: 44px; margin: 8px auto 0; display:flex; align-items:center; justify-content:center;">${renderTeamShieldElement(team)}</div>`;
+    } else if (winnerPlaceholder) {
+      championName = winnerPlaceholder;
+      championDesc = '¡Campeón Confirmado de la Gran Final!';
+      isCrown = true;
+    }
+  }
+
+  return `
+    <div class="bracket-champion-card ${isCrown ? 'has-champion' : ''}" id="bracketChampionCard">
+      <div class="champion-trophy-halo">
+        <div class="champion-trophy-glow"></div>
+        <span class="champion-trophy-icon">🏆</span>
+      </div>
+      <div class="champion-pill-tag">CAMPEÓN</div>
+      <h3 class="bracket-champion-title">${escapeHtml(championName)}</h3>
+      <p class="bracket-champion-desc">${escapeHtml(championDesc)}</p>
+      ${championShieldHtml}
+    </div>
+  `;
+}
+
+function updateBracketConnectors() {
+  const grid = document.getElementById('bracket5ColGrid');
+  const svg = document.getElementById('bracketConnectorSvg');
+  if (!grid || !svg) return;
+
+  const gridRect = grid.getBoundingClientRect();
+  if (gridRect.width === 0 || gridRect.height === 0) return;
+
+  const getCardAnchors = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return null;
+    const r = el.getBoundingClientRect();
+    return {
+      left: { x: r.left - gridRect.left, y: r.top + r.height / 2 - gridRect.top },
+      right: { x: r.right - gridRect.left, y: r.top + r.height / 2 - gridRect.top }
+    };
+  };
+
+  const drawBezier = (pathId, p1, p2, isLeftToRight) => {
+    const path = document.getElementById(pathId);
+    if (!path || !p1 || !p2) return;
+    const dx = Math.abs(p2.x - p1.x) * 0.45;
+    const c1x = isLeftToRight ? p1.x + dx : p1.x - dx;
+    const c2x = isLeftToRight ? p2.x - dx : p2.x + dx;
+    path.setAttribute('d', `M ${p1.x} ${p1.y} C ${c1x} ${p1.y}, ${c2x} ${p2.y}, ${p2.x} ${p2.y}`);
+  };
+
+  const qf1 = getCardAnchors('card-qf-1');
+  const qf2 = getCardAnchors('card-qf-2');
+  const sf1 = getCardAnchors('card-sf-1');
+  const finalC = getCardAnchors('card-final');
+  const sf2 = getCardAnchors('card-sf-2');
+  const qf3 = getCardAnchors('card-qf-3');
+  const qf4 = getCardAnchors('card-qf-4');
+
+  if (qf1 && sf1) drawBezier('conn-qf1-sf1', qf1.right, sf1.left, true);
+  if (qf2 && sf1) drawBezier('conn-qf2-sf1', qf2.right, sf1.left, true);
+  if (sf1 && finalC) drawBezier('conn-sf1-final', sf1.right, finalC.left, true);
+  if (sf2 && finalC) drawBezier('conn-sf2-final', sf2.left, finalC.right, false);
+  if (qf3 && sf2) drawBezier('conn-qf3-sf2', qf3.left, sf2.right, false);
+  if (qf4 && sf2) drawBezier('conn-qf4-sf2', qf4.left, sf2.right, false);
+}
+
+// Escuchar redimensionamiento para recalcular conectores SVG
+if (typeof window !== 'undefined' && !window._bracketResizeAttached) {
+  window._bracketResizeAttached = true;
+  window.addEventListener('resize', () => {
+    requestAnimationFrame(updateBracketConnectors);
+  });
+}
+
+window.renderBrackets = renderBrackets;
+window.updateBracketConnectors = updateBracketConnectors;
+
+window.handleBracketCardClick = function(matchId) {
+  const isOrg = (typeof isOrganizerOrAdmin === 'function' && isOrganizerOrAdmin(window.userSession?.role)) ||
+                (document.body.classList.contains('role-admin') || document.body.classList.contains('role-organizer'));
+  if (!isOrg) {
+    if (typeof showToast === 'function') {
+      showToast('Modo Consulta: Solo los organizadores y administradores pueden modificar marcadores.', 'info', 2800);
+    }
+    return;
+  }
+
+  const match = (tournamentState.matches || []).find(m => m.id === matchId);
+  if (!match) return;
+
+  const modal = document.getElementById('bracketScoreModal');
+  if (!modal) return;
+
+  document.getElementById('bracketModalMatchId').value = match.id;
+  document.getElementById('bracketModalTitle').textContent = `Editar ${match.roundName || 'Llave Eliminatoria'}`;
+  
+  const homeTeam = getTeamById(match.homeTeamId);
+  const awayTeam = getTeamById(match.awayTeamId);
+  const homeName = homeTeam ? homeTeam.name : (match.homeTeamPlaceholder || 'Equipo Local');
+  const awayName = awayTeam ? awayTeam.name : (match.awayTeamPlaceholder || 'Equipo Visitante');
+
+  document.getElementById('bracketModalSubtitle').textContent = `${homeName} vs ${awayName}`;
+  document.getElementById('bracketModalHomeName').textContent = homeName;
+  document.getElementById('bracketModalAwayName').textContent = awayName;
+
+  document.getElementById('bracketModalHomeScore').value = (match.homeScore !== null && match.homeScore !== undefined) ? match.homeScore : '';
+  document.getElementById('bracketModalAwayScore').value = (match.awayScore !== null && match.awayScore !== undefined) ? match.awayScore : '';
+  document.getElementById('bracketModalHomePen').value = (match.homePenalties !== null && match.homePenalties !== undefined) ? match.homePenalties : '';
+  document.getElementById('bracketModalAwayPen').value = (match.awayPenalties !== null && match.awayPenalties !== undefined) ? match.awayPenalties : '';
+
+  document.getElementById('bracketModalStatus').value = match.status || (match.isFinished ? 'finished' : 'pending');
+  document.getElementById('bracketModalVenue').value = match.venue || '';
+
+  modal.style.display = 'flex';
+};
+
+window.closeBracketScoreModal = function() {
+  const modal = document.getElementById('bracketScoreModal');
+  if (modal) modal.style.display = 'none';
+};
+
+window.saveBracketMatchScore = function(event) {
+  if (event) event.preventDefault();
+  const matchId = document.getElementById('bracketModalMatchId').value;
+  const match = (tournamentState.matches || []).find(m => m.id === matchId);
+  if (!match) return;
+
+  const hScoreVal = document.getElementById('bracketModalHomeScore').value;
+  const aScoreVal = document.getElementById('bracketModalAwayScore').value;
+  const hPenVal = document.getElementById('bracketModalHomePen').value;
+  const aPenVal = document.getElementById('bracketModalAwayPen').value;
+  const statusVal = document.getElementById('bracketModalStatus').value;
+  const venueVal = document.getElementById('bracketModalVenue').value;
+
+  const hScore = hScoreVal === '' ? null : parseInt(hScoreVal, 10);
+  const aScore = aScoreVal === '' ? null : parseInt(aScoreVal, 10);
+  const hPen = hPenVal === '' ? null : parseInt(hPenVal, 10);
+  const aPen = aPenVal === '' ? null : parseInt(aPenVal, 10);
+
+  match.homeScore = hScore;
+  match.awayScore = aScore;
+  match.homePenalties = hPen;
+  match.awayPenalties = aPen;
+  match.status = statusVal;
+  match.isFinished = (statusVal === 'finished') || (hScore !== null && aScore !== null && statusVal !== 'pending');
+  if (venueVal) match.venue = venueVal;
+
+  // Propagación automática del ganador a la siguiente llave y hasta CAMPEÓN
+  propagateKnockoutWinner(match);
+
+  saveState();
+  closeBracketScoreModal();
+
+  renderBrackets();
+  if (typeof updateProgressStatsOnly === 'function') updateProgressStatsOnly();
+  if (typeof renderStandingsView === 'function') renderStandingsView();
+  if (typeof renderTvMode === 'function') renderTvMode();
+
+  if (typeof showToast === 'function') {
+    showToast('Marcador guardado. ¡El ganador avanzó automáticamente en el cuadro! 🏆', 'success', 2800);
+  }
+};
 
 // =============================================================================
 // 16. REGISTRO DE GOLEADORES (PICHICHI)

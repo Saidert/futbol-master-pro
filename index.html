@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Galada&family=Inter:wght@300;400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   
-  <link rel="stylesheet" href="styles.css?v=20261118_v25_header">
+  <link rel="stylesheet" href="styles.css?v=20261120_v26_bracket_ball">
   <style>
     /* Regla Crítica de Interacción: El fondo animado NUNCA bloquea el ratón */
     #mercuryStage,
@@ -132,85 +132,46 @@
   <!-- FASE 1: SPLASH SCREEN & LOGO MORPH (0.0s - 0.7s) -->
     <div class="dashboard-splash-overlay splash-screen-overlay" id="dashboardSplashOverlay" style="display: none !important;">
       <div class="splash-center-content" id="splashCenterContent">
-        <div class="splash-kick-scene">
-          <!-- 1. EL BALÓN ACTUAL (Conserva aquí adentro el SVG del balón que ya tienes) -->
+        <div class="splash-ball-forge-stage">
+          <div class="ball-assembly-halo"></div>
           <div class="splash-ball-wrapper" id="splash-main-ball">
-            <svg class="full-soccer-ball-svg" viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg class="full-soccer-ball-svg assembling-ball" viewBox="0 0 100 100" width="100%" height="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <radialGradient id="ballSphereGrad" cx="35%" cy="28%" r="70%">
+                <radialGradient id="forgeSphereGrad" cx="35%" cy="28%" r="70%">
                   <stop offset="0%" stop-color="#FFFFFF" />
                   <stop offset="35%" stop-color="#1EC1CB" />
                   <stop offset="75%" stop-color="#0A3A42" />
                   <stop offset="100%" stop-color="#041519" />
                 </radialGradient>
-                <linearGradient id="seamGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="forgeSeamGlow" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stop-color="#FFFFFF" />
                   <stop offset="50%" stop-color="#1EC1CB" />
                   <stop offset="100%" stop-color="#10B981" />
                 </linearGradient>
               </defs>
 
-              <!-- Esfera base del balón (100% del círculo) -->
-              <circle cx="50" cy="50" r="48" fill="url(#ballSphereGrad)" stroke="url(#seamGlow)" stroke-width="2.5" />
+              <!-- Esfera que se ilumina al completarse el ensamblaje -->
+              <circle class="ball-sphere-fill" cx="50" cy="50" r="47" fill="url(#forgeSphereGrad)" />
+              <!-- Anillo perimetral que se dibuja en 360° -->
+              <circle class="ball-outer-ring" cx="50" cy="50" r="48" stroke="url(#forgeSeamGlow)" stroke-width="2.6" stroke-linecap="round" />
 
-              <!-- Pentágono central oscuro con borde luminoso -->
-              <polygon points="50,31 68,44 61,65 39,65 32,44" fill="#05181E" stroke="#1EC1CB" stroke-width="2.2" stroke-linejoin="round" />
+              <!-- Costuras luminosas que conectan los paneles -->
+              <path class="ball-seams" d="M50 31 L50 21 M68 44 L77 41 M61 65 L70 73 M39 65 L30 73 M32 44 L23 41" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
 
-              <!-- Pentágonos periféricos del balón -->
-              <polygon points="50,2 64,12 58,21 42,21 36,12" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-              <polygon points="96,35 88,52 77,47 77,32 88,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-              <polygon points="79,90 62,95 58,83 70,73 82,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-              <polygon points="21,90 38,95 42,83 30,73 18,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
-              <polygon points="4,35 12,52 23,47 23,32 12,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <!-- Pentágono central que nace desde el núcleo -->
+              <polygon class="ball-core-pentagon" points="50,31 68,44 61,65 39,65 32,44" fill="#05181E" stroke="#1EC1CB" stroke-width="2.2" stroke-linejoin="round" />
 
-              <!-- Costuras que unen los paneles -->
-              <path d="M50 31 L50 21 M68 44 L77 41 M61 65 L70 73 M39 65 L30 73 M32 44 L23 41" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" />
+              <!-- 5 Pentágonos exteriores que convergen radialmente para formar el balón -->
+              <polygon class="ball-panel p-top" points="50,2 64,12 58,21 42,21 36,12" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon class="ball-panel p-tr" points="96,35 88,52 77,47 77,32 88,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon class="ball-panel p-br" points="79,90 62,95 58,83 70,73 82,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon class="ball-panel p-bl" points="21,90 38,95 42,83 30,73 18,76" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
+              <polygon class="ball-panel p-tl" points="4,35 12,52 23,47 23,32 12,24" fill="#05181E" stroke="#1EC1CB" stroke-width="1.8" />
 
-              <!-- Brillo de cristal superior -->
-              <ellipse cx="38" cy="22" rx="16" ry="7" transform="rotate(-18 38 22)" fill="#FFFFFF" opacity="0.35" />
+              <!-- Brillo especular de cristal líquido -->
+              <ellipse class="ball-gloss" cx="38" cy="22" rx="16" ry="7" transform="rotate(-18 38 22)" fill="#FFFFFF" />
             </svg>
           </div>
-
-          <!-- 2. DESTELLO DE IMPACTO EN EL COSTADO DERECHO DEL BALÓN -->
-          <div class="kick-impact-flash-right"></div>
-
-          <!-- 3. SILUETA REALISTA DE FUTBOLISTA (.right-side-striker) -->
-          <svg class="right-side-striker" viewBox="0 0 200 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="realPlayerFill" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#FFFFFF" />
-                <stop offset="35%" stop-color="#1EC1CB" />
-                <stop offset="80%" stop-color="#0D6E75" />
-                <stop offset="100%" stop-color="#05262B" />
-              </linearGradient>
-              <linearGradient id="realLegStrike" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stop-color="#10B981" />
-                <stop offset="40%" stop-color="#FFFFFF" />
-                <stop offset="100%" stop-color="#1EC1CB" />
-              </linearGradient>
-            </defs>
-
-            <!-- Estela aerodinámica del disparo -->
-            <path class="kick-arc-trail" d="M105 178 C 68 186, 30 164, 6 122" stroke="#10B981" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="130" stroke-dashoffset="130" />
-
-            <!-- Grupo del cuerpo con balance natural de tiro -->
-            <g class="striker-full-body">
-              <!-- Cabeza realista en perfil atlético, cabello, mandíbula y cuello -->
-              <path d="M106 18 C115 17, 123 23, 123 33 C123 39, 120 45, 115 48 L117 56 L101 55 L102 48 C96 46, 94 40, 94 34 C94 24, 99 19, 106 18 Z" fill="url(#realPlayerFill)" />
-
-              <!-- Torso humano anatómico inclinado en postura de disparo + Brazos dinámicos -->
-              <path d="M92 54 C102 52, 116 53, 125 57 C136 62, 148 73, 160 86 C163 89, 159 95, 154 92 C143 82, 134 73, 124 68 L119 108 L86 105 L89 70 C77 75, 64 78, 50 72 C45 70, 47 63, 53 65 C65 69, 77 65, 88 57 Z" fill="url(#realPlayerFill)" />
-
-              <!-- Pierna derecha de apoyo (muslo, gemelo definido, media y guayo apoyado en punta) -->
-              <path d="M98 104 L119 106 C123 122, 126 138, 125 154 L131 182 L140 190 C143 193, 140 197, 134 197 L116 196 L117 184 L109 154 C104 138, 100 122, 98 104 Z" fill="url(#realPlayerFill)" />
-
-              <!-- Pierna izquierda articulada desde la cadera con muslo, rodilla, gemelo y guayo real -->
-              <g class="kicking-leg-group">
-                <!-- Pantaloneta y muslo integrado en la cadera (sin cortes cuadrados) -->
-                <path d="M108 100 C94 114, 76 124, 54 126 L24 122 L20 110 C18 105, 12 106, 10 112 L6 126 C5 131, 9 135, 15 134 L56 140 C82 140, 104 128, 116 112 Z" fill="url(#realLegStrike)" />
-              </g>
-            </g>
-          </svg>
         </div>
         <h2 class="splash-title" id="splashTitle">Fútbol Master Pro • Control Center</h2>
         <p class="splash-subtitle" id="splashSubtitle">Iniciando telemetría oficial FCF...</p>
@@ -3314,32 +3275,29 @@
           </div>
         </div>
 
-        <div class="view-header-bar">
+        <div class="view-header-bar bracket-view-header">
           <div class="view-title-block">
-            <span class="view-header-icon">🌳</span>
+            <span class="view-header-icon" style="background: rgba(30, 193, 203, 0.15); border: 1px solid rgba(30, 193, 203, 0.4); border-radius: 12px; padding: 8px 12px; font-size: 1.5rem;">🏆</span>
             <div>
-              <h2>Cuadro Eliminatorio (Brackets)</h2>
-              <p>Árbol de llaves conectadas en CSS. Los ganadores avanzan automáticamente de ronda.</p>
+              <h2 style="color: #FFFFFF; font-weight: 800; font-size: 1.75rem; margin: 0; letter-spacing: -0.5px;">Fases eliminatorias</h2>
+              <p style="color: #A5F3FC; font-size: 0.95rem; margin: 4px 0 0 0;">El camino hasta el campeonato, partido a partido.</p>
             </div>
           </div>
-          <div class="view-header-actions">
+          <div class="view-header-actions" style="display: flex; gap: 10px; align-items: center;">
+            <button type="button" class="bracket-print-btn" onclick="window.print()" title="Imprimir o exportar bracket en formato horizontal">
+              <span>🖨️ IMPRIMIR BRACKET</span>
+            </button>
             <a href="#/clasificacion" class="btn-ghost-sm">
               <span>📊 Ver Clasificación</span>
             </a>
           </div>
         </div>
 
-        <!-- CUADRO DE LLAVES (BRACKETS) -->
+        <!-- CUADRO DE LLAVES SIMÉTRICO DE 5 COLUMNAS (LIQUID GLASS) -->
         <div id="view-brackets" class="brackets-view-inner active">
-          <div class="brackets-container-wrapper">
-            <div class="brackets-header-info">
-              <h3>Árbol de Eliminación Directa</h3>
-              <p>El ganador de cada serie avanza automáticamente a la siguiente ronda al registrarse el resultado.</p>
-            </div>
-
-            <!-- Grilla / Flexbox del Árbol de Llaves -->
-            <div class="brackets-tree" id="bracketsTreeContainer">
-              <!-- Renderizado dinámicamente con JS -->
+          <div class="bracket-stage-wrapper" id="bracketStageWrapper">
+            <div id="bracketsTreeContainer">
+              <!-- Renderizado dinámicamente con JS (Grilla simétrica de 5 columnas) -->
             </div>
           </div>
         </div>
@@ -5218,6 +5176,73 @@
           Sí, vaciar equipos
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal Editor de Marcador para Fases Eliminatorias (Rol Organizador/Admin) -->
+  <div id="bracketScoreModal" class="modal-overlay" style="display: none;">
+    <div class="modal-dialog" style="max-width: 480px; background: linear-gradient(145deg, rgba(6, 26, 32, 0.96), rgba(4, 16, 20, 0.98)); border: 1.5px solid rgba(30, 193, 203, 0.5); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.8);">
+      <div class="modal-header" style="border-bottom: 1px solid rgba(30, 193, 203, 0.2); padding: 18px 24px; display: flex; justify-content: space-between; align-items: center;">
+        <div class="modal-match-summary" style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.8rem;">⚽</span>
+          <div>
+            <h3 id="bracketModalTitle" style="color: #FFFFFF; font-weight: 800; font-size: 1.2rem; margin: 0;">Editar Marcador de Llave</h3>
+            <p id="bracketModalSubtitle" style="color: #1EC1CB; font-size: 0.82rem; margin: 2px 0 0 0;">QF 01 • Cuartos de Final</p>
+          </div>
+        </div>
+        <button type="button" class="modal-close" onclick="closeBracketScoreModal()" style="background: none; border: none; color: #94A3B8; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
+      </div>
+
+      <form id="bracketScoreForm" onsubmit="saveBracketMatchScore(event)" style="padding: 20px 24px;">
+        <input type="hidden" id="bracketModalMatchId">
+
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; background: rgba(5, 20, 25, 0.7); padding: 16px; border-radius: 14px; border: 1px solid rgba(30, 193, 203, 0.2);">
+          <!-- Equipo Local -->
+          <div style="flex: 1; text-align: center;">
+            <div id="bracketModalHomeName" style="color: #E2F8FA; font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Local</div>
+            <input type="number" id="bracketModalHomeScore" min="0" max="99" placeholder="-" style="width: 72px; height: 50px; text-align: center; font-size: 1.6rem; font-weight: 900; background: rgba(6, 26, 32, 0.9); border: 1.5px solid #1EC1CB; border-radius: 10px; color: #FFFFFF;" required>
+          </div>
+
+          <div style="font-size: 1.4rem; font-weight: 800; color: #1EC1CB; margin-top: 24px;">VS</div>
+
+          <!-- Equipo Visitante -->
+          <div style="flex: 1; text-align: center;">
+            <div id="bracketModalAwayName" style="color: #E2F8FA; font-weight: 700; font-size: 0.95rem; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Visitante</div>
+            <input type="number" id="bracketModalAwayScore" min="0" max="99" placeholder="-" style="width: 72px; height: 50px; text-align: center; font-size: 1.6rem; font-weight: 900; background: rgba(6, 26, 32, 0.9); border: 1.5px solid #1EC1CB; border-radius: 10px; color: #FFFFFF;" required>
+          </div>
+        </div>
+
+        <!-- Penales opcionales en caso de empate -->
+        <div id="bracketPenaltiesRow" style="margin-bottom: 16px; padding: 12px; background: rgba(16, 185, 129, 0.08); border: 1px dashed rgba(16, 185, 129, 0.4); border-radius: 10px;">
+          <div style="font-size: 0.8rem; font-weight: 700; color: #10B981; margin-bottom: 8px; text-align: center;">🎯 Tanda de Penaltis (Desempate si hay empate)</div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 14px;">
+            <input type="number" id="bracketModalHomePen" min="0" max="99" placeholder="Pen L" style="width: 70px; height: 36px; text-align: center; font-weight: 700; background: rgba(6, 26, 32, 0.9); border: 1px solid rgba(16, 185, 129, 0.5); border-radius: 8px; color: #FFFFFF;">
+            <span style="color: #10B981; font-weight: bold;">-</span>
+            <input type="number" id="bracketModalAwayPen" min="0" max="99" placeholder="Pen V" style="width: 70px; height: 36px; text-align: center; font-weight: 700; background: rgba(6, 26, 32, 0.9); border: 1px solid rgba(16, 185, 129, 0.5); border-radius: 8px; color: #FFFFFF;">
+          </div>
+        </div>
+
+        <!-- Estado y Sede -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+          <div>
+            <label style="display: block; font-size: 0.76rem; color: #94A3B8; margin-bottom: 4px; font-weight: 600;">Estado de la Llave</label>
+            <select id="bracketModalStatus" style="width: 100%; height: 38px; background: rgba(6, 26, 32, 0.9); border: 1px solid rgba(30, 193, 203, 0.3); border-radius: 8px; color: #E2F8FA; padding: 0 10px;">
+              <option value="finished">FINALIZADO</option>
+              <option value="live">EN VIVO</option>
+              <option value="pending">PRÓXIMO</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.76rem; color: #94A3B8; margin-bottom: 4px; font-weight: 600;">Cancha / Estadio</label>
+            <input type="text" id="bracketModalVenue" placeholder="Ej: Cancha Central" style="width: 100%; height: 38px; background: rgba(6, 26, 32, 0.9); border: 1px solid rgba(30, 193, 203, 0.3); border-radius: 8px; color: #E2F8FA; padding: 0 10px;">
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn-ghost" onclick="closeBracketScoreModal()" style="padding: 10px 18px; border-radius: 10px;">Cancelar</button>
+          <button type="submit" class="btn-primary-neon" style="padding: 10px 22px; border-radius: 10px; font-weight: 700;">💾 Guardar y Avanzar Ganador</button>
+        </div>
+      </form>
     </div>
   </div>
 
