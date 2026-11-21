@@ -7783,18 +7783,46 @@ function renderCoachTournamentsGrid() {
     countPill.textContent = `${tournaments.length} Torneo${tournaments.length > 1 ? 's' : ''} Oficial${tournaments.length > 1 ? 'es' : ''} Disponible${tournaments.length > 1 ? 's' : ''}`;
   }
 
+  function getCoherentColombianCity(t) {
+    const name = (t.config?.name || t.name || '').toLowerCase();
+    if (name.includes('costeñ') || name.includes('caribe') || name.includes('costa') || name.includes('barranquilla')) {
+      return 'Barranquilla (Atlántico)';
+    }
+    if (name.includes('cafeter') || name.includes('eje') || name.includes('pereira') || name.includes('armenia') || name.includes('manizales')) {
+      return 'Pereira (Risaralda)';
+    }
+    if (name.includes('santander') || name.includes('bucaramanga') || name.includes('floridablanca')) {
+      return 'Bucaramanga (Santander)';
+    }
+    if (name.includes('andin') || name.includes('antioquia') || name.includes('medellín') || name.includes('medellin')) {
+      return 'Medellín (Antioquia)';
+    }
+    if (name.includes('pacífico') || name.includes('pacifico') || name.includes('valle') || name.includes('cali')) {
+      return 'Cali (Valle del Cauca)';
+    }
+    return t.config?.city || t.city || 'Bogotá D.C.';
+  }
+
+  function formatSportTag(rawSport) {
+    const s = (rawSport || 'f11').toLowerCase().trim();
+    if (s === 'f11' || s.includes('11')) return 'FÚTBOL 11';
+    if (s === 'f8' || s.includes('8')) return 'FÚTBOL 8';
+    if (s === 'f7' || s.includes('7')) return 'FÚTBOL 7';
+    if (s.includes('sala') || s.includes('futsal')) return 'FUTSAL FIFA';
+    return s.toUpperCase();
+  }
+
   container.innerHTML = tournaments.map(t => {
     const tId = t.id;
     const title = t.config?.name || t.name || 'Torneo Sin Título';
-    const rawSport = (t.config?.sport || t.sport || 'f11').toLowerCase();
-    const sportLabels = { f11: 'Fútbol 11', f8: 'Fútbol 8', f7: 'Fútbol 7', sala: 'Futsal FIFA' };
-    const sportTag = sportLabels[rawSport] || rawSport.toUpperCase();
-    const city = t.config?.city || t.city || 'Bogotá D.C.';
+    const sportTag = formatSportTag(t.config?.sport || t.sport);
+    const city = getCoherentColombianCity(t);
     const teamsCount = Array.isArray(t.teams) ? t.teams.length : 0;
     const maxTeams = parseInt(t.config?.maxTeams || t.maxTeams || 16, 10);
     const feeFormatted = (t.config?.registrationFee || t.registrationFee) 
       ? `$${Number(t.config?.registrationFee || t.registrationFee).toLocaleString('es-CO')} COP` 
       : '$350.000 COP';
+    const quotaPct = Math.min(100, Math.max(12, Math.round((teamsCount / (maxTeams || 8)) * 100)));
 
     // Buscar si mi club ya tiene postulación para este torneo
     const reg = allRegs.find(r => 
@@ -7812,28 +7840,31 @@ function renderCoachTournamentsGrid() {
     let actionBtnHtml = '';
 
     if (regStatus === 'habilitado' || regStatus === 'aprobado' || regStatus === 'aprobada_inicial') {
-      badgeHtml = '<span class="coach-tourney-badge badge-approved">✅ Inscrito Oficialmente</span>';
+      badgeHtml = '<span class="coach-tourney-badge badge-approved">● Inscrito Oficialmente</span>';
       actionBtnHtml = `
         <button type="button" class="btn-coach-action btn-go-tourney" onclick="window.activeTournamentId = '${escapeHtml(tId)}'; if(typeof setActiveTournament === 'function') setActiveTournament('${escapeHtml(tId)}'); navigateToView('calendario');">
           <span>Ver Calendario y Tabla</span>
         </button>
       `;
     } else if (regStatus === 'rechazado' || regStatus === 'rechazada' || regStatus === 'requiere_correccion' || regStatus === 'devuelta_inicial') {
-      badgeHtml = '<span class="coach-tourney-badge badge-rejected">❌ Requiere Subsanación</span>';
+      badgeHtml = '<span class="coach-tourney-badge badge-rejected">● Requiere Subsanación</span>';
       actionBtnHtml = `
         <button type="button" class="btn-coach-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', true, '${escapeHtml(reg.id)}')">
           <span>🔄 Subsanar Documentos</span>
         </button>
       `;
     } else if (regStatus === 'en_revision' || regStatus === 'pendiente' || regStatus === 'pendiente_inicial' || regStatus === 'revision_final') {
-      badgeHtml = '<span class="coach-tourney-badge badge-pending">⏳ En Revisión</span>';
+      badgeHtml = '<span class="coach-tourney-badge badge-pending">● En Revisión</span>';
       actionBtnHtml = `
         <button type="button" class="btn-coach-action btn-view-status" onclick="switchCoachTab('applications')">
-          <span>Ver Estado</span>
+          <span>⏳ Ver Estado de Solicitud</span>
         </button>
       `;
     } else {
-      badgeHtml = '<span class="coach-tourney-badge badge-open">🟢 Inscripciones Abiertas</span>';
+      const isFull = teamsCount >= maxTeams && maxTeams > 0;
+      badgeHtml = isFull 
+        ? '<span class="coach-tourney-badge badge-pending">● Cupos Completos</span>' 
+        : '<span class="coach-tourney-badge badge-open">● Inscripciones Abiertas</span>';
       actionBtnHtml = `
         <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
           <span>📋 Ingresar / Inscribir mi Club</span>
@@ -7844,32 +7875,34 @@ function renderCoachTournamentsGrid() {
     return `
       <div class="coach-tourney-card" data-tourney-id="${escapeHtml(tId)}">
         <div class="coach-tourney-card-header">
-          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+          <div class="coach-tourney-card-top-strip">
             <span class="coach-tourney-sport-pill">${escapeHtml(sportTag)}</span>
             ${badgeHtml}
           </div>
           <h4 class="coach-tourney-title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
           <div class="coach-tourney-location">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span>${escapeHtml(city)}</span>
           </div>
         </div>
-        <div class="coach-tourney-body">
-          <div class="coach-tourney-info-grid">
-            <div class="coach-tourney-info-item">
-              <span class="info-label">Modalidad</span>
-              <strong class="info-value">${escapeHtml(sportTag)}</strong>
+
+        <!-- Bloque de Métricas + Barra de Cupos -->
+        <div class="coach-tourney-metrics-box">
+          <div class="coach-metrics-row">
+            <div class="coach-metric-col">
+              <span class="coach-metric-label">Inscripción</span>
+              <strong class="coach-metric-value-fee">${escapeHtml(feeFormatted)}</strong>
             </div>
-            <div class="coach-tourney-info-item">
-              <span class="info-label">Cupos Oficiales</span>
-              <strong class="info-value">${teamsCount} / ${maxTeams} Equipos</strong>
-            </div>
-            <div class="coach-tourney-info-item" style="grid-column: span 2;">
-              <span class="info-label">Valor de Inscripción</span>
-              <strong class="info-value fee-highlight">${escapeHtml(feeFormatted)}</strong>
+            <div class="coach-metric-col text-right">
+              <span class="coach-metric-label">Cupos Oficiales</span>
+              <strong class="coach-metric-value-quotas">${teamsCount} / ${maxTeams} Equipos</strong>
             </div>
           </div>
+          <div class="coach-quota-progress-track" title="${quotaPct}% cupos ocupados">
+            <div class="coach-quota-progress-fill" style="width: ${quotaPct}%;"></div>
+          </div>
         </div>
+
         <div class="coach-tourney-footer">
           ${actionBtnHtml}
         </div>

@@ -10517,21 +10517,23 @@ body.blue-theme .hero-football-wrap {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
-  padding: 0.75rem 1.4rem;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  color: #ffffff;
-  font-weight: 800;
-  font-size: 0.9rem;
-  border-radius: 10px;
-  border: none;
+  padding: 0.7rem 1.35rem;
+  background: linear-gradient(135deg, #10B981 0%, #0EA5A4 100%);
+  color: #03181C;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
-  transition: all 0.2s ease;
+  box-shadow: 0 8px 22px rgba(16, 185, 129, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .btn-generate-pdf:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(239, 68, 68, 0.55);
+  filter: brightness(1.08);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.5);
 }
 
 /* Estado de Postulaciones a Torneo */
@@ -16533,7 +16535,6 @@ body.role-admin #mobileBtnCreateNew {
 .match-card,
 .admin-table-container,
 .venue-card-item,
-.club-hero-card,
 .group-card-panel,
 .penalties-section,
 .bento-card-glass,
@@ -21387,31 +21388,92 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
 
 /* =============================================================================
    CENTRO DE MANDO DEL DIRECTOR TÉCNICO (LIQUID GLASS CYAN / ESMERALDA #/club)
+   Estética Apple visionOS / Liquid Glass de Alto Rendimiento (60 FPS)
    ============================================================================= */
 
+/* 1. Rediseño del Banner Superior del Club */
+.coach-panel-container .club-hero-card,
+.club-hero-card {
+  background: linear-gradient(135deg, rgba(4, 18, 24, 0.88) 0%, rgba(7, 32, 39, 0.82) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.28) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45) !important;
+  border-radius: 24px !important;
+  padding: 24px 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-bottom: 2rem !important;
+  flex-wrap: wrap !important;
+  gap: 1.5rem !important;
+}
+
+.club-meta-strip {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.75rem !important;
+  color: #B8E3E8 !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  margin-top: 0.4rem !important;
+  flex-wrap: wrap !important;
+}
+
+.club-meta-strip .sep {
+  color: rgba(30, 193, 203, 0.45) !important;
+  font-weight: 300 !important;
+}
+
+#btnOpenEditCoachClub.btn-tool-outline,
+.coach-hero-btn-edit {
+  background: rgba(5, 20, 25, 0.72) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  color: #E8FAFC !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+#btnOpenEditCoachClub.btn-tool-outline:hover,
+.coach-hero-btn-edit:hover {
+  background: rgba(11, 77, 84, 0.85) !important;
+  border-color: #1EC1CB !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(30, 193, 203, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* 2. Barra de Pestañas (Tabs) Estilo Apple Pill */
 .coach-tab-nav-wrapper {
   margin-top: 1.25rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
 }
 
 .coach-tab-nav-strip {
-  display: flex;
-  gap: 8px;
-  background: rgba(8, 30, 34, 0.75);
-  border: 1px solid rgba(30, 193, 203, 0.25);
-  border-radius: 14px;
-  padding: 6px;
-  flex-wrap: wrap;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  display: inline-flex !important;
+  gap: 6px !important;
+  background: rgba(4, 17, 22, 0.82) !important;
+  border: 1px solid rgba(30, 193, 203, 0.22) !important;
+  border-radius: 18px !important;
+  padding: 6px !important;
+  flex-wrap: wrap !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
 }
 
 .coach-nav-tab {
   background: transparent;
   color: #94a3b8;
   border: 1px solid transparent;
-  border-radius: 10px;
-  padding: 10px 18px;
-  font-weight: 700;
+  border-radius: 12px;
+  padding: 9px 18px;
+  font-weight: 600;
   font-size: 0.88rem;
   cursor: pointer;
   display: inline-flex;
@@ -21424,18 +21486,18 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
 .coach-nav-tab:hover {
   color: #1EC1CB;
   background: rgba(30, 193, 203, 0.08);
-  border-color: rgba(30, 193, 203, 0.2);
 }
 
 .coach-nav-tab.active {
-  color: #ffffff;
-  background: linear-gradient(135deg, rgba(30, 193, 203, 0.28) 0%, rgba(16, 185, 129, 0.22) 100%);
-  border-color: rgba(30, 193, 203, 0.55);
-  box-shadow: 0 4px 14px rgba(30, 193, 203, 0.2);
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28), rgba(30, 193, 203, 0.24)) !important;
+  border: 1px solid rgba(30, 193, 203, 0.6) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 0 4px 16px rgba(30, 193, 203, 0.25) !important;
 }
 
 .coach-tab-icon {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .coach-tab-badge {
@@ -21487,36 +21549,56 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
   line-height: 1.45;
 }
 
-.coach-count-pill {
-  background: rgba(30, 193, 203, 0.15);
-  color: #1EC1CB;
-  border: 1px solid rgba(30, 193, 203, 0.35);
-  padding: 5px 12px;
-  border-radius: 9999px;
-  font-size: 0.8rem;
-  font-weight: 800;
-  white-space: nowrap;
+.coach-count-pill,
+#coachTournamentsCountPill {
+  background: rgba(4, 18, 24, 0.85) !important;
+  border: 1px solid rgba(30, 193, 203, 0.45) !important;
+  color: #7CE8F0 !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  white-space: nowrap !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Grilla de Torneos Disponibles */
+/* 3. Grilla Simétrica de 3 Columnas */
 .coach-tournaments-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.25rem;
-  margin-top: 0.5rem;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 22px !important;
+  margin-top: 0.75rem !important;
 }
 
+@media (max-width: 1120px) {
+  .coach-tournaments-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .coach-tournaments-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+}
+
+/* 4. Tarjetas de Torneo Premium Liquid Glass */
 .coach-tourney-card {
-  background: rgba(8, 30, 34, 0.75);
-  border: 1px solid rgba(30, 193, 203, 0.22);
-  border-radius: 14px;
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
-  overflow: hidden;
+  background: linear-gradient(135deg, rgba(5, 20, 25, 0.85) 0%, rgba(8, 30, 36, 0.80) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.22) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.28) !important;
+  border-radius: 20px !important;
+  padding: 20px 22px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38) !important;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .coach-tourney-card::before {
@@ -21525,174 +21607,429 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
   top: 0;
   left: 0;
   right: 0;
-  height: 3px;
+  height: 2px;
   background: linear-gradient(90deg, #1EC1CB, #10B981);
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .coach-tourney-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(30, 193, 203, 0.55);
-  box-shadow: 0 8px 24px rgba(4, 21, 25, 0.45);
+  transform: translateY(-4px) !important;
+  border-color: rgba(30, 193, 203, 0.55) !important;
+  box-shadow: 0 20px 45px rgba(4, 21, 25, 0.55), 0 0 20px rgba(30, 193, 203, 0.15) !important;
 }
 
-.coach-tourney-pills-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 0.75rem;
-}
-
-.coach-sport-pill {
-  background: rgba(30, 193, 203, 0.15);
-  color: #1EC1CB;
-  font-size: 0.72rem;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-weight: 800;
-  border: 1px solid rgba(30, 193, 203, 0.3);
-}
-
-.coach-tourney-badge {
-  font-size: 0.75rem;
-  font-weight: 800;
-  padding: 3px 9px;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.coach-tourney-badge.badge-open {
-  background: rgba(16, 185, 129, 0.18);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.4);
-}
-
-.coach-tourney-badge.badge-pending {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.4);
-}
-
-.coach-tourney-badge.badge-approved {
-  background: rgba(16, 185, 129, 0.25);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.6);
-}
-
-.coach-tourney-badge.badge-rejected {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.5);
-}
-
-.coach-tourney-badge.badge-canceled {
-  background: rgba(148, 163, 184, 0.2);
-  color: #cbd5e1;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-}
-
-.coach-tourney-title {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin: 0 0 0.35rem 0;
-  line-height: 1.3;
-}
-
-.coach-tourney-subtitle {
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin: 0 0 1rem 0;
-}
-
-.coach-tourney-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
-  margin-bottom: 1.25rem;
-  background: rgba(0, 0, 0, 0.25);
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.coach-meta-box {
+.coach-tourney-card-header {
   display: flex;
   flex-direction: column;
-  text-align: center;
+  gap: 6px;
+  margin-bottom: 4px;
 }
 
-.coach-meta-box .meta-label {
-  font-size: 0.68rem;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.coach-tourney-card-top-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin-bottom: 2px;
 }
 
-.coach-meta-box .meta-value {
-  font-size: 0.85rem;
-  font-weight: 800;
-  color: #f8fafc;
+.coach-tourney-sport-pill {
+  background: rgba(30, 193, 203, 0.15) !important;
+  color: #1EC1CB !important;
+  font-size: 11px !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  border: 1px solid rgba(30, 193, 203, 0.3) !important;
 }
 
-.coach-meta-box .fee-value {
-  color: #34d399;
+.coach-tourney-badge {
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  letter-spacing: 0.02em !important;
+  white-space: nowrap !important;
 }
 
-.coach-tourney-card-bottom {
-  margin-top: auto;
+.coach-tourney-badge.badge-open {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
 }
 
-.coach-tourney-card-bottom button {
-  width: 100%;
-  justify-content: center;
+.coach-tourney-badge.badge-pending {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #fbbf24 !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
 }
 
-/* Banner de alerta de rechazo */
-.coach-rejected-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.45);
-  border-left: 4px solid #ef4444;
-  border-radius: 10px;
-  padding: 1rem 1.25rem;
-  gap: 1rem;
-  flex-wrap: wrap;
+.coach-tourney-badge.badge-approved {
+  background: rgba(16, 185, 129, 0.25) !important;
+  color: #34d399 !important;
+  border: 1px solid rgba(16, 185, 129, 0.6) !important;
 }
 
-.coach-rejected-banner .banner-left {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  flex: 1;
+.coach-tourney-badge.badge-rejected {
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.5) !important;
 }
 
-.coach-rejected-banner .banner-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+.coach-tourney-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: -0.01em !important;
+  margin: 6px 0 2px 0 !important;
+  line-height: 1.3 !important;
 }
 
+.coach-tourney-location {
+  font-size: 13px !important;
+  color: #8EC5CC !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  margin-bottom: 4px !important;
+}
+
+/* Bloque de Métricas + Barra de Cupos */
+.coach-tourney-metrics-box {
+  background: rgba(3, 14, 18, 0.62) !important;
+  border: 1px solid rgba(30, 193, 203, 0.14) !important;
+  border-radius: 14px !important;
+  padding: 12px 14px !important;
+  margin: 12px 0 16px 0 !important;
+}
+
+.coach-metrics-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+}
+
+.coach-metric-col {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.coach-metric-col.text-right {
+  text-align: right !important;
+  align-items: flex-end !important;
+}
+
+.coach-metric-label {
+  font-size: 10.5px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  color: #7A9EA3 !important;
+  font-weight: 700 !important;
+}
+
+.coach-metric-value-fee {
+  color: #10B981 !important;
+  font-size: 15px !important;
+  font-weight: 800 !important;
+  margin-top: 2px !important;
+}
+
+.coach-metric-value-quotas {
+  color: #FFFFFF !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  margin-top: 2px !important;
+}
+
+.coach-quota-progress-track {
+  height: 5px !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  margin-top: 10px !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+
+.coach-quota-progress-fill {
+  height: 100% !important;
+  border-radius: 999px !important;
+  background: linear-gradient(90deg, #1EC1CB 0%, #10B981 100%) !important;
+  transition: width 0.4s ease !important;
+}
+
+.coach-tourney-footer {
+  margin-top: auto !important;
+  width: 100% !important;
+}
+
+/* Botones CTA Liquid Glass */
+.btn-coach-action {
+  width: 100% !important;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-weight: 700 !important;
+  font-size: 13.5px !important;
+  letter-spacing: 0.01em !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease !important;
+  text-decoration: none !important;
+}
+
+.btn-coach-action.btn-apply {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.92) 0%, rgba(30, 193, 203, 0.92) 100%) !important;
+  color: #03191E !important;
+  box-shadow: 0 8px 20px rgba(30, 193, 203, 0.22) !important;
+}
+
+.btn-coach-action.btn-apply:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+  box-shadow: 0 12px 26px rgba(16, 185, 129, 0.35) !important;
+}
+
+.btn-coach-action.btn-go-tourney {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(30, 193, 203, 0.25) 100%) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.2) !important;
+}
+
+.btn-coach-action.btn-go-tourney:hover {
+  background: rgba(16, 185, 129, 0.35) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-coach-action.btn-view-status {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%) !important;
+  color: #fbbf24 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.15) !important;
+}
+
+.btn-coach-action.btn-view-status:hover {
+  background: rgba(245, 158, 11, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-coach-action.btn-subsanar {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
+  color: #03181C !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3) !important;
+}
+
+.btn-coach-action.btn-subsanar:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.08) !important;
+}
+
+/* 5. Consistencia en Otras Pestañas (Sin Botones Grises Nativos) */
 .btn-doc-pill {
-  background: rgba(30, 193, 203, 0.15);
-  color: #1EC1CB;
-  border: 1px solid rgba(30, 193, 203, 0.35);
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
+  background: rgba(5, 20, 25, 0.72) !important;
+  color: #7CE8F0 !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  padding: 5px 12px !important;
+  border-radius: 8px !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
 }
 
 .btn-doc-pill:hover {
-  background: rgba(30, 193, 203, 0.25);
-  border-color: #1EC1CB;
-  color: #ffffff;
+  background: rgba(11, 77, 84, 0.8) !important;
+  border-color: #1EC1CB !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
 }
+
+.btn-coach-table-action {
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  transition: all 0.2s ease !important;
+  border: 1px solid transparent !important;
+  white-space: nowrap !important;
+}
+
+.btn-coach-table-action.btn-subsanar {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(217, 119, 6, 0.25) 100%) !important;
+  color: #fbbf24 !important;
+  border-color: rgba(245, 158, 11, 0.5) !important;
+}
+
+.btn-coach-table-action.btn-subsanar:hover {
+  background: #f59e0b !important;
+  color: #03181C !important;
+}
+
+.btn-coach-table-action.btn-go {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(30, 193, 203, 0.22) 100%) !important;
+  color: #34d399 !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+}
+
+.btn-coach-table-action.btn-go:hover {
+  background: #10b981 !important;
+  color: #03181C !important;
+}
+
+.btn-cancel-coach-app {
+  color: #fca5a5 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-cancel-coach-app:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.coach-rejected-banner {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background: rgba(239, 68, 68, 0.14) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  border-left: 4px solid #ef4444 !important;
+  border-radius: 14px !important;
+  padding: 1.15rem 1.35rem !important;
+  gap: 1rem !important;
+  flex-wrap: wrap !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Botones de navegación interna y herramientas de plantilla */
+#btnCoachGoStandings,
+#btnCoachGoBrackets,
+#btnCoachGoCalendar,
+#btnToggleCarnetsView {
+  border-radius: 12px !important;
+  padding: 9px 16px !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+#btnCoachGoStandings {
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.45) !important;
+  color: #1EC1CB !important;
+}
+
+#btnCoachGoStandings:hover {
+  background: rgba(30, 193, 203, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(30, 193, 203, 0.3) !important;
+}
+
+#btnCoachGoBrackets {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34d399 !important;
+}
+
+#btnCoachGoBrackets:hover {
+  background: rgba(16, 185, 129, 0.3) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3) !important;
+}
+
+#btnCoachGoCalendar {
+  background: rgba(5, 20, 25, 0.72) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  color: #E8FAFC !important;
+}
+
+#btnCoachGoCalendar:hover {
+  background: rgba(11, 77, 84, 0.8) !important;
+  color: #ffffff !important;
+  border-color: #1EC1CB !important;
+  transform: translateY(-1px) !important;
+}
+
+#btnToggleCarnetsView {
+  background: rgba(30, 193, 203, 0.15) !important;
+  border: 1px solid rgba(30, 193, 203, 0.4) !important;
+  color: #1EC1CB !important;
+}
+
+#btnToggleCarnetsView:hover {
+  background: rgba(30, 193, 203, 0.28) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px) !important;
+}
+
+#btnOpenAddPlayerForm {
+  background: linear-gradient(135deg, #10B981 0%, #0EA5A4 100%) !important;
+  color: #03181C !important;
+  font-weight: 700 !important;
+  border-radius: 12px !important;
+  padding: 9px 16px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+#btnOpenAddPlayerForm:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.08) !important;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.45) !important;
+}
+
+.btn-del-player {
+  color: #fca5a5 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  border-radius: 8px !important;
+  padding: 5px 10px !important;
+  cursor: pointer !important;
+  font-size: 0.78rem !important;
+  font-weight: 600 !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-del-player:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  color: #ffffff !important;
+}
+
