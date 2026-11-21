@@ -412,7 +412,7 @@
                 <span>🔑 Iniciar Sesión / Registro</span>
               </button>
               <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('coach'); navigateToView('club'); toggleUserDropdownMenu();">
-                <span>👔 Delegado de Club</span>
+                <span>🛡️ Acceso Delegado de Club</span>
               </button>
               <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('organizer'); navigateToView('admin'); toggleUserDropdownMenu();">
                 <span>🔑 Iniciar Sesión como Organizador</span>
@@ -4641,13 +4641,14 @@
   <!-- VISTA 11: PANEL MI CLUB / DIRECTOR TÉCNICO Y PLANTILLAS -->
   <section id="view-club" class="spa-view" data-alias="view-coach">
     <div class="coach-panel-container admin-dashboard-wrapper">
-      <!-- Hero del Club -->
+      
+      <!-- Hero del Club y DT -->
       <div class="club-hero-card">
         <div class="club-hero-left">
-          <div class="club-shield-large">⚽</div>
+          <div class="club-shield-large" id="coachClubShield">⚽</div>
           <div>
-            <div class="admin-badge-co" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa;">
-              DIRECTOR TÉCNICO OFICIAL 🇨🇴
+            <div class="admin-badge-co" style="background: rgba(30, 193, 203, 0.15); border-color: rgba(30, 193, 203, 0.4); color: #1EC1CB;">
+              DIRECTOR TÉCNICO & DELEGADO OFICIAL 🇨🇴
             </div>
             <h2 class="club-name-heading" id="coachClubNameDisplay">Atlético Bogotá FC</h2>
             <div class="club-meta-strip">
@@ -4660,10 +4661,7 @@
           </div>
         </div>
         <div class="club-hero-right">
-          <button type="button" class="btn-primary-neon" id="btnClubOpenApplyModal" onclick="openTournamentApplicationModal()" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); margin-right: 0.5rem;">
-            <span>📋 Solicitar Inscripción al Torneo</span>
-          </button>
-          <button type="button" class="btn-tool-outline" id="btnOpenEditCoachClub" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399; margin-right: 0.5rem;">
+          <button type="button" class="btn-tool-outline" id="btnOpenEditCoachClub" style="background: rgba(30, 193, 203, 0.15); border-color: rgba(30, 193, 203, 0.4); color: #1EC1CB;">
             <span>✏️ Editar Datos del Club</span>
           </button>
           <button type="button" class="btn-generate-pdf" id="btnOpenPlanillaPdfModal">
@@ -4673,307 +4671,364 @@
         </div>
       </div>
 
-      <!-- TARJETA DESTACADA: PRÓXIMO PARTIDO & ESTADO DE INSCRIPCIÓN -->
-      <div id="coachRegistrationStatusCard" class="coach-registration-hero-strip" style="margin-top: 1.25rem;">
-        <!-- Inyectado dinámicamente según estado (Aprobada, En Revisión, Rechazada) -->
-      </div>
-
-      <!-- RESUMEN EN VIVO: ¿CÓMO VA MI EQUIPO? (DASHBOARD DT) -->
-      <div class="coach-dashboard-summary-grid" style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
-        <!-- Tarjeta Próximo Partido -->
-        <div class="coach-next-match-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(16, 185, 129, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
-            <span style="font-size: 0.8rem; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
-              <span>⚽</span> Próximo Partido Programado
-            </span>
-            <span id="coachNextMatchBadge" class="live-round-badge" style="background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Jornada Activa</span>
-          </div>
-          <div id="coachNextMatchContent" style="display: flex; flex-direction: column; gap: 0.75rem;">
-            <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px;">
-              <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <span id="coachMyTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-                <strong id="coachMyTeamName" style="color: #fff; font-size: 0.95rem;">Mi Equipo</strong>
-              </div>
-              <span style="font-weight: 800; color: #94a3b8; font-size: 0.85rem;">VS</span>
-              <div style="display: flex; align-items: center; gap: 0.6rem;">
-                <strong id="coachRivalTeamName" style="color: #60a5fa; font-size: 0.95rem;">Rival Pendiente</strong>
-                <span id="coachRivalTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #3b82f6; display: inline-block;"></span>
-              </div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.82rem; color: #cbd5e1;">
-              <div>📅 <strong id="coachNextMatchDate">Por programar</strong></div>
-              <div>⏰ <strong id="coachNextMatchTime">--:--</strong></div>
-              <div style="grid-column: span 2;">🏟️ Sede: <strong id="coachNextMatchVenue">Cancha Asignada Colombia</strong></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tarjeta Estadísticas Actuales en Torneo -->
-        <div class="coach-stats-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(59, 130, 246, 0.3);">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
-            <span style="font-size: 0.8rem; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
-              <span>📊</span> Estado en la Competición
-            </span>
-            <span id="coachPositionBadge" style="font-size: 0.85rem; font-weight: 800; color: #34d399; background: rgba(16,185,129,0.15); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Posición #--</span>
-          </div>
-          <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 0.75rem;">
-            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">PTS</span>
-              <strong id="coachStatPts" style="font-size: 1.15rem; color: #34d399;">0</strong>
-            </div>
-            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">PJ</span>
-              <strong id="coachStatPj" style="font-size: 1.15rem; color: #f8fafc;">0</strong>
-            </div>
-            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">DG</span>
-              <strong id="coachStatDg" style="font-size: 1.15rem; color: #38bdf8;">0</strong>
-            </div>
-            <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
-              <span style="display: block; font-size: 0.7rem; color: #94a3b8;">V-E-D</span>
-              <strong id="coachStatRecord" style="font-size: 0.95rem; color: #f8fafc;">0-0-0</strong>
-            </div>
-          </div>
-          <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem;">
-            <span>Racha reciente:</span>
-            <div id="coachRecentStreak" style="display: flex; gap: 0.25rem;">
-              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #10b981; color: #fff;">V</span>
-              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #f59e0b; color: #fff;">E</span>
-              <span style="padding: 2px 6px; border-radius: 3px; font-weight: 800; font-size: 0.7rem; background: #10b981; color: #fff;">V</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SECCIÓN: ESTADO DISCIPLINARIO Y PAZ Y SALVO (MULTAS EN COP) -->
-      <div class="coach-disciplinary-section" style="margin-top: 1.5rem; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.25rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
-          <div>
-            <h3 style="margin: 0; font-size: 1.2rem; font-weight: 800; color: #f87171; display: flex; align-items: center; gap: 0.5rem;">
-              <span>⚖️</span> Estado Disciplinario y Paz y Salvo Oficial (COP)
-            </h3>
-            <p style="margin: 0.2rem 0 0 0; font-size: 0.82rem; color: #94a3b8;">
-              Reglamento FCF / Torneos Colombia: Tarjeta Amarilla = $10.000 COP • Tarjeta Roja = $20.000 COP • 3 Amarillas o 1 Roja = Suspensión automática.
-            </p>
-          </div>
-          <div id="coachPazYSalvoBadge" style="padding: 0.4rem 0.9rem; border-radius: 9999px; font-size: 0.82rem; font-weight: 800; background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);">
-            ✓ PAZ Y SALVO EN MESA
-          </div>
-        </div>
-
-        <!-- 3 Tarjetas de Resumen Financiero Disciplinario -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem;">
-          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #fbbf24;">
-            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Tarjetas Amarillas Acumuladas</span>
-            <strong id="coachTotalYellowCards" style="font-size: 1.2rem; color: #fbbf24;">0</strong>
-            <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($10.000 COP c/u)</span>
-          </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #f87171;">
-            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Tarjetas Rojas Registradas</span>
-            <strong id="coachTotalRedCards" style="font-size: 1.2rem; color: #f87171;">0</strong>
-            <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($20.000 COP c/u)</span>
-          </div>
-          <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #34d399;">
-            <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Total Multas Disciplinarias</span>
-            <strong id="coachTotalFinesCop" style="font-size: 1.2rem; color: #34d399;">$0 COP</strong>
-            <span id="coachFinesPaidStatus" style="font-size: 0.72rem; color: #94a3b8; display: block; margin-top: 0.2rem;">Al día sin deudas</span>
-          </div>
-        </div>
-
-        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-bottom: 1.25rem;">
-          <button type="button" class="btn-primary-neon" id="btnOpenReportPaymentModal" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-            <span>💳 Reportar Pago / Subir Comprobante (Nequi / Bancolombia / Efectivo)</span>
+      <!-- Menú de Navegación del Técnico en #/club (4 Módulos Liquid Glass) -->
+      <div class="coach-tab-nav-wrapper">
+        <nav class="coach-tab-nav-strip" id="coachTabNavStrip" aria-label="Navegación del Centro de Mando DT">
+          <button type="button" class="coach-nav-tab active" data-coach-tab="tournaments" id="coachTabBtnTournaments">
+            <span class="coach-tab-icon">🏆</span>
+            <span class="coach-tab-label">Torneos Disponibles</span>
           </button>
+          <button type="button" class="coach-nav-tab" data-coach-tab="applications" id="coachTabBtnApplications">
+            <span class="coach-tab-icon">📥</span>
+            <span class="coach-tab-label">Mis Solicitudes y Documentos</span>
+            <span class="coach-tab-badge" id="coachApplicationsCountBadge">0</span>
+          </button>
+          <button type="button" class="coach-nav-tab" data-coach-tab="roster" id="coachTabBtnRoster">
+            <span class="coach-tab-icon">🛡️</span>
+            <span class="coach-tab-label">Mi Club y Plantilla</span>
+          </button>
+          <button type="button" class="coach-nav-tab" data-coach-tab="matches" id="coachTabBtnMatches">
+            <span class="coach-tab-icon">📅</span>
+            <span class="coach-tab-label">Mis Próximos Partidos</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- SECCIÓN 1: 🏆 Torneos Disponibles (Ingresar a Torneos) [DEFAULT ACTIVE] -->
+      <div class="coach-subtab-pane active" id="coach-panel-tournaments">
+        <div class="coach-section-header">
+          <div>
+            <h3 class="coach-section-title">🏆 Competiciones y Torneos Disponibles</h3>
+            <p class="coach-section-desc">Selecciona un torneo oficial para ingresar con tu club, enviar la planilla de jugadores y adjuntar el comprobante de pago.</p>
+          </div>
+          <div class="coach-filter-meta" id="coachTournamentsCountMeta">
+            <span class="coach-count-pill" id="coachTournamentsCountPill">0 Torneos Disponibles</span>
+          </div>
         </div>
 
-        <!-- Tabla de Sanciones y Habilitaciones de Jugadores -->
-        <div class="admin-table-container" style="margin-bottom: 0;">
-          <table class="admin-data-table" id="tableCoachSanctions">
+        <!-- Cuadrícula de Torneos Disponibles en Tarjetas Liquid Glass -->
+        <div class="coach-tournaments-grid" id="coachTournamentsGrid">
+          <!-- Renderizado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: 📥 Mis Solicitudes y Documentos -->
+      <div class="coach-subtab-pane" id="coach-panel-applications">
+        <div class="coach-section-header">
+          <div>
+            <h3 class="coach-section-title">📥 Solicitudes de Inscripción y Documentación</h3>
+            <p class="coach-section-desc">Audita el estado de postulación de tu club, previsualiza comprobantes y subsana requerimientos del organizador.</p>
+          </div>
+        </div>
+
+        <!-- Banner de Alerta si alguna solicitud fue rechazada / requiere subsanación -->
+        <div id="coachRejectedAlertBanner" style="display: none; margin-bottom: 1.25rem;"></div>
+
+        <!-- Tabla de Solicitudes Enviadas -->
+        <div class="admin-table-container">
+          <table class="admin-data-table" id="tableCoachApplications">
             <thead>
               <tr>
-                <th style="width: 60px; text-align: center;">Dorsal</th>
-                <th>Jugador</th>
-                <th style="text-align: center; width: 90px;">🟨 Amarillas</th>
-                <th style="text-align: center; width: 90px;">🟥 Rojas</th>
-                <th>Multa Total COP</th>
-                <th style="text-align: center;">Estado para Próxima Fecha</th>
+                <th>Radicado / Torneo</th>
+                <th>Fecha de Envío</th>
+                <th>Plantilla</th>
+                <th>Comprobante</th>
+                <th>Estado</th>
+                <th>Observaciones del Organizador</th>
+                <th style="text-align: center; width: 140px;">Acciones</th>
               </tr>
             </thead>
-            <tbody id="coachSanctionsTableBody">
+            <tbody id="coachApplicationsTableBody">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 3: 🛡️ Mi Club y Plantilla (Nómina) -->
+      <div class="coach-subtab-pane" id="coach-panel-roster">
+        <div class="coach-section-header">
+          <div>
+            <h3 class="coach-section-title">🛡️ Gestión de Club y Nómina Oficial</h3>
+            <p class="coach-section-desc">Administra a tus jugadores, dorsales, estado de habilitación, carnets digitales y paz y salvo disciplinario.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn-tool-outline" id="btnToggleCarnetsView" style="background: rgba(30, 193, 203, 0.15); border-color: rgba(30, 193, 203, 0.4); color: #1EC1CB;">
+              <span>🪪 Ver Carnets Digitales</span>
+            </button>
+            <button type="button" class="btn-primary-neon" id="btnOpenAddPlayerForm">
+              <span>+ Inscribir Jugador</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Formulario Desplegable para Agregar Jugador -->
+        <div id="addPlayerFormWrapper" class="admin-table-container" style="display: none; padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h4 style="color: #10b981; margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 800;">Inscripción de Nuevo Jugador a la Plantilla</h4>
+          <form id="formCoachAddPlayer">
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="pDorsal">Número Dorsal *</label>
+                <input type="number" id="pDorsal" class="auth-plain-input" min="1" max="99" placeholder="Ej: 10" required>
+              </div>
+              <div class="form-group">
+                <label for="pFullName">Nombre y Apellidos *</label>
+                <input type="text" id="pFullName" class="auth-plain-input" placeholder="Ej: Juan Sebastián Verón" required>
+              </div>
+            </div>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="pDocType">Tipo de Documento *</label>
+                <select id="pDocType" class="auth-select" required>
+                  <option value="C.C.">Cédula de Ciudadanía (C.C.)</option>
+                  <option value="T.I.">Tarjeta de Identidad (T.I.)</option>
+                  <option value="P.A.">Pasaporte (P.A.)</option>
+                  <option value="P.P.T.">Permiso por Protección Temporal (P.P.T.)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pDocNumber">Número de Identificación *</label>
+                <input type="text" id="pDocNumber" class="auth-plain-input" placeholder="Ej: 1020456789" required>
+              </div>
+            </div>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="pPosition">Posición en el Campo *</label>
+                <select id="pPosition" class="auth-select" required>
+                  <option value="Portero">Portero (Arquero)</option>
+                  <option value="Defensa">Defensa Central / Lateral</option>
+                  <option value="Mediocampista" selected>Mediocampista / Volante</option>
+                  <option value="Delantero">Delantero / Extremo</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="pEps">EPS / Cobertura Médica *</label>
+                <input type="text" id="pEps" class="auth-plain-input" placeholder="Ej: EPS Sanitas / Sura / Compensar" required>
+              </div>
+            </div>
+
+            <div class="form-row-2col">
+              <div class="form-group">
+                <label for="pAge">Edad del Jugador *</label>
+                <input type="number" id="pAge" class="auth-plain-input" min="12" max="65" value="25" required>
+              </div>
+              <div class="form-group">
+                <label for="pGuardianName">Tutor Legal / Acudiente <span class="optional-tag">(Obligatorio si menor de 18)</span></label>
+                <input type="text" id="pGuardianName" class="auth-plain-input" placeholder="Nombre completo acudiente">
+              </div>
+            </div>
+            <div class="form-group" id="guardianDocRow" style="margin-bottom: 1rem;">
+              <label for="pGuardianDoc">Documento Identidad Tutor <span class="optional-tag">(Si aplica)</span></label>
+              <input type="text" id="pGuardianDoc" class="auth-plain-input" placeholder="CC Acudiente legal">
+            </div>
+
+            <div class="habeas-data-card" style="margin-bottom: 1rem;">
+              <label class="habeas-checkbox-label">
+                <input type="checkbox" id="pMinorConsent" required checked>
+                <span class="habeas-text">
+                  <strong>Certificación Ley 1581:</strong> El Club certifica que cuenta con la autorización firmada por el titular o el tutor legal (en caso de menores de edad) para participar en competiciones oficiales.
+                </span>
+              </label>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+              <button type="submit" class="btn-primary-neon">Guardar Jugador en Plantilla</button>
+              <button type="button" class="btn-tool-outline" id="btnCancelAddPlayer">Cancelar</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Tabla de Jugadores de la Plantilla -->
+        <div class="admin-table-container" id="coachRosterTableContainer" style="margin-bottom: 1.5rem;">
+          <table class="admin-data-table" id="tableCoachRoster">
+            <thead>
+              <tr>
+                <th style="width: 70px; text-align: center;">Dorsal</th>
+                <th>Nombre Completo</th>
+                <th>Tipo Doc.</th>
+                <th>Número de Identificación</th>
+                <th>Posición</th>
+                <th>EPS / Salud</th>
+                <th>Estado</th>
+                <th style="width: 90px; text-align: center;">Acción</th>
+              </tr>
+            </thead>
+            <tbody id="coachRosterTableBody">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Carnets Digitales (Toggle) -->
+        <div id="coachCarnetsContainer" style="display: none; margin-bottom: 1.5rem;">
+          <div style="margin-bottom: 1rem;">
+            <h4 style="font-size: 1.15rem; font-weight: 800; color: #f8fafc; margin: 0;">Carnets Digitales Homologados FCF 🇨🇴</h4>
+            <span style="font-size: 0.8rem; color: #94a3b8;">Fichas individuales reglamentarias con estado de habilitación</span>
+          </div>
+          <div id="coachCarnetsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+            <!-- Renderizado dinámico -->
+          </div>
+        </div>
+
+        <!-- Estado Disciplinario y Paz y Salvo Oficial (COP) -->
+        <div class="coach-disciplinary-section" style="background: rgba(8, 30, 34, 0.75); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.25rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+            <div>
+              <h4 style="margin: 0; font-size: 1.15rem; font-weight: 800; color: #f87171; display: flex; align-items: center; gap: 0.5rem;">
+                <span>⚖️</span> Estado Disciplinario y Paz y Salvo Oficial (COP)
+              </h4>
+              <p style="margin: 0.2rem 0 0 0; font-size: 0.82rem; color: #94a3b8;">
+                Reglamento FCF: Amarilla = $10.000 COP • Roja = $20.000 COP • 3 Amarillas o 1 Roja = Suspensión automática.
+              </p>
+            </div>
+            <div id="coachPazYSalvoBadge" style="padding: 0.4rem 0.9rem; border-radius: 9999px; font-size: 0.82rem; font-weight: 800; background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4);">
+              ✓ PAZ Y SALVO EN MESA
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #fbbf24;">
+              <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Amarillas Acumuladas</span>
+              <strong id="coachTotalYellowCards" style="font-size: 1.2rem; color: #fbbf24;">0</strong>
+              <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($10.000 COP c/u)</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #f87171;">
+              <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Rojas Registradas</span>
+              <strong id="coachTotalRedCards" style="font-size: 1.2rem; color: #f87171;">0</strong>
+              <span style="font-size: 0.72rem; color: #cbd5e1; display: block; margin-top: 0.2rem;">($20.000 COP c/u)</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px; border-left: 3px solid #10b981;">
+              <span style="font-size: 0.75rem; color: #94a3b8; display: block;">Total Multas</span>
+              <strong id="coachTotalFinesCop" style="font-size: 1.2rem; color: #34d399;">$0 COP</strong>
+              <span id="coachFinesPaidStatus" style="font-size: 0.72rem; color: #94a3b8; display: block; margin-top: 0.2rem;">Al día sin deudas</span>
+            </div>
+          </div>
+
+          <div class="admin-table-container" style="margin-bottom: 0;">
+            <table class="admin-data-table" id="tableCoachSanctions">
+              <thead>
+                <tr>
+                  <th style="width: 60px; text-align: center;">Dorsal</th>
+                  <th>Jugador</th>
+                  <th style="text-align: center; width: 90px;">🟨 Amarillas</th>
+                  <th style="text-align: center; width: 90px;">🟥 Rojas</th>
+                  <th>Multa Total COP</th>
+                  <th style="text-align: center;">Estado para Próxima Fecha</th>
+                </tr>
+              </thead>
+              <tbody id="coachSanctionsTableBody">
+                <!-- Renderizado dinámico -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4: 📅 Mis Próximos Partidos -->
+      <div class="coach-subtab-pane" id="coach-panel-matches">
+        <div class="coach-section-header">
+          <div>
+            <h3 class="coach-section-title">📅 Calendario y Encuentros de Mi Club</h3>
+            <p class="coach-section-desc">Supervisa los partidos programados, horarios, canchas asignadas y marcadores oficiales de tu equipo.</p>
+          </div>
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button type="button" class="btn-tool-outline" id="btnCoachGoStandings" style="background: rgba(30, 193, 203, 0.15); border-color: rgba(30, 193, 203, 0.4); color: #1EC1CB;">
+              <span>📊 Tabla de Posiciones</span>
+            </button>
+            <button type="button" class="btn-tool-outline" id="btnCoachGoBrackets" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399;">
+              <span>🌳 Fases Eliminatorias</span>
+            </button>
+            <button type="button" class="btn-tool-outline" id="btnCoachGoCalendar">
+              <span>📅 Calendario Completo</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tarjetas de Resumen en Vivo del Torneo Activo -->
+        <div class="coach-dashboard-summary-grid" style="margin-top: 1rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.5rem;">
+          <!-- Tarjeta Próximo Partido -->
+          <div class="coach-next-match-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(8, 30, 34, 0.75); border: 1px solid rgba(16, 185, 129, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+                <span>⚽</span> Próximo Partido Programado
+              </span>
+              <span id="coachNextMatchBadge" class="live-round-badge" style="background: rgba(16,185,129,0.15); color: #34d399; font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Jornada Activa</span>
+            </div>
+            <div id="coachNextMatchContent" style="display: flex; flex-direction: column; gap: 0.75rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 0.85rem; border-radius: 8px;">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <span id="coachMyTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+                  <strong id="coachMyTeamName" style="color: #fff; font-size: 0.95rem;">Mi Equipo</strong>
+                </div>
+                <span style="font-weight: 800; color: #94a3b8; font-size: 0.85rem;">VS</span>
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  <strong id="coachRivalTeamName" style="color: #1EC1CB; font-size: 0.95rem;">Rival Pendiente</strong>
+                  <span id="coachRivalTeamDot" style="width: 12px; height: 12px; border-radius: 50%; background: #1EC1CB; display: inline-block;"></span>
+                </div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.82rem; color: #cbd5e1;">
+                <div>📅 <strong id="coachNextMatchDate">Por programar</strong></div>
+                <div>⏰ <strong id="coachNextMatchTime">--:--</strong></div>
+                <div style="grid-column: span 2;">🏟️ Sede: <strong id="coachNextMatchVenue">Cancha Asignada Colombia</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta Estadísticas en Competición -->
+          <div class="coach-stats-card glass-panel" style="padding: 1.25rem; border-radius: 12px; background: rgba(8, 30, 34, 0.75); border: 1px solid rgba(30, 193, 203, 0.3);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+              <span style="font-size: 0.8rem; font-weight: 800; color: #1EC1CB; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 0.4rem;">
+                <span>📊</span> Estado en la Competición
+              </span>
+              <span id="coachPositionBadge" style="font-size: 0.85rem; font-weight: 800; color: #34d399; background: rgba(16,185,129,0.15); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(16,185,129,0.3);">Posición #--</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; text-align: center; margin-bottom: 0.75rem;">
+              <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+                <span style="display: block; font-size: 0.7rem; color: #94a3b8;">PTS</span>
+                <strong id="coachStatPts" style="font-size: 1.15rem; color: #34d399;">0</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+                <span style="display: block; font-size: 0.7rem; color: #f8fafc;">0</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+                <span style="display: block; font-size: 0.7rem; color: #94a3b8;">DG</span>
+                <strong id="coachStatDg" style="font-size: 1.15rem; color: #1EC1CB;">0</strong>
+              </div>
+              <div style="background: rgba(0,0,0,0.25); padding: 0.5rem; border-radius: 6px;">
+                <span style="display: block; font-size: 0.7rem; color: #94a3b8;">V-E-D</span>
+                <strong id="coachStatRecord" style="font-size: 0.95rem; color: #f8fafc;">0-0-0</strong>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem;">
+              <span>Racha reciente:</span>
+              <div id="coachRecentStreak" style="display: flex; gap: 0.25rem;">
+                <!-- V-E-D -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista Detallada de Todos los Partidos del Club -->
+        <div class="admin-table-container">
+          <table class="admin-data-table" id="tableCoachMatches">
+            <thead>
+              <tr>
+                <th>Torneo / Fase</th>
+                <th>Encuentro</th>
+                <th>Fecha y Hora</th>
+                <th>Cancha / Sede</th>
+                <th style="text-align: center;">Resultado / Estado</th>
+              </tr>
+            </thead>
+            <tbody id="coachMatchesTableBody">
               <!-- Renderizado dinámico -->
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Layout 2 Columnas: Plantilla de Jugadores vs Postulaciones -->
-      <div class="admin-filters-bar" style="margin-top: 1.5rem;">
-        <div>
-          <h3 style="font-size: 1.4rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.25rem 0;">Plantilla Oficial de Jugadores</h3>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Registro legal con documento de identidad y afiliación a salud conforme a la Ley del Deporte y Habeas Data Colombia.</p>
-        </div>
-        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
-          <button type="button" class="btn-tool-outline" id="btnToggleCarnetsView" style="background: rgba(59, 130, 246, 0.15); border-color: rgba(59, 130, 246, 0.4); color: #60a5fa;">
-            <span>🪪 Ver Carnets Digitales</span>
-          </button>
-          <button type="button" class="btn-primary-neon" id="btnOpenAddPlayerForm">
-            <span>+ Inscribir Jugador</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Formulario Desplegable para Agregar Jugador -->
-      <div id="addPlayerFormWrapper" class="admin-table-container" style="display: none; padding: 1.5rem; margin-bottom: 1.5rem;">
-        <h4 style="color: #34d399; margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 800;">Inscripción de Nuevo Jugador a la Plantilla</h4>
-        <form id="formCoachAddPlayer">
-          <div class="form-row-2col">
-            <div class="form-group">
-              <label for="pDorsal">Número Dorsal *</label>
-              <input type="number" id="pDorsal" class="auth-plain-input" min="1" max="99" placeholder="Ej: 10" required>
-            </div>
-            <div class="form-group">
-              <label for="pFullName">Nombre y Apellidos *</label>
-              <input type="text" id="pFullName" class="auth-plain-input" placeholder="Ej: Juan Sebastián Verón" required>
-            </div>
-          </div>
-
-          <div class="form-row-2col">
-            <div class="form-group">
-              <label for="pDocType">Tipo de Documento *</label>
-              <select id="pDocType" class="auth-select" required>
-                <option value="C.C.">Cédula de Ciudadanía (C.C.)</option>
-                <option value="T.I.">Tarjeta de Identidad (T.I.)</option>
-                <option value="P.A.">Pasaporte (P.A.)</option>
-                <option value="P.P.T.">Permiso por Protección Temporal (P.P.T.)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="pDocNumber">Número de Identificación *</label>
-              <input type="text" id="pDocNumber" class="auth-plain-input" placeholder="Ej: 1020456789" required>
-            </div>
-          </div>
-
-          <div class="form-row-2col">
-            <div class="form-group">
-              <label for="pPosition">Posición en el Campo *</label>
-              <select id="pPosition" class="auth-select" required>
-                <option value="Portero">Portero (Arquero)</option>
-                <option value="Defensa">Defensa Central / Lateral</option>
-                <option value="Mediocampista" selected>Mediocampista / Volante</option>
-                <option value="Delantero">Delantero / Extremo</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="pEps">EPS / Cobertura Médica *</label>
-              <input type="text" id="pEps" class="auth-plain-input" placeholder="Ej: EPS Sanitas / Sura / Compensar" required>
-            </div>
-          </div>
-
-          <div class="form-row-2col">
-            <div class="form-group">
-              <label for="pAge">Edad del Jugador *</label>
-              <input type="number" id="pAge" class="auth-plain-input" min="12" max="65" value="25" required>
-            </div>
-            <div class="form-group">
-              <label for="pGuardianInfo">Tutor Legal / Acudiente <span class="optional-tag">(Obligatorio si menor de 18)</span></label>
-              <input type="text" id="pGuardianName" class="auth-plain-input" placeholder="Nombre completo acudiente">
-            </div>
-          </div>
-          <div class="form-group" id="guardianDocRow" style="margin-bottom: 1rem;">
-            <label for="pGuardianDoc">Documento Identidad Tutor <span class="optional-tag">(Si aplica)</span></label>
-            <input type="text" id="pGuardianDoc" class="auth-plain-input" placeholder="CC Acudiente legal">
-          </div>
-
-          <div class="habeas-data-card" style="margin-bottom: 1rem;">
-            <label class="habeas-checkbox-label">
-              <input type="checkbox" id="pMinorConsent" required checked>
-              <span class="habeas-text">
-                <strong>Certificación Ley 1581:</strong> El Club certifica que cuenta con la autorización firmada por el titular o el tutor legal (en caso de menores de edad) para participar en competiciones oficiales.
-              </span>
-            </label>
-          </div>
-
-          <div style="display: flex; gap: 0.75rem;">
-            <button type="submit" class="btn-primary-neon">Guardar Jugador en Plantilla</button>
-            <button type="button" class="btn-tool-outline" id="btnCancelAddPlayer">Cancelar</button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Tabla de Jugadores de la Plantilla -->
-      <div class="admin-table-container" id="coachRosterTableContainer" style="margin-bottom: 2rem;">
-        <table class="admin-data-table" id="tableCoachRoster">
-          <thead>
-            <tr>
-              <th style="width: 70px; text-align: center;">Dorsal</th>
-              <th>Nombre Completo</th>
-              <th>Tipo Doc.</th>
-              <th>Número de Identificación</th>
-              <th>Posición</th>
-              <th>EPS / Salud</th>
-              <th>Consentimiento</th>
-              <th style="width: 90px; text-align: center;">Acción</th>
-            </tr>
-          </thead>
-          <tbody id="coachRosterTableBody">
-            <!-- Renderizado dinámicamente -->
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Contenedor de Carnets Digitales de la Plantilla -->
-      <div id="coachCarnetsContainer" style="display: none; margin-bottom: 2.5rem;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;">
-          <div>
-            <h4 style="font-size: 1.15rem; font-weight: 800; color: #f8fafc; margin: 0;">Carnets Digitales Homologados FCF 🇨🇴</h4>
-            <span style="font-size: 0.8rem; color: #94a3b8;">Fichas individuales reglamentarias con estado de habilitación para planillaje</span>
-          </div>
-        </div>
-        <div id="coachCarnetsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
-          <!-- Renderizado dinámico de los carnets -->
-        </div>
-      </div>
-
-      <!-- Sección 2: Postulación a Torneos Abiertos -->
-      <div class="admin-filters-bar">
-        <div>
-          <h3 style="font-size: 1.4rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.25rem 0;">Inscripción y Postulaciones a Torneos</h3>
-          <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Envía la solicitud de tu club a las competiciones activas y supervisa el estado de aprobación por el organizador.</p>
-        </div>
-      </div>
-
-      <div class="club-hero-card" style="background: rgba(15, 23, 42, 0.75); border-color: rgba(255, 255, 255, 0.1);">
-        <div style="flex: 1;">
-          <label style="display: block; font-weight: 800; font-size: 0.9rem; margin-bottom: 0.5rem; color: #f8fafc;">Seleccionar Torneo Abierto para Postularse:</label>
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <select id="coachSelectTournamentApply" class="auth-select" style="max-width: 450px;">
-              <!-- Opciones de torneos activos -->
-            </select>
-            <button type="button" class="btn-primary-neon" id="btnApplyClubTournament">
-              <span>⚡ Enviar Solicitud de Inscripción</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tabla de Estado de Solicitudes Enviadas -->
-      <div class="admin-table-container">
-        <table class="admin-data-table" id="tableCoachApplications">
-          <thead>
-            <tr>
-              <th>Torneo</th>
-              <th>Fecha de Envío</th>
-              <th>Plantilla Presentada</th>
-              <th>Estado de Solicitud</th>
-              <th>Observaciones del Organizador</th>
-              <th style="text-align: center; width: 140px;">Acciones</th>
-            </tr>
-          </thead>
-          <tbody id="coachApplicationsTableBody">
-            <!-- Renderizado dinámicamente -->
-          </tbody>
-        </table>
-      </div>
     </div>
   </section>
 

@@ -2551,6 +2551,8 @@ function setCurrentUserByRole(roleKey) {
     } else {
       navigateToView(currentRoute, false);
     }
+  } else if (normRole === 'coach' || normRole === 'tecnico') {
+    navigateToView('club');
   } else if ((newSession.role !== 'coach' && newSession.role !== 'tecnico') && currentRoute === 'club') {
     navigateToView('home');
   } else {
@@ -3445,7 +3447,7 @@ window.quickFillAndLogin = function(email, pass, role) {
             runDashboardEntranceSequence(true);
           }
         } else if (normRole === 'coach' || normRole === 'tecnico') {
-          navigateToView('torneos');
+          navigateToView('club');
         } else {
           navigateToView('home');
         }
@@ -4611,6 +4613,11 @@ var ROUTE_MAP = window.ROUTE_MAP = {
   'tv': 'tv',
   'admin': 'admin',
   'club': 'club',
+  'coach': 'club',
+  'mi-club': 'club',
+  'miclub': 'club',
+  'tab-coach': 'club',
+  'tab-club': 'club',
   'canchas': 'canchas',
   'solicitudes': 'solicitudes',
   // Compatibilidad con identificadores anteriores
@@ -7670,128 +7677,43 @@ function renderAdminOrganizerTab() {
   }
 }
 
-function initCoachPanelControls() {
-  // 1. Alternar formulario para añadir jugador
-  const btnOpenAddPlayerForm = document.getElementById('btnOpenAddPlayerForm');
-  const addPlayerFormWrapper = document.getElementById('addPlayerFormWrapper');
-  const btnCancelAddPlayer = document.getElementById('btnCancelAddPlayer');
+// =============================================================================
+// MENÚ Y CENTRO DE MANDO DEL TÉCNICO (PANEL #/club - 4 MÓDULOS LIQUID GLASS)
+// =============================================================================
 
-  if (btnOpenAddPlayerForm && addPlayerFormWrapper) {
-    btnOpenAddPlayerForm.addEventListener('click', () => {
-      const isVisible = addPlayerFormWrapper.style.display === 'block';
-      addPlayerFormWrapper.style.display = isVisible ? 'none' : 'block';
-      if (!isVisible) {
-        addPlayerFormWrapper.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  }
+var currentCoachTab = 'tournaments';
 
-  if (btnCancelAddPlayer && addPlayerFormWrapper) {
-    btnCancelAddPlayer.addEventListener('click', () => {
-      addPlayerFormWrapper.style.display = 'none';
-    });
-  }
+function switchCoachTab(tabKey) {
+  currentCoachTab = tabKey;
 
-  // 2. Enviar nuevo jugador con validaciones completas de Fase 5
-  const formCoachAddPlayer = document.getElementById('formCoachAddPlayer');
-  if (formCoachAddPlayer) {
-    formCoachAddPlayer.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const dorsal = parseInt(document.getElementById('pDorsal')?.value || '1', 10);
-      const name = (document.getElementById('pFullName')?.value || document.getElementById('pName')?.value || '').trim();
-      const docType = document.getElementById('pDocType')?.value || 'CC';
-      const docNumber = (document.getElementById('pDocNumber')?.value || '').trim();
-      const position = document.getElementById('pPosition')?.value || 'Mediocampista';
-      const eps = document.getElementById('pEps')?.value || 'Sura EPS';
-      const age = parseInt(document.getElementById('pAge')?.value || '25', 10);
-      const guardianName = (document.getElementById('pGuardianName')?.value || '').trim();
-      const guardianDoc = (document.getElementById('pGuardianDoc')?.value || '').trim();
+  // 1. Alternar estado activo en las pestañas de navegación (#coachTabNavStrip)
+  const navButtons = document.querySelectorAll('.coach-nav-tab');
+  navButtons.forEach(btn => {
+    const isTarget = btn.getAttribute('data-coach-tab') === tabKey;
+    btn.classList.toggle('active', isTarget);
+  });
 
-      const res = FMPStore.registerPlayerToRoster(activeTournamentId, 'tm-nac-01', {
-        name, docType, docNumber, dorsal, position, eps, age, guardianName, guardianDoc
-      });
+  // 2. Alternar paneles de contenido
+  const panes = document.querySelectorAll('.coach-subtab-pane');
+  panes.forEach(pane => {
+    const isTarget = pane.id === `coach-panel-${tabKey}`;
+    pane.classList.toggle('active', isTarget);
+  });
 
-      if (!res.ok) {
-        showToast(res.error, 'warning', 4000);
-        return;
-      }
-
-      formCoachAddPlayer.reset();
-      if (addPlayerFormWrapper) addPlayerFormWrapper.style.display = 'none';
-      renderCoachRosterTable();
-      showToast(`Jugador ${name} inscrito en la plantilla oficial (#${dorsal})`, 'success', 3500);
-    });
-  }
-
-  // 3. Postulación del Club a Torneos Abiertos (Fase 5)
-  const btnApplyClubTournament = document.getElementById('btnApplyClubTournament');
-  if (btnApplyClubTournament) {
-    btnApplyClubTournament.addEventListener('click', () => {
-      const select = document.getElementById('coachSelectTournamentApply');
-      const tourneyId = select?.value;
-      if (!tourneyId) {
-        showToast('Selecciona un torneo con inscripciones abiertas', 'warning');
-        return;
-      }
-
-      const activeUser = userSession || DEMO_USERS[2];
-      const club = activeUser.clubName || 'Atlético Nacional Master';
-      const dt = activeUser.name || 'Mario Alberto Yepes';
-
-      const res = FMPStore.applyToTournament(tourneyId, { name: club }, { name: dt, clubName: club, phone: activeUser.phone });
-      if (!res.ok) {
-        showToast(res.error, 'warning', 4000);
-        return;
-      }
-
-      renderCoachApplicationsTable();
-      showToast(`¡Solicitud enviada exitosamente para ${club}!`, 'success', 3500);
-    });
-  }
-
-  // 4. Modal de Planilla Oficial PDF
-  const btnOpenPlanillaPdfModal = document.getElementById('btnOpenPlanillaPdfModal');
-  const modalPlanillaPdf = document.getElementById('modalPlanillaPdf');
-  const btnClosePlanillaModal = document.getElementById('btnClosePlanillaModal');
-  const btnCancelPlanillaModal = document.getElementById('btnCancelPlanillaModal');
-  const btnPrintOfficialPlanilla = document.getElementById('btnPrintOfficialPlanilla');
-
-  if (btnOpenPlanillaPdfModal) {
-    btnOpenPlanillaPdfModal.addEventListener('click', openPlanillaPdfModal);
-  }
-  const closePlanilla = () => {
-    if (modalPlanillaPdf) modalPlanillaPdf.style.display = 'none';
-  };
-  if (btnClosePlanillaModal) btnClosePlanillaModal.addEventListener('click', closePlanilla);
-  if (btnCancelPlanillaModal) btnCancelPlanillaModal.addEventListener('click', closePlanilla);
-  if (btnPrintOfficialPlanilla) {
-    btnPrintOfficialPlanilla.addEventListener('click', () => {
-      logAudit('IMPRESION_PLANILLA_PDF', 'Generó e imprimió la planilla oficial de alineación');
-      window.print();
-    });
-  }
-
-  // 5. Botón Alternar Carnets Digitales vs Tabla de Jugadores
-  const btnToggleCarnetsView = document.getElementById('btnToggleCarnetsView');
-  if (btnToggleCarnetsView) {
-    btnToggleCarnetsView.addEventListener('click', () => {
-      const tableCont = document.getElementById('coachRosterTableContainer');
-      const carnetsCont = document.getElementById('coachCarnetsContainer');
-      if (!carnetsCont) return;
-      const isCarnets = carnetsCont.style.display !== 'none';
-      if (isCarnets) {
-        carnetsCont.style.display = 'none';
-        if (tableCont) tableCont.style.display = 'block';
-        btnToggleCarnetsView.innerHTML = '<span>🪪 Ver Carnets Digitales</span>';
-      } else {
-        carnetsCont.style.display = 'block';
-        if (tableCont) tableCont.style.display = 'none';
-        btnToggleCarnetsView.innerHTML = '<span>📋 Ver Lista en Tabla</span>';
-        renderCoachCarnetsGrid();
-      }
-    });
+  // 3. Renderizar contenido según la pestaña seleccionada
+  if (tabKey === 'tournaments') {
+    renderCoachTournamentsGrid();
+  } else if (tabKey === 'applications') {
+    renderCoachApplicationsTable();
+  } else if (tabKey === 'roster') {
+    renderCoachRosterTable();
+    renderCoachCarnetsGrid();
+    renderCoachDisciplinarySection();
+  } else if (tabKey === 'matches') {
+    renderCoachMatchesSection();
   }
 }
+window.switchCoachTab = switchCoachTab;
 
 function maskDocNumber(docNum) {
   if (!docNum) return '********';
@@ -7801,57 +7723,614 @@ function maskDocNumber(docNum) {
 }
 
 function renderCoachView() {
-  const activeUser = userSession || DEMO_USERS[2];
+  const activeUser = (typeof FMPStore !== 'undefined' && FMPStore.getSession) 
+    ? (FMPStore.getSession() || userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {}))
+    : (userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {}));
+
   const coachClubNameDisplay = document.getElementById('coachClubNameDisplay');
   const coachNameDisplay = document.getElementById('coachNameDisplay');
   const coachCategoryDisplay = document.getElementById('coachCategoryDisplay');
   const coachCityDisplay = document.getElementById('coachCityDisplay');
+  const coachClubShield = document.getElementById('coachClubShield');
 
   if (coachClubNameDisplay) coachClubNameDisplay.textContent = activeUser.clubName || 'Atlético Bogotá FC';
   if (coachNameDisplay) coachNameDisplay.textContent = 'DT: ' + (activeUser.name || 'Mario Alberto Yepes');
   if (coachCategoryDisplay) coachCategoryDisplay.textContent = 'Categoría: ' + (activeUser.category || 'Libre / Mayores');
   if (coachCityDisplay) coachCityDisplay.textContent = activeUser.city || 'Bogotá D.C.';
+  if (coachClubShield) coachClubShield.textContent = activeUser.clubShield || '⚽';
 
-  // Llenar selector de torneos disponibles (Solo en fase open_registration)
-  const select = document.getElementById('coachSelectTournamentApply');
-  if (select) {
-    const allTourneys = FMPStore.getTournaments();
-    const openTourneys = allTourneys.filter(t => (t.status || '').toLowerCase() === 'open_registration' || (t.status || '').toLowerCase() === 'inscripciones_abiertas');
-    if (openTourneys.length === 0) {
-      select.innerHTML = '<option value="">No hay torneos con inscripciones abiertas actualmente</option>';
+  // Sincronizar contador de solicitudes
+  const allRegs = (typeof FMPStore !== 'undefined' && FMPStore.getRegistrations) ? FMPStore.getRegistrations() : [];
+  const countBadge = document.getElementById('coachApplicationsCountBadge');
+  if (countBadge) countBadge.textContent = allRegs.length;
+
+  // Renderizar la pestaña activa actual
+  switchCoachTab(currentCoachTab || 'tournaments');
+}
+window.renderCoachView = renderCoachView;
+
+/**
+ * MÓDULO 1: Torneos Disponibles (Ingresar a Torneos en Tarjetas Liquid Glass)
+ */
+function renderCoachTournamentsGrid() {
+  const container = document.getElementById('coachTournamentsGrid');
+  const countPill = document.getElementById('coachTournamentsCountPill');
+  if (!container) return;
+
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const myEmail = (session?.email || '').toLowerCase().trim();
+  const myClub = (session?.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
+  const myId = session?.userId;
+  const allRegs = (typeof FMPStore !== 'undefined' && FMPStore.getRegistrations) ? FMPStore.getRegistrations() : [];
+
+  const rawTournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) 
+    ? FMPStore.getTournaments() 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments) ? savedTournaments : []);
+
+  const tournaments = Array.isArray(rawTournaments) ? rawTournaments : [];
+
+  if (tournaments.length === 0) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: rgba(5,20,25,0.6); border: 1px dashed rgba(30,193,203,0.3); border-radius: 12px;">
+        <p style="color: #94a3b8; font-size: 1rem; margin: 0 0 1rem 0;">No hay competiciones registradas en este momento.</p>
+      </div>
+    `;
+    if (countPill) countPill.textContent = '0 Torneos Disponibles';
+    return;
+  }
+
+  if (countPill) {
+    countPill.textContent = `${tournaments.length} Torneo${tournaments.length > 1 ? 's' : ''} Oficial${tournaments.length > 1 ? 'es' : ''} Disponible${tournaments.length > 1 ? 's' : ''}`;
+  }
+
+  container.innerHTML = tournaments.map(t => {
+    const tId = t.id;
+    const title = t.config?.name || t.name || 'Torneo Sin Título';
+    const rawSport = (t.config?.sport || t.sport || 'f11').toLowerCase();
+    const sportLabels = { f11: 'Fútbol 11', f8: 'Fútbol 8', f7: 'Fútbol 7', sala: 'Futsal FIFA' };
+    const sportTag = sportLabels[rawSport] || rawSport.toUpperCase();
+    const city = t.config?.city || t.city || 'Bogotá D.C.';
+    const teamsCount = Array.isArray(t.teams) ? t.teams.length : 0;
+    const maxTeams = parseInt(t.config?.maxTeams || t.maxTeams || 16, 10);
+    const feeFormatted = (t.config?.registrationFee || t.registrationFee) 
+      ? `$${Number(t.config?.registrationFee || t.registrationFee).toLocaleString('es-CO')} COP` 
+      : '$350.000 COP';
+
+    // Buscar si mi club ya tiene postulación para este torneo
+    const reg = allRegs.find(r => 
+      r.tournamentId === tId && (
+        (r.coachEmail && r.coachEmail.toLowerCase().trim() === myEmail) ||
+        (r.email && r.email.toLowerCase().trim() === myEmail) ||
+        (r.coachId && myId && r.coachId === myId) ||
+        (r.clubName && r.clubName.toLowerCase().trim() === myClub)
+      )
+    );
+
+    const regStatus = reg ? (reg.status || '').toLowerCase() : null;
+
+    let badgeHtml = '';
+    let actionBtnHtml = '';
+
+    if (regStatus === 'habilitado' || regStatus === 'aprobado' || regStatus === 'aprobada_inicial') {
+      badgeHtml = '<span class="coach-tourney-badge badge-approved">✅ Inscrito Oficialmente</span>';
+      actionBtnHtml = `
+        <button type="button" class="btn-coach-action btn-go-tourney" onclick="window.activeTournamentId = '${escapeHtml(tId)}'; if(typeof setActiveTournament === 'function') setActiveTournament('${escapeHtml(tId)}'); navigateToView('calendario');">
+          <span>Ver Calendario y Tabla</span>
+        </button>
+      `;
+    } else if (regStatus === 'rechazado' || regStatus === 'rechazada' || regStatus === 'requiere_correccion' || regStatus === 'devuelta_inicial') {
+      badgeHtml = '<span class="coach-tourney-badge badge-rejected">❌ Requiere Subsanación</span>';
+      actionBtnHtml = `
+        <button type="button" class="btn-coach-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', true, '${escapeHtml(reg.id)}')">
+          <span>🔄 Subsanar Documentos</span>
+        </button>
+      `;
+    } else if (regStatus === 'en_revision' || regStatus === 'pendiente' || regStatus === 'pendiente_inicial' || regStatus === 'revision_final') {
+      badgeHtml = '<span class="coach-tourney-badge badge-pending">⏳ En Revisión</span>';
+      actionBtnHtml = `
+        <button type="button" class="btn-coach-action btn-view-status" onclick="switchCoachTab('applications')">
+          <span>Ver Estado</span>
+        </button>
+      `;
     } else {
-      select.innerHTML = openTourneys.map(t => `
-        <option value="${t.id}">${escapeHtml(t.config?.name || t.name || 'Torneo Sin Título')} - ${t.category || t.config?.category || 'Libre'} (Cupos: ${t.maxTeams || 8})</option>
-      `).join('');
+      badgeHtml = '<span class="coach-tourney-badge badge-open">🟢 Inscripciones Abiertas</span>';
+      actionBtnHtml = `
+        <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
+          <span>📋 Ingresar / Inscribir mi Club</span>
+        </button>
+      `;
+    }
+
+    return `
+      <div class="coach-tourney-card" data-tourney-id="${escapeHtml(tId)}">
+        <div class="coach-tourney-card-header">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="coach-tourney-sport-pill">${escapeHtml(sportTag)}</span>
+            ${badgeHtml}
+          </div>
+          <h4 class="coach-tourney-title" title="${escapeHtml(title)}">${escapeHtml(title)}</h4>
+          <div class="coach-tourney-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>${escapeHtml(city)}</span>
+          </div>
+        </div>
+        <div class="coach-tourney-body">
+          <div class="coach-tourney-info-grid">
+            <div class="coach-tourney-info-item">
+              <span class="info-label">Modalidad</span>
+              <strong class="info-value">${escapeHtml(sportTag)}</strong>
+            </div>
+            <div class="coach-tourney-info-item">
+              <span class="info-label">Cupos Oficiales</span>
+              <strong class="info-value">${teamsCount} / ${maxTeams} Equipos</strong>
+            </div>
+            <div class="coach-tourney-info-item" style="grid-column: span 2;">
+              <span class="info-label">Valor de Inscripción</span>
+              <strong class="info-value fee-highlight">${escapeHtml(feeFormatted)}</strong>
+            </div>
+          </div>
+        </div>
+        <div class="coach-tourney-footer">
+          ${actionBtnHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+window.renderCoachTournamentsGrid = renderCoachTournamentsGrid;
+
+/**
+ * MÓDULO 2: Mis Solicitudes y Documentación Oficial (Auditoría, Radicados y Subsanación)
+ */
+function renderCoachApplicationsTable() {
+  const tbody = document.getElementById('coachApplicationsTableBody');
+  const countBadge = document.getElementById('coachApplicationsCountBadge');
+  const alertBanner = document.getElementById('coachRejectedAlertBanner');
+  if (!tbody) return;
+
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const myEmail = (session?.email || '').toLowerCase().trim();
+  const myClub = (session?.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
+  const myId = session?.userId;
+  const allRegs = (typeof FMPStore !== 'undefined' && FMPStore.getRegistrations) ? FMPStore.getRegistrations() : [];
+
+  // Filtrar solicitudes correspondientes al DT
+  const myRegs = allRegs.filter(r => 
+    (r.coachEmail && r.coachEmail.toLowerCase().trim() === myEmail) ||
+    (r.email && r.email.toLowerCase().trim() === myEmail) ||
+    (r.coachId && myId && r.coachId === myId) ||
+    (r.clubName && r.clubName.toLowerCase().trim() === myClub)
+  );
+
+  const displayRegs = myRegs.length > 0 ? myRegs : allRegs;
+
+  if (countBadge) {
+    countBadge.textContent = displayRegs.length;
+  }
+
+  // Verificar si hay solicitudes rechazadas que requieran subsanación
+  const rejectedReg = displayRegs.find(r => {
+    const s = (r.status || '').toLowerCase();
+    return s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial';
+  });
+
+  if (alertBanner) {
+    if (rejectedReg) {
+      alertBanner.style.display = 'block';
+      alertBanner.innerHTML = `
+        <div class="coach-rejected-banner">
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+            <span style="font-size: 1.25rem;">⚠️</span>
+            <strong style="color: #f87171; font-size: 0.95rem;">Postulación Requiere Subsanación de Requisitos</strong>
+          </div>
+          <p style="margin: 0 0 0.75rem 0; font-size: 0.85rem; color: #cbd5e1;">
+            El comité organizador auditó tu solicitud para <strong>${escapeHtml(rejectedReg.tournamentName || 'Torneo Oficial')}</strong> y emitió el siguiente dictamen:
+            <span style="display: block; margin-top: 0.35rem; padding: 0.6rem; background: rgba(0,0,0,0.3); border-left: 3px solid #ef4444; color: #fca5a5; font-style: italic;">
+              "${escapeHtml(rejectedReg.observations || 'Incumplimiento de requisitos documentales o comprobante de pago no válido.')}"
+            </span>
+          </p>
+          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${escapeHtml(rejectedReg.tournamentId)}', true, '${escapeHtml(rejectedReg.id)}')">
+            <span>🔄 Subsanar y Reenviar Documentos Ahora</span>
+          </button>
+        </div>
+      `;
+    } else {
+      alertBanner.style.display = 'none';
+      alertBanner.innerHTML = '';
     }
   }
 
-  // FASE 2: Resumen del Equipo, Módulo Disciplinario y Carnets Digitales
-  if (typeof renderCoachRegistrationStatusCard === 'function') {
-    renderCoachRegistrationStatusCard();
+  if (displayRegs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 2.5rem;">No tienes solicitudes de inscripción activas actualmente. Ingresa a la pestaña "🏆 Torneos Disponibles" para postularte.</td></tr>';
+    return;
   }
-  renderCoachDashboardSummary();
-  renderCoachDisciplinarySection();
-  renderCoachRosterTable();
-  renderCoachCarnetsGrid();
-  renderCoachApplicationsTable();
+
+  tbody.innerHTML = displayRegs.map(r => {
+    const s = (r.status || '').toLowerCase();
+    let statusClass = 'badge-pending';
+    let statusLabel = '⏳ En Revisión';
+
+    if (s === 'habilitado' || s === 'aprobado' || s === 'aprobada_inicial') {
+      statusClass = 'badge-approved';
+      statusLabel = '✅ Aprobado / Inscrito';
+    } else if (s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial') {
+      statusClass = 'badge-rejected';
+      statusLabel = '❌ Requiere Subsanación';
+    } else if (s === 'cancelada') {
+      statusClass = 'badge-pending';
+      statusLabel = '⚪ Cancelada';
+    }
+
+    const radicado = (r.id || 'REG').toUpperCase().substring(0, 10);
+    const dateFormatted = new Date(r.submittedAt || Date.now()).toLocaleDateString('es-CO');
+
+    const rosterPill = `
+      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'roster')" title="Previsualizar Planilla PDF en FMPFileVault">
+        <span>📄 ${escapeHtml(r.rosterFileName || 'Planilla.pdf')}</span>
+      </button>
+    `;
+
+    const paymentPill = `
+      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'payment')" title="Previsualizar Comprobante de Pago en FMPFileVault">
+        <span>💵 ${escapeHtml(r.paymentReceiptFileName || 'Comprobante.pdf')}</span>
+      </button>
+    `;
+
+    let actionBtn = '';
+    if (s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial') {
+      actionBtn = `
+        <button type="button" class="btn-coach-table-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(r.tournamentId)}', true, '${escapeHtml(r.id)}')" title="Subsanar requisitos">
+          <span>🔄 Subsanar</span>
+        </button>
+      `;
+    } else if (s === 'habilitado' || s === 'aprobado' || s === 'aprobada_inicial') {
+      actionBtn = `
+        <button type="button" class="btn-coach-table-action btn-go" onclick="window.activeTournamentId = '${escapeHtml(r.tournamentId)}'; navigateToView('calendario');" title="Ir al Calendario y Tabla del torneo">
+          <span>Ver Fixture</span>
+        </button>
+      `;
+    } else {
+      actionBtn = `
+        <button type="button" class="btn-cancel-coach-app" data-id="${escapeHtml(r.id)}" style="color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 0.78rem;">
+          Cancelar
+        </button>
+      `;
+    }
+
+    return `
+      <tr>
+        <td>
+          <span style="font-family: monospace; font-size: 0.75rem; color: #1EC1CB; display: block; font-weight: 800;">#${escapeHtml(radicado)}</span>
+          <strong style="color: #fff; font-size: 0.9rem;">${escapeHtml(r.tournamentName || 'Torneo Oficial')}</strong>
+        </td>
+        <td style="font-size: 0.82rem; color: #cbd5e1;">${escapeHtml(dateFormatted)}</td>
+        <td>${rosterPill}</td>
+        <td>${paymentPill}</td>
+        <td><span class="coach-tourney-badge ${statusClass}">${escapeHtml(statusLabel)}</span></td>
+        <td style="font-size: 0.8rem; color: #94a3b8; max-width: 240px;">${escapeHtml(r.observations || 'En auditoría por la mesa organizadora')}</td>
+        <td style="text-align: center;">${actionBtn}</td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.querySelectorAll('.btn-cancel-coach-app').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const regId = btn.getAttribute('data-id');
+      const res = FMPStore.cancelApplication(regId);
+      if (res && res.ok) {
+        showToast('Solicitud de inscripción cancelada', 'info', 3000);
+        renderCoachApplicationsTable();
+        renderCoachTournamentsGrid();
+      } else {
+        showToast(res?.error || 'No se pudo cancelar la solicitud', 'error');
+      }
+    });
+  });
 }
+window.renderCoachApplicationsTable = renderCoachApplicationsTable;
 
 /**
- * FASE 2: Tarjetas "Cómo va mi Equipo" (Próximo Partido & Estadísticas en Tabla)
+ * MÓDULO 3: Mi Club y Plantilla (Nómina de Jugadores, Carnets Digitales y Sanciones)
  */
+function renderCoachRosterTable() {
+  const tbody = document.getElementById('coachRosterTableBody');
+  if (!tbody) return;
+
+  const roster = getFmpClubRoster();
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const isFan = (session && session.role === 'fan');
+
+  if (roster.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 2rem;">No hay jugadores registrados en la plantilla oficial. Pulsa "+ Inscribir Jugador" para agregar integrantes.</td></tr>';
+    return;
+  }
+
+  const sorted = [...roster].sort((a, b) => a.dorsal - b.dorsal);
+
+  tbody.innerHTML = sorted.map(p => {
+    const docDisplay = isFan ? `${p.docType} ********` : `${p.docType} ${p.docNumber}`;
+    return `
+      <tr>
+        <td style="font-weight: 800; color: #34d399; text-align: center; font-size: 1rem;">#${p.dorsal}</td>
+        <td style="font-weight: 700; color: #fff;">${escapeHtml(p.name)}</td>
+        <td style="font-size: 0.85rem; color: #94a3b8;">${escapeHtml(p.docType)}</td>
+        <td style="font-family: monospace; font-size: 0.85rem; color: #cbd5e1;">${escapeHtml(docDisplay)}</td>
+        <td><span class="badge-player-position">${escapeHtml(p.position)}</span></td>
+        <td style="color: #38bdf8; font-size: 0.85rem;">${escapeHtml(p.eps || 'EPS Sura')}</td>
+        <td><span class="badge-roster-enabled">✓ Habilitado</span></td>
+        <td style="text-align: center;">
+          ${!isFan ? `
+            <button type="button" class="btn-tool-sm btn-del-player" data-id="${p.id}" style="color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 3px 8px; cursor: pointer;">
+              Eliminar
+            </button>
+          ` : '<span style="color: #64748b; font-size: 0.75rem;">Protegido</span>'}
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  if (!isFan) {
+    tbody.querySelectorAll('.btn-del-player').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pId = btn.getAttribute('data-id');
+        const currentRoster = getFmpClubRoster();
+        const target = currentRoster.find(x => x.id === pId);
+        const filtered = currentRoster.filter(x => x.id !== pId);
+        saveFmpClubRoster(filtered);
+        logAudit('BAJA_JUGADOR', `Eliminó de la plantilla a: ${target?.name || pId}`);
+        renderCoachRosterTable();
+        renderCoachCarnetsGrid();
+        showToast('Jugador eliminado de la plantilla oficial', 'info', 2000);
+      });
+    });
+  }
+}
+window.renderCoachRosterTable = renderCoachRosterTable;
+
+function renderCoachCarnetsGrid() {
+  const container = document.getElementById('coachCarnetsGrid');
+  if (!container) return;
+
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const clubName = session?.clubName || 'Atlético Bogotá FC';
+  const roster = getFmpClubRoster();
+  const isFan = (session && session.role === 'fan');
+
+  const tourney = (typeof tournamentState !== 'undefined' && tournamentState && Array.isArray(tournamentState.teams)) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const matches = Array.isArray(tourney?.matches) ? tourney.matches : [];
+  const allCards = [];
+  matches.forEach(m => {
+    if (Array.isArray(m.cards)) m.cards.forEach(c => allCards.push(c));
+  });
+
+  container.innerHTML = roster.map(p => {
+    const playerCards = allCards.filter(c => (c.playerName || '').toLowerCase().trim() === (p.name || '').toLowerCase().trim());
+    const reds = playerCards.filter(c => c.cardType === 'red').length;
+    const yellows = playerCards.filter(c => c.cardType === 'yellow').length;
+    const isSuspended = reds > 0 || yellows >= 3 || p.dorsal === 8;
+
+    const docDisplay = isFan ? `${p.docType} ********` : `${p.docType} ${p.docNumber}`;
+    const initials = (p.name || 'J').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+
+    return `
+      <div class="coach-carnet-card ${isSuspended ? 'is-suspended' : ''}">
+        <div class="carnet-header-strip">
+          <span class="carnet-federation-badge">🇨🇴 FMP • ${escapeHtml(clubName)}</span>
+          <span class="carnet-dorsal-badge">#${p.dorsal}</span>
+        </div>
+        <div class="carnet-body-main">
+          <div class="carnet-avatar-box">
+            ${initials}
+          </div>
+          <div class="carnet-info-box">
+            <h4 class="carnet-player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h4>
+            <span class="carnet-player-pos">${escapeHtml(p.position)}</span>
+            <div class="carnet-player-doc">${escapeHtml(docDisplay)}</div>
+            <div style="font-size: 0.72rem; color: #38bdf8; margin-top: 0.2rem;">🏥 ${escapeHtml(p.eps || 'EPS Sura')}</div>
+          </div>
+        </div>
+        <div class="carnet-footer-status">
+          <span style="font-size: 0.7rem; color: #94a3b8;">Ficha Verificada</span>
+          <span class="carnet-status-pill ${isSuspended ? 'suspended' : 'enabled'}">
+            ${isSuspended ? '⚠️ SUSPENDIDO' : '✓ HABILITADO'}
+          </span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+window.renderCoachCarnetsGrid = renderCoachCarnetsGrid;
+
+function renderCoachDisciplinarySection() {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const tourney = (typeof tournamentState !== 'undefined' && tournamentState && Array.isArray(tournamentState.teams)) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const matches = Array.isArray(tourney?.matches) ? tourney.matches : [];
+  const roster = getFmpClubRoster();
+
+  const allCards = [];
+  matches.forEach(m => {
+    if (Array.isArray(m.cards)) {
+      m.cards.forEach(c => allCards.push(c));
+    }
+  });
+
+  let totalYellows = 0;
+  let totalReds = 0;
+  const sanctionsList = [];
+
+  roster.forEach(p => {
+    const playerCards = allCards.filter(c => (c.playerName || '').toLowerCase().trim() === (p.name || '').toLowerCase().trim());
+    const yellows = playerCards.filter(c => c.cardType === 'yellow').length;
+    const reds = playerCards.filter(c => c.cardType === 'red').length;
+
+    totalYellows += yellows;
+    totalReds += reds;
+
+    const isSuspended = reds > 0 || yellows >= 3;
+    const fineCop = (yellows * 10000) + (reds * 20000);
+
+    let statusHtml = '<span class="badge-roster-enabled" style="background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🟢 HABILITADO</span>';
+    if (isSuspended) {
+      const reason = reds > 0 ? 'Expulsión directa' : '3 Amarillas acumuladas';
+      statusHtml = `<span style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🔴 SUSPENDIDO (${reason})</span>`;
+    }
+
+    sanctionsList.push({
+      player: p,
+      yellows,
+      reds,
+      fineCop,
+      isSuspended,
+      statusHtml
+    });
+  });
+
+  if (totalYellows === 0 && totalReds === 0 && sanctionsList.length > 2) {
+    sanctionsList[1].yellows = 2;
+    sanctionsList[1].fineCop = 20000;
+    sanctionsList[2].yellows = 3;
+    sanctionsList[2].fineCop = 30000;
+    sanctionsList[2].isSuspended = true;
+    sanctionsList[2].statusHtml = '<span style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🔴 SUSPENDIDO (3 Amarillas)</span>';
+    totalYellows = 5;
+  }
+
+  const totalFinesCop = (totalYellows * 10000) + (totalReds * 20000);
+
+  const totalYEl = document.getElementById('coachTotalYellowCards');
+  const totalREl = document.getElementById('coachTotalRedCards');
+  const totalFEl = document.getElementById('coachTotalFinesCop');
+  const pazBadge = document.getElementById('coachPazYSalvoBadge');
+  const finesStatus = document.getElementById('coachFinesPaidStatus');
+
+  if (totalYEl) totalYEl.textContent = totalYellows;
+  if (totalREl) totalREl.textContent = totalReds;
+  if (totalFEl) totalFEl.textContent = `$${totalFinesCop.toLocaleString('es-CO')} COP`;
+
+  const myTeam = (tourney?.teams || []).find(t => (t.name || '').toLowerCase() === (session?.clubName || '').toLowerCase());
+  const isPaid = (myTeam && myTeam.finesPaid) || totalFinesCop === 0;
+
+  if (pazBadge) {
+    if (isPaid) {
+      pazBadge.textContent = '✓ PAZ Y SALVO OFICIAL EN MESA';
+      pazBadge.style.background = 'rgba(16,185,129,0.2)';
+      pazBadge.style.color = '#34d399';
+      pazBadge.style.borderColor = 'rgba(16,185,129,0.4)';
+    } else {
+      pazBadge.textContent = '⚠️ PENDIENTE DE PAGO EN MESA';
+      pazBadge.style.background = 'rgba(239,68,68,0.2)';
+      pazBadge.style.color = '#f87171';
+      pazBadge.style.borderColor = 'rgba(239,68,68,0.4)';
+    }
+  }
+
+  if (finesStatus) {
+    finesStatus.textContent = isPaid ? 'Paz y Salvo al día' : 'Pagar antes del próximo partido';
+    finesStatus.style.color = isPaid ? '#34d399' : '#f87171';
+  }
+
+  const tbody = document.getElementById('coachSanctionsTableBody');
+  if (tbody) {
+    tbody.innerHTML = sanctionsList.map(s => `
+      <tr>
+        <td style="font-weight: 800; color: #34d399; text-align: center;">${s.player.dorsal}</td>
+        <td style="font-weight: 700; color: #fff;">${escapeHtml(s.player.name)} <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(${escapeHtml(s.player.position)})</span></td>
+        <td style="text-align: center; font-weight: 800; color: #fbbf24;">${s.yellows}</td>
+        <td style="text-align: center; font-weight: 800; color: #f87171;">${s.reds}</td>
+        <td style="font-family: monospace; color: #cbd5e1;">$${s.fineCop.toLocaleString('es-CO')} COP</td>
+        <td style="text-align: center;">${s.statusHtml}</td>
+      </tr>
+    `).join('');
+  }
+}
+window.renderCoachDisciplinarySection = renderCoachDisciplinarySection;
+
+/**
+ * MÓDULO 4: Mis Próximos Partidos (Resumen, Próximo Rival y Lista Completa de Partidos)
+ */
+function renderCoachMatchesSection() {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const clubName = (session?.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
+  const tourney = (typeof tournamentState !== 'undefined' && tournamentState && Array.isArray(tournamentState.teams)) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const teams = Array.isArray(tourney?.teams) ? tourney.teams : [];
+  const myTeam = teams.find(t => (t.name || '').toLowerCase().trim() === clubName) || teams[0];
+  const matches = Array.isArray(tourney?.matches) ? tourney.matches : [];
+
+  renderCoachDashboardSummary();
+
+  const tbody = document.getElementById('coachMatchesTableBody');
+  if (!tbody) return;
+
+  if (!myTeam) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">No hay torneos activos con tu equipo participante</td></tr>';
+    return;
+  }
+
+  const myMatches = matches.filter(m => !m.isBye && (m.homeTeamId === myTeam.id || m.awayTeamId === myTeam.id));
+  if (myMatches.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #94a3b8; padding: 2rem;">No hay partidos programados actualmente para tu club</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = myMatches.map(m => {
+    const isHome = m.homeTeamId === myTeam.id;
+    const rivalId = isHome ? m.awayTeamId : m.homeTeamId;
+    const rival = getTeamById(rivalId);
+    const rName = rival ? rival.name : (isHome ? m.awayTeamPlaceholder : m.homeTeamPlaceholder) || 'Rival por definir';
+    const fixtureTitle = isHome ? `${myTeam.name} vs ${rName}` : `${rName} vs ${myTeam.name}`;
+    const roundText = m.roundName || (m.isKnockout ? 'Fase Eliminatoria' : 'Fase Regular');
+    const dateText = m.date || 'Fecha por definir';
+    const timeText = m.time || '--:--';
+    const venueText = m.venueName || 'Cancha Asignada Colombia';
+
+    let resultHtml = '';
+    if (m.isFinished && m.homeScore !== null && m.awayScore !== null) {
+      const myScore = isHome ? m.homeScore : m.awayScore;
+      const rivalScore = isHome ? m.awayScore : m.homeScore;
+      let badgeColor = '#94a3b8';
+      let resultLabel = 'Empate';
+      if (myScore > rivalScore) { badgeColor = '#10b981'; resultLabel = 'Victoria'; }
+      else if (myScore < rivalScore) { badgeColor = '#ef4444'; resultLabel = 'Derrota'; }
+      resultHtml = `
+        <span style="font-weight: 800; font-size: 0.95rem; color: #fff;">${m.homeScore} - ${m.awayScore}</span>
+        <span style="display: block; font-size: 0.72rem; color: ${badgeColor}; font-weight: 700;">${resultLabel}</span>
+      `;
+    } else {
+      resultHtml = '<span class="live-round-badge" style="background: rgba(30,193,203,0.15); color: #1EC1CB; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">Programado</span>';
+    }
+
+    return `
+      <tr>
+        <td><span style="color: #1EC1CB; font-weight: 700;">${escapeHtml(roundText)}</span></td>
+        <td style="font-weight: 700; color: #fff;">${escapeHtml(fixtureTitle)}</td>
+        <td style="font-size: 0.85rem; color: #cbd5e1;">${escapeHtml(dateText)} • ${escapeHtml(timeText)}</td>
+        <td style="font-size: 0.82rem; color: #94a3b8;">${escapeHtml(venueText)}</td>
+        <td style="text-align: center;">${resultHtml}</td>
+      </tr>
+    `;
+  }).join('');
+}
+window.renderCoachMatchesSection = renderCoachMatchesSection;
+
 function renderCoachDashboardSummary() {
-  const activeUser = userSession || DEMO_USERS[2];
-  const clubName = (activeUser.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const clubName = (session?.clubName || 'Atlético Bogotá FC').toLowerCase().trim();
   
-  // Buscar mi equipo en el torneo activo o en torneos guardados
-  const tourney = tournamentState || savedTournaments[0];
+  const tourney = (typeof tournamentState !== 'undefined' && tournamentState && Array.isArray(tournamentState.teams)) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
   const teams = Array.isArray(tourney?.teams) ? tourney.teams : [];
   const myTeam = teams.find(t => (t.name || '').toLowerCase().trim() === clubName) || teams[0];
 
   const myTeamNameEl = document.getElementById('coachMyTeamName');
   const myTeamDotEl = document.getElementById('coachMyTeamDot');
-  if (myTeamNameEl) myTeamNameEl.textContent = myTeam?.name || activeUser.clubName || 'Mi Equipo';
+  if (myTeamNameEl) myTeamNameEl.textContent = myTeam?.name || session?.clubName || 'Mi Equipo';
   if (myTeamDotEl) myTeamDotEl.style.backgroundColor = myTeam?.color || '#10b981';
 
   // 1. Próximo Partido
@@ -7919,289 +8398,137 @@ function renderCoachDashboardSummary() {
     }
   }
 }
+window.renderCoachDashboardSummary = renderCoachDashboardSummary;
 
 /**
- * FASE 2: Módulo de Control Disciplinario, Tarjetas y Paz y Salvo (Multas en COP)
+ * Inicialización limpia e idempotente de controles del panel del Técnico
  */
-function renderCoachDisciplinarySection() {
-  const activeUser = userSession || DEMO_USERS[2];
-  const tourney = tournamentState || savedTournaments[0];
-  const matches = Array.isArray(tourney?.matches) ? tourney.matches : [];
-  const roster = getFmpClubRoster();
+function initCoachPanelControls() {
+  if (window._coachPanelControlsInitialized) return;
+  window._coachPanelControlsInitialized = true;
 
-  // Recolectar todas las tarjetas registradas en los partidos
-  const allCards = [];
-  matches.forEach(m => {
-    if (Array.isArray(m.cards)) {
-      m.cards.forEach(c => allCards.push(c));
-    }
-  });
-
-  let totalYellows = 0;
-  let totalReds = 0;
-  const sanctionsList = [];
-
-  roster.forEach(p => {
-    const playerCards = allCards.filter(c => (c.playerName || '').toLowerCase().trim() === (p.name || '').toLowerCase().trim());
-    const yellows = playerCards.filter(c => c.cardType === 'yellow').length;
-    const reds = playerCards.filter(c => c.cardType === 'red').length;
-
-    totalYellows += yellows;
-    totalReds += reds;
-
-    // Regla de negocio: 1 roja directa o 3 amarillas acumuladas = SUSPENDIDO
-    const isSuspended = reds > 0 || yellows >= 3;
-    const fineCop = (yellows * 10000) + (reds * 20000);
-
-    let statusHtml = '<span class="badge-roster-enabled" style="background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🟢 HABILITADO</span>';
-    if (isSuspended) {
-      const reason = reds > 0 ? 'Expulsión directa' : '3 Amarillas acumuladas';
-      statusHtml = `<span style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🔴 SUSPENDIDO (${reason})</span>`;
-    }
-
-    sanctionsList.push({
-      player: p,
-      yellows,
-      reds,
-      fineCop,
-      isSuspended,
-      statusHtml
-    });
-  });
-
-  // Si aún no hay tarjetas en el fixture para este club, hidratar demostración realista de Colombia
-  if (totalYellows === 0 && totalReds === 0 && sanctionsList.length > 2) {
-    sanctionsList[1].yellows = 2;
-    sanctionsList[1].fineCop = 20000;
-    sanctionsList[2].yellows = 3;
-    sanctionsList[2].fineCop = 30000;
-    sanctionsList[2].isSuspended = true;
-    sanctionsList[2].statusHtml = '<span style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); padding: 3px 8px; border-radius: 9999px; font-size: 0.75rem; font-weight: 800;">🔴 SUSPENDIDO (3 Amarillas)</span>';
-    totalYellows = 5;
-  }
-
-  const totalFinesCop = (totalYellows * 10000) + (totalReds * 20000);
-
-  const totalYEl = document.getElementById('coachTotalYellowCards');
-  const totalREl = document.getElementById('coachTotalRedCards');
-  const totalFEl = document.getElementById('coachTotalFinesCop');
-  const pazBadge = document.getElementById('coachPazYSalvoBadge');
-  const finesStatus = document.getElementById('coachFinesPaidStatus');
-
-  if (totalYEl) totalYEl.textContent = totalYellows;
-  if (totalREl) totalREl.textContent = totalReds;
-  if (totalFEl) totalFEl.textContent = `$${totalFinesCop.toLocaleString('es-CO')} COP`;
-
-  // Comprobar si el equipo ya fue marcado como Paz y Salvo
-  const myTeam = (tourney?.teams || []).find(t => (t.name || '').toLowerCase() === (activeUser.clubName || '').toLowerCase());
-  const isPaid = (myTeam && myTeam.finesPaid) || totalFinesCop === 0;
-
-  if (pazBadge) {
-    if (isPaid) {
-      pazBadge.textContent = '✓ PAZ Y SALVO OFICIAL EN MESA';
-      pazBadge.style.background = 'rgba(16,185,129,0.2)';
-      pazBadge.style.color = '#34d399';
-      pazBadge.style.borderColor = 'rgba(16,185,129,0.4)';
-    } else {
-      pazBadge.textContent = '⚠️ PENDIENTE DE PAGO EN MESA';
-      pazBadge.style.background = 'rgba(239,68,68,0.2)';
-      pazBadge.style.color = '#f87171';
-      pazBadge.style.borderColor = 'rgba(239,68,68,0.4)';
-    }
-  }
-
-  if (finesStatus) {
-    finesStatus.textContent = isPaid ? 'Paz y Salvo al día' : 'Pagar antes del próximo partido';
-    finesStatus.style.color = isPaid ? '#34d399' : '#f87171';
-  }
-
-  // Renderizar tabla de sanciones
-  const tbody = document.getElementById('coachSanctionsTableBody');
-  if (tbody) {
-    tbody.innerHTML = sanctionsList.map(s => `
-      <tr>
-        <td style="font-weight: 800; color: #34d399; text-align: center;">${s.player.dorsal}</td>
-        <td style="font-weight: 700; color: #fff;">${escapeHtml(s.player.name)} <span style="font-size: 0.75rem; color: #94a3b8; font-weight: normal;">(${escapeHtml(s.player.position)})</span></td>
-        <td style="text-align: center; font-weight: 800; color: #fbbf24;">${s.yellows}</td>
-        <td style="text-align: center; font-weight: 800; color: #f87171;">${s.reds}</td>
-        <td style="font-family: monospace; color: #cbd5e1;">$${s.fineCop.toLocaleString('es-CO')} COP</td>
-        <td style="text-align: center;">${s.statusHtml}</td>
-      </tr>
-    `).join('');
-  }
-}
-
-/**
- * FASE 2: Carnets Digitales de la Plantilla (Cards)
- */
-function renderCoachCarnetsGrid() {
-  const container = document.getElementById('coachCarnetsGrid');
-  if (!container) return;
-
-  const activeUser = userSession || DEMO_USERS[2];
-  const clubName = activeUser.clubName || 'Atlético Bogotá FC';
-  const roster = getFmpClubRoster();
-  const isFan = (userSession && userSession.role === 'fan');
-
-  const tourney = tournamentState || savedTournaments[0];
-  const matches = Array.isArray(tourney?.matches) ? tourney.matches : [];
-  const allCards = [];
-  matches.forEach(m => {
-    if (Array.isArray(m.cards)) m.cards.forEach(c => allCards.push(c));
-  });
-
-  container.innerHTML = roster.map(p => {
-    const playerCards = allCards.filter(c => (c.playerName || '').toLowerCase().trim() === (p.name || '').toLowerCase().trim());
-    const reds = playerCards.filter(c => c.cardType === 'red').length;
-    const yellows = playerCards.filter(c => c.cardType === 'yellow').length;
-    const isSuspended = reds > 0 || yellows >= 3 || p.dorsal === 8;
-
-    const docDisplay = isFan ? `${p.docType} ********` : `${p.docType} ${p.docNumber}`;
-    const initials = (p.name || 'J').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-
-    return `
-      <div class="coach-carnet-card ${isSuspended ? 'is-suspended' : ''}">
-        <div class="carnet-header-strip">
-          <span class="carnet-federation-badge">🇨🇴 FMP • ${escapeHtml(clubName)}</span>
-          <span class="carnet-dorsal-badge">#${p.dorsal}</span>
-        </div>
-        <div class="carnet-body-main">
-          <div class="carnet-avatar-box">
-            ${initials}
-          </div>
-          <div class="carnet-info-box">
-            <h4 class="carnet-player-name" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</h4>
-            <span class="carnet-player-pos">${escapeHtml(p.position)}</span>
-            <div class="carnet-player-doc">${escapeHtml(docDisplay)}</div>
-            <div style="font-size: 0.72rem; color: #38bdf8; margin-top: 0.2rem;">🏥 ${escapeHtml(p.eps || 'EPS Sura')}</div>
-          </div>
-        </div>
-        <div class="carnet-footer-status">
-          <span style="font-size: 0.7rem; color: #94a3b8;">Ficha Verificada</span>
-          <span class="carnet-status-pill ${isSuspended ? 'suspended' : 'enabled'}">
-            ${isSuspended ? '⚠️ SUSPENDIDO' : '✓ HABILITADO'}
-          </span>
-        </div>
-      </div>
-    `;
-  }).join('');
-}
-
-function renderCoachRosterTable() {
-  const tbody = document.getElementById('coachRosterTableBody');
-  if (!tbody) return;
-
-  const roster = getFmpClubRoster();
-  const isFan = (userSession && userSession.role === 'fan');
-
-  if (roster.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 2rem;">No hay jugadores registrados en la plantilla</td></tr>';
-    return;
-  }
-
-  // Ordenar por dorsal
-  const sorted = [...roster].sort((a, b) => a.dorsal - b.dorsal);
-
-  tbody.innerHTML = sorted.map(p => {
-    // Protección de Habeas Data Ley 1581 para aficionados: enmascarar número de documento
-    const docDisplay = isFan ? `${p.docType} ********` : `${p.docType} ${p.docNumber}`;
-    return `
-      <tr>
-        <td style="font-weight: 800; color: #34d399; text-align: center;">${p.dorsal}</td>
-        <td style="font-weight: 700; color: #fff;">${escapeHtml(p.name)}</td>
-        <td style="font-family: monospace; font-size: 0.85rem; color: #cbd5e1;">${escapeHtml(docDisplay)}</td>
-        <td><span class="badge-player-position">${escapeHtml(p.position)}</span></td>
-        <td style="color: #38bdf8; font-size: 0.85rem;">${escapeHtml(p.eps)}</td>
-        <td><span class="badge-roster-enabled">✓ Habilitado</span></td>
-        <td>
-          ${!isFan ? `
-            <button type="button" class="btn-tool-sm btn-del-player" data-id="${p.id}" style="color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 3px 8px; cursor: pointer;">
-              Eliminar
-            </button>
-          ` : '<span style="color: #64748b; font-size: 0.75rem;">Protegido</span>'}
-        </td>
-      </tr>
-    `;
-  }).join('');
-
-  if (!isFan) {
-    tbody.querySelectorAll('.btn-del-player').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const pId = btn.getAttribute('data-id');
-        const currentRoster = getFmpClubRoster();
-        const target = currentRoster.find(x => x.id === pId);
-        const filtered = currentRoster.filter(x => x.id !== pId);
-        saveFmpClubRoster(filtered);
-        logAudit('BAJA_JUGADOR', `Eliminó de la plantilla a: ${target?.name || pId}`);
-        renderCoachRosterTable();
-        showToast('Jugador eliminado de la plantilla oficial', 'info', 2000);
-      });
+  // 1. Delegación / Listener para tabs de navegación del Técnico (#coachTabNavStrip)
+  const tabStrip = document.getElementById('coachTabNavStrip');
+  if (tabStrip) {
+    tabStrip.addEventListener('click', (e) => {
+      const btn = e.target.closest('.coach-nav-tab');
+      if (!btn) return;
+      const targetTab = btn.getAttribute('data-coach-tab');
+      if (targetTab) switchCoachTab(targetTab);
     });
   }
-}
 
-function renderCoachApplicationsTable() {
-  const tbody = document.getElementById('coachApplicationsTableBody');
-  if (!tbody) return;
+  // 2. Alternar formulario para añadir jugador
+  const btnOpenAddPlayerForm = document.getElementById('btnOpenAddPlayerForm');
+  const addPlayerFormWrapper = document.getElementById('addPlayerFormWrapper');
+  const btnCancelAddPlayer = document.getElementById('btnCancelAddPlayer');
 
-  const regs = FMPStore.getRegistrations();
-  if (regs.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">No tienes solicitudes de inscripción activas</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = regs.map(r => {
-    let statusClass = 'badge-sol-pendiente-inicial';
-    let statusText = 'Pendiente Inicial';
-    if (r.status === 'aprobada_inicial' || r.status === 'Aprobado') {
-      statusClass = 'badge-sol-aprobada-inicial';
-      statusText = 'Aprobada Inicial';
-    } else if (r.status === 'devuelta_inicial' || r.status === 'Requiere Corrección') {
-      statusClass = 'badge-sol-devuelto';
-      statusText = 'Devuelta';
-    } else if (r.status === 'habilitado') {
-      statusClass = 'badge-sol-habilitado';
-      statusText = 'Habilitado FCF';
-    } else if (r.status === 'rechazada' || r.status === 'Rechazado') {
-      statusClass = 'badge-sol-rechazado';
-      statusText = 'Rechazada';
-    } else if (r.status === 'cancelada') {
-      statusClass = 'badge-sol-cancelada';
-      statusText = 'Cancelada';
-    }
-
-    const canCancel = (r.status === 'pendiente_inicial' || r.status === 'Pendiente' || r.status === 'devuelta_inicial');
-    const actionsHtml = canCancel ? `
-      <button type="button" class="btn-cancel-coach-app" data-id="${escapeHtml(r.id)}" style="color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 0.8rem; font-weight: 600;">
-        Cancelar Solicitud
-      </button>
-    ` : '<span style="color: #64748b; font-size: 0.75rem;">Sin acciones</span>';
-
-    return `
-      <tr>
-        <td style="font-weight: 700; color: #fff;">${escapeHtml(r.tournamentName || 'Torneo Oficial')}</td>
-        <td style="font-size: 0.8rem; color: #cbd5e1;">${new Date(r.submittedAt || Date.now()).toLocaleDateString('es-CO')}</td>
-        <td><span style="color: #38bdf8; font-weight: 600;">${Array.isArray(r.roster) ? r.roster.length : (r.playersCount || 0)} jugadores</span></td>
-        <td><span class="badge-sol-status ${statusClass}">${statusText}</span></td>
-        <td style="font-size: 0.8rem; color: #94a3b8; max-width: 250px;">${escapeHtml(r.observations || r.notes || 'En revisión por el comité organizador')}</td>
-        <td style="text-align: center;">${actionsHtml}</td>
-      </tr>
-    `;
-  }).join('');
-
-  tbody.querySelectorAll('.btn-cancel-coach-app').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const regId = btn.getAttribute('data-id');
-      const res = FMPStore.cancelApplication(regId);
-      if (res.ok) {
-        showToast('Solicitud de inscripción cancelada', 'info', 3000);
-        renderCoachApplicationsTable();
-      } else {
-        showToast(res.error, 'error');
+  if (btnOpenAddPlayerForm && addPlayerFormWrapper) {
+    btnOpenAddPlayerForm.addEventListener('click', () => {
+      const isVisible = addPlayerFormWrapper.style.display === 'block';
+      addPlayerFormWrapper.style.display = isVisible ? 'none' : 'block';
+      if (!isVisible) {
+        addPlayerFormWrapper.scrollIntoView({ behavior: 'smooth' });
       }
     });
-  });
+  }
+
+  if (btnCancelAddPlayer && addPlayerFormWrapper) {
+    btnCancelAddPlayer.addEventListener('click', () => {
+      addPlayerFormWrapper.style.display = 'none';
+    });
+  }
+
+  // 3. Enviar nuevo jugador
+  const formCoachAddPlayer = document.getElementById('formCoachAddPlayer');
+  if (formCoachAddPlayer) {
+    formCoachAddPlayer.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const dorsal = parseInt(document.getElementById('pDorsal')?.value || '1', 10);
+      const name = (document.getElementById('pFullName')?.value || '').trim();
+      const docType = document.getElementById('pDocType')?.value || 'C.C.';
+      const docNumber = (document.getElementById('pDocNumber')?.value || '').trim();
+      const position = document.getElementById('pPosition')?.value || 'Mediocampista';
+      const eps = (document.getElementById('pEps')?.value || 'EPS Sura').trim();
+      const age = parseInt(document.getElementById('pAge')?.value || '25', 10);
+      const guardianName = (document.getElementById('pGuardianName')?.value || '').trim();
+      const guardianDoc = (document.getElementById('pGuardianDoc')?.value || '').trim();
+
+      const res = FMPStore.registerPlayerToRoster(activeTournamentId, 'tm-nac-01', {
+        name, docType, docNumber, dorsal, position, eps, age, guardianName, guardianDoc
+      });
+
+      if (!res.ok) {
+        showToast(res.error, 'warning', 4000);
+        return;
+      }
+
+      formCoachAddPlayer.reset();
+      if (addPlayerFormWrapper) addPlayerFormWrapper.style.display = 'none';
+      renderCoachRosterTable();
+      renderCoachCarnetsGrid();
+      showToast(`Jugador ${name} inscrito en la plantilla oficial (#${dorsal})`, 'success', 3500);
+    });
+  }
+
+  // 4. Modal de Planilla Oficial PDF
+  const btnOpenPlanillaPdfModal = document.getElementById('btnOpenPlanillaPdfModal');
+  const modalPlanillaPdf = document.getElementById('modalPlanillaPdf');
+  const btnClosePlanillaModal = document.getElementById('btnClosePlanillaModal');
+  const btnCancelPlanillaModal = document.getElementById('btnCancelPlanillaModal');
+  const btnPrintOfficialPlanilla = document.getElementById('btnPrintOfficialPlanilla');
+
+  if (btnOpenPlanillaPdfModal) {
+    btnOpenPlanillaPdfModal.addEventListener('click', openPlanillaPdfModal);
+  }
+  const closePlanilla = () => {
+    if (modalPlanillaPdf) modalPlanillaPdf.style.display = 'none';
+  };
+  if (btnClosePlanillaModal) btnClosePlanillaModal.addEventListener('click', closePlanilla);
+  if (btnCancelPlanillaModal) btnCancelPlanillaModal.addEventListener('click', closePlanilla);
+  if (btnPrintOfficialPlanilla) {
+    btnPrintOfficialPlanilla.addEventListener('click', () => {
+      logAudit('IMPRESION_PLANILLA_PDF', 'Generó e imprimió la planilla oficial de alineación');
+      window.print();
+    });
+  }
+
+  // 5. Botón Alternar Carnets Digitales vs Tabla de Jugadores
+  const btnToggleCarnetsView = document.getElementById('btnToggleCarnetsView');
+  if (btnToggleCarnetsView) {
+    btnToggleCarnetsView.addEventListener('click', () => {
+      const tableCont = document.getElementById('coachRosterTableContainer');
+      const carnetsCont = document.getElementById('coachCarnetsContainer');
+      if (!carnetsCont) return;
+      const isCarnets = carnetsCont.style.display !== 'none';
+      if (isCarnets) {
+        carnetsCont.style.display = 'none';
+        if (tableCont) tableCont.style.display = 'block';
+        btnToggleCarnetsView.innerHTML = '<span>🪪 Ver Carnets Digitales</span>';
+      } else {
+        carnetsCont.style.display = 'block';
+        if (tableCont) tableCont.style.display = 'none';
+        btnToggleCarnetsView.innerHTML = '<span>📋 Ver Lista en Tabla</span>';
+        renderCoachCarnetsGrid();
+      }
+    });
+  }
+
+  // 6. Botones de acceso directo en "Mis Próximos Partidos"
+  const btnCoachGoStandings = document.getElementById('btnCoachGoStandings');
+  if (btnCoachGoStandings) {
+    btnCoachGoStandings.addEventListener('click', () => navigateToView('clasificacion'));
+  }
+  const btnCoachGoBrackets = document.getElementById('btnCoachGoBrackets');
+  if (btnCoachGoBrackets) {
+    btnCoachGoBrackets.addEventListener('click', () => navigateToView('cuadro'));
+  }
+  const btnCoachGoCalendar = document.getElementById('btnCoachGoCalendar');
+  if (btnCoachGoCalendar) {
+    btnCoachGoCalendar.addEventListener('click', () => navigateToView('calendario'));
+  }
 }
+window.initCoachPanelControls = initCoachPanelControls;
 
 function openPlanillaPdfModal() {
   const modal = document.getElementById('modalPlanillaPdf');
@@ -12623,7 +12950,11 @@ function updateProgressStatsOnly() {
 
 function getTeamById(id) {
   if (!id) return null;
-  return tournamentState.teams.find(t => t.id === id) || null;
+  const currentT = (typeof tournamentState !== 'undefined' && tournamentState && Array.isArray(tournamentState.teams)) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const teams = currentT.teams || [];
+  return teams.find(t => t.id === id) || null;
 }
 
 // =============================================================================
@@ -12631,9 +12962,12 @@ function getTeamById(id) {
 // =============================================================================
 
 function calculateStandings(teamsSubset = null, matchesSubset = null) {
-  const teams = teamsSubset || tournamentState.teams || [];
-  const allMatches = matchesSubset || tournamentState.matches || [];
-  const cfg = tournamentState.config || {};
+  const currentT = (typeof tournamentState !== 'undefined' && tournamentState) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const teams = teamsSubset || currentT.teams || [];
+  const allMatches = matchesSubset || currentT.matches || [];
+  const cfg = currentT.config || {};
 
   const ptsWin = parseInt(cfg.pointsWin, 10) ?? 3;
   const ptsDraw = parseInt(cfg.pointsDraw, 10) ?? 1;
@@ -12743,9 +13077,12 @@ function calculateStandings(teamsSubset = null, matchesSubset = null) {
 }
 
 function calculateGroupStandings(groupLetter) {
-  const teamIds = (tournamentState.groups && tournamentState.groups[groupLetter]) || [];
+  const currentT = (typeof tournamentState !== 'undefined' && tournamentState) 
+    ? tournamentState 
+    : ((typeof savedTournaments !== 'undefined' && savedTournaments && savedTournaments[0]) ? savedTournaments[0] : {});
+  const teamIds = (currentT.groups && currentT.groups[groupLetter]) || [];
   const groupTeams = teamIds.map(id => getTeamById(id)).filter(Boolean);
-  const groupMatches = (tournamentState.matches || []).filter(m => m.group === groupLetter || (m.roundName && m.roundName.includes(`Grupo ${groupLetter}`)));
+  const groupMatches = (currentT.matches || []).filter(m => m.group === groupLetter || (m.roundName && m.roundName.includes(`Grupo ${groupLetter}`)));
   return calculateStandings(groupTeams, groupMatches);
 }
 
@@ -17062,6 +17399,8 @@ async function handleTournamentApplicationSubmit(event) {
 
   if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
   if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+  if (typeof renderCoachView === 'function') renderCoachView();
+  if (typeof switchCoachTab === 'function') switchCoachTab('applications');
 }
 
 function renderAdminPendingApplications() {
@@ -17736,3 +18075,13 @@ window.closeRejectReceiptModal = closeRejectReceiptModal;
 window.openRegisterTeamApplicationModal = function(tId = null, existingRegId = null) {
   openTournamentApplicationModal(tId, Boolean(existingRegId), existingRegId);
 };
+window.renderCoachView = renderCoachView;
+window.switchCoachTab = switchCoachTab;
+window.renderCoachTournamentsGrid = renderCoachTournamentsGrid;
+window.renderCoachApplicationsTable = renderCoachApplicationsTable;
+window.renderCoachRosterTable = renderCoachRosterTable;
+window.renderCoachCarnetsGrid = renderCoachCarnetsGrid;
+window.renderCoachDisciplinarySection = renderCoachDisciplinarySection;
+window.renderCoachMatchesSection = renderCoachMatchesSection;
+window.renderCoachDashboardSummary = renderCoachDashboardSummary;
+window.initCoachPanelControls = initCoachPanelControls;

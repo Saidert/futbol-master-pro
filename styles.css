@@ -21384,3 +21384,315 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
     display: none !important;
   }
 }
+
+/* =============================================================================
+   CENTRO DE MANDO DEL DIRECTOR TÉCNICO (LIQUID GLASS CYAN / ESMERALDA #/club)
+   ============================================================================= */
+
+.coach-tab-nav-wrapper {
+  margin-top: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.coach-tab-nav-strip {
+  display: flex;
+  gap: 8px;
+  background: rgba(8, 30, 34, 0.75);
+  border: 1px solid rgba(30, 193, 203, 0.25);
+  border-radius: 14px;
+  padding: 6px;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.coach-nav-tab {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  white-space: nowrap;
+}
+
+.coach-nav-tab:hover {
+  color: #1EC1CB;
+  background: rgba(30, 193, 203, 0.08);
+  border-color: rgba(30, 193, 203, 0.2);
+}
+
+.coach-nav-tab.active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(30, 193, 203, 0.28) 0%, rgba(16, 185, 129, 0.22) 100%);
+  border-color: rgba(30, 193, 203, 0.55);
+  box-shadow: 0 4px 14px rgba(30, 193, 203, 0.2);
+}
+
+.coach-tab-icon {
+  font-size: 1.1rem;
+}
+
+.coach-tab-badge {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  font-weight: 800;
+}
+
+.coach-subtab-pane {
+  display: none;
+}
+
+.coach-subtab-pane.active {
+  display: block;
+  animation: coachPaneFadeIn 0.25s ease-out;
+}
+
+@keyframes coachPaneFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.coach-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.coach-section-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #f8fafc;
+  margin: 0 0 0.25rem 0;
+  letter-spacing: -0.01em;
+}
+
+.coach-section-desc {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0;
+  max-width: 650px;
+  line-height: 1.45;
+}
+
+.coach-count-pill {
+  background: rgba(30, 193, 203, 0.15);
+  color: #1EC1CB;
+  border: 1px solid rgba(30, 193, 203, 0.35);
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* Grilla de Torneos Disponibles */
+.coach-tournaments-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.coach-tourney-card {
+  background: rgba(8, 30, 34, 0.75);
+  border: 1px solid rgba(30, 193, 203, 0.22);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.coach-tourney-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1EC1CB, #10B981);
+  opacity: 0.6;
+}
+
+.coach-tourney-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(30, 193, 203, 0.55);
+  box-shadow: 0 8px 24px rgba(4, 21, 25, 0.45);
+}
+
+.coach-tourney-pills-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.coach-sport-pill {
+  background: rgba(30, 193, 203, 0.15);
+  color: #1EC1CB;
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  border: 1px solid rgba(30, 193, 203, 0.3);
+}
+
+.coach-tourney-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.coach-tourney-badge.badge-open {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.coach-tourney-badge.badge-pending {
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.coach-tourney-badge.badge-approved {
+  background: rgba(16, 185, 129, 0.25);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+}
+
+.coach-tourney-badge.badge-rejected {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.coach-tourney-badge.badge-canceled {
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+}
+
+.coach-tourney-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.3;
+}
+
+.coach-tourney-subtitle {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0 0 1rem 0;
+}
+
+.coach-tourney-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  margin-bottom: 1.25rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.coach-meta-box {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.coach-meta-box .meta-label {
+  font-size: 0.68rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.coach-meta-box .meta-value {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.coach-meta-box .fee-value {
+  color: #34d399;
+}
+
+.coach-tourney-card-bottom {
+  margin-top: auto;
+}
+
+.coach-tourney-card-bottom button {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Banner de alerta de rechazo */
+.coach-rejected-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-left: 4px solid #ef4444;
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.coach-rejected-banner .banner-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+
+.coach-rejected-banner .banner-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.btn-doc-pill {
+  background: rgba(30, 193, 203, 0.15);
+  color: #1EC1CB;
+  border: 1px solid rgba(30, 193, 203, 0.35);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-doc-pill:hover {
+  background: rgba(30, 193, 203, 0.25);
+  border-color: #1EC1CB;
+  color: #ffffff;
+}
