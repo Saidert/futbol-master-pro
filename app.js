@@ -2490,6 +2490,18 @@ function saveUserSession(session) {
 }
 
 function setCurrentUserByRole(roleKey) {
+  // Manejo directo de Modo Espectador / Visitante
+  if (roleKey === 'guest' || roleKey === 'spectator') {
+    try {
+      sessionStorage.removeItem('fmp_splash_completed');
+      sessionStorage.removeItem('fmp_splash_played');
+    } catch(e){}
+    handleLogout();
+    navigateToView('home');
+    showToast('Modo Espectador (Visitante Oficial) activado', 'info', 2500);
+    return;
+  }
+
   const users = FMPStore.getUsers();
   const target = users.find(u => 
     u.role === roleKey || 
@@ -2515,10 +2527,30 @@ function setCurrentUserByRole(roleKey) {
   saveUserSession(newSession);
   logAudit('CAMBIO_ROL_RAPIDO', `Cambió al rol de ${newSession.roleTitle} (${newSession.email})`);
   
-  // Si estamos en una vista restringida que no corresponde al nuevo rol, redirigir
+  const normRole = normalizeRole(newSession.role);
   const currentRoute = getNormalizedRoute();
-  if (newSession.role !== 'admin' && currentRoute === 'admin') {
-    navigateToView('home');
+
+  // 1. Si el rol seleccionado es 'admin' u 'organizer', reiniciar bandera y navegar a #/admin
+  if (normRole === 'admin' || normRole === 'organizer') {
+    try {
+      sessionStorage.removeItem('fmp_splash_completed');
+      sessionStorage.removeItem('fmp_splash_played');
+    } catch(e){}
+    navigateToView('admin');
+    if (getNormalizedRoute() === 'admin') {
+      runDashboardEntranceSequence(true);
+    }
+  } else if (normRole === 'fan' || normRole === 'guest') {
+    // Modo aficionado / espectador: reiniciar bandera para próximo inicio de admin
+    try {
+      sessionStorage.removeItem('fmp_splash_completed');
+      sessionStorage.removeItem('fmp_splash_played');
+    } catch(e){}
+    if (currentRoute === 'admin' || currentRoute === 'club') {
+      navigateToView('home');
+    } else {
+      navigateToView(currentRoute, false);
+    }
   } else if ((newSession.role !== 'coach' && newSession.role !== 'tecnico') && currentRoute === 'club') {
     navigateToView('home');
   } else {
@@ -3362,9 +3394,16 @@ window.quickFillAndLogin = function(email, pass, role) {
         };
         saveUserSession(adminSession);
         logAudit('INICIO_SESION_ADMIN', `Administrador General autenticado exitosamente (${adminSession.email})`);
+        try {
+          sessionStorage.removeItem('fmp_splash_completed');
+          sessionStorage.removeItem('fmp_splash_played');
+        } catch(e){}
         closeAuthModal();
         showToast('¡Bienvenido Administrador General Saider Boadas!', 'success', 2500);
         navigateToView('admin');
+        if (getNormalizedRoute() === 'admin') {
+          runDashboardEntranceSequence(true);
+        }
         return;
       }
 
@@ -3395,8 +3434,21 @@ window.quickFillAndLogin = function(email, pass, role) {
         logAudit('INICIO_SESION', `Inició sesión con éxito (${matched.email})`);
         closeAuthModal();
         showToast(`¡Bienvenido de nuevo, ${matched.name}!`, 'success', 2500);
-        if (matched.role === 'admin') navigateToView('admin');
-        else if (matched.role === 'coach' || matched.role === 'tecnico') navigateToView('torneos');
+        const normRole = normalizeRole(matched.role);
+        if (normRole === 'admin' || normRole === 'organizer') {
+          try {
+            sessionStorage.removeItem('fmp_splash_completed');
+            sessionStorage.removeItem('fmp_splash_played');
+          } catch(e){}
+          navigateToView('admin');
+          if (getNormalizedRoute() === 'admin') {
+            runDashboardEntranceSequence(true);
+          }
+        } else if (normRole === 'coach' || normRole === 'tecnico') {
+          navigateToView('torneos');
+        } else {
+          navigateToView('home');
+        }
       } else {
         showToast('Usuario o contraseña incorrectos. Si no tienes cuenta, completa tu registro.', 'warning', 3500);
       }
@@ -3598,6 +3650,8 @@ window.handleLogout = function(e) {
     localStorage.removeItem('futbol_master_session');
     localStorage.removeItem('futbolmaster_session');
     localStorage.removeItem('fmp_master_session');
+    sessionStorage.removeItem('fmp_splash_completed');
+    sessionStorage.removeItem('fmp_splash_played');
   } catch(err) {}
 
   // 3. Reset de modo torneo y clases del body
@@ -6497,6 +6551,9 @@ function runSplashKickToSidebar() {
 
   // A los 1340ms exactos (cuando termina el despliegue al botón superior):
   setTimeout(() => {
+    try {
+      sessionStorage.setItem('fmp_splash_completed', 'true');
+    } catch(e){}
     if (sidebarBallBtn) {
       sidebarBallBtn.style.opacity = '1';
       sidebarBallBtn.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
@@ -6508,6 +6565,7 @@ function runSplashKickToSidebar() {
       splashOverlay.style.opacity = '0';
       setTimeout(() => {
         splashOverlay.style.display = 'none';
+        splashOverlay.classList.remove('is-animating');
         isDashboardEntranceRunning = false;
       }, 250);
     }
@@ -6515,7 +6573,8 @@ function runSplashKickToSidebar() {
 }
 
 function runDashboardEntranceSequence(force = false) {
-  if (isDashboardEntranceRunning) return;
+  if (isDashboardEntranceRunning && !force) return;
+  isDashboardEntranceRunning = false;
 
   const overlay = document.getElementById('dashboardSplashOverlay') || document.querySelector('.splash-screen-overlay, #admin-splash-screen, .dashboard-splash-overlay');
   const splashContent = document.getElementById('splashCenterContent');
@@ -6524,13 +6583,14 @@ function runDashboardEntranceSequence(force = false) {
   if (!overlay) return;
 
   // Si no es forzado y ya se completó el splash en esta sesión, entrar directo en <150ms
-  const hasCompleted = (sessionStorage.getItem('fmp_splash_completed') === 'true') || (sessionStorage.getItem('fmp_splash_played') === 'true');
+  const hasCompleted = (sessionStorage.getItem('fmp_splash_completed') === 'true');
   if (!force && hasCompleted) {
     overlay.classList.add('is-hidden');
+    overlay.classList.remove('is-animating');
     overlay.style.setProperty('display', 'none', 'important');
     if (splashContent) splashContent.classList.add('text-fade-out');
     if (container) container.classList.add('entrance-expanding');
-    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, #pillSidebarTopLogo');
+    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
     if (sidebarBallBtn) {
       sidebarBallBtn.style.opacity = '1';
       sidebarBallBtn.style.transform = 'scale(1)';
@@ -6545,8 +6605,6 @@ function runDashboardEntranceSequence(force = false) {
   }
 
   isDashboardEntranceRunning = true;
-  sessionStorage.setItem('fmp_splash_played', 'true');
-  sessionStorage.setItem('fmp_splash_completed', 'true');
 
   // 1. Reset instantáneo al tope absoluto de la ventana (0, 0)
   try {
@@ -6557,42 +6615,57 @@ function runDashboardEntranceSequence(force = false) {
     window.scrollTo(0, 0);
   }
 
-  // 2. Fase 1: Splash screen visible con secuencia de ensamblaje del balón dinámico
+  // 2. Fase 1: Overlay visible y limpio de estados previos
+  overlay.style.removeProperty('display');
   overlay.style.setProperty('display', 'flex', 'important');
   overlay.style.opacity = '1';
   overlay.classList.remove('is-hidden');
   if (splashContent) splashContent.classList.remove('text-fade-out');
 
-  // Reiniciar animaciones CSS de las piezas del balón en cada apertura
-  const ballWrapper = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
-  const ballHalo = document.querySelector('.ball-assembly-halo');
-  const assemblingBall = document.querySelector('.assembling-ball');
-  const ring = document.querySelector('.ball-outer-ring');
-  const sphere = document.querySelector('.ball-sphere-fill');
-  const core = document.querySelector('.ball-core-pentagon');
-  const seams = document.querySelector('.ball-seams');
-  const gloss = document.querySelector('.ball-gloss');
-  const panels = document.querySelectorAll('.ball-panel');
+  // Limpiar estilos inline previos del botón de destino en la barra lateral
+  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
+  if (sidebarBallBtn) {
+    sidebarBallBtn.style.transform = '';
+    sidebarBallBtn.style.animation = '';
+    sidebarBallBtn.style.opacity = '0';
+  }
 
-  [ballWrapper, ballHalo, assemblingBall, ring, sphere, core, seams, gloss, ...panels].forEach(el => {
-    if (el) {
-      el.style.animation = 'none';
-      el.offsetHeight; // forzar reflow
-      el.style.animation = '';
+  // 3. Forzar reinicio de animaciones CSS/SVG en SPA (sin recargar F5)
+  // Reemplazar nodo .splash-ball-forge-stage con un clon idéntico fresco
+  const forgeStage = overlay.querySelector('.splash-ball-forge-stage');
+  if (forgeStage) {
+    const freshStage = forgeStage.cloneNode(true);
+    const clonedBall = freshStage.querySelector('.splash-ball-wrapper, #splash-main-ball');
+    if (clonedBall) {
+      clonedBall.style.transform = '';
+      clonedBall.style.animation = '';
+      clonedBall.style.removeProperty('--dock-x');
+      clonedBall.style.removeProperty('--dock-y');
+      clonedBall.style.removeProperty('--dock-scale');
     }
-  });
+    forgeStage.replaceWith(freshStage);
+  }
 
-  // Ejecutar docking balístico milimétrico hacia la barra lateral
+  // Forzar reflow en el overlay ANTES de calcular getBoundingClientRect()
+  overlay.classList.remove('is-animating');
+  void overlay.offsetWidth;
+  overlay.classList.add('is-animating');
+
+  // 4. Calcular coordenadas y ejecutar docking balístico al sidebar
   runSplashKickToSidebar();
 
-  // 3. A los 0.95s: Desvanecer subtítulo y título de splash suavemente
+  // 5. A los 0.95s: Desvanecer subtítulo y título de splash suavemente
   setTimeout(() => {
     if (splashContent) splashContent.classList.add('text-fade-out');
   }, 950);
 
-  // 4. A los 1340ms exactos: Al terminar el despliegue del balón, acoplar en la barra, expandir dashboard y shimmer
+  // 6. Al completarse los 1340ms exactos: Balón aterriza, guardar fmp_splash_completed y activar vista
   setTimeout(() => {
+    try {
+      sessionStorage.setItem('fmp_splash_completed', 'true');
+    } catch(e){}
     overlay.classList.add('is-hidden');
+    overlay.classList.remove('is-animating');
     overlay.style.setProperty('display', 'none', 'important');
     isDashboardEntranceRunning = false;
     if (container) container.classList.add('entrance-expanding');
@@ -14041,6 +14114,10 @@ function setPublicMode(enable, updateUrl = true) {
   tournamentState.isPublicMode = !!enable;
 
   if (tournamentState.isPublicMode) {
+    try {
+      sessionStorage.removeItem('fmp_splash_completed');
+      sessionStorage.removeItem('fmp_splash_played');
+    } catch(e){}
     document.body.classList.add('public-mode-active');
     if (dom.publicModeBanner) dom.publicModeBanner.style.display = 'block';
     if (dom.publicModeBtnText) dom.publicModeBtnText.textContent = 'Modo Publico';

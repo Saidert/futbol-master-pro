@@ -415,7 +415,10 @@
                 <span>👔 Delegado de Club</span>
               </button>
               <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('organizer'); navigateToView('admin'); toggleUserDropdownMenu();">
-                <span>🏆 Organizador / Admin</span>
+                <span>🔑 Iniciar Sesión como Organizador</span>
+              </button>
+              <button type="button" class="user-menu-item" onclick="setCurrentUserByRole('guest'); navigateToView('home'); toggleUserDropdownMenu();">
+                <span>👁️ Vista Espectador</span>
               </button>
             </div>
             <div class="user-dropdown-divider" id="dropdownLogoutDivider" style="display: none;"></div>
