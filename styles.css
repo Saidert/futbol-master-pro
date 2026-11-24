@@ -17325,10 +17325,22 @@ header.global-spa-header .header-brand,
   flex-direction: column !important;
   align-items: flex-start !important;
   gap: 10px !important;
-  overflow: visible !important;
+  max-height: 94vh !important;
+  overflow-y: auto !important;
+  overflow-x: visible !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   z-index: 99999 !important;
   box-sizing: border-box !important;
   pointer-events: auto !important;
+}
+
+.pill-sidebar-container::-webkit-scrollbar,
+.pill-sidebar-dock::-webkit-scrollbar,
+.pill-sidebar-wrapper::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 /* Balón de fútbol completo estilo Champions/Pro (100% del círculo de 44px) */
@@ -22032,4 +22044,110 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
   background: rgba(239, 68, 68, 0.3) !important;
   color: #ffffff !important;
 }
+
+/* =============================================================================
+   DASHBOARD DEL ORGANIZADOR (#/organizador) & RBAC ESTILOS DEDICADOS
+   ============================================================================= */
+body.route-organizador #mainHeader,
+body.in-organizer-dashboard #mainHeader {
+  display: none !important;
+}
+
+body.route-organizador aside.public-mode-banner,
+body.in-organizer-dashboard aside.public-mode-banner {
+  display: none !important;
+}
+
+#view-organizador.active {
+  display: block !important;
+}
+
+/* Empty State Card para Organizadores Nuevos (0 Torneos) */
+.org-empty-state-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  padding: 3.5rem 2rem !important;
+  margin: 2.5rem auto !important;
+  max-width: 640px !important;
+  border-radius: 24px !important;
+  background: linear-gradient(135deg, rgba(5, 20, 25, 0.88) 0%, rgba(11, 45, 52, 0.82) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+.org-empty-icon-ring {
+  width: 84px !important;
+  height: 84px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 2.75rem !important;
+  background: radial-gradient(circle, rgba(30, 193, 203, 0.28) 0%, rgba(5, 20, 25, 0.85) 70%) !important;
+  border: 2px solid rgba(30, 193, 203, 0.55) !important;
+  box-shadow: 0 0 35px rgba(30, 193, 203, 0.45), 0 0 65px rgba(16, 185, 129, 0.25) !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.org-empty-title {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #F8FAFC !important;
+  margin: 0 0 0.6rem 0 !important;
+  letter-spacing: -0.3px !important;
+}
+
+.org-empty-subtitle {
+  font-size: 0.94rem !important;
+  color: #94A3B8 !important;
+  line-height: 1.55 !important;
+  max-width: 500px !important;
+  margin: 0 0 1.8rem 0 !important;
+}
+
+.org-empty-cta-btn {
+  padding: 13px 30px !important;
+  font-size: 0.98rem !important;
+  font-weight: 700 !important;
+  border-radius: 14px !important;
+  background: linear-gradient(135deg, #10B981 0%, #0EA5A4 100%) !important;
+  color: #03181C !important;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.45) !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+.org-empty-cta-btn:hover {
+  transform: translateY(-2px) scale(1.02) !important;
+  box-shadow: 0 12px 32px rgba(30, 193, 203, 0.6) !important;
+}
+
+.org-active-tourney-wrapper {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.6rem !important;
+  background: rgba(5, 20, 25, 0.75) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  padding: 6px 14px !important;
+  border-radius: 9999px !important;
+}
+
+.badge-dt-only {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.35rem !important;
+  padding: 4px 10px !important;
+  border-radius: 9999px !important;
+  font-size: 0.75rem !important;
+  font-weight: 700 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  color: #f87171 !important;
+}
+
 

@@ -26,17 +26,42 @@ def mask_doc(doc_type, doc_number):
 
 def normalize_role(role):
     if not role:
-        return 'fan'
+        return 'spectator'
     r = str(role).lower().strip()
+    if r in ['admin', 'administrador', 'superadmin']:
+        return 'admin'
     if r in ['organizer', 'organizador']:
         return 'organizer'
-    if r in ['coach', 'tecnico', 'técnico']:
-        return 'coach'
-    if r in ['fan', 'aficionado', 'visitante', 'guest']:
-        return 'fan'
-    if r in ['admin', 'administrador']:
-        return 'admin'
+    if r in ['head_coach', 'headcoach', 'dt', 'director_tecnico', 'director técnico', 'coach', 'tecnico', 'técnico']:
+        return 'head_coach'
+    if r in ['team_coach', 'teamcoach', 'tecnico_equipo', 'técnico del equipo', 'entrenador']:
+        return 'team_coach'
+    if r in ['spectator', 'aficionado', 'fan', 'visitante', 'guest', 'espectador']:
+        return 'spectator'
     return r
+
+def apply_schema_migrations(conn):
+    """Aplica migraciones seguras ALTER TABLE para asegurar columnas del esquema RBAC y modelos extendidos"""
+    migrations = [
+        ("venues", "localidad", "TEXT"),
+        ("venues", "barrio", "TEXT"),
+        ("venues", "superficie", "TEXT"),
+        ("tournaments", "organizer_id", "TEXT"),
+        ("tournaments", "localidad", "TEXT"),
+        ("players", "birth_date", "TEXT"),
+        ("players", "yellow_cards", "INTEGER DEFAULT 0"),
+        ("players", "red_cards", "INTEGER DEFAULT 0"),
+        ("matches", "yellow_cards", "TEXT"),
+        ("matches", "red_cards", "TEXT"),
+        ("matches", "referee", "TEXT")
+    ]
+    cur = conn.cursor()
+    for table, col, col_type in migrations:
+        try:
+            cur.execute(f"ALTER TABLE {table} ADD COLUMN {col} {col_type};")
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass # Columna ya existente o tabla pendiente de inicializar
 
 def recalculate_standings(conn, tournament_id):
     cur = conn.cursor()
@@ -481,8 +506,8 @@ class FootballMasterHandler(http.server.SimpleHTTPRequestHandler):
 
             # 4. Solicitud de Inscripción por Director Técnico (Fase 5)
             if path == '/api/registrations/apply':
-                if user_role not in ['coach', 'admin']:
-                    return self.send_error_json("Solo los Directores Técnicos o Administradores pueden inscribir equipos.", 403)
+                if user_role not in ['head_coach', 'admin']:
+                    return self.send_error_json("Solo el Director Técnico o Administrador puede postular equipos e inscribir clubes a torneos.", 403)
 
                 tournament_id = body.get('tournamentId')
                 team_id = body.get('teamId')
@@ -915,6 +940,14 @@ def run_server():
             db_manager.init_db()
         except Exception as e:
             print(f"[!] Error inicializando BD: {e}")
+    else:
+        try:
+            conn = get_db_connection()
+            apply_schema_migrations(conn)
+            conn.close()
+            print("[*] Migraciones de esquema RBAC y modelos extendidos verificadas.")
+        except Exception as e:
+            print(f"[!] Error aplicando migraciones: {e}")
 
     socketserver.TCPServer.allow_reuse_address = True
     with socketserver.TCPServer(("", PORT), FootballMasterHandler) as httpd:

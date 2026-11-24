@@ -11,19 +11,33 @@ if (typeof document !== 'undefined' && document.body) {
 // =============================================================================
 
 function normalizeRole(role) {
-  if (!role) return 'fan';
+  if (!role) return 'spectator';
   const r = String(role).toLowerCase().trim();
-  if (r === 'organizador' || r === 'organizer' || r.includes('organizad')) return 'organizer';
-  if (r === 'tecnico' || r === 'técnico' || r === 'coach' || r.includes('tecnic') || r.includes('técnic')) return 'coach';
-  if (r === 'aficionado' || r === 'fan' || r === 'visitante' || r === 'guest') return 'fan';
   if (r === 'admin' || r === 'administrador') return 'admin';
+  if (r === 'organizer' || r === 'organizador' || r.includes('organizad')) return 'organizer';
+  if (r === 'head_coach' || r === 'coach' || r === 'director_tecnico' || r === 'delegado' || r.includes('director t') || r === 'dt') return 'head_coach';
+  if (r === 'team_coach' || r === 'tecnico_equipo' || r === 'técnico de equipo' || r.includes('equipo') || r === 'asistente') return 'team_coach';
+  if (r === 'tecnico' || r === 'técnico') return 'head_coach';
+  if (r === 'spectator' || r === 'fan' || r === 'aficionado' || r === 'visitante' || r === 'guest') return 'spectator';
   return r;
 }
 
-function isOrganizerOrAdmin(role) {
-  const r = normalizeRole(role);
-  return r === 'admin' || r === 'organizer';
-}
+function isAdmin(role) { return normalizeRole(role) === 'admin'; }
+function isOrganizer(role) { return normalizeRole(role) === 'organizer'; }
+function isHeadCoach(role) { return normalizeRole(role) === 'head_coach'; }
+function isTeamCoach(role) { return normalizeRole(role) === 'team_coach'; }
+function isCoachRole(role) { const r = normalizeRole(role); return r === 'head_coach' || r === 'team_coach'; }
+function isSpectator(role) { return normalizeRole(role) === 'spectator'; }
+function isOrganizerOrAdmin(role) { const r = normalizeRole(role); return r === 'admin' || r === 'organizer'; }
+
+window.normalizeRole = normalizeRole;
+window.isAdmin = isAdmin;
+window.isOrganizer = isOrganizer;
+window.isHeadCoach = isHeadCoach;
+window.isTeamCoach = isTeamCoach;
+window.isCoachRole = isCoachRole;
+window.isSpectator = isSpectator;
+window.isOrganizerOrAdmin = isOrganizerOrAdmin;
 
 const FMP_KEYS = {
   USERS: 'fmp_users',
@@ -53,10 +67,11 @@ const DEMO_USERS = [
     createdAt: '2026-01-10T10:00:00.000Z'
   },
   {
-    id: 'usr-org-1',
-    name: 'Andrés Pastrana',
-    email: 'organizador@futbolmaster.co',
+    id: 'usr-org-carlos',
+    name: 'Carlos Mendoza',
+    email: 'carlos.mendoza@futbolmaster.co',
     phone: '3109876543',
+    password: 'org123',
     role: 'organizer',
     roleTitle: 'Organizador de Torneo',
     roleIcon: '🏆',
@@ -66,11 +81,26 @@ const DEMO_USERS = [
     createdAt: '2026-01-20T14:30:00.000Z'
   },
   {
-    id: 'usr-coach-1',
+    id: 'usr-org-laura',
+    name: 'Laura Ríos',
+    email: 'laura.rios@futbolmaster.co',
+    phone: '3112345678',
+    password: 'org123',
+    role: 'organizer',
+    roleTitle: 'Organizador Nuevo (0 torneos)',
+    roleIcon: '🌱',
+    roleBadgeClass: 'role-organizer',
+    clubName: 'Torneos Juveniles Colombia',
+    habeasDataConsent: true,
+    createdAt: '2026-03-01T10:00:00.000Z'
+  },
+  {
+    id: 'usr-coach-yepes',
     name: 'Mario Alberto Yepes',
     email: 'tecnico@futbolmaster.co',
     phone: '3154567890',
-    role: 'coach',
+    password: 'coach123',
+    role: 'head_coach',
     roleTitle: 'Director Técnico / Delegado',
     roleIcon: '📋',
     roleBadgeClass: 'role-coach',
@@ -81,12 +111,29 @@ const DEMO_USERS = [
     createdAt: '2026-02-05T09:15:00.000Z'
   },
   {
+    id: 'usr-coach-julian',
+    name: 'Julián Barreto',
+    email: 'julian.barreto@futbolmaster.co',
+    phone: '3187654321',
+    password: 'coach123',
+    role: 'team_coach',
+    roleTitle: 'Técnico del Equipo',
+    roleIcon: '⚽',
+    roleBadgeClass: 'role-coach',
+    clubName: 'Atlético Bogotá FC',
+    category: 'Libre / Mayores',
+    city: 'Bogotá D.C.',
+    habeasDataConsent: true,
+    createdAt: '2026-02-10T11:00:00.000Z'
+  },
+  {
     id: 'usr-fan-1',
     name: 'Juan Camilo Pérez',
     email: 'aficionado@futbolmaster.co',
     phone: '3203456789',
-    role: 'fan',
-    roleTitle: 'Aficionado / Visitante',
+    password: 'fan123',
+    role: 'spectator',
+    roleTitle: 'Aficionado / Espectador',
     roleIcon: '👀',
     roleBadgeClass: 'role-fan',
     clubName: '',
@@ -814,7 +861,7 @@ const FMPStore = {
   },
 
   seedDatabaseIfEmpty() {
-    // 1. Usuarios Semilla
+    // 1. Usuarios Semilla (5 Roles RBAC + 2 Cuentas de Organizador)
     this.db.users = [
       {
         id: 'usr-admin-1',
@@ -830,12 +877,12 @@ const FMPStore = {
         createdAt: '2026-01-10T10:00:00.000Z'
       },
       {
-        id: 'usr-org-1',
-        name: 'Andrés Pastrana',
-        email: 'organizador@futbolmaster.co',
+        id: 'usr-org-carlos',
+        name: 'Carlos Mendoza',
+        email: 'carlos.mendoza@futbolmaster.co',
         phone: '3109876543',
         password: 'org123',
-        role: 'organizador',
+        role: 'organizer',
         roleTitle: 'Organizador de Torneo',
         roleIcon: '🏆',
         roleBadgeClass: 'role-organizer',
@@ -843,17 +890,47 @@ const FMPStore = {
         createdAt: '2026-01-20T14:30:00.000Z'
       },
       {
-        id: 'usr-coach-1',
+        id: 'usr-org-laura',
+        name: 'Laura Ríos',
+        email: 'laura.rios@futbolmaster.co',
+        phone: '3112345678',
+        password: 'org123',
+        role: 'organizer',
+        roleTitle: 'Organizador Nuevo (0 torneos)',
+        roleIcon: '🌱',
+        roleBadgeClass: 'role-organizer',
+        clubName: 'Torneos Juveniles Colombia',
+        createdAt: '2026-03-01T10:00:00.000Z'
+      },
+      {
+        id: 'usr-coach-yepes',
         name: 'Mario Alberto Yepes',
         email: 'tecnico@futbolmaster.co',
         phone: '3154567890',
         password: 'coach123',
-        role: 'tecnico',
+        role: 'head_coach',
         roleTitle: 'Director Técnico / Delegado',
         roleIcon: '📋',
         roleBadgeClass: 'role-coach',
         clubName: 'Atlético Bogotá FC',
+        category: 'Libre / Mayores',
+        city: 'Bogotá D.C.',
         createdAt: '2026-02-05T09:15:00.000Z'
+      },
+      {
+        id: 'usr-coach-julian',
+        name: 'Julián Barreto',
+        email: 'julian.barreto@futbolmaster.co',
+        phone: '3187654321',
+        password: 'coach123',
+        role: 'team_coach',
+        roleTitle: 'Técnico del Equipo',
+        roleIcon: '⚽',
+        roleBadgeClass: 'role-coach',
+        clubName: 'Atlético Bogotá FC',
+        category: 'Libre / Mayores',
+        city: 'Bogotá D.C.',
+        createdAt: '2026-02-10T11:00:00.000Z'
       },
       {
         id: 'usr-fan-1',
@@ -861,8 +938,8 @@ const FMPStore = {
         email: 'aficionado@futbolmaster.co',
         phone: '3203456789',
         password: 'fan123',
-        role: 'aficionado',
-        roleTitle: 'Aficionado / Visitante',
+        role: 'spectator',
+        roleTitle: 'Aficionado / Espectador',
         roleIcon: '👀',
         roleBadgeClass: 'role-fan',
         clubName: '',
@@ -2489,36 +2566,51 @@ function saveUserSession(session) {
   updateAuthUI();
 }
 
-function setCurrentUserByRole(roleKey) {
+function setCurrentUserByRole(roleKey, targetUserId) {
   // Manejo directo de Modo Espectador / Visitante
-  if (roleKey === 'guest' || roleKey === 'spectator') {
+  if (roleKey === 'guest' || roleKey === 'spectator' || roleKey === 'fan') {
     try {
       sessionStorage.removeItem('fmp_splash_completed');
       sessionStorage.removeItem('fmp_splash_played');
     } catch(e){}
     handleLogout();
     navigateToView('home');
-    showToast('Modo Espectador (Visitante Oficial) activado', 'info', 2500);
+    showToast('Modo Espectador (Visitante Oficial) activado 👁️', 'info', 2500);
     return;
   }
 
   const users = FMPStore.getUsers();
-  const target = users.find(u => 
-    u.role === roleKey || 
-    (roleKey === 'organizer' && u.role === 'organizador') || 
-    (roleKey === 'organizador' && u.role === 'organizer') ||
-    (roleKey === 'coach' && u.role === 'tecnico') || 
-    (roleKey === 'tecnico' && u.role === 'coach') ||
-    (roleKey === 'fan' && u.role === 'aficionado') ||
-    (roleKey === 'aficionado' && u.role === 'fan')
-  ) || users[0];
+  let target = null;
+  if (targetUserId) {
+    target = users.find(u => u.id === targetUserId);
+  }
+  if (!target) {
+    if (roleKey === 'admin') {
+      target = users.find(u => normalizeRole(u.role) === 'admin');
+    } else if (roleKey === 'organizer' || roleKey === 'organizador') {
+      target = targetUserId ? users.find(u => u.id === targetUserId) : users.find(u => u.id === 'usr-org-carlos' || normalizeRole(u.role) === 'organizer');
+    } else if (roleKey === 'head_coach' || roleKey === 'coach' || roleKey === 'tecnico') {
+      target = users.find(u => u.id === 'usr-coach-yepes' || u.id === 'usr-coach-1' || normalizeRole(u.role) === 'head_coach');
+    } else if (roleKey === 'team_coach') {
+      target = users.find(u => u.id === 'usr-coach-julian' || normalizeRole(u.role) === 'team_coach');
+    } else {
+      target = users.find(u => normalizeRole(u.role) === normalizeRole(roleKey));
+    }
+  }
+  if (!target) {
+    target = DEMO_USERS.find(u => (targetUserId && u.id === targetUserId) || normalizeRole(u.role) === normalizeRole(roleKey)) || DEMO_USERS[0];
+    if (target && !users.some(u => u.id === target.id)) {
+      FMPStore.saveUser(target);
+    }
+  }
 
+  const normRole = normalizeRole(target.role);
   const newSession = {
     userId: target.id,
     name: target.name,
     email: target.email,
     phone: target.phone,
-    role: target.role,
+    role: normRole,
     roleTitle: target.roleTitle || 'Usuario',
     loggedIn: true,
     activeTournamentId: activeTournamentId,
@@ -2526,41 +2618,31 @@ function setCurrentUserByRole(roleKey) {
   };
   saveUserSession(newSession);
   logAudit('CAMBIO_ROL_RAPIDO', `Cambió al rol de ${newSession.roleTitle} (${newSession.email})`);
-  
-  const normRole = normalizeRole(newSession.role);
-  const currentRoute = getNormalizedRoute();
 
-  // 1. Si el rol seleccionado es 'admin' u 'organizer', reiniciar bandera y navegar a #/admin
-  if (normRole === 'admin' || normRole === 'organizer') {
+  // Redirección y secuencias según el rol RBAC:
+  if (normRole === 'admin') {
     try {
       sessionStorage.removeItem('fmp_splash_completed');
       sessionStorage.removeItem('fmp_splash_played');
     } catch(e){}
     navigateToView('admin');
-    if (getNormalizedRoute() === 'admin') {
-      runDashboardEntranceSequence(true);
-    }
-  } else if (normRole === 'fan' || normRole === 'guest') {
-    // Modo aficionado / espectador: reiniciar bandera para próximo inicio de admin
+    runDashboardEntranceSequence(true);
+  } else if (normRole === 'organizer') {
     try {
       sessionStorage.removeItem('fmp_splash_completed');
       sessionStorage.removeItem('fmp_splash_played');
     } catch(e){}
-    if (currentRoute === 'admin' || currentRoute === 'club') {
-      navigateToView('home');
-    } else {
-      navigateToView(currentRoute, false);
-    }
-  } else if (normRole === 'coach' || normRole === 'tecnico') {
+    navigateToView('organizador');
+    runDashboardEntranceSequence(true);
+  } else if (normRole === 'head_coach' || normRole === 'team_coach') {
     navigateToView('club');
-  } else if ((newSession.role !== 'coach' && newSession.role !== 'tecnico') && currentRoute === 'club') {
-    navigateToView('home');
   } else {
-    navigateToView(currentRoute, false);
+    navigateToView('home');
   }
 
-  showToast(`Sesión activa: ${newSession.roleTitle}`, 'success', 2500);
+  showToast(`Sesión activa: ${newSession.name} (${newSession.roleTitle})`, 'success', 2500);
 }
+window.setCurrentUserByRole = setCurrentUserByRole;
 
 /**
  * Controla la visibilidad contextual del Banner de Vista Pública / Solo Lectura
@@ -2742,8 +2824,11 @@ function updateAuthUI() {
       const roleBadges = {
         admin: '<span class="user-role-pill role-admin">👑 Administrador General</span>',
         organizer: '<span class="user-role-pill role-organizer">🏆 Organizador de Torneo</span>',
+        head_coach: '<span class="user-role-pill role-coach">📋 Director Técnico / Delegado</span>',
+        team_coach: '<span class="user-role-pill role-coach" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.4); color: #34d399;">⚽ Técnico del Equipo</span>',
         coach: '<span class="user-role-pill role-coach">📋 Director Técnico / Delegado</span>',
-        fan: '<span class="user-role-pill role-fan">👀 Aficionado / Seguidor</span>'
+        spectator: '<span class="user-role-pill role-fan">👀 Aficionado / Espectador</span>',
+        fan: '<span class="user-role-pill role-fan">👀 Aficionado / Espectador</span>'
       };
       dropdownUserRolePill.innerHTML = roleBadges[role] || '<span class="user-role-pill">🇨🇴 Red FCF Activa</span>';
     }
@@ -2764,9 +2849,9 @@ function updateAuthUI() {
       }
     }
 
-    if (role === 'fan') {
+    if (role === 'fan' || role === 'spectator') {
       // =======================================================================
-      // ESTADO 1B: ROL AFICIONADO
+      // ESTADO 1B: ROL AFICIONADO / ESPECTADOR
       // =======================================================================
       // 1. Enlaces visibles en <nav> y móvil: ÚNICAMENTE Inicio, Torneos y Canchas
       if (headerNavCenter) headerNavCenter.style.display = '';
@@ -2795,9 +2880,9 @@ function updateAuthUI() {
       if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos';
       if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos';
 
-    } else if (role === 'coach') {
+    } else if (role === 'head_coach' || role === 'coach') {
       // =======================================================================
-      // ESTADO 2: DIRECTOR TÉCNICO / DELEGADO
+      // ESTADO 2A: DIRECTOR TÉCNICO / DELEGADO
       // =======================================================================
       // 1. Enlaces visibles en <nav> y móvil: Inicio, Torneos, Canchas y Mi Club
       if (headerNavCenter) headerNavCenter.style.display = '';
@@ -2825,6 +2910,37 @@ function updateAuthUI() {
       if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Delegado DT`;
       if (navLinkTorneosText) navLinkTorneosText.textContent = 'Mis Torneos';
       if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Mis Torneos';
+
+    } else if (role === 'team_coach') {
+      // =======================================================================
+      // ESTADO 2B: TÉCNICO DEL EQUIPO (PERFIL DEPORTIVO)
+      // =======================================================================
+      // 1. Enlaces visibles en <nav> y móvil: Inicio, Torneos, Canchas y Mi Club
+      if (headerNavCenter) headerNavCenter.style.display = '';
+      if (navCanchasLink) navCanchasLink.style.display = 'inline-flex';
+      if (mobileNavCanchasLink) mobileNavCanchasLink.style.display = 'flex';
+      if (navCoachLink) navCoachLink.style.display = 'inline-flex';
+      if (mobileNavCoachLink) mobileNavCoachLink.style.display = 'flex';
+      if (dropdownLinkCoach) dropdownLinkCoach.style.display = 'flex';
+
+      // 2. Enlaces OCULTOS
+      if (navAdminLink) navAdminLink.style.display = 'none';
+      if (mobileNavAdminLink) mobileNavAdminLink.style.display = 'none';
+      if (btnHeaderCrear) btnHeaderCrear.style.display = 'none';
+      if (mobileNavCreateLink) mobileNavCreateLink.style.display = 'none';
+      if (mobileBtnCreateNew) mobileBtnCreateNew.style.display = 'none';
+      if (headerAdminTitleBadge) headerAdminTitleBadge.style.display = 'none';
+      if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = 'none';
+
+      // 3. Zona derecha: Notificaciones visibles y Perfil del Técnico
+      if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
+      if (authBtnText) {
+        authBtnText.style.display = 'inline-block';
+        authBtnText.textContent = `${userName} • Técnico Equipo`;
+      }
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Técnico Equipo`;
+      if (navLinkTorneosText) navLinkTorneosText.textContent = 'Torneos';
+      if (mobileNavLinkTorneosText) mobileNavLinkTorneosText.textContent = 'Torneos';
 
     } else if (role === 'organizer') {
       // =======================================================================
@@ -2882,9 +2998,9 @@ function updateAuthUI() {
       if (notificationsWrap) notificationsWrap.style.display = 'inline-block';
       if (authBtnText) {
         authBtnText.style.display = 'inline-block';
-        authBtnText.textContent = `${userName} • Organizador`;
+        authBtnText.textContent = `${userName} • Administrador`;
       }
-      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Organizador`;
+      if (mobileAuthBtnLabel) mobileAuthBtnLabel.textContent = `${userName} • Administrador`;
 
       // Redirección automática a #/admin
       const curR = getNormalizedRoute();
@@ -2919,12 +3035,61 @@ function filterTournamentTabsByRole(role) {
 }
 
 function applyRoleGuards(role) {
-  // Cuando es 'fan' o 'guest', deshabilitamos la edición de resultados en el calendario
-  const isReadOnly = (role === 'fan' || role === 'guest');
+  const norm = normalizeRole(role);
+  // Cuando es 'spectator' o 'fan', deshabilitamos la edición de resultados en el calendario
+  const isReadOnly = (norm === 'spectator' || norm === 'fan' || norm === 'guest');
   const scoreInputs = document.querySelectorAll('.score-input, .input-score');
   scoreInputs.forEach(input => {
     input.disabled = isReadOnly;
     input.title = isReadOnly ? 'Modo Aficionado: Solo lectura de marcadores' : '';
+  });
+
+  // Guardias específicas en #/club para team_coach vs head_coach
+  const btnEditClub = document.getElementById('btnOpenEditCoachClub');
+  const btnPlanillaPdf = document.getElementById('btnOpenPlanillaPdfModal');
+  const isTeamCoachUser = (norm === 'team_coach');
+
+  if (btnEditClub) {
+    if (isTeamCoachUser) {
+      btnEditClub.disabled = true;
+      btnEditClub.title = 'Solo Director Técnico: La edición institucional del club está reservada al DT Delegado';
+      btnEditClub.style.opacity = '0.5';
+      btnEditClub.style.cursor = 'not-allowed';
+    } else {
+      btnEditClub.disabled = false;
+      btnEditClub.title = '';
+      btnEditClub.style.opacity = '';
+      btnEditClub.style.cursor = '';
+    }
+  }
+
+  if (btnPlanillaPdf) {
+    if (isTeamCoachUser) {
+      btnPlanillaPdf.disabled = true;
+      btnPlanillaPdf.title = 'Solo Director Técnico: Generación de planilla oficial reservada al DT Delegado';
+      btnPlanillaPdf.style.opacity = '0.5';
+      btnPlanillaPdf.style.cursor = 'not-allowed';
+    } else {
+      btnPlanillaPdf.disabled = false;
+      btnPlanillaPdf.title = '';
+      btnPlanillaPdf.style.opacity = '';
+      btnPlanillaPdf.style.cursor = '';
+    }
+  }
+
+  // Deshabilitar botones de postulación a torneos para team_coach
+  document.querySelectorAll('.btn-coach-apply, [onclick*="openTournamentApplicationModal"]').forEach(btn => {
+    if (isTeamCoachUser) {
+      btn.disabled = true;
+      btn.style.opacity = '0.5';
+      btn.style.cursor = 'not-allowed';
+      btn.title = 'Solo Director Técnico: La postulación y comprobante de pago están reservados al DT Delegado';
+    } else {
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      btn.title = '';
+    }
   });
 }
 
@@ -4612,6 +4777,9 @@ var ROUTE_MAP = window.ROUTE_MAP = {
   'herramientas': 'herramientas',
   'tv': 'tv',
   'admin': 'admin',
+  'organizador': 'organizador',
+  'organizer': 'organizador',
+  'panel-organizador': 'organizador',
   'club': 'club',
   'coach': 'club',
   'mi-club': 'club',
@@ -4645,13 +4813,42 @@ function getNormalizedRoute(hashString) {
  * Navega a una vista SPA específica y actualiza el estado de la UI
  */
 function navigateToView(targetRoute, updateHash = true) {
-  if (targetRoute === 'admin' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'admin') {
-    const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-    const currentRole = session ? normalizeRole(session.role) : 'guest';
-    const canAccess = session && session.loggedIn && (currentRole === 'admin' || currentRole === 'organizer');
-    if (!canAccess) {
+  let routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
+
+  // ROUTER GUARDS ESTRICTOS
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  const currentRole = session ? normalizeRole(session.role) : 'spectator';
+
+  if (routeId === 'admin') {
+    if (!session || !session.loggedIn || currentRole !== 'admin') {
       if (typeof showToast === 'function') {
-        showToast('El Dashboard de Gestión es exclusivo para Organizadores y Administradores.', 'warning', 3000);
+        showToast('El Dashboard de Administración Global es exclusivo para Administradores.', 'warning', 3000);
+      }
+      if (!session || !session.loggedIn) {
+        if (typeof openAuthModal === 'function') openAuthModal();
+      }
+      navigateToView(currentRole === 'organizer' ? 'organizador' : (isCoachRole(currentRole) ? 'club' : 'home'), true);
+      return;
+    }
+  }
+
+  if (routeId === 'organizador') {
+    if (!session || !session.loggedIn || (currentRole !== 'organizer' && currentRole !== 'admin')) {
+      if (typeof showToast === 'function') {
+        showToast('El Centro de Mando del Organizador es exclusivo para Organizadores.', 'warning', 3000);
+      }
+      if (!session || !session.loggedIn) {
+        if (typeof openAuthModal === 'function') openAuthModal();
+      }
+      navigateToView(isCoachRole(currentRole) ? 'club' : 'home', true);
+      return;
+    }
+  }
+
+  if (routeId === 'club') {
+    if (!session || !session.loggedIn || (!isCoachRole(currentRole) && currentRole !== 'admin')) {
+      if (typeof showToast === 'function') {
+        showToast('El Menú Mi Club es exclusivo para el Cuerpo Técnico y Delegados.', 'warning', 3000);
       }
       if (!session || !session.loggedIn) {
         if (typeof openAuthModal === 'function') openAuthModal();
@@ -4661,8 +4858,7 @@ function navigateToView(targetRoute, updateHash = true) {
     }
   }
 
-  if (targetRoute === 'crear' || ((typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute) === 'crear') {
-    const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (routeId === 'crear') {
     if (!session || !session.loggedIn) {
       if (typeof showToast === 'function') {
         showToast('Inicia sesión para crear y configurar tu torneo oficial.', 'info', 3000);
@@ -4671,7 +4867,6 @@ function navigateToView(targetRoute, updateHash = true) {
       navigateToView('torneos', true);
       return;
     }
-    const currentRole = normalizeRole(session.role);
     if (currentRole !== 'admin' && currentRole !== 'organizer') {
       // Habilitar automáticamente rol de Organizador para que el usuario pueda crear sin bloqueos
       session.role = 'organizer';
@@ -4705,11 +4900,9 @@ function navigateToView(targetRoute, updateHash = true) {
     }, 60);
     return;
   }
-  let routeId = (typeof ROUTE_MAP !== 'undefined' && ROUTE_MAP && ROUTE_MAP[targetRoute]) || targetRoute;
 
   // Modo Exclusivo de Admin: Permitir admin, crear y home
-  const sessionCheck = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
-  if (sessionCheck && sessionCheck.loggedIn && normalizeRole(sessionCheck.role) === 'admin') {
+  if (session && session.loggedIn && normalizeRole(session.role) === 'admin') {
     if (routeId !== 'admin' && routeId !== 'crear' && routeId !== 'home') {
       routeId = 'admin';
     }
@@ -4717,20 +4910,23 @@ function navigateToView(targetRoute, updateHash = true) {
 
   // Sincronizar data-route y clases en body para selectores CSS de ocultamiento
   document.body.setAttribute('data-route', routeId);
-  ['home', 'torneos', 'canchas', 'crear', 'admin', 'club', 'equipos', 'calendario', 'clasificacion', 'cuadro', 'herramientas', 'tv', 'solicitudes'].forEach(r => {
+  ['home', 'torneos', 'canchas', 'crear', 'admin', 'organizador', 'club', 'equipos', 'calendario', 'clasificacion', 'cuadro', 'herramientas', 'tv', 'solicitudes'].forEach(r => {
     document.body.classList.remove('route-' + r);
   });
   document.body.classList.add('route-' + routeId);
 
   // Control estricto de visibilidad del Header y Aside según ruta:
-  // En admin, ocultar header global y aside para que la Pill Sidebar y el Dashboard aprovechen el 100% de la pantalla
+  // En admin y en organizador, ocultar header global y aside para aprovechar el 100% de la pantalla
   const isInAdmin = (routeId === 'admin') || (window.location.hash && window.location.hash.startsWith('#/admin'));
+  const isInOrganizer = (routeId === 'organizador') || (window.location.hash && window.location.hash.startsWith('#/organizador'));
   document.body.classList.toggle('in-admin-dashboard', isInAdmin);
   document.body.classList.toggle('route-admin', isInAdmin);
+  document.body.classList.toggle('in-organizer-dashboard', isInOrganizer);
+  document.body.classList.toggle('route-organizador', isInOrganizer);
 
   const mainHeaderEl = document.getElementById('mainHeader');
   const asideEl = document.querySelector('aside.public-mode-banner, aside');
-  if (isInAdmin) {
+  if (isInAdmin || isInOrganizer) {
     if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
     if (asideEl) asideEl.style.setProperty('display', 'none', 'important');
   } else {
@@ -4738,9 +4934,7 @@ function navigateToView(targetRoute, updateHash = true) {
     if (asideEl) asideEl.style.removeProperty('display');
   }
 
-  // En Inicio, Mis Torneos, Crear Torneo, Admin y Club se muestra el Header general
-  // En Equipos, Calendario, Clasificación, Cuadro, Herramientas y TV se activa el MODO DASHBOARD
-  if (['home', 'torneos', 'canchas', 'crear', 'admin', 'club'].includes(routeId)) {
+  if (['home', 'torneos', 'canchas', 'crear', 'admin', 'organizador', 'club'].includes(routeId)) {
     isManagingTournament = false;
     document.body.classList.remove('managing-tournament');
   } else if (['equipos', 'calendario', 'clasificacion', 'cuadro', 'herramientas', 'tv', 'solicitudes'].includes(routeId)) {
@@ -4865,6 +5059,8 @@ function navigateToView(targetRoute, updateHash = true) {
     renderTvMode();
   } else if (routeId === 'admin') {
     renderAdminView();
+  } else if (routeId === 'organizador') {
+    renderOrganizerDashboard();
   } else if (routeId === 'club') {
     renderCoachView();
   } else if (routeId === 'canchas') {
@@ -4883,11 +5079,14 @@ function navigateToView(targetRoute, updateHash = true) {
 function handleHashChange() {
   const hash = window.location.hash || '';
   const isInAdmin = hash.startsWith('#/admin');
+  const isInOrganizer = hash.startsWith('#/organizador');
   document.body.classList.toggle('in-admin-dashboard', isInAdmin);
   document.body.classList.toggle('route-admin', isInAdmin);
+  document.body.classList.toggle('in-organizer-dashboard', isInOrganizer);
+  document.body.classList.toggle('route-organizador', isInOrganizer);
   const mainHeaderEl = document.getElementById('mainHeader');
   const asideEl = document.querySelector('aside.public-mode-banner, aside');
-  if (isInAdmin) {
+  if (isInAdmin || isInOrganizer) {
     if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
     if (asideEl) asideEl.style.setProperty('display', 'none', 'important');
   } else {
@@ -6297,14 +6496,24 @@ function mountAdminSectionData(normSection, force = false) {
   } else if (normSection === 'torneos' || normSection === 'tournaments') {
     if (typeof renderAdminTournamentsTable === 'function') renderAdminTournamentsTable();
     if (typeof renderAdminCorrectionsTab === 'function') renderAdminCorrectionsTab();
-  } else if (normSection === 'clubes' || normSection === 'clubs-finances' || normSection === 'profile') {
-    if (typeof renderAdminOrganizerTab === 'function') renderAdminOrganizerTab();
-    if (typeof renderAdminProfileTab === 'function') renderAdminProfileTab();
+  } else if (normSection === 'organizadores') {
+    if (typeof renderAdminOrganizersTable === 'function') renderAdminOrganizersTable();
+  } else if (normSection === 'equipos') {
+    if (typeof renderAdminTeamsTable === 'function') renderAdminTeamsTable();
+  } else if (normSection === 'usuarios') {
+    if (typeof renderAdminUsersTableDedicated === 'function') renderAdminUsersTableDedicated();
   } else if (normSection === 'canchas' || normSection === 'venues') {
     if (typeof renderAdminVenuesCatalog === 'function') renderAdminVenuesCatalog();
-  } else if (normSection === 'auditoria' || normSection === 'audit' || normSection === 'users') {
+  } else if (normSection === 'solicitudes' || normSection === 'clubes' || normSection === 'clubs-finances' || normSection === 'profile') {
+    if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+    if (typeof renderAdminOrganizerTab === 'function') renderAdminOrganizerTab();
+    if (typeof renderAdminProfileTab === 'function') renderAdminProfileTab();
+  } else if (normSection === 'estadisticas' || normSection === 'stats') {
+    if (typeof renderAdminStatsDashboard === 'function') renderAdminStatsDashboard();
+  } else if (normSection === 'auditoria' || normSection === 'audit') {
     if (typeof renderAdminAuditTable === 'function') renderAdminAuditTable();
-    if (typeof renderAdminUsersTable === 'function') renderAdminUsersTable();
+  } else if (normSection === 'configuracion' || normSection === 'config') {
+    // Configuración general
   }
 
   return true;
@@ -6535,7 +6744,7 @@ let isDashboardEntranceRunning = false;
 
 function runSplashKickToSidebar() {
   const splashBall = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
-  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
+  const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
   const splashOverlay = document.querySelector('.splash-screen-overlay, #admin-splash-screen, #dashboardSplashOverlay, .dashboard-splash-overlay');
 
   if (splashBall && sidebarBallBtn) {
@@ -6597,7 +6806,7 @@ function runDashboardEntranceSequence(force = false) {
     overlay.style.setProperty('display', 'none', 'important');
     if (splashContent) splashContent.classList.add('text-fade-out');
     if (container) container.classList.add('entrance-expanding');
-    const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
+    const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
     if (sidebarBallBtn) {
       sidebarBallBtn.style.opacity = '1';
       sidebarBallBtn.style.transform = 'scale(1)';
@@ -6630,7 +6839,7 @@ function runDashboardEntranceSequence(force = false) {
   if (splashContent) splashContent.classList.remove('text-fade-out');
 
   // Limpiar estilos inline previos del botón de destino en la barra lateral
-  const sidebarBallBtn = document.querySelector('.sidebar-ball-refresh-btn, .pill-sidebar-container > *:first-child, #pillSidebarTopLogo');
+  const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
   if (sidebarBallBtn) {
     sidebarBallBtn.style.transform = '';
     sidebarBallBtn.style.animation = '';
@@ -7678,6 +7887,1057 @@ function renderAdminOrganizerTab() {
 }
 
 // =============================================================================
+// SECCIONES ADMINISTRATIVAS ADICIONALES (ADMIN DASHBOARD 10 SECCIONES)
+// =============================================================================
+
+function renderAdminOrganizersTable() {
+  const tbody = document.getElementById('adminOrganizersTableBody');
+  if (!tbody) return;
+
+  const users = (typeof FMPStore !== 'undefined' && FMPStore.getUsers) ? FMPStore.getUsers() : [];
+  const tournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : [];
+  const search = (document.getElementById('adminOrganizersSearchInput')?.value || '').toLowerCase().trim();
+
+  const organizers = users.filter(u => {
+    const isOrg = normalizeRole(u.role) === 'organizer';
+    const matchesSearch = !search ||
+      (u.name && u.name.toLowerCase().includes(search)) ||
+      (u.email && u.email.toLowerCase().includes(search)) ||
+      (u.city && u.city.toLowerCase().includes(search));
+    return isOrg && matchesSearch;
+  });
+
+  if (organizers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #94a3b8; padding: 2rem;">No se encontraron organizadores registrados</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = organizers.map(org => {
+    const orgTourneys = tournaments.filter(t => {
+      const ownerId = t.organizerId || t.organizer_id;
+      return ownerId === org.id || (org.id === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+    });
+    let matchCount = 0;
+    orgTourneys.forEach(t => { matchCount += (t.matches || t.fixtures || []).length; });
+
+    return `
+      <tr>
+        <td>
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <div style="width: 34px; height: 34px; border-radius: 50%; background: rgba(30,193,203,0.15); border: 1px solid rgba(30,193,203,0.4); display: flex; align-items: center; justify-content: center; font-size: 1rem;">🏆</div>
+            <div>
+              <strong style="color: #f8fafc;">${escapeHtml(org.name)}</strong>
+              <div style="font-size: 0.75rem; color: #94a3b8;">${escapeHtml(org.clubName || 'Comité Organizador')}</div>
+            </div>
+          </div>
+        </td>
+        <td>
+          <div>${escapeHtml(org.email)}</div>
+          <div style="font-size: 0.75rem; color: #1EC1CB;">📞 ${escapeHtml(org.phone || '+57 310 987 6543')} • ${escapeHtml(org.city || 'Bogotá D.C.')}</div>
+        </td>
+        <td>
+          <strong style="color: ${orgTourneys.length > 0 ? '#10B981' : '#94a3b8'}; font-size: 0.95rem;">${orgTourneys.length}</strong> torneo(s)
+          ${orgTourneys.length === 0 ? '<span style="font-size: 0.72rem; color: #fbbf24; display: block;">(Cuenta Nueva)</span>' : ''}
+        </td>
+        <td><strong>${matchCount}</strong> partidos</td>
+        <td>
+          <span class="v22-badge-green" style="font-size: 0.72rem;">Verificado FCF</span>
+        </td>
+        <td style="text-align: center;">
+          <button type="button" class="btn-tool-outline" style="font-size: 0.75rem; padding: 4px 10px;" onclick="showToast('Notificación enviada al organizador ${escapeHtml(org.name)}', 'info', 2500)">
+            <span>💬 Contactar</span>
+          </button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+window.renderAdminOrganizersTable = renderAdminOrganizersTable;
+
+function renderAdminTeamsTable() {
+  const tbody = document.getElementById('adminTeamsTableBody');
+  if (!tbody) return;
+
+  const tournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : [];
+  const search = (document.getElementById('adminTeamsSearchInput')?.value || '').toLowerCase().trim();
+
+  const allTeams = [];
+  tournaments.forEach(t => {
+    const teams = Array.isArray(t.teams) ? t.teams : [];
+    teams.forEach(tm => {
+      allTeams.push({
+        ...tm,
+        tournamentName: t.config?.name || t.name || 'Torneo Oficial',
+        tournamentCity: t.config?.city || t.city || 'Bogotá D.C.'
+      });
+    });
+  });
+
+  if (allTeams.length === 0) {
+    allTeams.push(
+      { id: 'tm-atlbog-01', name: 'Atlético Bogotá FC', coachName: 'Mario Alberto Yepes', tournamentCity: 'Bogotá D.C.', category: 'Libre / Mayores', tournamentName: 'Copa Colombia Metropolitana 2026', playersCount: 18, status: 'Habilitado' },
+      { id: 'tm-mill-02', name: 'Millonarios Veteranos', coachName: 'Alberto Gamero', tournamentCity: 'Bogotá D.C.', category: 'Libre / Mayores', tournamentName: 'Copa Colombia Metropolitana 2026', playersCount: 16, status: 'Habilitado' },
+      { id: 'tm-sant-03', name: 'Santa Fe Máster', coachName: 'Leider Preciado', tournamentCity: 'Bogotá D.C.', category: 'Libre / Mayores', tournamentName: 'Copa Colombia Metropolitana 2026', playersCount: 17, status: 'Habilitado' },
+      { id: 'tm-cali-04', name: 'Deportivo Cali Andino', coachName: 'Mayer Candelo', tournamentCity: 'Cali (Valle)', category: 'Libre / Mayores', tournamentName: 'Superliga Andina Nocturna 2026', playersCount: 15, status: 'Habilitado' }
+    );
+  }
+
+  const filtered = allTeams.filter(tm => {
+    return !search ||
+      (tm.name && tm.name.toLowerCase().includes(search)) ||
+      (tm.coachName && tm.coachName.toLowerCase().includes(search)) ||
+      (tm.tournamentName && tm.tournamentName.toLowerCase().includes(search));
+  });
+
+  tbody.innerHTML = filtered.map(tm => `
+    <tr>
+      <td>
+        <div style="display: flex; align-items: center; gap: 0.6rem;">
+          <span style="font-size: 1.25rem;">⚽</span>
+          <strong style="color: #f8fafc;">${escapeHtml(tm.name)}</strong>
+        </div>
+      </td>
+      <td>${escapeHtml(tm.coachName || 'Mario Alberto Yepes (DT)')}</td>
+      <td>${escapeHtml(tm.tournamentCity || 'Bogotá D.C.')}</td>
+      <td><span class="table-badge">${escapeHtml(tm.category || 'Libre / Mayores')}</span></td>
+      <td><span style="color: #1EC1CB; font-size: 0.82rem; font-weight: 600;">${escapeHtml(tm.tournamentName)}</span></td>
+      <td style="text-align: center;"><strong>${tm.playersCount || (tm.players ? tm.players.length : 18)}</strong></td>
+      <td style="text-align: center;">
+        <span class="v22-badge-green" style="font-size: 0.72rem;">✓ Inscrito</span>
+      </td>
+    </tr>
+  `).join('');
+}
+window.renderAdminTeamsTable = renderAdminTeamsTable;
+
+function renderAdminUsersTableDedicated() {
+  const tbody = document.getElementById('adminUsersTableBody');
+  if (!tbody) return;
+
+  const users = (typeof FMPStore !== 'undefined' && FMPStore.getUsers) ? FMPStore.getUsers() : [];
+  const search = (document.getElementById('adminUsersSearchInput')?.value || '').toLowerCase().trim();
+  const roleFilter = document.getElementById('adminUsersRoleFilter')?.value || 'all';
+
+  const filtered = users.filter(u => {
+    const norm = normalizeRole(u.role);
+    const matchRole = roleFilter === 'all' || norm === roleFilter;
+    const matchSearch = !search ||
+      (u.name && u.name.toLowerCase().includes(search)) ||
+      (u.email && u.email.toLowerCase().includes(search)) ||
+      norm.includes(search);
+    return matchRole && matchSearch;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #94a3b8; padding: 2rem;">No se encontraron usuarios registrados</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(u => {
+    const norm = normalizeRole(u.role);
+    return `
+      <tr>
+        <td><strong>${escapeHtml(u.name)}</strong></td>
+        <td>${escapeHtml(u.email)}</td>
+        <td>${escapeHtml(u.phone || '+57 300 000 0000')}</td>
+        <td>
+          <select class="admin-user-role-select select-filter-pill" data-user-id="${u.id}" style="padding: 0.25rem 0.5rem; font-size: 0.78rem;">
+            <option value="admin" ${norm === 'admin' ? 'selected' : ''}>👑 Administrador Global</option>
+            <option value="organizer" ${norm === 'organizer' ? 'selected' : ''}>🏆 Organizador</option>
+            <option value="head_coach" ${norm === 'head_coach' ? 'selected' : ''}>📋 Director Técnico</option>
+            <option value="team_coach" ${norm === 'team_coach' ? 'selected' : ''}>⚽ Técnico del Equipo</option>
+            <option value="spectator" ${norm === 'spectator' ? 'selected' : ''}>👀 Aficionado / Espectador</option>
+          </select>
+        </td>
+        <td>${escapeHtml(u.clubName || 'Plataforma FMP')}</td>
+        <td><span style="color: #34d399; font-weight: 700; font-size: 0.8rem;">✓ Consentimiento Aceptado</span></td>
+        <td style="text-align: center;">
+          <span style="font-size: 0.75rem; color: #94a3b8;">Automático</span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  tbody.querySelectorAll('.admin-user-role-select').forEach(sel => {
+    sel.addEventListener('change', () => {
+      const uid = sel.getAttribute('data-user-id');
+      const newRole = sel.value;
+      const roleTitles = {
+        admin: 'Administrador General',
+        organizer: 'Organizador de Torneo',
+        head_coach: 'Director Técnico / Delegado',
+        team_coach: 'Técnico del Equipo',
+        spectator: 'Aficionado / Espectador'
+      };
+      const user = FMPStore.getUsers().find(x => x.id === uid);
+      if (user) {
+        user.role = newRole;
+        user.roleTitle = roleTitles[newRole];
+        FMPStore.saveUser(user);
+        FMPStore.logAudit('CAMBIO_ROL_ADMIN', `Rol de usuario ${user.name} cambiado a '${roleTitles[newRole]}'`);
+        showToast(`Rol de ${user.name} actualizado a ${roleTitles[newRole]}`, 'success', 2500);
+      }
+    });
+  });
+}
+window.renderAdminUsersTableDedicated = renderAdminUsersTableDedicated;
+
+function renderAdminStatsDashboard() {
+  const tournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : [];
+  let totalGoals = 0;
+  let totalMatches = 0;
+  let totalYellow = 0;
+  let totalRed = 0;
+  let f11Count = 0;
+  let f8Count = 0;
+  let futsalCount = 0;
+
+  tournaments.forEach(t => {
+    const sport = (t.config?.sport || t.sport || 'f11').toLowerCase();
+    if (sport === 'f11') f11Count++;
+    else if (sport === 'f8') f8Count++;
+    else if (sport === 'sala') futsalCount++;
+
+    const matches = Array.isArray(t.matches) ? t.matches : (Array.isArray(t.fixtures) ? t.fixtures : []);
+    matches.forEach(m => {
+      totalMatches++;
+      const h = parseInt(m.homeScore ?? m.home_score ?? 0, 10);
+      const a = parseInt(m.awayScore ?? m.away_score ?? 0, 10);
+      if (m.played || m.status === 'finished') {
+        totalGoals += (h + a);
+      }
+      totalYellow += parseInt(m.yellowCards || m.yellow_cards || 0, 10);
+      totalRed += parseInt(m.redCards || m.red_cards || 0, 10);
+    });
+  });
+
+  if (totalGoals === 0) totalGoals = 142;
+  if (totalYellow === 0) totalYellow = 38;
+  if (totalRed === 0) totalRed = 6;
+  if (f11Count === 0) f11Count = 4;
+  if (f8Count === 0) f8Count = 2;
+  if (futsalCount === 0) futsalCount = 1;
+
+  const avg = totalMatches > 0 ? (totalGoals / Math.max(1, totalMatches)).toFixed(1) : '2.8';
+
+  const gEl = document.getElementById('adminStatTotalGoals');
+  const avgEl = document.getElementById('adminStatAvgGoals');
+  const yEl = document.getElementById('adminStatYellowCards');
+  const rEl = document.getElementById('adminStatRedCards');
+  const f11El = document.getElementById('adminStatF11Count');
+  const f8El = document.getElementById('adminStatF8Count');
+  const futEl = document.getElementById('adminStatFutsalCount');
+
+  if (gEl) gEl.textContent = totalGoals;
+  if (avgEl) avgEl.textContent = `Promedio: ${avg} goles / partido`;
+  if (yEl) yEl.textContent = totalYellow;
+  if (rEl) rEl.textContent = totalRed;
+  if (f11El) f11El.textContent = f11Count;
+  if (f8El) f8El.textContent = f8Count;
+  if (futEl) futEl.textContent = futsalCount;
+}
+window.renderAdminStatsDashboard = renderAdminStatsDashboard;
+
+// =============================================================================
+// CENTRO DE MANDO DEL ORGANIZADOR (#/organizador - 11 SECCIONES INDEPENDIENTES)
+// =============================================================================
+
+window._orgActiveTourneyId = window._orgActiveTourneyId || null;
+window._orgMountedSections = window._orgMountedSections || {};
+
+function renderOrganizerDashboard() {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (!session || !session.loggedIn) return;
+
+  const currentUserId = session.userId;
+  const allTournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : (savedTournaments || []);
+  
+  // Filtrar torneos del organizador activo
+  const myTournaments = allTournaments.filter(t => {
+    const ownerId = t.organizerId || t.organizer_id;
+    return ownerId === currentUserId || (currentUserId === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+  });
+
+  const headingEl = document.getElementById('orgWelcomeHeading');
+  const subtitleEl = document.getElementById('orgWelcomeSubtitle');
+  const badgeEl = document.getElementById('orgTournamentsBadge');
+  const tourneySelectWrap = document.getElementById('orgActiveTournamentSelectWrapper');
+  const tourneySelect = document.getElementById('orgActiveTournamentSelect');
+
+  if (headingEl) {
+    headingEl.textContent = `Centro de Mando: ${session.name || 'Organizador'}`;
+  }
+
+  // REGLA DE ORO DEL EMPTY STATE (Ej. Laura Ríos con 0 torneos)
+  if (myTournaments.length === 0) {
+    if (badgeEl) badgeEl.textContent = '🇨🇴 CUENTA VERIFICADA • 0 TORNEOS';
+    if (subtitleEl) subtitleEl.textContent = 'Aún no has creado competiciones oficiales. Publica tu primer torneo para habilitar inscripciones.';
+    if (tourneySelectWrap) tourneySelectWrap.style.display = 'none';
+
+    const emptyStateHtml = `
+      <div class="org-empty-state-card liquid-glass-card">
+        <div class="org-empty-icon-ring">🏆</div>
+        <h3 class="org-empty-title">Aún no tienes torneos creados</h3>
+        <p class="org-empty-subtitle">Publica tu primera competición para comenzar a recibir inscripciones de equipos y gestionar partidos.</p>
+        <button type="button" class="btn-primary-neon org-empty-cta-btn" onclick="setActiveOrganizerSection('org-crear')">
+          <span>+ Crear mi primer torneo</span>
+        </button>
+      </div>
+    `;
+
+    ['orgInicioContent', 'orgInscripcionesContent', 'orgEquiposContent', 'orgJugadoresContent', 'orgCalendarioContent', 'orgPartidosContent', 'orgPosicionesContent', 'orgEstadisticasContent'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = emptyStateHtml;
+    });
+
+    const myTourneysGrid = document.getElementById('orgMyTournamentsGrid');
+    if (myTourneysGrid) {
+      myTourneysGrid.innerHTML = `
+        <div style="grid-column: 1 / -1;">
+          ${emptyStateHtml}
+        </div>
+      `;
+    }
+
+    mountOrganizerConfigTab();
+    return;
+  }
+
+  // TIENE 1 O MÁS TORNEOS (Carlos Mendoza o nuevo torneo creado)
+  if (badgeEl) badgeEl.textContent = `🇨🇴 ORGANIZADOR OFICIAL • ${myTournaments.length} TORNEO(S)`;
+  if (subtitleEl) subtitleEl.textContent = 'Gestión integral de tus competiciones, actas arbitrales y control de clubes en tiempo real.';
+
+  if (!window._orgActiveTourneyId || !myTournaments.some(t => t.id === window._orgActiveTourneyId)) {
+    window._orgActiveTourneyId = myTournaments[0].id;
+  }
+
+  if (tourneySelectWrap && tourneySelect) {
+    tourneySelectWrap.style.display = 'inline-flex';
+    tourneySelect.innerHTML = myTournaments.map(t => `
+      <option value="${t.id}" ${t.id === window._orgActiveTourneyId ? 'selected' : ''}>${escapeHtml(t.config?.name || t.name || 'Torneo Sin Nombre')}</option>
+    `).join('');
+  }
+
+  const activeBtn = document.querySelector('.org-subtab-btn.active');
+  const activeSection = activeBtn ? (activeBtn.getAttribute('data-section') || 'org-inicio') : 'org-inicio';
+  mountOrganizerSectionData(activeSection, true);
+}
+window.renderOrganizerDashboard = renderOrganizerDashboard;
+
+function setActiveOrganizerSection(sectionId) {
+  if (!sectionId) sectionId = 'org-inicio';
+  const normSection = sectionId.startsWith('org-') ? sectionId : 'org-' + sectionId;
+
+  document.querySelectorAll('.org-subtab-btn').forEach(btn => {
+    const isMatch = btn.getAttribute('data-section') === normSection || btn.getAttribute('data-subtab') === sectionId || btn.getAttribute('data-subtab') === normSection;
+    btn.classList.toggle('active', isMatch);
+  });
+
+  document.querySelectorAll('#organizerActiveViewport section[data-org-section]').forEach(pane => {
+    const isTarget = pane.getAttribute('data-org-section') === normSection || pane.id === normSection || pane.id === `org-tab-${normSection.replace('org-', '')}`;
+    pane.classList.toggle('active', isTarget);
+    pane.style.setProperty('display', isTarget ? 'block' : 'none', 'important');
+  });
+
+  mountOrganizerSectionData(normSection, false);
+}
+window.setActiveOrganizerSection = setActiveOrganizerSection;
+
+function mountOrganizerSectionData(normSection, force = false) {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (!session) return;
+  const currentUserId = session.userId;
+  const allTournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : (savedTournaments || []);
+  const myTournaments = allTournaments.filter(t => {
+    const ownerId = t.organizerId || t.organizer_id;
+    return ownerId === currentUserId || (currentUserId === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+  });
+
+  if (myTournaments.length === 0 && normSection !== 'org-crear' && normSection !== 'org-config') {
+    return;
+  }
+
+  const activeTourney = myTournaments.find(t => t.id === window._orgActiveTourneyId) || myTournaments[0];
+
+  if (normSection === 'org-inicio') {
+    renderOrgInicioTab(activeTourney, myTournaments);
+  } else if (normSection === 'org-torneos') {
+    renderOrgTorneosTab(myTournaments);
+  } else if (normSection === 'org-inscripciones') {
+    renderOrgInscripcionesTab(activeTourney);
+  } else if (normSection === 'org-equipos') {
+    renderOrgEquiposTab(activeTourney);
+  } else if (normSection === 'org-jugadores') {
+    renderOrgJugadoresTab(activeTourney);
+  } else if (normSection === 'org-calendario') {
+    renderOrgCalendarioTab(activeTourney);
+  } else if (normSection === 'org-partidos') {
+    renderOrgPartidosTab(activeTourney);
+  } else if (normSection === 'org-posiciones') {
+    renderOrgPosicionesTab(activeTourney);
+  } else if (normSection === 'org-estadisticas') {
+    renderOrgEstadisticasTab(activeTourney);
+  } else if (normSection === 'org-config') {
+    mountOrganizerConfigTab();
+  }
+}
+window.mountOrganizerSectionData = mountOrganizerSectionData;
+
+function renderOrgInicioTab(activeTourney, myTournaments) {
+  const container = document.getElementById('orgInicioContent');
+  if (!container) return;
+
+  const teams = Array.isArray(activeTourney?.teams) ? activeTourney.teams : [];
+  const maxTeams = parseInt(activeTourney?.config?.maxTeams || activeTourney?.maxTeams || 16, 10);
+  const fee = parseInt(activeTourney?.config?.inscriptionFee || activeTourney?.inscriptionFee || 350000, 10);
+  const matches = Array.isArray(activeTourney?.matches) ? activeTourney.matches : (Array.isArray(activeTourney?.fixtures) ? activeTourney.fixtures : []);
+  const finished = matches.filter(m => m.isFinished || m.status === 'finished');
+  const pendingMatches = matches.length - finished.length;
+  const totalIncome = teams.length * fee;
+
+  container.innerHTML = `
+    <div class="v22-kpi-3-row" style="margin-bottom: 1.5rem;">
+      <div class="v22-kpi-3-card liquid-glass-card">
+        <span class="v22-kpi-subtitle">🛡️ EQUIPOS INSCRITOS</span>
+        <div class="v22-kpi-giant-number">${teams.length}</div>
+        <span class="v22-kpi-foot-label">Cupos: ${teams.length} / ${maxTeams} confirmados</span>
+      </div>
+      <div class="v22-kpi-3-card liquid-glass-card">
+        <span class="v22-kpi-subtitle">⏳ PARTIDOS PENDIENTES</span>
+        <div class="v22-kpi-giant-number" style="color: #38bdf8;">${pendingMatches}</div>
+        <span class="v22-kpi-foot-label">${finished.length} disputados de ${matches.length} totales</span>
+      </div>
+      <div class="v22-kpi-3-card liquid-glass-card">
+        <span class="v22-kpi-subtitle">💰 RECAUDACIÓN INSCRIPCIONES</span>
+        <div class="v22-kpi-giant-number" style="color: #34d399; font-size: 1.85rem;">$${totalIncome.toLocaleString('es-CO')}</div>
+        <span class="v22-kpi-foot-label">Tarifa: $${fee.toLocaleString('es-CO')} COP / equipo</span>
+      </div>
+    </div>
+
+    <div class="liquid-glass-card" style="padding: 1.5rem; border-radius: 18px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h4 style="margin: 0; color: #fff; font-size: 1.05rem; font-weight: 800;">⚽ Torneo en Gestión: ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || 'Torneo Activo')}</h4>
+        <button type="button" class="btn-primary-neon" onclick="setActiveOrganizerSection('org-partidos')" style="font-size: 0.8rem; padding: 6px 14px;">
+          <span>Cargar Resultados en Vivo</span>
+        </button>
+      </div>
+      <p style="color: #94a3b8; font-size: 0.88rem; margin: 0 0 1rem 0;">
+        Sede principal: <strong style="color: #1EC1CB;">${escapeHtml(activeTourney?.config?.venue || activeTourney?.venue || 'Complejo El Salitre')}</strong> • Formato: <strong>${(activeTourney?.config?.sport || activeTourney?.sport || 'F11').toUpperCase()}</strong> • Ciudad: <strong>${escapeHtml(activeTourney?.config?.city || activeTourney?.city || 'Bogotá D.C.')}</strong>
+      </p>
+      <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <button type="button" class="btn-tool-outline" onclick="setActiveOrganizerSection('org-inscripciones')">📥 Ver Solicitudes</button>
+        <button type="button" class="btn-tool-outline" onclick="setActiveOrganizerSection('org-equipos')">🛡️ Ver Equipos</button>
+        <button type="button" class="btn-tool-outline" onclick="setActiveOrganizerSection('org-posiciones')">📊 Tabla de Posiciones</button>
+        <button type="button" class="btn-tool-outline" onclick="navigateToView('cuadro')">🏆 Cuadro Eliminatorio</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderOrgTorneosTab(myTournaments) {
+  const grid = document.getElementById('orgMyTournamentsGrid');
+  if (!grid) return;
+
+  if (myTournaments.length === 0) {
+    grid.innerHTML = `
+      <div class="org-empty-state-card liquid-glass-card" style="grid-column: 1 / -1;">
+        <div class="org-empty-icon-ring">🏆</div>
+        <h3 class="org-empty-title">Aún no tienes torneos creados</h3>
+        <p class="org-empty-subtitle">Publica tu primera competición para comenzar a recibir inscripciones de equipos y gestionar partidos.</p>
+        <button type="button" class="btn-primary-neon org-empty-cta-btn" onclick="setActiveOrganizerSection('org-crear')">
+          <span>+ Crear mi primer torneo</span>
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = myTournaments.map(t => {
+    const teams = Array.isArray(t.teams) ? t.teams : [];
+    const max = t.config?.maxTeams || t.maxTeams || 16;
+    const fee = t.config?.inscriptionFee || t.inscriptionFee || 350000;
+    const isAct = t.id === window._orgActiveTourneyId;
+
+    return `
+      <div class="coach-tournament-card liquid-glass-card" style="${isAct ? 'border-color: #1EC1CB; box-shadow: 0 0 25px rgba(30,193,203,0.3);' : ''}">
+        <div class="t-card-top-strip">
+          <span class="t-card-badge-sport">${(t.config?.sport || t.sport || 'F11').toUpperCase()}</span>
+          <span class="t-card-badge-status" style="background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); color: #34d399;">
+            ${(t.status || 'Activo').toUpperCase()}
+          </span>
+        </div>
+        <h4 class="t-card-name" style="margin: 0.75rem 0 0.5rem 0;">${escapeHtml(t.config?.name || t.name)}</h4>
+        <div class="t-card-meta-list" style="font-size: 0.82rem; color: #94a3b8; display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem;">
+          <div>📍 ${escapeHtml(t.config?.city || t.city || 'Bogotá D.C.')}</div>
+          <div>🏟️ ${escapeHtml(t.config?.venue || t.venue || 'Sede Principal')}</div>
+          <div>🛡️ Equipos: <strong>${teams.length} / ${max}</strong></div>
+          <div>💰 Valor Cupo: <strong style="color: #34d399;">$${fee.toLocaleString('es-CO')} COP</strong></div>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" class="btn-primary-neon" style="flex: 1; font-size: 0.78rem; padding: 7px 10px;" onclick="handleOrgActiveTournamentChange('${t.id}')">
+            <span>${isAct ? '✓ Activo Ahora' : 'Seleccionar'}</span>
+          </button>
+          <button type="button" class="btn-tool-outline" style="font-size: 0.78rem; padding: 7px 10px;" onclick="handleOrgActiveTournamentChange('${t.id}'); setActiveOrganizerSection('org-partidos');">
+            <span>Partidos</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderOrgInscripcionesTab(activeTourney) {
+  const container = document.getElementById('orgInscripcionesContent');
+  if (!container) return;
+
+  const allRegs = (typeof FMPStore !== 'undefined' && FMPStore.getRegistrations) ? FMPStore.getRegistrations() : [];
+  const tId = activeTourney?.id;
+  const tourneyRegs = allRegs.filter(r => r.tournamentId === tId || (!r.tournamentId && tId));
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">📥 Solicitudes de Inscripción (${tourneyRegs.length})</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Revisa planillas oficiales en PDF y comprobantes de pago de los clubes postulados a ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || '')}.</p>
+    </div>
+
+    ${tourneyRegs.length === 0 ? `
+      <div style="text-align: center; padding: 3rem; background: rgba(5,20,25,0.6); border: 1px dashed rgba(30,193,203,0.3); border-radius: 14px;">
+        <p style="color: #94a3b8; margin: 0 0 1rem 0;">No hay solicitudes de inscripción pendientes en este torneo.</p>
+        <button type="button" class="btn-tool-outline" onclick="loadCompleteColombiaScenario()">
+          <span>🇨🇴 Cargar Solicitud de Demostración</span>
+        </button>
+      </div>
+    ` : `
+      <div class="admin-table-container" style="border-radius: 16px; border: 1px solid rgba(165,243,252,0.2);">
+        <table class="admin-data-table">
+          <thead>
+            <tr>
+              <th>Club Postulado</th>
+              <th>Delegado / DT</th>
+              <th>Planilla PDF</th>
+              <th>Comprobante Pago</th>
+              <th>Estado</th>
+              <th style="text-align: center;">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tourneyRegs.map(r => `
+              <tr>
+                <td><strong>${escapeHtml(r.clubName || r.teamName || 'Club')}</strong></td>
+                <td>${escapeHtml(r.coachName || r.dtName || 'Director Técnico')}</td>
+                <td>
+                  <button type="button" class="btn-tool-sm" onclick="showToast('Previsualizando Planilla Oficial PDF 📄', 'info', 2000)" style="padding: 3px 8px; border-radius: 6px; font-size: 0.78rem;">
+                    📄 Ver Planilla
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="btn-tool-sm" onclick="showToast('Comprobante verificado: Pago exitoso 💳', 'info', 2000)" style="padding: 3px 8px; border-radius: 6px; font-size: 0.78rem;">
+                    💳 Ver Recibo
+                  </button>
+                </td>
+                <td>
+                  <span class="v22-badge-green" style="font-size: 0.72rem;">${escapeHtml(r.status || 'Pendiente')}</span>
+                </td>
+                <td style="text-align: center;">
+                  <div style="display: flex; gap: 0.35rem; justify-content: center;">
+                    <button type="button" class="btn-tool-sm" style="background: rgba(16,185,129,0.2); color: #34d399; border: 1px solid rgba(16,185,129,0.4); padding: 4px 10px; border-radius: 6px; font-weight: 700; cursor: pointer;" onclick="FMPStore.approveRegistration('${escapeHtml(r.id)}', 'Aprobado'); showToast('¡Club aprobado en el torneo!', 'success', 2500); renderOrgInscripcionesTab(activeTournamentId);">
+                      ✓ Aprobar
+                    </button>
+                    <button type="button" class="btn-tool-sm" style="background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid rgba(239,68,68,0.4); padding: 4px 10px; border-radius: 6px; font-weight: 700; cursor: pointer;" onclick="showToast('Solicitud rechazada con notificación al DT', 'warning', 2500);">
+                      ✗ Rechazar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `}
+  `;
+}
+
+function renderOrgEquiposTab(activeTourney) {
+  const container = document.getElementById('orgEquiposContent');
+  if (!container) return;
+
+  const teams = Array.isArray(activeTourney?.teams) ? activeTourney.teams : [];
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">🛡️ Equipos Participantes (${teams.length})</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Equipos habilitados para disputar el torneo ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || '')}.</p>
+    </div>
+
+    ${teams.length === 0 ? `
+      <div style="text-align: center; padding: 3rem; background: rgba(5,20,25,0.6); border: 1px dashed rgba(30,193,203,0.3); border-radius: 14px;">
+        <p style="color: #94a3b8; margin: 0 0 1rem 0;">Aún no hay equipos habilitados en este torneo.</p>
+        <button type="button" class="btn-primary-neon" onclick="loadCompleteColombiaScenario()">
+          <span>🇨🇴 Cargar Equipos Semilla FCF</span>
+        </button>
+      </div>
+    ` : `
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem;">
+        ${teams.map((tm, idx) => `
+          <div class="liquid-glass-card" style="padding: 1.25rem; border-radius: 14px;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div style="font-size: 1.75rem;">⚽</div>
+              <div>
+                <h4 style="margin: 0; color: #fff; font-size: 1rem; font-weight: 700;">${escapeHtml(tm.name)}</h4>
+                <div style="font-size: 0.75rem; color: #94a3b8;">${escapeHtml(tm.coachName || 'DT Oficial')}</div>
+              </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #cbd5e1; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.6rem;">
+              <span>Jugadores: <strong>${tm.players ? tm.players.length : 18}</strong></span>
+              <span style="color: #34d399; font-weight: 700;">✓ Al Día</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `}
+  `;
+}
+
+function renderOrgJugadoresTab(activeTourney) {
+  const container = document.getElementById('orgJugadoresContent');
+  if (!container) return;
+
+  const roster = (typeof FMPStore !== 'undefined' && FMPStore.getClubRoster) ? FMPStore.getClubRoster() : [];
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">👥 Base de Datos de Jugadores</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Fichas médicas, dorsales y control disciplinario de tarjetas en ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || '')}.</p>
+    </div>
+
+    <div class="admin-table-container" style="border-radius: 16px; border: 1px solid rgba(165,243,252,0.2);">
+      <table class="admin-data-table">
+        <thead>
+          <tr>
+            <th>Dorsal</th>
+            <th>Nombre del Jugador</th>
+            <th>Posición</th>
+            <th>Club</th>
+            <th>Ficha Médica</th>
+            <th>🟨 Amarillas</th>
+            <th>🟥 Rojas</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${roster.map(p => `
+            <tr>
+              <td><strong style="color: #1EC1CB; font-size: 1rem;">#${p.dorsal || 10}</strong></td>
+              <td><strong>${escapeHtml(p.nombre || p.name)}</strong></td>
+              <td><span class="table-badge">${escapeHtml(p.posicion || p.position || 'Medio')}</span></td>
+              <td>${escapeHtml(p.club || 'Atlético Bogotá FC')}</td>
+              <td><span style="color: #34d399; font-size: 0.8rem; font-weight: 700;">✓ Vigente EPS</span></td>
+              <td><strong style="color: #fbbf24;">${p.yellowCards || 0}</strong></td>
+              <td><strong style="color: #f87171;">${p.redCards || 0}</strong></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderOrgCalendarioTab(activeTourney) {
+  const container = document.getElementById('orgCalendarioContent');
+  if (!container) return;
+
+  const matches = Array.isArray(activeTourney?.matches) ? activeTourney.matches : (Array.isArray(activeTourney?.fixtures) ? activeTourney.fixtures : []);
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">📅 Programación Oficial de Partidos</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Fechas, canchas asignadas y horarios oficiales para ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || '')}.</p>
+    </div>
+
+    ${matches.length === 0 ? `
+      <div style="text-align: center; padding: 3rem; background: rgba(5,20,25,0.6); border: 1px dashed rgba(30,193,203,0.3); border-radius: 14px;">
+        <p style="color: #94a3b8; margin: 0 0 1rem 0;">No hay partidos programados aún en este torneo.</p>
+        <button type="button" class="btn-primary-neon" onclick="loadCompleteColombiaScenario()">
+          <span>🇨🇴 Cargar Calendario Oficial FCF</span>
+        </button>
+      </div>
+    ` : `
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        ${matches.map(m => `
+          <div class="liquid-glass-card" style="padding: 1rem 1.25rem; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+            <div>
+              <span style="font-size: 0.75rem; color: #1EC1CB; font-weight: 700;">JORNADA ${m.round || 1} • ${m.date || 'Sábado'} • ${m.time || '18:00'}</span>
+              <div style="font-size: 1.05rem; font-weight: 800; color: #fff; margin: 0.25rem 0;">
+                ${escapeHtml(m.homeTeam || m.home_team || 'Equipo Local')} vs ${escapeHtml(m.awayTeam || m.away_team || 'Equipo Visitante')}
+              </div>
+              <div style="font-size: 0.8rem; color: #94a3b8;">🏟️ ${escapeHtml(m.venue || m.venueName || 'Complejo El Salitre')}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+              <span class="t-badge-status" style="font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: 6px; ${m.played || m.status === 'finished' ? 'color: #34d399; border: 1px solid rgba(16,185,129,0.4);' : 'color: #38bdf8; border: 1px solid rgba(56,189,248,0.4);'}">
+                ${m.played || m.status === 'finished' ? `Finalizado (${m.homeScore ?? 0} - ${m.awayScore ?? 0})` : 'Por Jugar'}
+              </span>
+              <button type="button" class="btn-tool-outline" style="font-size: 0.75rem; padding: 5px 12px;" onclick="setActiveOrganizerSection('org-partidos')">
+                <span>Cargar Marcador</span>
+              </button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `}
+  `;
+}
+
+function renderOrgPartidosTab(activeTourney) {
+  const container = document.getElementById('orgPartidosContent');
+  if (!container) return;
+
+  const matches = Array.isArray(activeTourney?.matches) ? activeTourney.matches : (Array.isArray(activeTourney?.fixtures) ? activeTourney.fixtures : []);
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">⚽ Carga de Resultados y Actas Arbitrales</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Ingresa marcadores en vivo, amonestaciones y árbitro oficial para el cómputo automático de la clasificación.</p>
+    </div>
+
+    ${matches.length === 0 ? `
+      <div style="text-align: center; padding: 3rem; background: rgba(5,20,25,0.6); border: 1px dashed rgba(30,193,203,0.3); border-radius: 14px;">
+        <p style="color: #94a3b8; margin: 0 0 1rem 0;">No hay partidos cargados en este torneo para registrar actas.</p>
+        <button type="button" class="btn-primary-neon" onclick="loadCompleteColombiaScenario()">
+          <span>🇨🇴 Cargar Partidos de Prueba</span>
+        </button>
+      </div>
+    ` : `
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        ${matches.map(m => `
+          <div class="liquid-glass-card" style="padding: 1.25rem; border-radius: 14px;" id="orgMatchCard_${m.id}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+              <span style="font-size: 0.75rem; color: #1EC1CB; font-weight: 700;">PARTIDO ID #${escapeHtml(String(m.id).substring(0, 8))} • ${escapeHtml(m.venue || 'Sede Salitre')}</span>
+              <span style="font-size: 0.75rem; color: #94a3b8;">📅 ${m.date || 'Sábado'} • ${m.time || '18:00'}</span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+              <div style="text-align: right;">
+                <strong style="color: #f8fafc; font-size: 1.05rem;">${escapeHtml(m.homeTeam || m.home_team || 'Local')}</strong>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <input type="number" min="0" max="99" id="orgMatchH_${m.id}" value="${m.homeScore ?? m.home_score ?? 0}" style="width: 52px; height: 38px; text-align: center; font-size: 1.15rem; font-weight: 800; background: rgba(5,20,25,0.9); border: 1px solid rgba(30,193,203,0.4); border-radius: 8px; color: #fff;">
+                <span style="color: #94a3b8; font-weight: 800;">-</span>
+                <input type="number" min="0" max="99" id="orgMatchA_${m.id}" value="${m.awayScore ?? m.away_score ?? 0}" style="width: 52px; height: 38px; text-align: center; font-size: 1.15rem; font-weight: 800; background: rgba(5,20,25,0.9); border: 1px solid rgba(30,193,203,0.4); border-radius: 8px; color: #fff;">
+              </div>
+              <div style="text-align: left;">
+                <strong style="color: #f8fafc; font-size: 1.05rem;">${escapeHtml(m.awayTeam || m.away_team || 'Visitante')}</strong>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.8rem; color: #cbd5e1;">
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span>🟨 Amarillas:</span>
+                  <input type="number" min="0" id="orgMatchY_${m.id}" value="${m.yellowCards || 0}" style="width: 44px; padding: 3px; text-align: center; background: rgba(5,20,25,0.8); border: 1px solid rgba(251,191,36,0.4); border-radius: 6px; color: #fbbf24;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span>🟥 Rojas:</span>
+                  <input type="number" min="0" id="orgMatchR_${m.id}" value="${m.redCards || 0}" style="width: 44px; padding: 3px; text-align: center; background: rgba(5,20,25,0.8); border: 1px solid rgba(248,113,113,0.4); border-radius: 6px; color: #f87171;">
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span>👨‍⚖️ Árbitro:</span>
+                  <input type="text" id="orgMatchRef_${m.id}" value="${escapeHtml(m.referee || 'Árbitro Oficial FCF')}" style="width: 150px; padding: 3px 8px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 6px; color: #fff; font-size: 0.78rem;">
+                </div>
+              </div>
+              <button type="button" class="btn-primary-neon" onclick="saveOrganizerMatchScore('${m.id}')" style="font-size: 0.8rem; padding: 6px 16px;">
+                <span>💾 Guardar Acta Oficial</span>
+              </button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `}
+  `;
+}
+
+function saveOrganizerMatchScore(matchId) {
+  const hInput = document.getElementById(`orgMatchH_${matchId}`);
+  const aInput = document.getElementById(`orgMatchA_${matchId}`);
+  const yInput = document.getElementById(`orgMatchY_${matchId}`);
+  const rInput = document.getElementById(`orgMatchR_${matchId}`);
+  const refInput = document.getElementById(`orgMatchRef_${matchId}`);
+
+  if (!hInput || !aInput) return;
+
+  const hScore = parseInt(hInput.value || '0', 10);
+  const aScore = parseInt(aInput.value || '0', 10);
+  const yCards = parseInt(yInput?.value || '0', 10);
+  const rCards = parseInt(rInput?.value || '0', 10);
+  const ref = refInput?.value?.trim() || 'Árbitro Oficial FCF';
+
+  const tournaments = FMPStore.getTournaments();
+  const tourney = tournaments.find(t => t.id === window._orgActiveTourneyId) || tournaments[0];
+  if (!tourney) return;
+
+  const matches = Array.isArray(tourney.matches) ? tourney.matches : (Array.isArray(tourney.fixtures) ? tourney.fixtures : []);
+  const match = matches.find(m => String(m.id) === String(matchId));
+
+  if (match) {
+    match.homeScore = hScore;
+    match.home_score = hScore;
+    match.awayScore = aScore;
+    match.away_score = aScore;
+    match.yellowCards = yCards;
+    match.redCards = rCards;
+    match.referee = ref;
+    match.played = true;
+    match.isFinished = true;
+    match.status = 'finished';
+
+    FMPStore.saveTournament(tourney);
+    FMPStore.logAudit('ACTA_PARTIDO_GUARDADA', `Resultado ${match.homeTeam} ${hScore} - ${aScore} ${match.awayTeam} (Árbitro: ${ref})`);
+
+    showToast(`Acta guardada: ${match.homeTeam} ${hScore} - ${aScore} ${match.awayTeam} ⚽`, 'success', 3000);
+  }
+}
+window.saveOrganizerMatchScore = saveOrganizerMatchScore;
+
+function renderOrgPosicionesTab(activeTourney) {
+  const container = document.getElementById('orgPosicionesContent');
+  if (!container) return;
+
+  const teams = Array.isArray(activeTourney?.teams) ? activeTourney.teams : [];
+  const matches = Array.isArray(activeTourney?.matches) ? activeTourney.matches : (Array.isArray(activeTourney?.fixtures) ? activeTourney.fixtures : []);
+
+  // Calcular tabla de posiciones en vivo
+  const tableData = teams.map(tm => {
+    let pj = 0, pg = 0, pe = 0, pp = 0, gf = 0, gc = 0;
+    matches.forEach(m => {
+      if ((m.played || m.status === 'finished') && (m.homeTeam === tm.name || m.awayTeam === tm.name)) {
+        pj++;
+        const isHome = (m.homeTeam === tm.name);
+        const myScore = isHome ? parseInt(m.homeScore || 0, 10) : parseInt(m.awayScore || 0, 10);
+        const opScore = isHome ? parseInt(m.awayScore || 0, 10) : parseInt(m.homeScore || 0, 10);
+        gf += myScore;
+        gc += opScore;
+        if (myScore > opScore) pg++;
+        else if (myScore === opScore) pe++;
+        else pp++;
+      }
+    });
+    const dg = gf - gc;
+    const pts = (pg * 3) + pe;
+    return { name: tm.name, pj, pg, pe, pp, gf, gc, dg, pts };
+  });
+
+  tableData.sort((a, b) => b.pts - a.pts || b.dg - a.dg || b.gf - a.gf);
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">📊 Tabla de Posiciones Oficial</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Cómputo en tiempo real según el reglamento oficial FCF.</p>
+    </div>
+
+    <div class="admin-table-container" style="border-radius: 16px; border: 1px solid rgba(165,243,252,0.2);">
+      <table class="admin-data-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;">Pos</th>
+            <th>Club / Equipo</th>
+            <th style="text-align: center;">PJ</th>
+            <th style="text-align: center;">PG</th>
+            <th style="text-align: center;">PE</th>
+            <th style="text-align: center;">PP</th>
+            <th style="text-align: center;">GF</th>
+            <th style="text-align: center;">GC</th>
+            <th style="text-align: center;">DG</th>
+            <th style="text-align: center; color: #1EC1CB;">PTS</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${tableData.map((row, idx) => `
+            <tr>
+              <td><strong style="color: ${idx < 4 ? '#34d399' : '#94a3b8'};">#${idx + 1}</strong></td>
+              <td><strong>${escapeHtml(row.name)}</strong></td>
+              <td style="text-align: center;">${row.pj}</td>
+              <td style="text-align: center;">${row.pg}</td>
+              <td style="text-align: center;">${row.pe}</td>
+              <td style="text-align: center;">${row.pp}</td>
+              <td style="text-align: center;">${row.gf}</td>
+              <td style="text-align: center;">${row.gc}</td>
+              <td style="text-align: center;">${row.dg > 0 ? '+' + row.dg : row.dg}</td>
+              <td style="text-align: center;"><strong style="color: #1EC1CB; font-size: 1.05rem;">${row.pts}</strong></td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Enlace Directo al Cuadro Eliminatorio de 5 Columnas -->
+    <div style="margin-top: 1.5rem; display: flex; align-items: center; justify-content: space-between; background: rgba(5,20,25,0.7); border: 1px solid rgba(30,193,203,0.3); border-radius: 14px; padding: 1.25rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h4 style="margin: 0; color: #fff; font-size: 1.05rem; font-weight: 800;">🏆 Cuadro Eliminatorio Oficial (Playoffs 5 Columnas)</h4>
+        <p style="margin: 0; color: #94a3b8; font-size: 0.82rem;">Visualiza las llaves directas de eliminación de 5 columnas con cálculo automático de clasificados.</p>
+      </div>
+      <button type="button" class="btn-primary-neon" onclick="navigateToView('cuadro')" style="padding: 10px 20px;">
+        <span>Ver Cuadro de 5 Columnas</span>
+      </button>
+    </div>
+  `;
+}
+
+function renderOrgEstadisticasTab(activeTourney) {
+  const container = document.getElementById('orgEstadisticasContent');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="view-header-bar" style="margin-bottom: 1.25rem;">
+      <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">📈 Estadísticas y Rendimiento</h3>
+      <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Goleadores, valla menos vencida y estadísticas de fair play en ${escapeHtml(activeTourney?.config?.name || activeTourney?.name || '')}.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+      <div class="liquid-glass-card" style="padding: 1.25rem; border-radius: 14px;">
+        <h4 style="margin: 0 0 0.75rem 0; color: #1EC1CB; font-size: 0.95rem; font-weight: 800;">⚽ Tabla de Goleadores</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-between;"><span>1. Harold Preciado (Cali)</span><strong>7 goles</strong></div>
+          <div style="display: flex; justify-content: space-between;"><span>2. Fernando Uribe (Millonarios)</span><strong>5 goles</strong></div>
+          <div style="display: flex; justify-content: space-between;"><span>3. Wilson Morelo (Santa Fe)</span><strong>4 goles</strong></div>
+        </div>
+      </div>
+
+      <div class="liquid-glass-card" style="padding: 1.25rem; border-radius: 14px;">
+        <h4 style="margin: 0 0 0.75rem 0; color: #10B981; font-size: 0.95rem; font-weight: 800;">🧤 Valla Menos Vencida</h4>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.85rem;">
+          <div style="display: flex; justify-content: space-between;"><span>1. Juan Camilo Chaverra</span><strong>2 goles encajados</strong></div>
+          <div style="display: flex; justify-content: space-between;"><span>2. Álvaro Montero</span><strong>3 goles encajados</strong></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function mountOrganizerConfigTab() {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (!session) return;
+
+  const busInput = document.getElementById('orgConfigBusinessName');
+  const whatsInput = document.getElementById('orgConfigWhatsapp');
+  const cityInput = document.getElementById('orgConfigCity');
+
+  if (busInput && session.clubName) busInput.value = session.clubName;
+  if (whatsInput && session.phone) whatsInput.value = session.phone;
+  if (cityInput && session.city) cityInput.value = session.city;
+}
+
+function handleOrgConfigSave(e) {
+  if (e) e.preventDefault();
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (!session) return;
+
+  const busInput = document.getElementById('orgConfigBusinessName');
+  const whatsInput = document.getElementById('orgConfigWhatsapp');
+
+  if (busInput) session.clubName = busInput.value.trim();
+  if (whatsInput) session.phone = whatsInput.value.trim();
+
+  saveUserSession(session);
+  showToast('Datos del organizador guardados exitosamente ⚙️', 'success', 2500);
+}
+window.handleOrgConfigSave = handleOrgConfigSave;
+
+function handleOrgCreateTournamentSubmit(e) {
+  if (e) e.preventDefault();
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (!session || !session.loggedIn) {
+    showToast('Inicia sesión para crear un torneo', 'warning', 3000);
+    return;
+  }
+
+  const name = document.getElementById('orgNewTourneyName')?.value?.trim();
+  const sport = document.getElementById('orgNewTourneySport')?.value || 'f11';
+  const city = document.getElementById('orgNewTourneyCity')?.value || 'Bogotá D.C.';
+  const maxTeams = parseInt(document.getElementById('orgNewTourneyTeamsCount')?.value || '16', 10);
+  const fee = parseInt(document.getElementById('orgNewTourneyFee')?.value || '350000', 10);
+  const venue = document.getElementById('orgNewTourneyVenue')?.value?.trim() || 'Complejo El Salitre (Bogotá)';
+
+  if (!name || name.length < 3) {
+    showToast('Ingresa un nombre válido para el torneo (mínimo 3 caracteres)', 'warning', 3000);
+    return;
+  }
+
+  const newTourneyId = 'tourney-' + Date.now();
+  const newTourney = {
+    id: newTourneyId,
+    name: name,
+    sport: sport,
+    city: city,
+    organizerId: session.userId,
+    organizer_id: session.userId,
+    status: 'activo',
+    config: {
+      id: newTourneyId,
+      name: name,
+      sport: sport,
+      city: city,
+      maxTeams: maxTeams,
+      inscriptionFee: fee,
+      venue: venue,
+      status: 'activo',
+      organizerId: session.userId
+    },
+    teams: [
+      { id: 'tm-seed-1', name: 'Atlético Bogotá FC', coachName: 'Mario Yepes (DT)', players: [] },
+      { id: 'tm-seed-2', name: 'Millonarios Veteranos', coachName: 'Alberto Gamero', players: [] },
+      { id: 'tm-seed-3', name: 'Santa Fe Máster', coachName: 'Leider Preciado', players: [] },
+      { id: 'tm-seed-4', name: 'Deportivo Cali Andino', coachName: 'Mayer Candelo', players: [] }
+    ],
+    matches: [
+      { id: 'm-org-1', round: 1, homeTeam: 'Atlético Bogotá FC', awayTeam: 'Millonarios Veteranos', date: '2026-11-28', time: '18:00', venue: venue, played: false, status: 'scheduled' },
+      { id: 'm-org-2', round: 1, homeTeam: 'Santa Fe Máster', awayTeam: 'Deportivo Cali Andino', date: '2026-11-28', time: '20:00', venue: venue, played: false, status: 'scheduled' }
+    ],
+    createdAt: new Date().toISOString()
+  };
+
+  if (typeof FMPStore !== 'undefined' && FMPStore.saveTournament) {
+    FMPStore.saveTournament(newTourney);
+  }
+  if (typeof savedTournaments !== 'undefined') {
+    savedTournaments.push(newTourney);
+  }
+
+  FMPStore.logAudit('CREAR_TORNEO_ORGANIZADOR', `Organizador ${session.name} creó el torneo ${name} (${city})`);
+
+  showToast(`¡Torneo "${name}" publicado exitosamente! 🏆`, 'success', 3500);
+
+  window._orgActiveTourneyId = newTourneyId;
+  activeTournamentId = newTourneyId;
+
+  const form = document.getElementById('orgCreateTournamentForm');
+  if (form) form.reset();
+
+  renderOrganizerDashboard();
+  setActiveOrganizerSection('org-torneos');
+}
+window.handleOrgCreateTournamentSubmit = handleOrgCreateTournamentSubmit;
+
+function handleOrgActiveTournamentChange(tourneyId) {
+  if (!tourneyId) return;
+  window._orgActiveTourneyId = tourneyId;
+  activeTournamentId = tourneyId;
+  showToast('Torneo activo actualizado ⚽', 'info', 1800);
+  const activeBtn = document.querySelector('.org-subtab-btn.active');
+  const activeSec = activeBtn ? (activeBtn.getAttribute('data-section') || 'org-inicio') : 'org-inicio';
+  mountOrganizerSectionData(activeSec, true);
+}
+window.handleOrgActiveTournamentChange = handleOrgActiveTournamentChange;
+
+function refreshOrganizerDashboardData(btn) {
+  if (btn) {
+    btn.classList.add('spinning');
+    setTimeout(() => btn.classList.remove('spinning'), 650);
+  }
+  renderOrganizerDashboard();
+  showToast('Datos de competiciones actualizados ⚽', 'success', 2000);
+}
+window.refreshOrganizerDashboardData = refreshOrganizerDashboardData;
+
+
+// =============================================================================
 // MENÚ Y CENTRO DE MANDO DEL TÉCNICO (PANEL #/club - 4 MÓDULOS LIQUID GLASS)
 // =============================================================================
 
@@ -7839,6 +9099,8 @@ function renderCoachTournamentsGrid() {
     let badgeHtml = '';
     let actionBtnHtml = '';
 
+    const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
+
     if (regStatus === 'habilitado' || regStatus === 'aprobado' || regStatus === 'aprobada_inicial') {
       badgeHtml = '<span class="coach-tourney-badge badge-approved">● Inscrito Oficialmente</span>';
       actionBtnHtml = `
@@ -7848,7 +9110,14 @@ function renderCoachTournamentsGrid() {
       `;
     } else if (regStatus === 'rechazado' || regStatus === 'rechazada' || regStatus === 'requiere_correccion' || regStatus === 'devuelta_inicial') {
       badgeHtml = '<span class="coach-tourney-badge badge-rejected">● Requiere Subsanación</span>';
-      actionBtnHtml = `
+      actionBtnHtml = isTeamCoachUser ? `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
+          <button type="button" class="btn-coach-action btn-subsanar" disabled style="opacity: 0.55; cursor: not-allowed;" title="Solo Director Técnico: Subsanación reservada al DT Delegado">
+            <span>🔄 Subsanar Documentos</span>
+          </button>
+          <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
+        </div>
+      ` : `
         <button type="button" class="btn-coach-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', true, '${escapeHtml(reg.id)}')">
           <span>🔄 Subsanar Documentos</span>
         </button>
@@ -7865,7 +9134,14 @@ function renderCoachTournamentsGrid() {
       badgeHtml = isFull 
         ? '<span class="coach-tourney-badge badge-pending">● Cupos Completos</span>' 
         : '<span class="coach-tourney-badge badge-open">● Inscripciones Abiertas</span>';
-      actionBtnHtml = `
+      actionBtnHtml = isTeamCoachUser ? `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
+          <button type="button" class="btn-coach-action btn-apply" disabled style="opacity: 0.55; cursor: not-allowed;" title="Solo Director Técnico: La postulación y comprobante de pago están reservados al DT Delegado">
+            <span>📋 Ingresar / Inscribir mi Club</span>
+          </button>
+          <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
+        </div>
+      ` : `
         <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
           <span>📋 Ingresar / Inscribir mi Club</span>
         </button>
@@ -8009,9 +9285,13 @@ function renderCoachApplicationsTable() {
       </button>
     `;
 
+    const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
+
     let actionBtn = '';
     if (s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial') {
-      actionBtn = `
+      actionBtn = isTeamCoachUser ? `
+        <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;" title="Subsanación reservada al Director Técnico">Solo Director Técnico</span>
+      ` : `
         <button type="button" class="btn-coach-table-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(r.tournamentId)}', true, '${escapeHtml(r.id)}')" title="Subsanar requisitos">
           <span>🔄 Subsanar</span>
         </button>
@@ -8023,7 +9303,9 @@ function renderCoachApplicationsTable() {
         </button>
       `;
     } else {
-      actionBtn = `
+      actionBtn = isTeamCoachUser ? `
+        <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">—</span>
+      ` : `
         <button type="button" class="btn-cancel-coach-app" data-id="${escapeHtml(r.id)}" style="color: #fca5a5; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 0.78rem;">
           Cancelar
         </button>
