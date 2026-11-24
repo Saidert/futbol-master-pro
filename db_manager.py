@@ -287,7 +287,7 @@ def seed_db(cursor, conn):
         ("usr-dt-1", "Prof. Héctor Ramírez", "dt.ramirez@nacional.co", "+57 312 888 9900", "dt123", "coach", "Director Técnico / Delegado", "Atlético Nacional Master", now),
         ("usr-fan-1", "Santiago Rojas", "hincha@futbolmaster.pro", "+57 320 555 1234", "fan123", "fan", "Aficionado / Visitante", None, now)
     ]
-    cursor.executemany("INSERT INTO users (id, name, email, phone, password, role, role_title, club_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", users)
+    cursor.executemany("INSERT INTO users (id, name, email, phone, password_hash, role, role_title, club_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", users)
 
     # 2. Sedes Colombianas
     venues = [
