@@ -5010,12 +5010,60 @@ function navigateToView(targetRoute, updateHash = true) {
 
   if (spaViews && spaViews.length > 0) {
     spaViews.forEach(view => {
-      const isTarget = view.id === targetViewId || (routeId === 'club' && (view.id === 'view-coach' || view.getAttribute('data-alias') === 'view-coach'));
+      const isTarget = view.id === targetViewId || 
+        ((routeId === 'organizador' || routeId === 'organizer') && (view.id === 'view-organizer' || view.id === 'view-organizador' || view.getAttribute('data-alias') === 'view-organizador')) ||
+        (routeId === 'club' && (view.id === 'view-coach' || view.getAttribute('data-alias') === 'view-coach'));
       if (isTarget) viewFound = true;
       view.classList.toggle('active', isTarget);
+      if (isTarget) {
+        view.removeAttribute('hidden');
+        view.style.display = 'block';
+      } else {
+        view.setAttribute('hidden', '');
+        view.style.display = 'none';
+      }
     });
     document.body.classList.toggle('route-admin', routeId === 'admin');
+    document.body.classList.toggle('route-organizador', routeId === 'organizador' || routeId === 'organizer');
     document.body.classList.toggle('route-club', routeId === 'club');
+  }
+
+  // Aislamiento físico garantizado entre Admin y Organizador
+  const adminViewEl = document.getElementById('view-admin');
+  const orgViewEl = document.getElementById('view-organizer') || document.getElementById('view-organizador');
+  if (routeId === 'admin') {
+    if (adminViewEl) {
+      adminViewEl.removeAttribute('hidden');
+      adminViewEl.style.display = 'block';
+      adminViewEl.classList.add('active');
+    }
+    if (orgViewEl) {
+      orgViewEl.setAttribute('hidden', '');
+      orgViewEl.style.display = 'none';
+      orgViewEl.classList.remove('active');
+    }
+  } else if (routeId === 'organizador' || routeId === 'organizer') {
+    if (adminViewEl) {
+      adminViewEl.setAttribute('hidden', '');
+      adminViewEl.style.display = 'none';
+      adminViewEl.classList.remove('active');
+    }
+    if (orgViewEl) {
+      orgViewEl.removeAttribute('hidden');
+      orgViewEl.style.display = 'block';
+      orgViewEl.classList.add('active');
+    }
+  } else {
+    if (adminViewEl) {
+      adminViewEl.setAttribute('hidden', '');
+      adminViewEl.style.display = 'none';
+      adminViewEl.classList.remove('active');
+    }
+    if (orgViewEl) {
+      orgViewEl.setAttribute('hidden', '');
+      orgViewEl.style.display = 'none';
+      orgViewEl.classList.remove('active');
+    }
   }
 
   // Fallback si la vista no se encontró
@@ -6930,6 +6978,9 @@ window.runSplashKickToSidebar = runSplashKickToSidebar;
 window.runDashboardEntranceSequence = runDashboardEntranceSequence;
 
 function initAdminPanelControls() {
+  if (window.__adminControlsInitialized) return;
+  window.__adminControlsInitialized = true;
+
   // Listener para Corrección Auditada de Resultados (Fase 3)
   const formCorrection = document.getElementById('adminFormCorrection');
   if (formCorrection && !formCorrection.dataset.initAttached) {

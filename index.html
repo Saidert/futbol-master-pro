@@ -3582,8 +3582,7 @@
   </section>
 
   <!-- VISTA 10: PANEL DE ADMINISTRACIÓN GENERAL Y AUDITORÍA -->
-    <!-- VISTA 10: PANEL DE ADMINISTRACIÓN GENERAL Y AUDITORÍA -->
-  <section id="view-admin" class="spa-view">
+  <section id="view-admin" class="app-view spa-view" hidden>
     <div class="admin-shell-layout" id="adminShellLayout">
 
       <!-- 1. BARRA IZQUIERDA (Pill Sidebar Container) -->
@@ -4621,7 +4620,7 @@
 
         <div class="admin-table-container audit-table-scroll-container" style="max-height: 540px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2); margin-bottom: 2.5rem;">
           <table class="admin-data-table" id="tableAuditLogs">
-            <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
+            <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); z-index: 2;">
               <tr>
                 <th style="width: 140px;">Fecha y Hora</th>
                 <th style="width: 170px;">Usuario</th>
@@ -4662,7 +4661,7 @@
           </div>
           <div class="admin-table-container" style="max-height: 520px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2);">
             <table class="admin-data-table" id="tableAdminOrganizers">
-              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
+              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); z-index: 2;">
                 <tr>
                   <th>Organizador</th>
                   <th>Contacto & Ciudad</th>
@@ -4698,7 +4697,7 @@
           </div>
           <div class="admin-table-container" style="max-height: 520px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2);">
             <table class="admin-data-table" id="tableAdminTeams">
-              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
+              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); z-index: 2;">
                 <tr>
                   <th>Club / Equipo</th>
                   <th>Delegado / DT</th>
@@ -4745,7 +4744,7 @@
           </div>
           <div class="admin-table-container" style="max-height: 520px; overflow-y: auto; border-radius: 16px; border: 1px solid rgba(165, 243, 252, 0.2);">
             <table class="admin-data-table" id="tableAdminUsers">
-              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); backdrop-filter: blur(12px); z-index: 2;">
+              <thead style="position: sticky; top: 0; background: rgba(5, 20, 25, 0.95); z-index: 2;">
                 <tr>
                   <th>Nombre Completo</th>
                   <th>Correo Electrónico</th>
@@ -4866,7 +4865,7 @@
   <!-- ===================================================================== -->
   <!-- VISTA DEDICADA: DASHBOARD DEL ORGANIZADOR (#/organizador) -->
   <!-- ===================================================================== -->
-  <section id="view-organizador" class="spa-view">
+  <section id="view-organizer" class="app-view spa-view" data-alias="view-organizador" hidden>
     <div class="admin-shell-layout" id="organizerShellLayout">
       
       <!-- 1. BARRA LATERAL FLOTANTE DEL ORGANIZADOR (11 SECCIONES) -->

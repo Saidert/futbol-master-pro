@@ -306,19 +306,21 @@ void main() {
 
   function resize() {
     if (!canvas || !gl) return;
-    const dpr = 0.75; // Resolución optimizada a 0.75x: 70% menos carga GPU manteniendo suavidad visual
-    const w = Math.max(1, Math.floor(window.innerWidth * dpr));
-    const h = Math.max(1, Math.floor(window.innerHeight * dpr));
+    const SCALE = 0.5; // Escala interna 0.5x (75% menos carga GPU)
+    const w = Math.max(1, Math.floor(window.innerWidth * SCALE));
+    const h = Math.max(1, Math.floor(window.innerHeight * SCALE));
     if (canvas.width !== w || canvas.height !== h) {
       canvas.width = w;
       canvas.height = h;
       gl.viewport(0, 0, w, h);
     }
+    if (canvas.style.width !== '100%') canvas.style.width = '100%';
+    if (canvas.style.height !== '100%') canvas.style.height = '100%';
   }
 
   function render(now) {
-    if (isPaused || !gl || !program) return;
-    if (now - lastFrameTime < targetInterval) {
+    if (isPaused || !gl || !program || document.hidden) return;
+    if (now - lastFrameTime < 33) {
       animId = requestAnimationFrame(render);
       return;
     }
@@ -332,6 +334,9 @@ void main() {
   }
 
   function initSilkBackground() {
+    if (window.__silkLoopRunning) return;
+    window.__silkLoopRunning = true;
+
     canvas = document.getElementById('silk-webgl-bg');
     if (!canvas) {
       canvas = document.createElement('canvas');
@@ -339,6 +344,13 @@ void main() {
       canvas.setAttribute('aria-hidden', 'true');
       document.body.prepend(canvas);
     }
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '-1';
+    canvas.style.pointerEvents = 'none';
 
     try {
       gl = canvas.getContext('webgl', {
