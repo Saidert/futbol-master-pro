@@ -287,7 +287,7 @@ def seed_db(cursor, conn):
         ("usr-dt-1", "Prof. Héctor Ramírez", "dt.ramirez@nacional.co", "+57 312 888 9900", "dt123", "coach", "Director Técnico / Delegado", "Atlético Nacional Master", now),
         ("usr-fan-1", "Santiago Rojas", "hincha@futbolmaster.pro", "+57 320 555 1234", "fan123", "fan", "Aficionado / Visitante", None, now)
     ]
-    cursor.executemany("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", users)
+    cursor.executemany("INSERT INTO users (id, name, email, phone, password, role, role_title, club_name, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", users)
 
     # 2. Sedes Colombianas
     venues = [
@@ -300,7 +300,7 @@ def seed_db(cursor, conn):
         ("vn-ctg-1", "Cancha El Campito Bocagrande", "Bolívar", "Cartagena", "Avenida San Martín # 8-40", "+57 301 987 6543", "Sintética Monofilamento", "Fútbol 7", 150, "LED Brisa Marina", json.dumps(["17:00", "19:00", "21:00"]), "10.4000° N, 75.5540° W", "Verificada", now),
         ("vn-iba-1", "Cancha Sintética Champagnat", "Tolima", "Ibagué", "Calle 19 # 4-88", "+57 311 222 3344", "Grama Sintética", "Fútbol 8", 180, "LED Nocturna", json.dumps(["16:00", "18:00", "20:00"]), "4.4389° N, 75.2322° W", "Verificada", now)
     ]
-    cursor.executemany("INSERT INTO venues VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", venues)
+    cursor.executemany("INSERT INTO venues (id, name, department, city, address, phone, surface, modality, capacity, lighting, slots_json, coordinates, verified, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", venues)
 
     # 3. Equipos Maestros (Regla 10: entidad independiente)
     master_teams = [
@@ -313,7 +313,7 @@ def seed_db(cursor, conn):
         ("tm-dim-07", "Independiente Medellín Clásicos", None, "Alfredo Arias", "Medellín", "Libre Masculino", "#b91c1c", "", now),
         ("tm-buc-08", "Atlético Bucaramanga Campeón", None, "Rafael Dudamel", "Bucaramanga", "Libre Masculino", "#ca8a04", "", now)
     ]
-    cursor.executemany("INSERT INTO teams VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", master_teams)
+    cursor.executemany("INSERT INTO teams (id, name, coach_id, coach_name, city, category, color, shield_svg, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", master_teams)
 
     # 4. Torneo Demo "Copa Colombia Master 2026"
     t_id = "tournament_copa_colombia_2026"
@@ -340,7 +340,15 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_data)
+    tourney_insert_sql = """
+        INSERT INTO tournaments (
+            id, organizer_id, organizer_name, name, description, sport, format, category,
+            status, start_date, end_date, reg_start_date, reg_end_date, max_teams,
+            play_days_json, time_slots_json, venues_json, rules_json, points_config_json,
+            created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """
+    cursor.execute(tourney_insert_sql, t_data)
 
     # 4b. Torneo 2 en Inscripciones Abiertas: "Torneo Apertura Colombia 2026"
     t_open_id = "tournament_apertura_2026"
@@ -367,7 +375,7 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_open_data)
+    cursor.execute(tourney_insert_sql, t_open_data)
 
     # 4c. Torneo 3 en Inscripciones Abiertas: "Liga Élite del Caribe 2026"
     t_caribe_id = "tournament_liga_caribe_2026"
@@ -394,7 +402,7 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_caribe_data)
+    cursor.execute(tourney_insert_sql, t_caribe_data)
 
     # 4d. Torneo 4 en Inscripciones Abiertas: "Copa Cafetera de Occidente 2026"
     t_cafe_id = "tournament_copa_cafetera_2026"
@@ -421,7 +429,7 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_cafe_data)
+    cursor.execute(tourney_insert_sql, t_cafe_data)
 
     # 4e. Torneo 5 Próximo a comenzar: "Torneo Metropolitano Santander 2026"
     t_sant_id = "tournament_metro_santander_2026"
@@ -448,7 +456,7 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_sant_data)
+    cursor.execute(tourney_insert_sql, t_sant_data)
 
     # 4f. Torneo 6 En Curso con Franjas Ocupadas: "Superliga Andina Nocturna 2026"
     t_andina_id = "tournament_superliga_andina_2026"
@@ -475,12 +483,12 @@ def seed_db(cursor, conn):
         now,
         now
     )
-    cursor.execute("INSERT INTO tournaments VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", t_andina_data)
+    cursor.execute(tourney_insert_sql, t_andina_data)
 
 
     # 5. Participación de los 8 equipos en el torneo
     tourney_teams = [(f"tt_{t_id}_{tm[0]}", t_id, tm[0], "Grupo Único", now) for tm in master_teams]
-    cursor.executemany("INSERT INTO tournament_teams VALUES (?, ?, ?, ?, ?);", tourney_teams)
+    cursor.executemany("INSERT INTO tournament_teams (id, tournament_id, team_id, group_name, joined_at) VALUES (?, ?, ?, ?, ?);", tourney_teams)
 
     # 5b. Jugadores oficiales para Nacional y Millonarios
     seed_players = [
@@ -491,7 +499,13 @@ def seed_db(cursor, conn):
         ("ply_mil_2", "tm-mil-02", t_id, None, "Mackalister Silva Mosquera", "CC", "1025678901", "1986-12-13", 39, 14, "Mediocampista", "Sanitas", None, None, 1, now),
         ("ply_mil_3", "tm-mil-02", t_id, None, "Leonardo Castro Loaiza", "CC", "1026789012", "1992-06-14", 34, 23, "Delantero", "Compensar", None, None, 1, now)
     ]
-    cursor.executemany("INSERT INTO players VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", seed_players)
+    cursor.executemany("""
+        INSERT INTO players (
+            id, team_id, tournament_id, registration_id, name, doc_type, doc_number,
+            birth_date, age, dorsal, position, eps, guardian_name, guardian_doc,
+            enabled, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """, seed_players)
 
     # 6. Partidos y Marcadores de Fecha 1 (Jugados) y Fechas 2 a 7
     # 4 partidos fecha 1 jugados con soporte
@@ -501,7 +515,14 @@ def seed_db(cursor, conn):
         ("m_f1_3", t_id, 1, "Grupo Único", "tm-sf-05", "tm-cali-06", "Independiente Santa Fe Master", "Deportivo Cali Élite", "vn-bog-1", "Complejo Salitre Alto Rendimiento", "2026-03-01", "14:00", 1, 1, "finished", "Empate táctico.", "acta_oficial_f1_p3.pdf", "/uploads/actas/acta_oficial_f1_p3.pdf", None, "verified", 1, now, "usr-org-1"),
         ("m_f1_4", t_id, 1, "Grupo Único", "tm-dim-07", "tm-buc-08", "Independiente Medellín Clásicos", "Atlético Bucaramanga Campeón", "vn-med-1", "Cancha Marte 1 - Atanasio Girardot", "2026-03-01", "16:00", 0, 1, "finished", "Victoria visitante.", "acta_oficial_f1_p4.pdf", "/uploads/actas/acta_oficial_f1_p4.pdf", None, "verified", 1, now, "usr-org-1")
     ]
-    cursor.executemany("INSERT INTO matches VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", matches)
+    cursor.executemany("""
+        INSERT INTO matches (
+            id, tournament_id, round_number, group_name, home_team_id, away_team_id,
+            home_team_name, away_team_name, venue_id, venue_name, match_date, match_time,
+            home_score, away_score, status, observations, support_doc_name, support_doc_path,
+            support_doc_data, review_status, is_locked, updated_at, updated_by
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """, matches)
 
     # 6b. Goles del partido m_f1_1: Nacional 2 - 1 Millonarios
     seed_goals = [
@@ -509,7 +530,7 @@ def seed_db(cursor, conn):
         ("goal_2", "m_f1_1", t_id, "tm-nac-01", "ply_nac_2", "Edwin Cardona Bedoya", 68, 0, now),
         ("goal_3", "m_f1_1", t_id, "tm-mil-02", "ply_mil_3", "Leonardo Castro Loaiza", 52, 0, now)
     ]
-    cursor.executemany("INSERT INTO match_goals VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", seed_goals)
+    cursor.executemany("INSERT INTO match_goals (id, match_id, tournament_id, team_id, player_id, player_name, minute, is_own_goal, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", seed_goals)
 
     # 7. Tabla de posiciones inicial calculada para el torneo
     standings = [
@@ -522,7 +543,7 @@ def seed_db(cursor, conn):
         (f"st_{t_id}_mil", t_id, "Grupo Único", "tm-mil-02", "Millonarios Senior FC", 1, 0, 0, 1, 1, 2, -1, 0, 7),
         (f"st_{t_id}_dim", t_id, "Grupo Único", "tm-dim-07", "Independiente Medellín Clásicos", 1, 0, 0, 1, 0, 1, -1, 0, 8)
     ]
-    cursor.executemany("INSERT INTO standings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", standings)
+    cursor.executemany("INSERT INTO standings (id, tournament_id, group_name, team_id, team_name, played, won, drawn, lost, goals_for, goals_against, goal_diff, points, rank) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);", standings)
 
     # 8. Auditoría Inicial
     audit = [
@@ -530,7 +551,7 @@ def seed_db(cursor, conn):
         ("aud-2", "usr-org-1", "Andrés Montoya", "organizador", "TORNEO_CREADO", "Creó el torneo 'Copa Colombia Master 2026' con 8 clubes y 28 partidos programados.", "186.84.90.11", now),
         ("aud-3", "usr-org-1", "Andrés Montoya", "organizador", "ACTA_VALIDADA", "Asentó marcador y acta oficial de la Fecha 1: Nacional 2 - 1 Millonarios.", "186.84.90.11", now)
     ]
-    cursor.executemany("INSERT INTO audit_log VALUES (?, ?, ?, ?, ?, ?, ?, ?);", audit)
+    cursor.executemany("INSERT INTO audit_log (id, user_id, user_name, user_role, action, details, ip_address, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", audit)
 
     conn.commit()
 
