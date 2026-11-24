@@ -1,4 +1,4 @@
-﻿// Garantizar sincronización inicial de rol visitante en body
+// Garantizar sincronización inicial de rol visitante en body
 if (typeof document !== 'undefined' && document.body) {
   if (!window.userSession || !window.userSession.loggedIn) {
     document.body.classList.add('role-guest');
@@ -2690,6 +2690,8 @@ function updateAuthUI() {
   const mobileNavCanchasLink = document.getElementById('mobileNavCanchasLink');
   const navCoachLink = document.getElementById('navCoachLink');
   const mobileNavCoachLink = document.getElementById('mobileNavCoachLink');
+  const navOrganizerLink = document.getElementById('navOrganizerLink');
+  const mobileNavOrganizerLink = document.getElementById('mobileNavOrganizerLink');
   const navAdminLink = document.getElementById('navAdminLink');
   const mobileNavAdminLink = document.getElementById('mobileNavAdminLink');
   const mobileNavCreateLink = document.getElementById('mobileNavCreateLink');
@@ -2737,6 +2739,8 @@ function updateAuthUI() {
     // 2. Enlaces OCULTOS estrictos
     if (navCoachLink) navCoachLink.style.display = 'none';
     if (mobileNavCoachLink) mobileNavCoachLink.style.display = 'none';
+    if (navOrganizerLink) navOrganizerLink.style.display = 'none';
+    if (mobileNavOrganizerLink) mobileNavOrganizerLink.style.display = 'none';
     if (navAdminLink) navAdminLink.style.display = 'none';
     if (mobileNavAdminLink) mobileNavAdminLink.style.display = 'none';
     if (btnHeaderCrear) btnHeaderCrear.style.display = 'none';
@@ -2946,19 +2950,21 @@ function updateAuthUI() {
       // =======================================================================
       // ESTADO 3: ORGANIZADOR DE TORNEO
       // =======================================================================
-      // 1. Enlaces visibles en <nav> y móvil: Inicio, Torneos, Canchas y Organizador
+      // 1. Enlaces visibles en <nav> y móvil: Inicio, Torneos, Canchas y Mis Torneos (Organizador)
       if (headerNavCenter) headerNavCenter.style.display = '';
       if (navCanchasLink) navCanchasLink.style.display = 'inline-flex';
       if (mobileNavCanchasLink) mobileNavCanchasLink.style.display = 'flex';
-      if (navAdminLink) navAdminLink.style.display = 'inline-flex';
-      if (mobileNavAdminLink) mobileNavAdminLink.style.display = 'flex';
-      if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = 'flex';
+      if (navOrganizerLink) navOrganizerLink.style.display = 'inline-flex';
+      if (mobileNavOrganizerLink) mobileNavOrganizerLink.style.display = 'flex';
+      if (navAdminLink) navAdminLink.style.display = 'none';
+      if (mobileNavAdminLink) mobileNavAdminLink.style.display = 'none';
 
       // 2. Enlaces OCULTOS
       if (navCoachLink) navCoachLink.style.display = 'none';
       if (mobileNavCoachLink) mobileNavCoachLink.style.display = 'none';
       if (headerAdminTitleBadge) headerAdminTitleBadge.style.display = 'none';
       if (dropdownLinkCoach) dropdownLinkCoach.style.display = 'none';
+      if (dropdownLinkAdmin) dropdownLinkAdmin.style.display = 'none';
 
       // 3. Zona derecha: Botón + Nuevo Torneo, Notificaciones y Perfil
       if (btnHeaderCrear) {
@@ -3359,20 +3365,27 @@ window.quickFillAndLogin = function(email, pass, role) {
   if (inputPass) inputPass.value = pass;
   
   if (role) {
+    let targetUserId = null;
+    if (email && email.includes('laura')) targetUserId = 'usr-org-laura';
+    else if (email && (email.includes('carlos') || email.includes('organizador'))) targetUserId = 'usr-org-carlos';
+    else if (email && email.includes('boada')) targetUserId = 'usr-admin-1';
+    else if (email && email.includes('tecnico')) targetUserId = 'usr-coach-yepes';
+
     if (typeof setCurrentUserByRole === 'function') {
-      setCurrentUserByRole(role);
+      setCurrentUserByRole(role, targetUserId);
     }
     if (typeof closeAuthModal === 'function') {
       closeAuthModal();
     }
     if (typeof showToast === 'function') {
-      const titles = { admin: 'Administrador General', organizer: 'Organizador', coach: 'Delegado DT' };
+      const titles = { admin: 'Administrador General', organizer: 'Organizador', coach: 'Delegado DT', head_coach: 'Director Técnico', team_coach: 'Técnico del Equipo' };
       showToast(`¡Sesión iniciada como ${titles[role] || role}!`, 'success', 2500);
     }
     if (typeof navigateToView === 'function') {
-      if (role === 'admin' || role === 'organizer') navigateToView('admin');
-      else if (role === 'coach') navigateToView('club');
-      else navigateToView('torneos');
+      if (role === 'admin') navigateToView('admin');
+      else if (role === 'organizer') navigateToView('organizador');
+      else if (role === 'coach' || role === 'head_coach' || role === 'team_coach') navigateToView('club');
+      else navigateToView('home');
     }
   }
 };
@@ -3582,7 +3595,11 @@ window.quickFillAndLogin = function(email, pass, role) {
       const users = FMPStore.getUsers();
       const matched = users.find(u => 
         (u.email && u.email.toLowerCase() === userInput && (!u.password || u.password === passInput)) || 
-        (u.name && u.name.toLowerCase() === userInput && (!u.password || u.password === passInput))
+        (u.name && u.name.toLowerCase() === userInput && (!u.password || u.password === passInput)) ||
+        (userInput === 'organizador@futbolmaster.co' && u.id === 'usr-org-carlos' && (!u.password || u.password === passInput))
+      ) || DEMO_USERS.find(u => 
+        (u.email && u.email.toLowerCase() === userInput && (!u.password || u.password === passInput)) ||
+        (userInput === 'organizador@futbolmaster.co' && u.id === 'usr-org-carlos' && (!u.password || u.password === passInput))
       );
 
       if (matched) {
@@ -4929,6 +4946,13 @@ function navigateToView(targetRoute, updateHash = true) {
   if (session && session.loggedIn && normalizeRole(session.role) === 'admin') {
     if (routeId !== 'admin' && routeId !== 'crear' && routeId !== 'home') {
       routeId = 'admin';
+    }
+  }
+
+  // Modo Exclusivo de Organizador: Si intenta ir a admin, redirigir a organizador
+  if (session && session.loggedIn && normalizeRole(session.role) === 'organizer') {
+    if (routeId === 'admin') {
+      routeId = 'organizador';
     }
   }
 
@@ -6816,7 +6840,7 @@ let isDashboardEntranceRunning = false;
 
 function runSplashKickToSidebar() {
   const splashBall = document.getElementById('splash-main-ball') || document.querySelector('.splash-ball-wrapper');
-  const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
+  const sidebarBallBtn = document.querySelector('#view-organizer.active .sidebar-ball-refresh-btn, #view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
   const splashOverlay = document.querySelector('.splash-screen-overlay, #admin-splash-screen, #dashboardSplashOverlay, .dashboard-splash-overlay');
 
   if (splashBall && sidebarBallBtn) {
@@ -6878,7 +6902,7 @@ function runDashboardEntranceSequence(force = false) {
     overlay.style.setProperty('display', 'none', 'important');
     if (splashContent) splashContent.classList.add('text-fade-out');
     if (container) container.classList.add('entrance-expanding');
-    const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
+    const sidebarBallBtn = document.querySelector('#view-organizer.active .sidebar-ball-refresh-btn, #view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
     if (sidebarBallBtn) {
       sidebarBallBtn.style.opacity = '1';
       sidebarBallBtn.style.transform = 'scale(1)';
@@ -6911,7 +6935,7 @@ function runDashboardEntranceSequence(force = false) {
   if (splashContent) splashContent.classList.remove('text-fade-out');
 
   // Limpiar estilos inline previos del botón de destino en la barra lateral
-  const sidebarBallBtn = document.querySelector('#view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
+  const sidebarBallBtn = document.querySelector('#view-organizer.active .sidebar-ball-refresh-btn, #view-organizador.active .sidebar-ball-refresh-btn, #view-admin.active .sidebar-ball-refresh-btn, .sidebar-ball-refresh-btn, #pillSidebarTopLogo, #orgPillSidebarTopLogo');
   if (sidebarBallBtn) {
     sidebarBallBtn.style.transform = '';
     sidebarBallBtn.style.animation = '';
@@ -7365,6 +7389,12 @@ function renderBentoSideFeed() {
 function renderAdminView() {
   const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
   const role = normalizeRole(session?.role || 'fan');
+
+  // SEGURIDAD ESTRICTA: El panel de Admin solo se ejecuta para Administradores
+  if (role !== 'admin') {
+    navigateToView(role === 'organizer' ? 'organizador' : (isCoachRole(role) ? 'club' : 'home'), true);
+    return;
+  }
 
   // Asegurar sección activa sin apilar otras vistas
   let activeSubtab = document.querySelector('.admin-subtab-btn.active');
@@ -8247,7 +8277,11 @@ function renderOrganizerDashboard() {
   // Filtro estricto: Torneos del organizador activo
   const myTournaments = allTournaments.filter(t => {
     const ownerId = String(t.organizerId || t.organizer_id || '');
-    return ownerId === String(currentUserId) || (String(currentUserId) === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+    const isCarlos = String(currentUserId) === 'usr-org-carlos' || String(currentUserId) === 'usr-org-1';
+    if (isCarlos) {
+      return ownerId === 'usr-org-carlos' || ownerId === 'usr-org-1' || !ownerId;
+    }
+    return ownerId === String(currentUserId);
   });
 
   const headingEl = document.getElementById('orgWelcomeHeading');
@@ -8338,7 +8372,11 @@ function mountOrganizerSectionData(normSection, myTournaments) {
     const allTournaments = (typeof FMPStore !== 'undefined' && FMPStore.getTournaments) ? FMPStore.getTournaments() : (savedTournaments || []);
     myTournaments = allTournaments.filter(t => {
       const ownerId = String(t.organizerId || t.organizer_id || '');
-      return ownerId === String(currentUserId) || (String(currentUserId) === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+      const isCarlos = String(currentUserId) === 'usr-org-carlos' || String(currentUserId) === 'usr-org-1';
+      if (isCarlos) {
+        return ownerId === 'usr-org-carlos' || ownerId === 'usr-org-1' || !ownerId;
+      }
+      return ownerId === String(currentUserId);
     });
   }
 
@@ -8440,7 +8478,11 @@ function renderOrgSolicitudesTab(myTournaments, selectedTourneyId = 'all') {
     const currentUserId = session?.userId || 'usr-org-carlos';
     myTournaments = FMPStore.getTournaments().filter(t => {
       const ownerId = String(t.organizerId || t.organizer_id || '');
-      return ownerId === String(currentUserId) || (String(currentUserId) === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+      const isCarlos = String(currentUserId) === 'usr-org-carlos' || String(currentUserId) === 'usr-org-1';
+      if (isCarlos) {
+        return ownerId === 'usr-org-carlos' || ownerId === 'usr-org-1' || !ownerId;
+      }
+      return ownerId === String(currentUserId);
     });
   }
 
@@ -8537,7 +8579,11 @@ function renderOrgMarcadoresTab(myTournaments, selectedTourneyId = 'all') {
     const currentUserId = session?.userId || 'usr-org-carlos';
     myTournaments = FMPStore.getTournaments().filter(t => {
       const ownerId = String(t.organizerId || t.organizer_id || '');
-      return ownerId === String(currentUserId) || (String(currentUserId) === 'usr-org-carlos' && (ownerId === 'usr-org-1' || !ownerId));
+      const isCarlos = String(currentUserId) === 'usr-org-carlos' || String(currentUserId) === 'usr-org-1';
+      if (isCarlos) {
+        return ownerId === 'usr-org-carlos' || ownerId === 'usr-org-1' || !ownerId;
+      }
+      return ownerId === String(currentUserId);
     });
   }
 

@@ -1,4 +1,4 @@
-﻿/* =============================================================================
+/* =============================================================================
    PERFORMANCE & COMPOSITING: ZERO BACKDROP-FILTER KILL-SWITCH (60 FPS LOCK)
    ============================================================================= */
 *, *::before, *::after {
@@ -21940,6 +21940,7 @@ body.in-organizer-dashboard aside.public-mode-banner {
   display: none !important;
 }
 
+#view-organizer.active,
 #view-organizador.active {
   display: block !important;
 }

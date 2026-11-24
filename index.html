@@ -320,9 +320,13 @@
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           <span id="navCoachLinkText">Mi Club</span>
         </a>
+        <a href="#/organizador" class="nav-link global-nav-link" id="navOrganizerLink" data-route="organizador" style="display: none;">
+          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          <span id="navOrganizerLinkText">Mis Torneos</span>
+        </a>
         <a href="#/admin" class="nav-link global-nav-link" id="navAdminLink" data-route="admin" style="display: none;">
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span id="navAdminLinkText">Organizador</span>
+          <span id="navAdminLinkText">Admin Global</span>
         </a>
       </nav>
 
@@ -513,9 +517,13 @@
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
           <span id="mobileNavCoachLinkText">Mi Club</span>
         </a>
+        <a href="#/organizador" class="mobile-nav-item global-nav-link" id="mobileNavOrganizerLink" data-route="organizador" style="display: none;">
+          <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          <span id="mobileNavOrganizerLinkText">Mis Torneos</span>
+        </a>
         <a href="#/admin" class="mobile-nav-item global-nav-link" id="mobileNavAdminLink" data-route="admin" style="display: none;">
           <svg class="nav-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
-          <span id="mobileNavAdminLinkText">Organizador</span>
+          <span id="mobileNavAdminLinkText">Admin Global</span>
         </a>
         <!-- Enlaces Contextuales del Torneo Activo en Móvil -->
         <div id="mobileTournamentLinksWrap" style="display: none; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 0.5rem; margin-top: 0.5rem;">
@@ -6102,11 +6110,18 @@
                   <span>⚡</span><span>Accesos Rápidos de Demostración</span>
                 </div>
                 <div class="quick-test-grid">
-                  <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('organizador@futbolmaster.co', 'org123', 'organizer')">
+                  <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('carlos.mendoza@futbolmaster.co', 'org123', 'organizer')">
                     <span class="demo-role-icon">🏆</span>
                     <div class="demo-role-info">
-                      <strong>Organizador</strong>
-                      <span>organizador@...</span>
+                      <strong>Carlos Mendoza</strong>
+                      <span>Organizador con torneos</span>
+                    </div>
+                  </button>
+                  <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('laura.rios@futbolmaster.co', 'org123', 'organizer')">
+                    <span class="demo-role-icon">🌱</span>
+                    <div class="demo-role-info">
+                      <strong>Laura Ríos</strong>
+                      <span>Organizador Nuevo (0)</span>
                     </div>
                   </button>
                   <button type="button" class="btn-quick-demo-login" onclick="quickFillAndLogin('tecnico@futbolmaster.co', 'coach123', 'coach')">
