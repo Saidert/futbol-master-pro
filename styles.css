@@ -20196,8 +20196,12 @@ body.route-admin #mainHeader {
 
 body.in-admin-dashboard main,
 body.route-admin main,
+body.in-organizer-dashboard main,
+body.route-organizador main,
 body.in-admin-dashboard .main-content,
-body.route-admin .main-content {
+body.route-admin .main-content,
+body.in-organizer-dashboard .main-content,
+body.route-organizador .main-content {
   padding-top: 18px !important;
   margin-top: 0 !important;
 }

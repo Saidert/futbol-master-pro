@@ -4965,8 +4965,8 @@ function navigateToView(targetRoute, updateHash = true) {
 
   // Control estricto de visibilidad del Header y Aside según ruta:
   // En admin y en organizador, ocultar header global y aside para aprovechar el 100% de la pantalla
-  const isInAdmin = (routeId === 'admin') || (window.location.hash && window.location.hash.startsWith('#/admin'));
-  const isInOrganizer = (routeId === 'organizador') || (window.location.hash && window.location.hash.startsWith('#/organizador'));
+  const isInAdmin = (routeId === 'admin');
+  const isInOrganizer = (routeId === 'organizador' || routeId === 'organizer');
   document.body.classList.toggle('in-admin-dashboard', isInAdmin);
   document.body.classList.toggle('route-admin', isInAdmin);
   document.body.classList.toggle('in-organizer-dashboard', isInOrganizer);
@@ -16463,9 +16463,13 @@ function initSlideTabsNav() {
 function initApp() {
   window._fmpIsBooting = true;
 
-  // Detección inicial estricta de ruta admin para ocultar header antes de pintar
+  // Detección inicial estricta de rutas de dashboard para ocultar header antes de pintar
   if (window.location.hash && window.location.hash.startsWith('#/admin')) {
     document.body.classList.add('in-admin-dashboard', 'route-admin');
+    const mainHeaderEl = document.getElementById('mainHeader');
+    if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
+  } else if (window.location.hash && window.location.hash.startsWith('#/organizador')) {
+    document.body.classList.add('in-organizer-dashboard', 'route-organizador');
     const mainHeaderEl = document.getElementById('mainHeader');
     if (mainHeaderEl) mainHeaderEl.style.setProperty('display', 'none', 'important');
   }
