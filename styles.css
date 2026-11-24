@@ -21555,7 +21555,8 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
 
 .coach-section-desc {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: #D7F2F5 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85) !important;
   margin: 0;
   max-width: 650px;
   line-height: 1.45;
@@ -21578,8 +21579,19 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
 .coach-tournaments-grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
   gap: 22px !important;
   margin-top: 0.75rem !important;
+}
+
+.btn-cupos-agotados,
+.btn-coach-locked {
+  background: rgba(12, 26, 32, 0.78) !important;
+  color: #84A3AB !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  opacity: 0.85;
 }
 
 @media (max-width: 1120px) {

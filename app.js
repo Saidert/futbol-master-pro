@@ -3602,7 +3602,7 @@ window.quickFillAndLogin = function(email, pass, role) {
         closeAuthModal();
         showToast(`¡Bienvenido de nuevo, ${matched.name}!`, 'success', 2500);
         const normRole = normalizeRole(matched.role);
-        if (normRole === 'admin' || normRole === 'organizer') {
+        if (normRole === 'admin') {
           try {
             sessionStorage.removeItem('fmp_splash_completed');
             sessionStorage.removeItem('fmp_splash_played');
@@ -3611,7 +3611,16 @@ window.quickFillAndLogin = function(email, pass, role) {
           if (getNormalizedRoute() === 'admin') {
             runDashboardEntranceSequence(true);
           }
-        } else if (normRole === 'coach' || normRole === 'tecnico') {
+        } else if (normRole === 'organizer') {
+          try {
+            sessionStorage.removeItem('fmp_splash_completed');
+            sessionStorage.removeItem('fmp_splash_played');
+          } catch(e){}
+          navigateToView('organizador');
+          if (getNormalizedRoute() === 'organizador') {
+            runDashboardEntranceSequence(true);
+          }
+        } else if (isCoachRole(normRole)) {
           navigateToView('club');
         } else {
           navigateToView('home');
@@ -3913,59 +3922,59 @@ var tournamentState = window.tournamentState = {
 const DEMO_TEAMS = [
   { 
     id: 'team-1', 
-    name: 'Real Madrid', 
-    color: '#ffffff', 
+    name: 'Millonarios FC', 
+    color: '#0033a0', 
     shield: '', 
-    players: ['Vinicius Jr', 'Kylian Mbappé', 'Jude Bellingham', 'Luka Modric', 'Thibaut Courtois'] 
+    players: ['David Ospina', 'Mackalister Silva', 'Leonardo Castro', 'Daniel Cataño', 'Álvaro Montero'] 
   },
   { 
     id: 'team-2', 
-    name: 'FC Barcelona', 
-    color: '#a50044', 
+    name: 'Atlético Nacional', 
+    color: '#059669', 
     shield: '', 
-    players: ['Lamine Yamal', 'Robert Lewandowski', 'Pedri', 'Raphinha', 'Marc-André ter Stegen'] 
+    players: ['Edwin Cardona', 'Alfredo Morelos', 'William Tesillo', 'Jorman Campuzano', 'Harlen Castillo'] 
   },
   { 
     id: 'team-3', 
-    name: 'Manchester City', 
-    color: '#6cabdd', 
+    name: 'América de Cali', 
+    color: '#dc2626', 
     shield: '', 
-    players: ['Erling Haaland', 'Kevin De Bruyne', 'Phil Foden', 'Rodri', 'Ederson'] 
+    players: ['Adrián Ramos', 'Duván Vergara', 'Cristian Barrios', 'Éder Álvarez Balanta', 'Jorge Soto'] 
   },
   { 
     id: 'team-4', 
-    name: 'Bayern Múnich', 
-    color: '#dc052d', 
+    name: 'Junior FC', 
+    color: '#e11d48', 
     shield: '', 
-    players: ['Harry Kane', 'Jamal Musiala', 'Leroy Sané', 'Joshua Kimmich', 'Manuel Neuer'] 
+    players: ['Carlos Bacca', 'Víctor Cantillo', 'José Enamorado', 'Yimmi Chará', 'Santiago Mele'] 
   },
   { 
     id: 'team-5', 
-    name: 'Paris Saint-Germain', 
-    color: '#004170', 
+    name: 'Independiente Santa Fe', 
+    color: '#ef4444', 
     shield: '', 
-    players: ['Ousmane Dembélé', 'Achraf Hakimi', 'Warren Zaïre-Emery', 'Vitinha', 'Gianluigi Donnarumma'] 
+    players: ['Hugo Rodallega', 'Daniel Torres', 'Elvis Perlaza', 'Jhojan Torres', 'Andrés Mosquera'] 
   },
   { 
     id: 'team-6', 
-    name: 'Liverpool FC', 
-    color: '#c8102e', 
+    name: 'Deportivo Cali', 
+    color: '#16a34a', 
     shield: '', 
-    players: ['Mohamed Salah', 'Virgil van Dijk', 'Darwin Núñez', 'Luis Díaz', 'Alisson Becker'] 
+    players: ['Fredy Montero', 'Jarlan Barrera', 'Alexander Mejía', 'Francisco Meza', 'Alejandro Rodríguez'] 
   },
   { 
     id: 'team-7', 
-    name: 'Inter de Milán', 
-    color: '#0068a8', 
+    name: 'Independiente Medellín', 
+    color: '#b91c1c', 
     shield: '', 
-    players: ['Lautaro Martínez', 'Marcus Thuram', 'Nicolò Barella', 'Hakan Çalhanoğlu', 'Yann Sommer']
+    players: ['Brayan León', 'Jaime Alvarado', 'Fainer Torijano', 'Diego Moreno', 'Éder Chaux']
   },
   { 
     id: 'team-8', 
-    name: 'Arsenal FC', 
-    color: '#e03a3e', 
+    name: 'Atlético Bucaramanga', 
+    color: '#ca8a04', 
     shield: '', 
-    players: ['Bukayo Saka', 'Martin Ødegaard', 'Declan Rice', 'Gabriel Jesus', 'David Raya']
+    players: ['Fabián Sambueza', 'Fredy Hinestroza', 'Jefferson Mena', 'Fabry Castro', 'Aldair Quintana']
   }
 ];
 
@@ -4648,9 +4657,24 @@ var dom = window.dom = {
 // =============================================================================
 // 3. SISTEMA DE TOASTS Y NOTIFICACIONES
 // =============================================================================
-function showToast(message, type = 'info', duration = 3200) {
+function showToast(message, type = 'info', duration = 2800) {
   const container = (typeof dom !== 'undefined' && dom && dom.toastContainer) || document.getElementById('toastContainer');
   if (!container) return;
+
+  // Deduplicación de toasts de bienvenida / sesión
+  if (message.includes('Bienvenido') || message.includes('Sesión activa') || message.includes('Sesión iniciada')) {
+    Array.from(container.children).forEach(child => {
+      const text = child.textContent || '';
+      if (text.includes('Bienvenido') || text.includes('Sesión activa') || text.includes('Sesión iniciada')) {
+        child.remove();
+      }
+    });
+  }
+
+  // Limitar a máximo 2 toasts simultáneos en pantalla
+  while (container.children.length >= 2) {
+    container.removeChild(container.firstChild);
+  }
 
   const icons = {
     success: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>',
@@ -5847,14 +5871,14 @@ function loadDemoTournament() {
   document.body.classList.add('managing-tournament');
   const demoId = 'tournament_demo_' + Date.now();
   const demoTeams = [
-    { id: 'team_d1', name: 'Real Madrid CF', color: '#1e3a8a', shield: '' },
-    { id: 'team_d2', name: 'FC Barcelona', color: '#a50044', shield: '' },
-    { id: 'team_d3', name: 'Manchester City', color: '#6cabdd', shield: '' },
-    { id: 'team_d4', name: 'Bayern München', color: '#dc052d', shield: '' },
-    { id: 'team_d5', name: 'Paris Saint-Germain', color: '#004170', shield: '' },
-    { id: 'team_d6', name: 'Liverpool FC', color: '#c8102e', shield: '' },
-    { id: 'team_d7', name: 'Juventus FC', color: '#334155', shield: '' },
-    { id: 'team_d8', name: 'Inter de Milán', color: '#001489', shield: '' }
+    { id: 'team_d1', name: 'Millonarios FC', color: '#0033a0', shield: '' },
+    { id: 'team_d2', name: 'Atlético Nacional', color: '#059669', shield: '' },
+    { id: 'team_d3', name: 'América de Cali', color: '#dc2626', shield: '' },
+    { id: 'team_d4', name: 'Junior FC', color: '#e11d48', shield: '' },
+    { id: 'team_d5', name: 'Independiente Santa Fe', color: '#ef4444', shield: '' },
+    { id: 'team_d6', name: 'Deportivo Cali', color: '#16a34a', shield: '' },
+    { id: 'team_d7', name: 'Independiente Medellín', color: '#b91c1c', shield: '' },
+    { id: 'team_d8', name: 'Atlético Bucaramanga', color: '#ca8a04', shield: '' }
   ];
 
   // Generar emparejamientos Round-Robin oficiales para 8 equipos (7 jornadas, 4 partidos c/u = 28)
@@ -7274,7 +7298,7 @@ function renderBentoSideFeed() {
     </div>
     <div class="side-feed-item">
       <span class="side-feed-icon">⚽</span>
-      <div><strong style="color:#ffffff;">Real Madrid 3 - 2 Man. City</strong> acta de partido finalizada.<br><small style="color:#10b981">Hace 22 min • 3 puntos sumados</small></div>
+      <div><strong style="color:#ffffff;">Millonarios 3 - 2 Santa Fe</strong> acta de partido finalizada.<br><small style="color:#10b981">Hace 22 min • 3 puntos sumados</small></div>
     </div>
     <div class="side-feed-item">
       <span class="side-feed-icon">⚖️</span>
@@ -7409,6 +7433,24 @@ function renderAdminStats() {
     } else {
       bannerAlerts.style.display = 'none';
     }
+  }
+
+  // Sincronización del contador de clubes y botón
+  const confirmedClubsCount = (teams && teams.length > 0) ? teams.length : 16;
+  const elClubsCount = document.getElementById('v22ClubsCount');
+  if (elClubsCount) {
+    elClubsCount.textContent = confirmedClubsCount < 10 ? `0${confirmedClubsCount}` : `${confirmedClubsCount}`;
+    elClubsCount.setAttribute('data-target', confirmedClubsCount);
+  }
+  const elBtnAllClubs = document.getElementById('btnViewAllClubsAdmin');
+  if (elBtnAllClubs) {
+    elBtnAllClubs.textContent = `Ver los ${confirmedClubsCount} clubes →`;
+  }
+  const btnColScenario = document.getElementById('btnLoadCompleteColombiaScenario');
+  if (btnColScenario) {
+    const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+    const role = session ? normalizeRole(session.role) : 'spectator';
+    btnColScenario.style.display = (role === 'admin') ? 'inline-flex' : 'none';
   }
 }
 
@@ -8165,12 +8207,12 @@ function renderOrganizerDashboard() {
   const tourneySelect = document.getElementById('orgActiveTournamentSelect');
 
   if (headingEl) {
-    headingEl.textContent = `Centro de Mando: ${session.name || 'Organizador'}`;
+    headingEl.textContent = 'Panel del Organizador';
   }
 
   // REGLA DE ORO DEL EMPTY STATE (Ej. Laura Ríos con 0 torneos)
   if (myTournaments.length === 0) {
-    if (badgeEl) badgeEl.textContent = '🇨🇴 CUENTA VERIFICADA • 0 TORNEOS';
+    if (badgeEl) badgeEl.textContent = '🇨🇴 GESTIÓN DE MIS TORNEOS • 0 TORNEOS';
     if (subtitleEl) subtitleEl.textContent = 'Aún no has creado competiciones oficiales. Publica tu primer torneo para habilitar inscripciones.';
     if (tourneySelectWrap) tourneySelectWrap.style.display = 'none';
 
@@ -8204,7 +8246,7 @@ function renderOrganizerDashboard() {
   }
 
   // TIENE 1 O MÁS TORNEOS (Carlos Mendoza o nuevo torneo creado)
-  if (badgeEl) badgeEl.textContent = `🇨🇴 ORGANIZADOR OFICIAL • ${myTournaments.length} TORNEO(S)`;
+  if (badgeEl) badgeEl.textContent = `🇨🇴 GESTIÓN DE MIS TORNEOS • ${myTournaments.length} TORNEO(S)`;
   if (subtitleEl) subtitleEl.textContent = 'Gestión integral de tus competiciones, actas arbitrales y control de clubes en tiempo real.';
 
   if (!window._orgActiveTourneyId || !myTournaments.some(t => t.id === window._orgActiveTourneyId)) {
@@ -8984,20 +9026,42 @@ function maskDocNumber(docNum) {
 
 function renderCoachView() {
   const activeUser = (typeof FMPStore !== 'undefined' && FMPStore.getSession) 
-    ? (FMPStore.getSession() || userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {}))
-    : (userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[2] : {}));
+    ? (FMPStore.getSession() || userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[3] : {}))
+    : (userSession || (typeof DEMO_USERS !== 'undefined' ? DEMO_USERS[3] : {}));
 
   const coachClubNameDisplay = document.getElementById('coachClubNameDisplay');
   const coachNameDisplay = document.getElementById('coachNameDisplay');
   const coachCategoryDisplay = document.getElementById('coachCategoryDisplay');
   const coachCityDisplay = document.getElementById('coachCityDisplay');
   const coachClubShield = document.getElementById('coachClubShield');
+  const coachHeroRoleBadge = document.getElementById('coachHeroRoleBadge');
+  const btnOpenEditCoachClub = document.getElementById('btnOpenEditCoachClub');
+  const btnOpenPlanillaPdfModal = document.getElementById('btnOpenPlanillaPdfModal');
+
+  const isTeamCoach = (normalizeRole(activeUser.role) === 'team_coach');
 
   if (coachClubNameDisplay) coachClubNameDisplay.textContent = activeUser.clubName || 'Atlético Bogotá FC';
-  if (coachNameDisplay) coachNameDisplay.textContent = 'DT: ' + (activeUser.name || 'Mario Alberto Yepes');
   if (coachCategoryDisplay) coachCategoryDisplay.textContent = 'Categoría: ' + (activeUser.category || 'Libre / Mayores');
   if (coachCityDisplay) coachCityDisplay.textContent = activeUser.city || 'Bogotá D.C.';
   if (coachClubShield) coachClubShield.textContent = activeUser.clubShield || '⚽';
+
+  if (isTeamCoach) {
+    if (coachHeroRoleBadge) coachHeroRoleBadge.textContent = 'TÉCNICO DEL EQUIPO • GESTIÓN DEPORTIVA 🇨🇴';
+    if (coachNameDisplay) coachNameDisplay.textContent = 'Técnico: ' + (activeUser.name || 'Julián Barreto');
+    if (btnOpenEditCoachClub) btnOpenEditCoachClub.style.display = 'none';
+    if (btnOpenPlanillaPdfModal) btnOpenPlanillaPdfModal.style.display = 'none';
+    if (!window._coachTabManuallySelected) {
+      currentCoachTab = 'roster';
+    }
+  } else {
+    if (coachHeroRoleBadge) coachHeroRoleBadge.textContent = 'DIRECTOR TÉCNICO & DELEGADO OFICIAL 🇨🇴';
+    if (coachNameDisplay) coachNameDisplay.textContent = 'DT: ' + (activeUser.name || 'Mario Alberto Yepes');
+    if (btnOpenEditCoachClub) btnOpenEditCoachClub.style.display = '';
+    if (btnOpenPlanillaPdfModal) btnOpenPlanillaPdfModal.style.display = '';
+    if (!window._coachTabManuallySelected) {
+      currentCoachTab = 'tournaments';
+    }
+  }
 
   // Sincronizar contador de solicitudes
   const allRegs = (typeof FMPStore !== 'undefined' && FMPStore.getRegistrations) ? FMPStore.getRegistrations() : [];
@@ -9005,7 +9069,7 @@ function renderCoachView() {
   if (countBadge) countBadge.textContent = allRegs.length;
 
   // Renderizar la pestaña activa actual
-  switchCoachTab(currentCoachTab || 'tournaments');
+  switchCoachTab(currentCoachTab || (isTeamCoach ? 'roster' : 'tournaments'));
 }
 window.renderCoachView = renderCoachView;
 
@@ -9082,7 +9146,7 @@ function renderCoachTournamentsGrid() {
     const feeFormatted = (t.config?.registrationFee || t.registrationFee) 
       ? `$${Number(t.config?.registrationFee || t.registrationFee).toLocaleString('es-CO')} COP` 
       : '$350.000 COP';
-    const quotaPct = Math.min(100, Math.max(12, Math.round((teamsCount / (maxTeams || 8)) * 100)));
+    const quotaPct = maxTeams > 0 ? Math.min(100, Math.round((teamsCount / maxTeams) * 100)) : 0;
 
     // Buscar si mi club ya tiene postulación para este torneo
     const reg = allRegs.find(r => 
@@ -9112,8 +9176,8 @@ function renderCoachTournamentsGrid() {
       badgeHtml = '<span class="coach-tourney-badge badge-rejected">● Requiere Subsanación</span>';
       actionBtnHtml = isTeamCoachUser ? `
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
-          <button type="button" class="btn-coach-action btn-subsanar" disabled style="opacity: 0.55; cursor: not-allowed;" title="Solo Director Técnico: Subsanación reservada al DT Delegado">
-            <span>🔄 Subsanar Documentos</span>
+          <button type="button" class="btn-coach-action btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Solo Director Técnico: Subsanación reservada al DT Delegado">
+            <span>🔒 Subsanación exclusiva del Director Técnico</span>
           </button>
           <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
         </div>
@@ -9131,21 +9195,28 @@ function renderCoachTournamentsGrid() {
       `;
     } else {
       const isFull = teamsCount >= maxTeams && maxTeams > 0;
-      badgeHtml = isFull 
-        ? '<span class="coach-tourney-badge badge-pending">● Cupos Completos</span>' 
-        : '<span class="coach-tourney-badge badge-open">● Inscripciones Abiertas</span>';
-      actionBtnHtml = isTeamCoachUser ? `
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
-          <button type="button" class="btn-coach-action btn-apply" disabled style="opacity: 0.55; cursor: not-allowed;" title="Solo Director Técnico: La postulación y comprobante de pago están reservados al DT Delegado">
+      if (isFull) {
+        badgeHtml = '<span class="coach-tourney-badge badge-pending">● Cupos Agotados</span>';
+        actionBtnHtml = `
+          <button type="button" class="btn-coach-action btn-cupos-agotados" disabled title="No hay cupos disponibles en esta competición">
+            <span>🔒 Cupos Agotados</span>
+          </button>
+        `;
+      } else {
+        badgeHtml = '<span class="coach-tourney-badge badge-open">● Inscripciones Abiertas</span>';
+        actionBtnHtml = isTeamCoachUser ? `
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
+            <button type="button" class="btn-coach-action btn-coach-locked" disabled title="Solo Director Técnico: La postulación y comprobante de pago están reservados al DT Delegado">
+              <span>🔒 Inscripción exclusiva del Director Técnico</span>
+            </button>
+            <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
+          </div>
+        ` : `
+          <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
             <span>📋 Ingresar / Inscribir mi Club</span>
           </button>
-          <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
-        </div>
-      ` : `
-        <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
-          <span>📋 Ingresar / Inscribir mi Club</span>
-        </button>
-      `;
+        `;
+      }
     }
 
     return `
@@ -9175,7 +9246,7 @@ function renderCoachTournamentsGrid() {
             </div>
           </div>
           <div class="coach-quota-progress-track" title="${quotaPct}% cupos ocupados">
-            <div class="coach-quota-progress-fill" style="width: ${quotaPct}%;"></div>
+            <div class="coach-quota-progress-fill" style="${quotaPct === 0 ? 'width: 0%; min-width: 0 !important; opacity: 0;' : `width: ${quotaPct}%;`}"></div>
           </div>
         </div>
 
@@ -9225,6 +9296,7 @@ function renderCoachApplicationsTable() {
 
   if (alertBanner) {
     if (rejectedReg) {
+      const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
       alertBanner.style.display = 'block';
       alertBanner.innerHTML = `
         <div class="coach-rejected-banner">
@@ -9238,9 +9310,15 @@ function renderCoachApplicationsTable() {
               "${escapeHtml(rejectedReg.observations || 'Incumplimiento de requisitos documentales o comprobante de pago no válido.')}"
             </span>
           </p>
-          <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${escapeHtml(rejectedReg.tournamentId)}', true, '${escapeHtml(rejectedReg.id)}')">
-            <span>🔄 Subsanar y Reenviar Documentos Ahora</span>
-          </button>
+          ${isTeamCoachUser ? `
+            <button type="button" class="btn-primary-neon btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Subsanación reservada al Director Técnico">
+              <span>🔒 Subsanación exclusiva del Director Técnico</span>
+            </button>
+          ` : `
+            <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${escapeHtml(rejectedReg.tournamentId)}', true, '${escapeHtml(rejectedReg.id)}')">
+              <span>🔄 Subsanar y Reenviar Documentos Ahora</span>
+            </button>
+          `}
         </div>
       `;
     } else {
@@ -18378,6 +18456,29 @@ Fútbol Master Pro • Sistema de Gestión y Telemetría Oficial
 }
 
 function openTournamentApplicationModal(tId, isCorrection = false, existingRegId = null) {
+  const session = (typeof FMPStore !== 'undefined' && FMPStore.getSession) ? FMPStore.getSession() : userSession;
+  if (session && normalizeRole(session.role) === 'team_coach') {
+    if (typeof showToast === 'function') {
+      showToast('🔒 Acción exclusiva del Director Técnico y Delegado Oficial.', 'warning', 3500);
+    }
+    return;
+  }
+
+  const allTournaments = FMPStore.getTournaments();
+  if (tId && !isCorrection) {
+    const targetTourney = allTournaments.find(t => t.id === tId);
+    if (targetTourney) {
+      const teamsCount = Array.isArray(targetTourney.teams) ? targetTourney.teams.length : 0;
+      const maxTeams = parseInt(targetTourney.config?.maxTeams || targetTourney.maxTeams || 16, 10);
+      if (maxTeams > 0 && teamsCount >= maxTeams) {
+        if (typeof showToast === 'function') {
+          showToast('🔒 Cupos agotados para este torneo. No admite nuevas postulaciones.', 'warning', 3500);
+        }
+        return;
+      }
+    }
+  }
+
   const modal = document.getElementById('modalApplyTournament');
   if (!modal) return;
 
