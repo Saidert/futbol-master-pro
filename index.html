@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -4863,12 +4863,12 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- VISTA DEDICADA: DASHBOARD DEL ORGANIZADOR (#/organizador) -->
+  <!-- VISTA DEDICADA: DASHBOARD DEL ORGANIZADOR (#/organizador - 3 APARTADOS) -->
   <!-- ===================================================================== -->
   <section id="view-organizer" class="app-view spa-view" data-alias="view-organizador" hidden>
     <div class="admin-shell-layout" id="organizerShellLayout">
       
-      <!-- 1. BARRA LATERAL FLOTANTE DEL ORGANIZADOR (11 SECCIONES) -->
+      <!-- 1. BARRA LATERAL FLOTANTE DEL ORGANIZADOR (EXACTAMENTE 3 APARTADOS) -->
       <aside class="pill-sidebar-container pill-sidebar-wrapper pill-sidebar-dock" id="organizerPillSidebar">
         <!-- Balón 360° interactivo superior para recargar datos y docking de splash -->
         <button type="button" class="sidebar-nav-btn sidebar-ball-refresh-btn" id="orgPillSidebarTopLogo" title="Actualizar datos del torneo" onclick="refreshOrganizerDashboardData(this)">
@@ -4900,51 +4900,23 @@
 
         <div class="pill-dock-divider"></div>
 
-        <!-- 11 Botones de Navegación del Organizador -->
+        <!-- EXACTAMENTE 3 Botones de Navegación del Organizador -->
         <div class="pill-dock-group">
-          <button type="button" class="sidebar-nav-btn org-subtab-btn active" data-subtab="org-tab-inicio" data-section="org-inicio" onclick="setActiveOrganizerSection('org-inicio')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
-            <span class="sidebar-item-label">Inicio</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-torneos" data-section="org-torneos" onclick="setActiveOrganizerSection('org-torneos')">
+          <!-- 1. Mis Torneos (por defecto) -->
+          <button type="button" class="sidebar-nav-btn org-subtab-btn active" data-subtab="org-tab-torneos" data-section="org-torneos" onclick="setActiveOrganizerSection('org-torneos')" title="Mis Torneos">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
             <span class="sidebar-item-label">Mis Torneos</span>
           </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-crear" data-section="org-crear" onclick="setActiveOrganizerSection('org-crear')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            <span class="sidebar-item-label">Crear Torneo</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-inscripciones" data-section="org-inscripciones" onclick="setActiveOrganizerSection('org-inscripciones')">
+          <!-- 2. Solicitudes con Badge de Pendientes -->
+          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-solicitudes" data-section="org-solicitudes" onclick="setActiveOrganizerSection('org-solicitudes')" title="Solicitudes" style="position: relative;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span class="sidebar-item-label">Inscripciones</span>
+            <span class="sidebar-item-label">Solicitudes</span>
+            <span class="org-sidebar-badge-counter" id="orgSidebarSolicitudesBadge" style="display: none;">0</span>
           </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-equipos" data-section="org-equipos" onclick="setActiveOrganizerSection('org-equipos')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-            <span class="sidebar-item-label">Equipos</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-jugadores" data-section="org-jugadores" onclick="setActiveOrganizerSection('org-jugadores')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <span class="sidebar-item-label">Jugadores</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-calendario" data-section="org-calendario" onclick="setActiveOrganizerSection('org-calendario')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            <span class="sidebar-item-label">Calendario</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-partidos" data-section="org-partidos" onclick="setActiveOrganizerSection('org-partidos')">
+          <!-- 3. Marcadores Rápidos -->
+          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-marcadores" data-section="org-marcadores" onclick="setActiveOrganizerSection('org-marcadores')" title="Marcadores Rápidos">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-            <span class="sidebar-item-label">Partidos</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-posiciones" data-section="org-posiciones" onclick="setActiveOrganizerSection('org-posiciones')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-            <span class="sidebar-item-label">Tabla de Posiciones</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-estadisticas" data-section="org-estadisticas" onclick="setActiveOrganizerSection('org-estadisticas')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-            <span class="sidebar-item-label">Estadísticas</span>
-          </button>
-          <button type="button" class="sidebar-nav-btn org-subtab-btn" data-subtab="org-tab-config" data-section="org-config" onclick="setActiveOrganizerSection('org-config')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-            <span class="sidebar-item-label">Configuración</span>
+            <span class="sidebar-item-label">Marcadores</span>
           </button>
         </div>
 
@@ -4952,11 +4924,11 @@
 
         <!-- Acciones Rápidas (Inicio Público y Logout) -->
         <div class="pill-dock-actions">
-          <button type="button" class="sidebar-nav-btn pill-dock-action-btn" onclick="navigateToView('home')">
+          <button type="button" class="sidebar-nav-btn pill-dock-action-btn" onclick="navigateToView('home')" title="Inicio Público">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span class="sidebar-item-label">Inicio Público</span>
           </button>
-          <button type="button" class="sidebar-nav-btn pill-dock-action-btn btn-action-logout" onclick="handleLogout(event)">
+          <button type="button" class="sidebar-nav-btn pill-dock-action-btn btn-action-logout" onclick="handleLogout(event)" title="Cerrar Sesión">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
             <span class="sidebar-item-label">Cerrar Sesión</span>
           </button>
@@ -4970,204 +4942,125 @@
         <div class="admin-header-strip organizer-header-strip">
           <div>
             <div class="admin-badge-co">
-              <span id="orgTournamentsBadge">🇨🇴 GESTIÓN DE MIS TORNEOS</span>
+              <span id="orgTournamentsBadge">🇨🇴 MI ESPACIO DE ORGANIZADOR</span>
             </div>
             <h1 class="admin-main-title" id="orgWelcomeHeading">Panel del Organizador</h1>
-            <p class="admin-sub-title" id="orgWelcomeSubtitle">Gestión exclusiva de tus competiciones, actas arbitrales y control financiero de clubes.</p>
+            <p class="admin-sub-title" id="orgWelcomeSubtitle">Gestión exclusiva de tus competiciones, solicitudes de clubes y marcadores en tiempo real.</p>
           </div>
           <div class="admin-top-actions">
-            <!-- Selector de Torneo Activo -->
-            <div class="org-active-tourney-wrapper" id="orgActiveTournamentSelectWrapper" style="display: none;">
-              <label for="orgActiveTournamentSelect" style="font-size: 0.75rem; color: #1EC1CB; font-weight: 700; text-transform: uppercase;">Torneo Activo:</label>
-              <select id="orgActiveTournamentSelect" class="select-filter-pill" onchange="handleOrgActiveTournamentChange(this.value)">
-                <!-- Poblado dinámicamente -->
-              </select>
-            </div>
-            <button type="button" class="btn-primary-neon" onclick="setActiveOrganizerSection('org-crear')">
-              <span>+ Nuevo Torneo</span>
+            <button type="button" class="btn-primary-neon" onclick="openOrgCreateTournamentModal()">
+              <span>+ Crear Torneo</span>
             </button>
           </div>
         </div>
 
-        <!-- SECCIÓN 1: INICIO -->
-        <section data-org-section="org-inicio" id="org-tab-inicio" class="admin-section-pane active" style="display: block;">
-          <div id="orgInicioContent">
-            <!-- Renderizado dinámicamente: KPIs o Empty State -->
-          </div>
-        </section>
+        <!-- Contenedor de Estado Vacío (Para cuando 0 torneos creados) -->
+        <div id="orgEmptyStateContainer" style="display: none;"></div>
 
-        <!-- SECCIÓN 2: MIS TORNEOS -->
-        <section data-org-section="org-torneos" id="org-tab-torneos" class="admin-section-pane" style="display: none;">
-          <div class="view-header-bar" style="margin-bottom: 1.25rem;">
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">🏆 Mis Torneos Creados</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Supervisión del estado de tus torneos: borrador, activo o finalizado.</p>
-          </div>
-          <div class="coach-tournaments-grid" id="orgMyTournamentsGrid">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
+        <!-- Contenedor Principal de Secciones (Para cuando >= 1 torneos) -->
+        <div id="orgSectionsWrapper">
+          <!-- SECCIÓN 1: MIS TORNEOS (POR DEFECTO) -->
+          <section data-org-section="org-torneos" id="org-tab-torneos" class="admin-section-pane active" style="display: block;">
+            <div id="orgTorneosContent"></div>
+          </section>
 
-        <!-- SECCIÓN 3: CREAR TORNEO (Formulario Integrado) -->
-        <section data-org-section="org-crear" id="org-tab-crear" class="admin-section-pane" style="display: none;">
-          <div class="view-header-bar" style="margin-bottom: 1.25rem;">
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">➕ Publicar Nuevo Torneo Oficial</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Configura las bases del torneo, sede, cupos y valor de inscripción en Pesos Colombianos.</p>
-          </div>
-          <div class="liquid-glass-card" style="padding: 1.75rem; border-radius: 20px; max-width: 860px;">
-            <form id="orgCreateTournamentForm" onsubmit="handleOrgCreateTournamentSubmit(event)">
-              <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                <div>
-                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Nombre del Torneo *</label>
-                  <input type="text" id="orgNewTourneyName" class="form-control-neon" placeholder="Ej. Torneo Apertura 2026 - Copa Élite" required style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Formato de Juego *</label>
-                    <select id="orgNewTourneySport" class="form-control-neon" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                      <option value="f11">Fútbol 11 (F11)</option>
-                      <option value="f8">Fútbol 8 (F8)</option>
-                      <option value="sala">Fútbol de Salón / Futsal</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Ciudad Sede *</label>
-                    <select id="orgNewTourneyCity" class="form-control-neon" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                      <option value="Bogotá D.C.">Bogotá D.C.</option>
-                      <option value="Medellín">Medellín</option>
-                      <option value="Cali">Cali</option>
-                      <option value="Barranquilla">Barranquilla</option>
-                      <option value="Bucaramanga">Bucaramanga</option>
-                    </select>
-                  </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Número de Equipos *</label>
-                    <select id="orgNewTourneyTeamsCount" class="form-control-neon" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                      <option value="8">8 Equipos (Cuartos de final)</option>
-                      <option value="16" selected>16 Equipos (Octavos de final)</option>
-                      <option value="32">32 Equipos (Dieciseisavos)</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Costo de Inscripción (COP) *</label>
-                    <input type="number" id="orgNewTourneyFee" class="form-control-neon" value="350000" step="10000" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                  </div>
-                </div>
-                <div>
-                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Sede / Cancha Principal</label>
-                  <input type="text" id="orgNewTourneyVenue" class="form-control-neon" placeholder="Ej. Complejo Deportivo El Salitre - Cancha Sintética 1" value="Complejo El Salitre (Bogotá)" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
-                  <button type="submit" class="btn-primary-neon" style="padding: 12px 28px; font-size: 0.95rem;">
-                    <span>🚀 Publicar Torneo Ahora</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </section>
+          <!-- SECCIÓN 2: SOLICITUDES (CON BADGE DE PENDIENTES) -->
+          <section data-org-section="org-solicitudes" id="org-tab-solicitudes" class="admin-section-pane" style="display: none;">
+            <div id="orgSolicitudesContent"></div>
+          </section>
 
-        <!-- SECCIÓN 4: INSCRIPCIONES -->
-        <section data-org-section="org-inscripciones" id="org-tab-inscripciones" class="admin-section-pane" style="display: none;">
-          <div id="orgInscripcionesContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 5: EQUIPOS -->
-        <section data-org-section="org-equipos" id="org-tab-equipos" class="admin-section-pane" style="display: none;">
-          <div id="orgEquiposContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 6: JUGADORES -->
-        <section data-org-section="org-jugadores" id="org-tab-jugadores" class="admin-section-pane" style="display: none;">
-          <div id="orgJugadoresContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 7: CALENDARIO -->
-        <section data-org-section="org-calendario" id="org-tab-calendario" class="admin-section-pane" style="display: none;">
-          <div id="orgCalendarioContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 8: PARTIDOS & ACTAS -->
-        <section data-org-section="org-partidos" id="org-tab-partidos" class="admin-section-pane" style="display: none;">
-          <div id="orgPartidosContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 9: TABLA DE POSICIONES -->
-        <section data-org-section="org-posiciones" id="org-tab-posiciones" class="admin-section-pane" style="display: none;">
-          <div id="orgPosicionesContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 10: ESTADÍSTICAS -->
-        <section data-org-section="org-estadisticas" id="org-tab-estadisticas" class="admin-section-pane" style="display: none;">
-          <div id="orgEstadisticasContent">
-            <!-- Renderizado dinámicamente -->
-          </div>
-        </section>
-
-        <!-- SECCIÓN 11: CONFIGURACIÓN -->
-        <section data-org-section="org-config" id="org-tab-config" class="admin-section-pane" style="display: none;">
-          <div class="view-header-bar" style="margin-bottom: 1.25rem;">
-            <h3 style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; margin: 0 0 0.4rem 0;">⚙️ Configuración del Organizador</h3>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Actualiza tus datos de contacto, cuenta bancaria para recaudos y nombre comercial.</p>
-          </div>
-          <div class="liquid-glass-card" style="padding: 1.75rem; border-radius: 20px; max-width: 780px;">
-            <form id="orgProfileConfigForm" onsubmit="handleOrgConfigSave(event)">
-              <div style="display: flex; flex-direction: column; gap: 1.25rem;">
-                <div>
-                  <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Nombre Comercial / Organización</label>
-                  <input type="text" id="orgConfigBusinessName" class="form-control-neon" value="Liga Premier Bogotá" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">WhatsApp Oficial de Contacto</label>
-                    <input type="tel" id="orgConfigWhatsapp" class="form-control-neon" value="3109876543" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                  </div>
-                  <div>
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.4rem;">Ciudad Base</label>
-                    <input type="text" id="orgConfigCity" class="form-control-neon" value="Bogotá D.C." style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff;">
-                  </div>
-                </div>
-                <div style="background: rgba(5,20,25,0.6); border: 1px solid rgba(30,193,203,0.25); border-radius: 12px; padding: 1.25rem;">
-                  <h4 style="color: #1EC1CB; font-size: 0.95rem; font-weight: 800; margin: 0 0 0.8rem 0;">💳 Datos de Recaudo para Comprobantes de Pago</h4>
-                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                    <div>
-                      <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.3rem;">Entidad (Nequi / Daviplata / Bancolombia)</label>
-                      <input type="text" id="orgConfigBank" class="form-control-neon" value="Nequi / Bancolombia Ahorros" style="width: 100%; padding: 8px 12px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.2); border-radius: 8px; color: #fff;">
-                    </div>
-                    <div>
-                      <label style="display: block; font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-bottom: 0.3rem;">Número de Cuenta / Teléfono Recaudo</label>
-                      <input type="text" id="orgConfigAccountNum" class="form-control-neon" value="3109876543" style="width: 100%; padding: 8px 12px; background: rgba(5,20,25,0.8); border: 1px solid rgba(30,193,203,0.2); border-radius: 8px; color: #fff;">
-                    </div>
-                  </div>
-                </div>
-                <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
-                  <button type="submit" class="btn-primary-neon" style="padding: 10px 22px;">
-                    <span>💾 Guardar Datos del Organizador</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </section>
+          <!-- SECCIÓN 3: MARCADORES RÁPIDOS -->
+          <section data-org-section="org-marcadores" id="org-tab-marcadores" class="admin-section-pane" style="display: none;">
+            <div id="orgMarcadoresContent"></div>
+          </section>
+        </div>
 
       </main> <!-- /organizerActiveViewport -->
 
     </div> <!-- /organizerShellLayout -->
   </section>
 
+  <!-- MODAL: CREAR / EDITAR TORNEO OFICIAL DEL ORGANIZADOR -->
+  <div class="fmp-modal-backdrop" id="modalOrgCreateTournament" style="display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(3, 14, 18, 0.85); align-items: center; justify-content: center;" onclick="if(event.target===this) closeOrgCreateTournamentModal();">
+    <div class="fmp-modal-window liquid-glass-card" style="max-width: 680px; width: 92%; border-radius: 22px; padding: 2rem; background: linear-gradient(135deg, rgba(6, 26, 32, 0.96), rgba(4, 16, 20, 0.98)); border: 1px solid rgba(30, 193, 203, 0.35); border-top: 1px solid rgba(165, 243, 252, 0.4); box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <div class="admin-badge-co" style="font-size: 0.72rem; margin-bottom: 0.3rem;">🇨🇴 CREACIÓN OFICIAL DE COMPETICIÓN</div>
+          <h3 id="orgCreateModalTitle" style="color: #f8fafc; font-size: 1.35rem; font-weight: 800; margin: 0;">➕ Publicar Nuevo Torneo</h3>
+        </div>
+        <button type="button" onclick="closeOrgCreateTournamentModal()" style="background: transparent; border: none; color: #94a3b8; font-size: 1.5rem; cursor: pointer; padding: 4px 8px;">✕</button>
+      </div>
+
+      <form id="orgCreateTournamentModalForm" onsubmit="handleOrgCreateTournamentSubmit(event)">
+        <input type="hidden" id="orgEditingTournamentId" value="">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div>
+            <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Nombre Oficial del Torneo *</label>
+            <input type="text" id="orgNewTourneyName" required placeholder="Ej. Copa Élite Colombia 2026" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Modalidad Deportiva</label>
+              <select id="orgNewTourneySport" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+                <option value="futbol11">Fútbol 11 (Cancha Reglamentaria)</option>
+                <option value="futbol7">Fútbol 7 (Grama Sintética)</option>
+                <option value="futsal">Fútbol Sala / Microfútbol</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Formato de Competencia</label>
+              <select id="orgNewTourneyFormat" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+                <option value="league_single">Liga (Todos contra todos)</option>
+                <option value="knockout">Eliminatoria Directa (Playoffs)</option>
+                <option value="groups_playoffs">Fase de Grupos + Llaves Finales</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Categoría</label>
+              <select id="orgNewTourneyCategory" style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+                <option value="Libre Masculino">Libre Masculino</option>
+                <option value="Libre Femenino">Libre Femenino</option>
+                <option value="Senior +35">Senior +35</option>
+                <option value="Sub-20 Masculino">Sub-20 Masculino</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Ciudad Sede</label>
+              <input type="text" id="orgNewTourneyCity" value="Bogotá D.C." required style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Cancha / Sede</label>
+              <input type="text" id="orgNewTourneyVenue" value="Complejo Salitre Alto Rendimiento" required style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Cupos Máximos</label>
+              <input type="number" id="orgNewTourneyMaxTeams" value="8" min="2" max="64" required style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.82rem; font-weight: 700; color: #b8e3e8; margin-bottom: 0.35rem;">Inscripción ($ COP)</label>
+              <input type="number" id="orgNewTourneyFee" value="350000" step="50000" required style="width: 100%; padding: 10px 14px; background: rgba(5,20,25,0.85); border: 1px solid rgba(30,193,203,0.3); border-radius: 10px; color: #fff; font-size: 0.92rem; box-sizing: border-box;">
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.75rem;">
+            <button type="button" class="btn-tool-outline" onclick="closeOrgCreateTournamentModal()" style="padding: 10px 20px;">
+              Cancelar
+            </button>
+            <button type="submit" class="btn-primary-neon" style="padding: 10px 26px;">
+              <span id="orgSubmitModalBtnText">🚀 Publicar Torneo Oficial</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
   <!-- VISTA 11: PANEL MI CLUB / DIRECTOR TÉCNICO Y PLANTILLAS -->
   <section id="view-club" class="spa-view" data-alias="view-coach">
     <div class="coach-panel-container admin-dashboard-wrapper">

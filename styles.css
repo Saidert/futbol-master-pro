@@ -22060,3 +22060,30 @@ body.in-organizer-dashboard aside.public-mode-banner {
 #view-organizador:not(.active) {
   display: none !important;
 }
+
+/* Badge de Solicitudes Pendientes en la Sidebar del Organizador */
+.org-sidebar-badge-counter {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  background: #10B981;
+  color: #03181C;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+  pointer-events: none;
+}
+
+.clean-empty-notice {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: rgba(6, 26, 32, 0.7);
+  border: 1px dashed rgba(30,193,203,0.3);
+  border-radius: 16px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  margin: 1.5rem 0;
+}
