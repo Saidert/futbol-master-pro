@@ -8521,46 +8521,87 @@ function renderOrgSolicitudesTab(myTournaments, selectedTourneyId = 'all') {
         ${myRegs.map(r => {
           const t = myTournaments.find(x => String(x.id) === String(r.tournamentId));
           const tName = t ? (t.config?.name || t.name) : (r.tournamentName || 'Torneo Oficial');
-          const isPending = !r.status || r.status === 'pendiente' || r.status === 'pending';
+          const rawStatus = (r.status || 'pendiente_admision').toLowerCase();
           const radicado = (r.id || 'REG').toUpperCase().substring(0, 10);
           const dateStr = new Date(r.submittedAt || Date.now()).toLocaleDateString('es-CO');
 
+          const isPreAdmission = (rawStatus === 'pendiente_admision' || rawStatus === 'en_revision' || rawStatus === 'pendiente' || rawStatus === 'pending');
+          const isAdmitted = (rawStatus === 'admitido');
+          const isConfirmed = (rawStatus === 'habilitado' || rawStatus === 'aprobado' || rawStatus === 'aprobada_inicial');
+          const isRejected = (rawStatus === 'rechazado' || rawStatus === 'rechazada');
+
+          let statusBadge = '';
+          let actionButtons = '';
+          let borderAccent = '#1EC1CB';
+
+          if (isPreAdmission) {
+            borderAccent = '#f59e0b';
+            statusBadge = '<span style="font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4);">🟡 Pendiente de Admisión</span>';
+            actionButtons = `
+              <button type="button" class="btn-primary-neon" style="font-size: 0.8rem; padding: 6px 14px; background: linear-gradient(135deg, #10B981, #059669);" onclick="admitOrgApplication('${r.id}')" title="Admitir Club en el Torneo">
+                <span>✅ Admitir Club</span>
+              </button>
+              <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 14px; border-color: rgba(239,68,68,0.4); color: #f87171;" onclick="openRejectApplicationModal('${r.id}')" title="Rechazar Postulación">
+                <span>❌ Rechazar</span>
+              </button>
+            `;
+          } else if (isAdmitted) {
+            borderAccent = '#10B981';
+            statusBadge = '<span style="font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4);">🟢 Admitido (Esperando pago y plantilla del DT)</span>';
+            actionButtons = `
+              <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 12px; border-color: rgba(30, 193, 203, 0.4); color: #1EC1CB;" onclick="showToast('El club fue admitido. El DT Mario Alberto Yepes está formalizando el pago y plantilla en Mi Club.', 'info', 3500)">
+                <span>⏳ Esperando Formalización DT</span>
+              </button>
+            `;
+          } else if (isConfirmed) {
+            borderAccent = '#10B981';
+            statusBadge = '<span style="font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; background: rgba(16, 185, 129, 0.25); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.6);">🏆 Inscripción Confirmada (Pago y Jugadores)</span>';
+            actionButtons = `
+              ${r.rosterFileUrl ? `
+                <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 12px;" onclick="viewApplicationDocument('${r.id}', 'roster')" title="Ver Planilla PDF en FMPFileVault">
+                  <span>📄 Planilla PDF</span>
+                </button>
+              ` : ''}
+              ${r.paymentReceiptUrl ? `
+                <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 12px;" onclick="viewApplicationDocument('${r.id}', 'payment')" title="Ver Comprobante de Pago en FMPFileVault">
+                  <span>💵 Soporte Pago</span>
+                </button>
+              ` : ''}
+              <span style="font-size: 0.78rem; color: #10B981; font-weight: 700;">✓ Habilitado</span>
+            `;
+          } else {
+            borderAccent = '#ef4444';
+            statusBadge = '<span style="font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 9999px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);">✕ Postulación Rechazada</span>';
+            actionButtons = `<span style="font-size: 0.75rem; color: #94a3b8;">Rechazado</span>`;
+          }
+
           return `
-            <div class="liquid-glass-card org-registration-card" style="padding: 1.25rem 1.5rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-left: 4px solid ${isPending ? '#1EC1CB' : (r.status === 'aprobado' ? '#10B981' : '#f87171')};">
+            <div class="liquid-glass-card org-registration-card" style="padding: 1.25rem 1.5rem; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border-left: 4px solid ${borderAccent};">
               <div>
                 <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.35rem;">
                   <span style="font-size: 1.4rem;">🛡️</span>
                   <strong style="color: #fff; font-size: 1.1rem;">${escapeHtml(r.clubName || r.teamName || 'Club Postulado')}</strong>
                   <span style="font-family: monospace; font-size: 0.72rem; color: #1EC1CB; background: rgba(30,193,203,0.15); padding: 2px 6px; border-radius: 4px;">#${radicado}</span>
+                  ${statusBadge}
                 </div>
                 <div style="font-size: 0.84rem; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 0.75rem;">
                   <span>🏆 Torneo: <strong style="color: #67e8f9;">${escapeHtml(tName)}</strong></span>
                   <span>•</span>
                   <span>👤 DT: <strong>${escapeHtml(r.coachName || r.dtName || 'Director Técnico')}</strong></span>
                   <span>•</span>
+                  <span>📱 Tel: <strong>${escapeHtml(r.coachPhone || '+57 312 888 9900')}</strong></span>
+                  <span>•</span>
                   <span>📅 Fecha: ${dateStr}</span>
                 </div>
+                ${r.message ? `
+                  <div style="font-size: 0.78rem; color: #cbd5e1; margin-top: 6px; font-style: italic; background: rgba(0,0,0,0.25); padding: 4px 10px; border-radius: 6px;">
+                    "${escapeHtml(r.message)}"
+                  </div>
+                ` : ''}
               </div>
 
               <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
-                <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 12px;" onclick="viewApplicationDocument('${r.id}', 'roster')" title="Previsualizar Planilla PDF en FMPFileVault">
-                  <span>📄 Ver Planilla PDF</span>
-                </button>
-                <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 12px;" onclick="viewApplicationDocument('${r.id}', 'payment')" title="Previsualizar Soporte de Pago en FMPFileVault">
-                  <span>💵 Ver Soporte de Pago</span>
-                </button>
-                ${isPending ? `
-                  <button type="button" class="btn-primary-neon" style="font-size: 0.8rem; padding: 6px 14px; background: linear-gradient(135deg, #10B981, #059669);" onclick="approveOrgApplication('${r.id}')" title="Aprobar e Inscribir Club">
-                    <span>✅ Aprobar</span>
-                  </button>
-                  <button type="button" class="btn-tool-outline" style="font-size: 0.8rem; padding: 6px 14px; border-color: rgba(239,68,68,0.4); color: #f87171;" onclick="openRejectApplicationModal('${r.id}')" title="Rechazar con causales y WhatsApp">
-                    <span>❌ Rechazar</span>
-                  </button>
-                ` : `
-                  <span style="font-size: 0.8rem; font-weight: 700; padding: 4px 10px; border-radius: 9999px; ${r.status === 'aprobado' ? 'background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.4);' : 'background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.4);'}">
-                    ${r.status === 'aprobado' ? '✓ Aprobado e Inscrito' : '✕ Rechazado'}
-                  </span>
-                `}
+                ${actionButtons}
               </div>
             </div>
           `;
@@ -9132,25 +9173,32 @@ function renderCoachTournamentsGrid() {
           <span>Ver Calendario y Tabla</span>
         </button>
       `;
-    } else if (regStatus === 'rechazado' || regStatus === 'rechazada' || regStatus === 'requiere_correccion' || regStatus === 'devuelta_inicial') {
-      badgeHtml = '<span class="coach-tourney-badge badge-rejected">● Requiere Subsanación</span>';
+    } else if (regStatus === 'admitido') {
+      badgeHtml = '<span class="coach-tourney-badge badge-admitted">● ¡Club Admitido! Pagar Cupo</span>';
       actionBtnHtml = isTeamCoachUser ? `
         <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
-          <button type="button" class="btn-coach-action btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Solo Director Técnico: Subsanación reservada al DT Delegado">
-            <span>🔒 Subsanación exclusiva del Director Técnico</span>
+          <button type="button" class="btn-coach-action btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Solo Director Técnico: Formalización reservada al DT Delegado">
+            <span>🔒 Formalización exclusiva del Director Técnico</span>
           </button>
           <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
         </div>
       ` : `
-        <button type="button" class="btn-coach-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', true, '${escapeHtml(reg.id)}')">
-          <span>🔄 Subsanar Documentos</span>
+        <button type="button" class="btn-coach-action btn-formalize" onclick="openFormalizeRegistrationModal('${escapeHtml(reg.id)}')">
+          <span>💳 Formalizar Pago y Nómina</span>
         </button>
       `;
-    } else if (regStatus === 'en_revision' || regStatus === 'pendiente' || regStatus === 'pendiente_inicial' || regStatus === 'revision_final') {
-      badgeHtml = '<span class="coach-tourney-badge badge-pending">● En Revisión</span>';
+    } else if (regStatus === 'pendiente_admision' || regStatus === 'en_revision' || regStatus === 'pendiente' || regStatus === 'pending') {
+      badgeHtml = '<span class="coach-tourney-badge badge-pending">● Postulación en Revisión</span>';
       actionBtnHtml = `
         <button type="button" class="btn-coach-action btn-view-status" onclick="switchCoachTab('applications')">
-          <span>⏳ Ver Estado de Solicitud</span>
+          <span>⏳ Ver Estado de Postulación</span>
+        </button>
+      `;
+    } else if (regStatus === 'rechazado' || regStatus === 'rechazada' || regStatus === 'requiere_correccion' || regStatus === 'devuelta_inicial') {
+      badgeHtml = '<span class="coach-tourney-badge badge-rejected">● Postulación No Admitida</span>';
+      actionBtnHtml = `
+        <button type="button" class="btn-coach-action btn-subsanar" onclick="switchCoachTab('applications')">
+          <span>Ver Motivo de Rechazo</span>
         </button>
       `;
     } else {
@@ -9166,14 +9214,14 @@ function renderCoachTournamentsGrid() {
         badgeHtml = '<span class="coach-tourney-badge badge-open">● Inscripciones Abiertas</span>';
         actionBtnHtml = isTeamCoachUser ? `
           <div style="display: flex; flex-direction: column; align-items: center; gap: 5px; width: 100%;">
-            <button type="button" class="btn-coach-action btn-coach-locked" disabled title="Solo Director Técnico: La postulación y comprobante de pago están reservados al DT Delegado">
-              <span>🔒 Inscripción exclusiva del Director Técnico</span>
+            <button type="button" class="btn-coach-action btn-coach-locked" disabled title="Solo Director Técnico: La postulación está reservada al DT Delegado">
+              <span>🔒 Postulación exclusiva del Director Técnico</span>
             </button>
             <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo Director Técnico</span>
           </div>
         ` : `
-          <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}', false)">
-            <span>📋 Ingresar / Inscribir mi Club</span>
+          <button type="button" class="btn-coach-action btn-apply" onclick="openTournamentApplicationModal('${escapeHtml(tId)}')">
+            <span>📋 Postular mi Club</span>
           </button>
         `;
       }
@@ -9248,35 +9296,54 @@ function renderCoachApplicationsTable() {
     countBadge.textContent = displayRegs.length;
   }
 
-  // Verificar si hay solicitudes rechazadas que requieran subsanación
+  // Verificar si hay solicitudes admitidas listas para formalizar o rechazadas
+  const admittedReg = displayRegs.find(r => (r.status || '').toLowerCase() === 'admitido');
   const rejectedReg = displayRegs.find(r => {
     const s = (r.status || '').toLowerCase();
     return s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial';
   });
 
   if (alertBanner) {
-    if (rejectedReg) {
-      const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
+    const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
+    if (admittedReg) {
+      alertBanner.style.display = 'block';
+      alertBanner.innerHTML = `
+        <div class="coach-admitted-hero-banner">
+          <div style="font-size: 2.2rem; line-height: 1;">🎉</div>
+          <div class="coach-admitted-info" style="flex: 1;">
+            <h4>¡Tu Club ha sido ADMITIDO para competir!</h4>
+            <p>El comité organizador aprobó la admisión de <strong>${escapeHtml(admittedReg.clubName)}</strong> en el torneo <strong>${escapeHtml(admittedReg.tournamentName)}</strong>. Formaliza el pago de la cuota ($350.000 COP) y confirma tu nómina oficial para asegurar tu cupo definitivo.</p>
+          </div>
+          ${isTeamCoachUser ? `
+            <span class="badge-dt-only" style="font-size: 0.75rem; color: #f87171; background: rgba(239, 68, 68, 0.2); padding: 6px 12px; border-radius: 8px; font-weight: 700;">Solo Director Técnico</span>
+          ` : `
+            <button type="button" class="btn-primary-neon btn-glow" onclick="openFormalizeRegistrationModal('${escapeHtml(admittedReg.id)}')" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); font-weight: 800; padding: 10px 18px; font-size: 0.88rem; white-space: nowrap;">
+              <span>💳 Formalizar Pago y Plantilla</span>
+            </button>
+          `}
+        </div>
+      `;
+    } else if (rejectedReg) {
       alertBanner.style.display = 'block';
       alertBanner.innerHTML = `
         <div class="coach-rejected-banner">
           <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
             <span style="font-size: 1.25rem;">⚠️</span>
-            <strong style="color: #f87171; font-size: 0.95rem;">Postulación Requiere Subsanación de Requisitos</strong>
+            <strong style="color: #f87171; font-size: 0.95rem;">Postulación No Admitida por el Organizador</strong>
           </div>
           <p style="margin: 0 0 0.75rem 0; font-size: 0.85rem; color: #cbd5e1;">
             El comité organizador auditó tu solicitud para <strong>${escapeHtml(rejectedReg.tournamentName || 'Torneo Oficial')}</strong> y emitió el siguiente dictamen:
             <span style="display: block; margin-top: 0.35rem; padding: 0.6rem; background: rgba(0,0,0,0.3); border-left: 3px solid #ef4444; color: #fca5a5; font-style: italic;">
-              "${escapeHtml(rejectedReg.observations || 'Incumplimiento de requisitos documentales o comprobante de pago no válido.')}"
+              "${escapeHtml(rejectedReg.observations || 'Cupos limitados o no cumple con los requisitos de la categoría.')}"
             </span>
           </p>
           ${isTeamCoachUser ? `
-            <button type="button" class="btn-primary-neon btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Subsanación reservada al Director Técnico">
-              <span>🔒 Subsanación exclusiva del Director Técnico</span>
+            <button type="button" class="btn-primary-neon btn-coach-locked" disabled style="opacity: 0.85; cursor: not-allowed;" title="Postulación reservada al Director Técnico">
+              <span>🔒 Exclusivo del Director Técnico</span>
             </button>
           ` : `
-            <button type="button" class="btn-primary-neon" onclick="openTournamentApplicationModal('${escapeHtml(rejectedReg.tournamentId)}', true, '${escapeHtml(rejectedReg.id)}')">
-              <span>🔄 Subsanar y Reenviar Documentos Ahora</span>
+            <button type="button" class="btn-primary-neon" onclick="switchCoachTab('tournaments')" style="background: linear-gradient(135deg, #1EC1CB 0%, #0B4D54 100%);">
+              <span>🏆 Explorar Otros Torneos Disponibles</span>
             </button>
           `}
         </div>
@@ -9293,54 +9360,38 @@ function renderCoachApplicationsTable() {
   }
 
   tbody.innerHTML = displayRegs.map(r => {
-    const s = (r.status || '').toLowerCase();
+    const s = (r.status || 'pendiente_admision').toLowerCase();
     let statusClass = 'badge-pending';
-    let statusLabel = '⏳ En Revisión';
-
-    if (s === 'habilitado' || s === 'aprobado' || s === 'aprobada_inicial') {
-      statusClass = 'badge-approved';
-      statusLabel = '✅ Aprobado / Inscrito';
-    } else if (s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial') {
-      statusClass = 'badge-rejected';
-      statusLabel = '❌ Requiere Subsanación';
-    } else if (s === 'cancelada') {
-      statusClass = 'badge-pending';
-      statusLabel = '⚪ Cancelada';
-    }
-
-    const radicado = (r.id || 'REG').toUpperCase().substring(0, 10);
-    const dateFormatted = new Date(r.submittedAt || Date.now()).toLocaleDateString('es-CO');
-
-    const rosterPill = `
-      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'roster')" title="Previsualizar Planilla PDF en FMPFileVault">
-        <span>📄 ${escapeHtml(r.rosterFileName || 'Planilla.pdf')}</span>
-      </button>
-    `;
-
-    const paymentPill = `
-      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'payment')" title="Previsualizar Comprobante de Pago en FMPFileVault">
-        <span>💵 ${escapeHtml(r.paymentReceiptFileName || 'Comprobante.pdf')}</span>
-      </button>
-    `;
+    let statusLabel = '⏳ Pendiente de Admisión';
+    let actionBtn = '';
 
     const isTeamCoachUser = (session && normalizeRole(session.role) === 'team_coach');
 
-    let actionBtn = '';
-    if (s === 'rechazado' || s === 'rechazada' || s === 'requiere_correccion' || s === 'devuelta_inicial') {
-      actionBtn = isTeamCoachUser ? `
-        <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;" title="Subsanación reservada al Director Técnico">Solo Director Técnico</span>
-      ` : `
-        <button type="button" class="btn-coach-table-action btn-subsanar" onclick="openTournamentApplicationModal('${escapeHtml(r.tournamentId)}', true, '${escapeHtml(r.id)}')" title="Subsanar requisitos">
-          <span>🔄 Subsanar</span>
-        </button>
-      `;
-    } else if (s === 'habilitado' || s === 'aprobado' || s === 'aprobada_inicial') {
+    if (s === 'habilitado' || s === 'aprobado' || s === 'aprobada_inicial') {
+      statusClass = 'badge-approved';
+      statusLabel = '✅ Inscripción Confirmada';
       actionBtn = `
         <button type="button" class="btn-coach-table-action btn-go" onclick="window.activeTournamentId = '${escapeHtml(r.tournamentId)}'; navigateToView('calendario');" title="Ir al Calendario y Tabla del torneo">
           <span>Ver Fixture</span>
         </button>
       `;
+    } else if (s === 'admitido') {
+      statusClass = 'badge-admitted';
+      statusLabel = '🎉 Admitido (Pagar Cupo)';
+      actionBtn = isTeamCoachUser ? `
+        <span class="badge-dt-only" style="font-size: 0.72rem; color: #f87171; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px; font-weight: 700;">Solo DT</span>
+      ` : `
+        <button type="button" class="btn-coach-table-action btn-go" onclick="openFormalizeRegistrationModal('${escapeHtml(r.id)}')" title="Formalizar pago y nómina oficial">
+          <span>💳 Formalizar</span>
+        </button>
+      `;
+    } else if (s === 'rechazado' || s === 'rechazada') {
+      statusClass = 'badge-rejected';
+      statusLabel = '❌ No Admitido';
+      actionBtn = `<span style="font-size: 0.75rem; color: #f87171; font-weight: 600;">No admitido</span>`;
     } else {
+      statusClass = 'badge-pending';
+      statusLabel = '⏳ En Revisión de Mesa';
       actionBtn = isTeamCoachUser ? `
         <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">—</span>
       ` : `
@@ -9349,6 +9400,21 @@ function renderCoachApplicationsTable() {
         </button>
       `;
     }
+
+    const radicado = (r.id || 'REG').toUpperCase().substring(0, 10);
+    const dateFormatted = new Date(r.submittedAt || Date.now()).toLocaleDateString('es-CO');
+
+    const rosterPill = r.rosterFileUrl ? `
+      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'roster')" title="Previsualizar Nómina PDF">
+        <span>📄 ${escapeHtml(r.rosterFileName || 'Planilla.pdf')}</span>
+      </button>
+    ` : (s === 'admitido' ? '<span style="font-size: 0.75rem; color: #fbbf24; font-weight: 700;">Pendiente formalizar</span>' : '<span style="font-size: 0.75rem; color: #64748b;">N/A (Previa)</span>');
+
+    const paymentPill = r.paymentReceiptUrl ? `
+      <button type="button" class="btn-doc-pill" onclick="viewApplicationDocument('${escapeHtml(r.id)}', 'payment')" title="Previsualizar Comprobante">
+        <span>💵 ${escapeHtml(r.paymentReceiptFileName || 'Comprobante.pdf')}</span>
+      </button>
+    ` : (s === 'admitido' ? '<span style="font-size: 0.75rem; color: #34d399; font-weight: 700;">Pendiente de pago</span>' : '<span style="font-size: 0.75rem; color: #64748b;">Tras admisión</span>');
 
     return `
       <tr>
@@ -18451,19 +18517,10 @@ function openTournamentApplicationModal(tId, isCorrection = false, existingRegId
   const cityInput = document.getElementById('applyCity');
   const coachInput = document.getElementById('applyCoachName');
   const emailInput = document.getElementById('applyCoachEmail');
-  const rosterFile = document.getElementById('applyRosterPdf');
-  const paymentFile = document.getElementById('applyPaymentReceipt');
-  const previewRoster = document.getElementById('previewRosterPdfName');
-  const previewPayment = document.getElementById('previewPaymentReceiptName');
+  const phoneInput = document.getElementById('applyCoachPhone');
+  const categoryInput = document.getElementById('applyCategory');
+  const messageInput = document.getElementById('applyMessage');
   const hiddenExistingId = document.getElementById('applyExistingRegId');
-  const correctionBanner = document.getElementById('applyCorrectionBanner');
-  const correctionReasonsText = document.getElementById('applyCorrectionReasonsText');
-  const submitBtn = modal.querySelector('button[type="submit"]');
-
-  if (rosterFile) rosterFile.value = '';
-  if (paymentFile) paymentFile.value = '';
-  if (previewRoster) { previewRoster.style.display = 'none'; previewRoster.innerHTML = ''; }
-  if (previewPayment) { previewPayment.style.display = 'none'; previewPayment.innerHTML = ''; }
 
   const tournaments = FMPStore.getTournaments();
   if (select) {
@@ -18481,90 +18538,27 @@ function openTournamentApplicationModal(tId, isCorrection = false, existingRegId
     }
   }
 
-  // Buscar registro previo si estamos en modo subsanación
-  let targetReg = null;
-  const regs = FMPStore.getRegistrations();
-  if (existingRegId) {
-    targetReg = regs.find(r => r.id === existingRegId);
-  } else if (isCorrection) {
-    const session = FMPStore.getSession();
-    const myEmail = session?.email || '';
-    targetReg = regs.find(r => (r.status === 'rechazado') && (
-      (r.coachEmail && r.coachEmail.toLowerCase() === myEmail.toLowerCase()) ||
-      (r.coachId && session && r.coachId === session.userId) ||
-      (tId && r.tournamentId === tId)
-    )) || regs.find(r => r.status === 'rechazado');
-  }
-
   if (hiddenExistingId) {
-    hiddenExistingId.value = (isCorrection && targetReg) ? targetReg.id : '';
+    hiddenExistingId.value = existingRegId || '';
   }
 
-  if (isCorrection && targetReg) {
-    if (clubInput) clubInput.value = targetReg.clubName || '';
-    if (cityInput) cityInput.value = targetReg.city || 'Bogotá D.C.';
-    if (coachInput) coachInput.value = targetReg.coachName || targetReg.dtName || '';
-    if (emailInput) emailInput.value = targetReg.coachEmail || targetReg.email || '';
-    if (select && targetReg.tournamentId) select.value = targetReg.tournamentId;
-
-    if (correctionBanner) {
-      correctionBanner.style.display = 'block';
-      if (correctionReasonsText) {
-        correctionReasonsText.innerHTML = `<strong>Observaciones oficiales del dictamen:</strong> ${escapeHtml(targetReg.observations || 'Por favor reemplaza el documento requerido o actualiza el comprobante bancario.')}`;
-      }
-    }
-
-    // En modo subsanación, los inputs no son forzosos si el archivo previo ya existe
-    if (rosterFile) rosterFile.required = !Boolean(targetReg.rosterFileUrl);
-    if (paymentFile) paymentFile.required = !Boolean(targetReg.paymentReceiptUrl);
-
-    if (targetReg.rosterFileName && previewRoster) {
-      previewRoster.style.display = 'flex';
-      previewRoster.innerHTML = `<span style="color: #38bdf8; font-size: 0.78rem;">📄 Archivo actual: <strong>${escapeHtml(targetReg.rosterFileName)}</strong> (Carga un archivo nuevo solo si vas a corregirlo)</span>`;
-    }
-    if (targetReg.paymentReceiptFileName && previewPayment) {
-      previewPayment.style.display = 'flex';
-      previewPayment.innerHTML = `<span style="color: #38bdf8; font-size: 0.78rem;">💵 Archivo actual: <strong>${escapeHtml(targetReg.paymentReceiptFileName)}</strong> (Carga un archivo nuevo solo si vas a corregirlo)</span>`;
-    }
-
-    if (submitBtn) {
-      submitBtn.innerHTML = '<span>🔄 Reenviar Documentos Subsanados</span>';
-      submitBtn.style.background = 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)';
-      submitBtn.style.color = '#000';
-      submitBtn.style.fontWeight = '800';
-    }
+  // Prellenar con los datos del usuario en sesión
+  if (session && session.loggedIn) {
+    if (coachInput) coachInput.value = session.name || 'Mario Alberto Yepes';
+    if (emailInput) emailInput.value = session.email || 'delegado@atleticobogota.co';
+    if (clubInput) clubInput.value = session.clubName || 'Atlético Bogotá FC';
+    if (cityInput) cityInput.value = session.city || 'Bogotá D.C.';
+    if (phoneInput && !phoneInput.value) phoneInput.value = session.phone || '+57 312 888 9900';
   } else {
-    if (correctionBanner) correctionBanner.style.display = 'none';
-    if (rosterFile) rosterFile.required = true;
-    if (paymentFile) paymentFile.required = true;
-
-    const session = FMPStore.getSession();
-    if (session && session.loggedIn) {
-      if (coachInput && !coachInput.value) coachInput.value = session.name || 'Mario Alberto Yepes';
-      if (emailInput && !emailInput.value) emailInput.value = session.email || 'delegado@atleticobogota.co';
-      if (clubInput && !clubInput.value) clubInput.value = session.clubName || 'Atlético Bogotá FC';
-      if (cityInput && !cityInput.value) cityInput.value = session.city || 'Bogotá D.C.';
-    } else {
-      if (clubInput && !clubInput.value) clubInput.value = 'Atlético Bogotá FC';
-      if (coachInput && !coachInput.value) coachInput.value = 'Mario Alberto Yepes';
-      if (emailInput && !emailInput.value) emailInput.value = 'delegado@atleticobogota.co';
-      if (cityInput && !cityInput.value) cityInput.value = 'Bogotá D.C.';
-    }
-
-    if (submitBtn) {
-      submitBtn.innerHTML = '<span>🚀 Enviar Solicitud de Inscripción</span>';
-      submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-      submitBtn.style.color = '#fff';
-      submitBtn.style.fontWeight = '700';
-    }
+    if (clubInput) clubInput.value = 'Atlético Bogotá FC';
+    if (coachInput) coachInput.value = 'Mario Alberto Yepes';
+    if (emailInput) emailInput.value = 'delegado@atleticobogota.co';
+    if (cityInput) cityInput.value = 'Bogotá D.C.';
+    if (phoneInput && !phoneInput.value) phoneInput.value = '+57 312 888 9900';
   }
 
-  const titleEl = modal.querySelector('h3');
-  if (titleEl) {
-    titleEl.textContent = isCorrection 
-      ? '🔄 Subsanar y Reenviar Documentos de Inscripción' 
-      : '📋 Solicitar Inscripción al Torneo Oficial';
-  }
+  if (categoryInput && !categoryInput.value) categoryInput.value = 'Libre Masculino';
+  if (messageInput) messageInput.value = '';
 
   modal.style.setProperty('display', 'flex', 'important');
   modal.classList.add('active');
@@ -18609,8 +18603,9 @@ async function handleTournamentApplicationSubmit(event) {
   const cityInput = document.getElementById('applyCity');
   const coachInput = document.getElementById('applyCoachName');
   const emailInput = document.getElementById('applyCoachEmail');
-  const rosterFile = document.getElementById('applyRosterPdf');
-  const paymentFile = document.getElementById('applyPaymentReceipt');
+  const phoneInput = document.getElementById('applyCoachPhone');
+  const categoryInput = document.getElementById('applyCategory');
+  const messageInput = document.getElementById('applyMessage');
   const hiddenExistingId = document.getElementById('applyExistingRegId');
 
   const existingRegId = (hiddenExistingId?.value || '').trim();
@@ -18619,6 +18614,9 @@ async function handleTournamentApplicationSubmit(event) {
   const city = (cityInput?.value || 'Bogotá D.C.').trim();
   const coachName = (coachInput?.value || '').trim();
   const coachEmail = (emailInput?.value || '').trim();
+  const coachPhone = (phoneInput?.value || '+57 312 888 9900').trim();
+  const category = (categoryInput?.value || 'Libre Masculino').trim();
+  const message = (messageInput?.value || '').trim();
 
   if (!tournamentId || !clubName || !coachName || !coachEmail) {
     if (typeof showToast === 'function') showToast('Por favor completa todos los campos obligatorios.', 'error');
@@ -18639,120 +18637,42 @@ async function handleTournamentApplicationSubmit(event) {
   const isCorrection = Boolean(existingRegId);
   const regId = isCorrection ? existingRegId : ('reg_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
 
-  // 1. Procesar Planilla PDF
-  let rosterDataUrl = null;
-  let rosterFileName = null;
-  if (rosterFile && rosterFile.files && rosterFile.files[0]) {
-    const f = rosterFile.files[0];
-    rosterFileName = f.name;
-    try {
-      rosterDataUrl = await new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => resolve(null);
-        reader.readAsDataURL(f);
-      });
-      if (rosterDataUrl) {
-        await FMPFileVault.putFile('roster_' + regId, rosterDataUrl, { fileName: rosterFileName, type: 'roster' });
-      }
-    } catch (e) {
-      console.warn('Error guardando en FMPFileVault (roster):', e);
-    }
-  }
+  const newReg = {
+    id: regId,
+    tournamentId: tournamentId,
+    tournamentName: tournamentName,
+    clubName: clubName,
+    city: city,
+    coachId: session?.userId || 'usr_coach_' + Date.now(),
+    coachName: coachName,
+    coachEmail: coachEmail,
+    coachPhone: coachPhone,
+    category: category,
+    message: message,
+    status: 'pendiente_admision',
+    statusText: 'Pendiente de Admisión por el Organizador',
+    paymentStatus: 'pending_admission',
+    paymentFee: 350000,
+    feeCurrency: 'COP',
+    rosterFileName: '',
+    rosterFileUrl: '',
+    paymentReceiptFileName: '',
+    paymentReceiptUrl: '',
+    submittedAt: new Date().toISOString(),
+    observations: ''
+  };
 
-  // 2. Procesar Comprobante de Pago (con compresión automática si es imagen)
-  let paymentDataUrl = null;
-  let paymentFileName = null;
-  if (paymentFile && paymentFile.files && paymentFile.files[0]) {
-    const f = paymentFile.files[0];
-    paymentFileName = f.name;
-    try {
-      paymentDataUrl = await compressImageFile(f, 1000, 0.72);
-      if (paymentDataUrl) {
-        await FMPFileVault.putFile('payment_' + regId, paymentDataUrl, { fileName: paymentFileName, type: 'payment' });
-      }
-    } catch (e) {
-      console.warn('Error guardando en FMPFileVault (pago):', e);
-    }
-  }
+  FMPStore.saveRegistration(newReg);
+  FMPStore.logAudit('POSTULACION_CLUB_ENVIADA', `El club "${clubName}" envió postulación previa para el torneo "${tournamentName}".`);
+  FMPStore.addNotification({
+    userId: 'organizer',
+    title: '📋 Nueva Postulación de Club',
+    message: `El club "${clubName}" se ha postulado para competir en "${tournamentName}". Revisa su postulación en Solicitudes.`,
+    type: 'info'
+  });
 
-  if (isCorrection) {
-    // =========================================================================
-    // FLUJO DE SUBSANACIÓN: ACTUALIZAR EL REGISTRO EXISTENTE SIN DUPLICAR
-    // =========================================================================
-    const regs = FMPStore.getRegistrations();
-    const existingReg = regs.find(r => r.id === existingRegId);
-
-    if (existingReg) {
-      existingReg.clubName = clubName;
-      existingReg.city = city;
-      existingReg.coachName = coachName;
-      existingReg.coachEmail = coachEmail;
-      existingReg.tournamentId = tournamentId;
-      existingReg.tournamentName = tournamentName;
-
-      if (rosterFileName && rosterDataUrl) {
-        existingReg.rosterFileName = rosterFileName;
-        existingReg.rosterFileUrl = 'vault://roster_' + existingRegId;
-      }
-      if (paymentFileName && paymentDataUrl) {
-        existingReg.paymentReceiptFileName = paymentFileName;
-        existingReg.paymentReceiptUrl = 'vault://payment_' + existingRegId;
-      }
-
-      existingReg.status = 'revision_final';
-      existingReg.statusText = 'En Revisión (Subsanada)';
-      existingReg.previousObservations = existingReg.observations || '';
-      existingReg.observations = '';
-      existingReg.submittedAt = new Date().toISOString();
-      existingReg.subsanadaAt = new Date().toISOString();
-
-      FMPStore.saveRegistration(existingReg);
-      FMPStore.logAudit('SOLICITUD_SUBSANADA', `El club ${clubName} subsanó sus documentos para el torneo "${tournamentName}"`);
-      FMPStore.addNotification({
-        userId: 'organizer',
-        title: '🔄 Documentos Subsanados',
-        message: `El club "${clubName}" ha subsanado sus documentos para "${tournamentName}". Listo para nueva auditoría.`,
-        type: 'info'
-      });
-
-      if (typeof showToast === 'function') {
-        showToast('✅ Documentos subsanados y reenviados exitosamente a la mesa organizadora', 'success', 4500);
-      }
-    }
-  } else {
-    // =========================================================================
-    // NUEVA POSTULACIÓN INICIAL (REFERENCIAS LIGERAS A VAULT EN LOCALSTORAGE)
-    // =========================================================================
-    const newReg = {
-      id: regId,
-      tournamentId: tournamentId,
-      tournamentName: tournamentName,
-      clubName: clubName,
-      city: city,
-      coachId: session?.userId || 'usr_coach_' + Date.now(),
-      coachName: coachName,
-      coachEmail: coachEmail,
-      email: coachEmail,
-      status: 'en_revision',
-      statusText: 'En Revisión de Mesa',
-      paymentStatus: 'under_review',
-      paymentFee: 350000,
-      feeCurrency: 'COP',
-      rosterFileName: rosterFileName || 'Planilla_Oficial_Jugadores.pdf',
-      rosterFileUrl: rosterDataUrl ? ('vault://roster_' + regId) : '',
-      paymentReceiptFileName: paymentFileName || 'Comprobante_Pago_Transferencia.pdf',
-      paymentReceiptUrl: paymentDataUrl ? ('vault://payment_' + regId) : '',
-      submittedAt: new Date().toISOString(),
-      observations: ''
-    };
-
-    FMPStore.saveRegistration(newReg);
-    FMPStore.logAudit('SOLICITUD_INSCRIPCION_ENVIADA', `Club ${clubName} postuló con comprobante y planilla PDF al torneo "${tournamentName}"`);
-
-    if (typeof showToast === 'function') {
-      showToast('✅ Solicitud enviada al organizador para revisión de documentos y pago', 'success', 4500);
-    }
+  if (typeof showToast === 'function') {
+    showToast('🎉 ¡Postulación enviada exitosamente! El organizador revisará tu solicitud de admisión.', 'success', 4500);
   }
 
   // Notificar al backend de forma asíncrona
@@ -18766,11 +18686,12 @@ async function handleTournamentApplicationSubmit(event) {
         clubName: clubName,
         coachName: coachName,
         coachEmail: coachEmail,
+        coachPhone: coachPhone,
         city: city,
-        pdfUrl: 'vault://roster_' + regId,
-        pdfAttached: Boolean(rosterDataUrl),
+        category: category,
+        message: message,
         feeAmount: 350000,
-        isCorrection: isCorrection
+        status: 'pendiente_admision'
       })
     }).catch(e => console.warn('Backend sync warning:', e));
   } catch (err) {}
@@ -18778,9 +18699,251 @@ async function handleTournamentApplicationSubmit(event) {
   closeTournamentApplicationModal();
 
   if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderOrgSolicitudesTab === 'function') renderOrgSolicitudesTab();
   if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
-  if (typeof renderCoachView === 'function') renderCoachView();
+  if (typeof renderCoachTournamentsGrid === 'function') renderCoachTournamentsGrid();
+  if (typeof renderCoachApplicationsTable === 'function') renderCoachApplicationsTable();
   if (typeof switchCoachTab === 'function') switchCoachTab('applications');
+}
+
+/**
+ * Admite a un club en el torneo (Organizador o Admin).
+ * Pasa el estado a 'admitido' para que el DT proceda a pagar y vincular jugadores.
+ */
+function admitOrgApplication(regId) {
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+  if (!reg) {
+    if (typeof showToast === 'function') showToast('Solicitud no encontrada.', 'error');
+    return;
+  }
+
+  reg.status = 'admitido';
+  reg.statusText = 'Admitido • Pendiente de Formalizar Pago y Plantilla';
+  reg.admittedAt = new Date().toISOString();
+  FMPStore.saveRegistration(reg);
+
+  FMPStore.logAudit('CLUB_ADMITIDO_TORNEO', `El comité organizador admitió al club "${reg.clubName}" en el torneo "${reg.tournamentName}".`);
+  FMPStore.addNotification({
+    userId: reg.coachId || 'usr_coach_01',
+    title: '🎉 ¡Club Admitido en el Torneo!',
+    message: `¡Excelentes noticias! Tu club "${reg.clubName}" fue admitido en "${reg.tournamentName}". Procede a Formalizar Pago y Plantilla de Jugadores en tu panel Mi Club.`,
+    type: 'success'
+  });
+
+  if (typeof showToast === 'function') {
+    showToast(`✅ Club "${reg.clubName}" admitido en el torneo. Se notificó al DT para formalizar pago y jugadores.`, 'success', 4000);
+  }
+
+  // Refrescar vistas
+  if (typeof renderOrgSolicitudesTab === 'function') renderOrgSolicitudesTab();
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+  if (typeof renderCoachTournamentsGrid === 'function') renderCoachTournamentsGrid();
+  if (typeof renderCoachApplicationsTable === 'function') renderCoachApplicationsTable();
+}
+
+/**
+ * Abre el modal para que el DT formalice el pago y vincule su plantilla de jugadores.
+ */
+function openFormalizeRegistrationModal(regId) {
+  const modal = document.getElementById('modalFormalizeRegistration');
+  if (!modal) return;
+
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+  if (!reg) {
+    if (typeof showToast === 'function') showToast('Registro no encontrado.', 'error');
+    return;
+  }
+
+  const hiddenId = document.getElementById('formalizeRegId');
+  const radicadoBadge = document.getElementById('formalizeRadicadoBadge');
+  const modalTitle = document.getElementById('formalizeModalTitle');
+  const modalSub = document.getElementById('formalizeModalSub');
+  const countSummary = document.getElementById('formalizeRosterCountSummary');
+  const rosterListContainer = document.getElementById('formalizeClubRosterList');
+  const paymentFileInput = document.getElementById('formalizePaymentFile');
+  const previewPayment = document.getElementById('previewFormalizePaymentName');
+
+  if (hiddenId) hiddenId.value = reg.id;
+  if (radicadoBadge) radicadoBadge.textContent = '#' + (reg.id || 'REG').toUpperCase().substring(0, 10);
+  if (modalTitle) modalTitle.textContent = `Formalización de Cupo: ${reg.tournamentName || 'Torneo Oficial'}`;
+  if (modalSub) modalSub.textContent = `Club ${reg.clubName || 'Mi Club'} • Completa el comprobante bancario y vincula a tus jugadores`;
+
+  if (paymentFileInput) paymentFileInput.value = '';
+  if (previewPayment) { previewPayment.style.display = 'none'; previewPayment.innerHTML = ''; }
+
+  // Cargar la nómina actual del club
+  const players = (typeof getFmpClubRoster === 'function') ? getFmpClubRoster() : (typeof SEED_CLUB_PLAYERS !== 'undefined' ? SEED_CLUB_PLAYERS : []);
+  if (countSummary) {
+    countSummary.textContent = `${players.length} Jugadores registrados en Mi Club`;
+  }
+
+  if (rosterListContainer) {
+    if (players.length === 0) {
+      rosterListContainer.innerHTML = '<div style="color: #94a3b8; font-size: 0.8rem; padding: 0.5rem;">No hay jugadores registrados en la plantilla del club.</div>';
+    } else {
+      rosterListContainer.innerHTML = players.map(p => `
+        <div class="mini-player-chip">
+          <span class="mini-player-dorsal">${p.dorsal || '10'}</span>
+          <div class="mini-player-meta">
+            <strong style="color: #f8fafc; font-size: 0.82rem;">${escapeHtml(p.name)}</strong>
+            <span style="font-size: 0.72rem; color: #94a3b8;">${escapeHtml(p.position || 'Jugador')} • EPS: ${escapeHtml(p.eps || 'Sura EPS')}</span>
+          </div>
+          <span style="font-size: 0.7rem; color: #10B981; font-weight: 700; margin-left: auto;">✓ Apto</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  modal.style.setProperty('display', 'flex', 'important');
+  modal.classList.add('active');
+}
+
+function closeFormalizeRegistrationModal() {
+  const modal = document.getElementById('modalFormalizeRegistration');
+  if (modal) {
+    modal.style.removeProperty('display');
+    modal.style.display = 'none';
+    modal.classList.remove('active');
+  }
+}
+
+function toggleRosterSourceType(type) {
+  const labelClub = document.getElementById('labelChoiceClubRoster');
+  const labelPdf = document.getElementById('labelChoicePdf');
+  const previewWrap = document.getElementById('formalizeClubRosterPreviewWrap');
+  const pdfWrap = document.getElementById('formalizePdfUploadWrap');
+  const pdfInput = document.getElementById('formalizeRosterPdfFile');
+
+  if (type === 'club') {
+    if (labelClub) labelClub.classList.add('active');
+    if (labelPdf) labelPdf.classList.remove('active');
+    if (previewWrap) previewWrap.style.display = 'block';
+    if (pdfWrap) pdfWrap.style.display = 'none';
+    if (pdfInput) pdfInput.required = false;
+  } else {
+    if (labelClub) labelClub.classList.remove('active');
+    if (labelPdf) labelPdf.classList.add('active');
+    if (previewWrap) previewWrap.style.display = 'none';
+    if (pdfWrap) pdfWrap.style.display = 'block';
+    if (pdfInput) pdfInput.required = true;
+  }
+}
+
+async function handleFormalizeRegistrationSubmit(event) {
+  event.preventDefault();
+
+  const hiddenId = document.getElementById('formalizeRegId');
+  const regId = hiddenId?.value;
+  if (!regId) return;
+
+  const regs = FMPStore.getRegistrations();
+  const reg = regs.find(r => r.id === regId);
+  if (!reg) {
+    if (typeof showToast === 'function') showToast('Registro no encontrado.', 'error');
+    return;
+  }
+
+  const paymentFileInput = document.getElementById('formalizePaymentFile');
+  const rosterType = document.querySelector('input[name="rosterSourceType"]:checked')?.value || 'club';
+  const pdfFileInput = document.getElementById('formalizeRosterPdfFile');
+
+  if (!paymentFileInput || !paymentFileInput.files || !paymentFileInput.files[0]) {
+    if (typeof showToast === 'function') showToast('Por favor adjunta el comprobante de transferencia bancaria.', 'warning');
+    return;
+  }
+
+  // 1. Guardar comprobante de pago en FMPFileVault
+  const pFile = paymentFileInput.files[0];
+  let paymentDataUrl = null;
+  try {
+    paymentDataUrl = await compressImageFile(pFile, 1000, 0.72);
+    if (paymentDataUrl) {
+      await FMPFileVault.putFile('payment_' + regId, paymentDataUrl, { fileName: pFile.name, type: 'payment' });
+      reg.paymentReceiptFileName = pFile.name;
+      reg.paymentReceiptUrl = 'vault://payment_' + regId;
+    }
+  } catch (e) {
+    console.warn('Error guardando pago en FMPFileVault:', e);
+  }
+
+  // 2. Procesar Nómina de Jugadores
+  if (rosterType === 'pdf') {
+    if (pdfFileInput && pdfFileInput.files && pdfFileInput.files[0]) {
+      const rFile = pdfFileInput.files[0];
+      try {
+        const rDataUrl = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = () => resolve(null);
+          reader.readAsDataURL(rFile);
+        });
+        if (rDataUrl) {
+          await FMPFileVault.putFile('roster_' + regId, rDataUrl, { fileName: rFile.name, type: 'roster' });
+          reg.rosterFileName = rFile.name;
+          reg.rosterFileUrl = 'vault://roster_' + regId;
+        }
+      } catch (e) {
+        console.warn('Error guardando nómina PDF en FMPFileVault:', e);
+      }
+    }
+  } else {
+    // Vinculación automática de jugadores de Mi Club
+    const clubPlayers = (typeof getFmpClubRoster === 'function') ? getFmpClubRoster() : (typeof SEED_CLUB_PLAYERS !== 'undefined' ? SEED_CLUB_PLAYERS : []);
+    reg.rosterFileName = 'Plantilla_MiClub_18Jugadores.json';
+    reg.rosterPlayers = clubPlayers;
+  }
+
+  // 3. Actualizar estado oficial a HABILITADO
+  reg.status = 'habilitado';
+  reg.statusText = 'Inscripción Oficial Confirmada';
+  reg.paymentStatus = 'paid';
+  reg.formalizedAt = new Date().toISOString();
+  FMPStore.saveRegistration(reg);
+
+  // 4. Agregar el equipo al torneo para fixture y tabla
+  const tourneys = FMPStore.getTournaments();
+  const tourney = tourneys.find(t => String(t.id) === String(reg.tournamentId));
+  if (tourney) {
+    if (!Array.isArray(tourney.teams)) tourney.teams = [];
+    const clubName = reg.clubName || 'Atlético Bogotá FC';
+    const exists = tourney.teams.some(team => (typeof team === 'string' ? team : team.name)?.toLowerCase() === clubName.toLowerCase());
+    if (!exists) {
+      tourney.teams.push({
+        id: 'tm_' + Date.now(),
+        name: clubName,
+        city: reg.city || 'Bogotá D.C.',
+        coach: reg.coachName || 'Mario Alberto Yepes',
+        playersCount: reg.rosterPlayers ? reg.rosterPlayers.length : 18,
+        group: 'A',
+        status: 'confirmed'
+      });
+      FMPStore.saveTournament(tourney);
+    }
+  }
+
+  FMPStore.logAudit('INSCRIPCION_FORMALIZADA', `El DT formalizó con éxito el pago y plantilla de jugadores para "${reg.tournamentName}". Equipo habilitado.`);
+  FMPStore.addNotification({
+    userId: 'organizer',
+    title: '🏆 Inscripción Oficial Confirmada',
+    message: `El club "${reg.clubName}" completó el pago y plantilla oficial para "${reg.tournamentName}". El equipo ya está habilitado en el torneo.`,
+    type: 'success'
+  });
+
+  if (typeof showToast === 'function') {
+    showToast('🎉 ¡Inscripción oficial confirmada! Tu club está 100% habilitado en el torneo con su nómina y pago.', 'success', 5000);
+  }
+
+  closeFormalizeRegistrationModal();
+
+  // Re-render de vistas
+  if (typeof renderCoachRegistrationStatusCard === 'function') renderCoachRegistrationStatusCard();
+  if (typeof renderCoachTournamentsGrid === 'function') renderCoachTournamentsGrid();
+  if (typeof renderCoachApplicationsTable === 'function') renderCoachApplicationsTable();
+  if (typeof renderOrgSolicitudesTab === 'function') renderOrgSolicitudesTab();
+  if (typeof renderAdminPendingApplications === 'function') renderAdminPendingApplications();
 }
 
 function renderAdminPendingApplications() {

@@ -21932,6 +21932,282 @@ body.role-spectator #userDropdownMenu[style*="display: block"] {
 }
 
 /* =============================================================================
+   ESTILOS PREMIUM Y ELEVACIÓN ESTÉTICA: PANEL DEL DT & POSTULACIÓN EN 2 FASES
+   ============================================================================= */
+
+/* 1. Scrollbar invisible o ultra-delgado en todos los modales (Adiós scrollbar blanco de Windows) */
+.modal-dialog,
+.modal-liquid-glass,
+.fmp-modal-window,
+.coach-modal-aesthetic,
+.modal-overlay *,
+.modal-dialog *,
+.coach-modal-aesthetic * {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(30, 193, 203, 0.4) rgba(4, 18, 22, 0.6) !important;
+}
+
+.modal-dialog::-webkit-scrollbar,
+.modal-liquid-glass::-webkit-scrollbar,
+.fmp-modal-window::-webkit-scrollbar,
+.coach-modal-aesthetic::-webkit-scrollbar,
+.modal-dialog *::-webkit-scrollbar,
+.coach-modal-aesthetic *::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+.modal-dialog::-webkit-scrollbar-track,
+.modal-liquid-glass::-webkit-scrollbar-track,
+.fmp-modal-window::-webkit-scrollbar-track,
+.coach-modal-aesthetic::-webkit-scrollbar-track,
+.modal-dialog *::-webkit-scrollbar-track,
+.coach-modal-aesthetic *::-webkit-scrollbar-track {
+  background: rgba(4, 18, 22, 0.6) !important;
+  border-radius: 9999px !important;
+}
+
+.modal-dialog::-webkit-scrollbar-thumb,
+.modal-liquid-glass::-webkit-scrollbar-thumb,
+.fmp-modal-window::-webkit-scrollbar-thumb,
+.coach-modal-aesthetic::-webkit-scrollbar-thumb,
+.modal-dialog *::-webkit-scrollbar-thumb,
+.coach-modal-aesthetic *::-webkit-scrollbar-thumb {
+  background: rgba(30, 193, 203, 0.4) !important;
+  border-radius: 9999px !important;
+}
+
+.modal-dialog::-webkit-scrollbar-thumb:hover,
+.modal-liquid-glass::-webkit-scrollbar-thumb:hover,
+.fmp-modal-window::-webkit-scrollbar-thumb:hover,
+.coach-modal-aesthetic::-webkit-scrollbar-thumb:hover,
+.modal-dialog *::-webkit-scrollbar-thumb:hover,
+.coach-modal-aesthetic *::-webkit-scrollbar-thumb:hover {
+  background: rgba(30, 193, 203, 0.75) !important;
+}
+
+/* 2. Banner de Notificación de Admisión Previa */
+.apply-aesthetic-notice {
+  background: linear-gradient(135deg, rgba(6, 32, 40, 0.85) 0%, rgba(4, 18, 22, 0.9) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.35) !important;
+  border-top: 1.5px solid rgba(165, 243, 252, 0.45) !important;
+  border-radius: 14px !important;
+  padding: 14px 16px !important;
+  margin-bottom: 18px !important;
+}
+
+.apply-notice-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 6px !important;
+}
+
+.apply-notice-pill {
+  font-size: 0.72rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.05em !important;
+  color: #1EC1CB !important;
+  background: rgba(30, 193, 203, 0.15) !important;
+  padding: 3px 8px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(30, 193, 203, 0.3) !important;
+}
+
+.apply-notice-fee {
+  font-size: 0.95rem !important;
+  font-weight: 900 !important;
+  color: #10B981 !important;
+}
+
+.apply-notice-desc {
+  margin: 0 !important;
+  font-size: 0.82rem !important;
+  color: #cbd5e1 !important;
+  line-height: 1.45 !important;
+}
+
+/* 3. Modal de Formalización de Pago y Jugadores */
+.formalize-section-card {
+  background: linear-gradient(135deg, rgba(5, 22, 28, 0.85) 0%, rgba(3, 14, 18, 0.92) 100%) !important;
+  border: 1px solid rgba(30, 193, 203, 0.22) !important;
+  border-top: 1px solid rgba(165, 243, 252, 0.35) !important;
+  border-radius: 16px !important;
+  padding: 16px 18px !important;
+}
+
+.formalize-card-title {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 12px !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  color: #f8fafc !important;
+}
+
+.formalize-price-tag {
+  color: #10B981 !important;
+  font-size: 1.05rem !important;
+  font-weight: 900 !important;
+}
+
+.formalize-bank-grid {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.formalize-bank-item {
+  background: rgba(2, 11, 14, 0.65) !important;
+  border: 1px solid rgba(30, 193, 203, 0.18) !important;
+  border-radius: 10px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  font-size: 0.8rem !important;
+}
+
+.formalize-bank-item strong {
+  font-size: 0.82rem !important;
+}
+
+.formalize-bank-item span {
+  font-family: monospace !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  letter-spacing: 0.04em !important;
+}
+
+.roster-choice-container {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 10px !important;
+}
+
+.roster-choice-label {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  background: rgba(4, 16, 20, 0.7) !important;
+  border: 1.5px solid rgba(30, 193, 203, 0.25) !important;
+  border-radius: 12px !important;
+  padding: 10px 14px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.roster-choice-label.active,
+.roster-choice-label:has(input:checked) {
+  border-color: #10B981 !important;
+  background: rgba(16, 185, 129, 0.12) !important;
+}
+
+.roster-choice-label input[type="radio"] {
+  accent-color: #10B981 !important;
+}
+
+.roster-choice-label strong {
+  display: block !important;
+  font-size: 0.82rem !important;
+  color: #ffffff !important;
+}
+
+.roster-choice-label span {
+  display: block !important;
+  font-size: 0.72rem !important;
+  color: #94a3b8 !important;
+}
+
+.club-roster-mini-list {
+  max-height: 150px !important;
+  overflow-y: auto !important;
+  background: rgba(2, 10, 13, 0.65) !important;
+  border: 1px solid rgba(30, 193, 203, 0.15) !important;
+  border-radius: 10px !important;
+  padding: 8px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  scrollbar-width: thin !important;
+}
+
+.mini-player-chip {
+  background: rgba(30, 193, 203, 0.12) !important;
+  border: 1px solid rgba(30, 193, 203, 0.25) !important;
+  border-radius: 6px !important;
+  padding: 3px 8px !important;
+  font-size: 0.74rem !important;
+  color: #e2e8f0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.mini-player-chip strong {
+  color: #1EC1CB !important;
+}
+
+/* 4. Banner Celebratorio de Club Admitido */
+.coach-admitted-hero-banner {
+  background: linear-gradient(135deg, rgba(6, 40, 32, 0.92) 0%, rgba(3, 22, 18, 0.96) 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
+  border-top: 2px solid rgba(167, 243, 208, 0.6) !important;
+  border-radius: 18px !important;
+  padding: 18px 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px !important;
+  flex-wrap: wrap !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.22) !important;
+}
+
+.coach-admitted-info h4 {
+  margin: 0 0 4px 0 !important;
+  font-size: 1.05rem !important;
+  font-weight: 800 !important;
+  color: #a7f3d0 !important;
+}
+
+.coach-admitted-info p {
+  margin: 0 !important;
+  font-size: 0.84rem !important;
+  color: #e2e8f0 !important;
+  line-height: 1.4 !important;
+}
+
+/* Badges de Estado del Torneo */
+.coach-tourney-badge.badge-admitted {
+  background: rgba(16, 185, 129, 0.22) !important;
+  color: #34d399 !important;
+  border: 1.5px solid #10B981 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3) !important;
+  animation: pulseAdmitted 2s infinite ease-in-out !important;
+}
+
+@keyframes pulseAdmitted {
+  0%, 100% { box-shadow: 0 0 8px rgba(16, 185, 129, 0.2); }
+  50% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.5); }
+}
+
+.btn-coach-action.btn-formalize {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4) !important;
+}
+
+.btn-coach-action.btn-formalize:hover {
+  filter: brightness(1.12) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.55) !important;
+}
+
+/* =============================================================================
    DASHBOARD DEL ORGANIZADOR (#/organizador) & RBAC ESTILOS DEDICADOS
    ============================================================================= */
 body.route-organizador #mainHeader,
